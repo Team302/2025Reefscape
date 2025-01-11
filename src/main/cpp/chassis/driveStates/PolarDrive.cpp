@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -37,8 +37,8 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 {
     if (m_chassis != nullptr)
     {
-        units::length::meter_t reefXPos = units::length::meter_t(4.5); // Reef center x-coordinate, needs updating based on alliance and use constants
-        units::length::meter_t reefYPos = units::length::meter_t(4.0); // Reef center y-coordinate, needs updating based on alliance and use constants
+        units::length::meter_t reefXPos = units::length::meter_t(4.5); // TODO needs updating based on alliance and use constants
+        units::length::meter_t reefYPos = units::length::meter_t(4.0); // TODO needs updating based on alliance and use constants
 
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
