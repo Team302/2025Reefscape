@@ -2,7 +2,6 @@ plugins {
     id "cpp"
     id "google-test-test-suite"
     id "edu.wpi.first.GradleRIO" version "2025.1.1"
-    id "org.ysb33r.doxygen" version "1.0.3"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -28,7 +27,7 @@ deploy {
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
                     files = project.fileTree('src/main/deploy')
                     directory = '/home/lvuser/deploy'
-                    deleteOldFiles = true // Change to true to delete files on roboRIO that no
+                    deleteOldFiles = false // Change to true to delete files on roboRIO that no
                                            // longer exist in deploy directory of this project
                 }
             }
@@ -39,13 +38,13 @@ deploy {
 def deployArtifact = deploy.targets.roborio.artifacts.frcCpp
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = false
+def includeDesktopSupport = true
 
 // Set to true to run simulation in debug mode
 wpi.cpp.debugSimulation = false
 
 // Default enable simgui
-wpi.sim.addGui().defaultEnabled = false
+wpi.sim.addGui().defaultEnabled = true
 // Enable DS but not by default
 wpi.sim.addDriverstation()
 
@@ -60,13 +59,10 @@ model {
             sources.cpp {
                 source {
                     srcDir 'src/main/cpp'
-                    srcDir 'src/main/thirdparty'
-                    include '**/*.cpp','**/*.cxx', '**/*.cc', '**/*.c'
+                    include '**/*.cpp', '**/*.cc'
                 }
                 exportedHeaders {
-                    srcDir 'src/main/cpp'
-                    srcDir 'src/main/thirdparty'
-                    include '**/*.hpp', '**/*.hxx', '**/*.h'
+                    srcDir 'src/main/include'
                 }
             }
 
