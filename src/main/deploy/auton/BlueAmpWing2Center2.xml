@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+                
+<primitive id= "DO_NOTHING"
+noteOption = "STATE_READY_ODOMETRY_LAUNCH"
+time= "0.25"
+/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname= "BlueAmpWing2Center2_A"
+noteOption= "STATE_FEEDER_INTAKE"
+time= "1.0"
+pathUpdateOption="NOTE"
+headingOption= "FACE_SPEAKER"/>
+
+<primitive id= "DO_NOTHING"
+noteOption = "STATE_FEEDER_INTAKE"
+headingOption= "FACE_SPEAKER"
+time= "0.5"/>
+
+<primitive id= "DO_NOTHING"
+noteOption = "STATE_FEEDER_INTAKE"
+headingOption= "FACE_SPEAKER"
+time= "0.75"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname= "BlueAmpWing2Center2_B"
+noteOption= "STATE_FEEDER_INTAKE"
+pathUpdateOption="NOTE"
+time= "3.0"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname= "BlueAmpWing2Center2_C"
+noteOption= "STATE_FEEDER_INTAKE"
+pathgains="ShortPath"
+time="2.5"
+headingOption= "FACE_SPEAKER"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueAmpWing2Center2_D"
+noteOption= "STATE_FEEDER_INTAKE"
+pathUpdateOption="NOTE"
+time= "2.5"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueAmpWing2Center2_E"
+noteOption= "STATE_FEEDER_INTAKE"
+time= "2.85"
+headingOption= "FACE_SPEAKER"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+</auton>

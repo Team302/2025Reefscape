@@ -1,0 +1,41 @@
+<!ELEMENT auton (snippet | primitive)* >
+
+<!ELEMENT snippet EMPTY>
+<!ATTLIST snippet file CDATA #IMPLIED>
+
+<!ELEMENT primitive (zone* ) >
+<!ATTLIST primitive 
+          id                ( DO_NOTHING | HOLD_POSITION | 
+                              DRIVE_PATH_PLANNER | RESET_POSITION_PATH_PLANNER | RESET_POSITION_PATH_PLANNER_NO_VISION) "DO_NOTHING"
+		  time				CDATA #IMPLIED
+          headingOption     CDATA "MAINTAIN"
+          heading           CDATA "0.0"
+          pathname          CDATA #IMPLIED
+		  choreoname		CDATA #IMPLIED
+		  pathgains			(LongPath | ShortPath) "LongPath"
+		  climberOption		( STATE_OFF | STATE_INITIALIZE | 
+		  					  STATE_MANUAL | STATE_AUTO_CLIMB | STATE_HOLD ) "STATE_OFF"
+		  noteOption        ( STATE_OFF | STATE_READY | STATE_FEEDER_INTAKE | 
+		                      STATE_EXPEL | STATE_PLACER_INTAKE | STATE_HOLD_FEEDER_FRONT | 
+		                      STATE_HOLD_FEEDER_BACK | STATE_INTAKE_TO_FEEDER | 
+							  STATE_LAUNCHER_TO_PLACER_FRONT | STATE_LAUNCHER_TO_PLACER_BACK | 
+							  STATE_HOLD_FEEDER | STATE_READY_AUTO_LAUNCH | 
+		                      STATE_READY_MANUAL_LAUNCH | STATE_PASS | STATE_AUTO_LAUNCH | 
+							  STATE_MANUAL_LAUNCH | STATE_READY_ODOMETRY_LAUNCH | 
+							  STATE_AUTO_LAUNCH_ODOMETRY | STATE_HOLD_PLACER_FRONT | 
+		                      STATE_HOLD_PLACER_BACK | STATE_INTAKE_TO_PLACER | STATE_PREPARE_PLACE_AMP | 
+		                      STATE_PREPARE_PLACE_TRAP | STATE_PLACE_AMP | 
+							  STATE_PLACE_TRAP | STATE_PLACER_TO_LAUNCHER_FRONT | 
+		                      STATE_PLACER_TO_LAUNCHER_BACK | STATE_BACKUP_MANUAL_LAUNCH | 
+							  STATE_BACKUP_MANUAL_PLACE ) "STATE_OFF"
+		  visionAligment    ( UNKNOWN | NOTE | SPEAKER ) "UNKNOWN"
+		  pathUpdateOption    (NOTE | NONE) "NONE"
+>
+
+
+<!ELEMENT zone EMPTY >
+<!ATTLIST zone
+		filename CDATA #REQUIRED
+>
+
+

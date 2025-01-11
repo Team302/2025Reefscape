@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topLevelAppDataElement xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <robotFiles>
+    <string>CompBot302.xml</string>
+    <string>Thing1.xml</string>
+    <string>ChassisBot9997.xml</string>
+  </robotFiles>
+  <Robots />
+  <Mechanisms>
+    <mechanism>
+      <GUID>fe625e52-5053-495b-9340-9ca23511df3c</GUID>
+      <name>noteManagement</name>
+      <MotorControllers />
+      <closedLoopControlParameters />
+      <solenoid />
+      <servo />
+      <analogInput />
+      <digitalInput />
+      <cancoder />
+      <stateMotorControlData />
+      <states />
+    </mechanism>
+    <mechanism>
+      <GUID>1822615b-4ff6-4f4c-b548-bf561b7c936b</GUID>
+      <name>Climber</name>
+      <MotorControllers />
+      <closedLoopControlParameters />
+      <solenoid />
+      <servo />
+      <analogInput />
+      <digitalInput />
+      <cancoder />
+      <stateMotorControlData />
+      <states />
+    </mechanism>
+    <mechanism>
+      <GUID>45858aa2-2754-4d54-b663-f0b847bd8c36</GUID>
+      <name>Thing1Equipment</name>
+      <MotorControllers />
+      <closedLoopControlParameters />
+      <solenoid />
+      <servo />
+      <analogInput />
+      <digitalInput />
+      <cancoder />
+      <stateMotorControlData />
+      <states />
+    </mechanism>
+  </Mechanisms>
+</topLevelAppDataElement>

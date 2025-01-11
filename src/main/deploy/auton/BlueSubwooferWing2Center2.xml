@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+
+<auton>
+
+<primitive id= "RESET_POSITION_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_A"/>
+
+<snippet file= "ShootWhenStopManual.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_A"
+time= "3.0"
+noteOption="STATE_FEEDER_INTAKE"
+visionAligment= "SPEAKER"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_B"
+time= "3.5"
+noteOption="STATE_FEEDER_INTAKE"
+pathUpdateOption = "NOTE"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_C"
+time= "3.0"
+noteOption="STATE_FEEDER_INTAKE"
+visionAligment= "SPEAKER"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_D"
+time= "3.5"
+noteOption="STATE_FEEDER_INTAKE"
+pathUpdateOption = "NOTE"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+pathname= "BlueSubwooferWing2Center2_E"
+time= "3.0"
+noteOption="STATE_FEEDER_INTAKE"
+visionAligment= "SPEAKER"/>
+
+<snippet file= "ShootWhenStopAuto.xml"/>
+
+</auton>
