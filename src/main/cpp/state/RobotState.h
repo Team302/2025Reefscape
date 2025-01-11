@@ -37,7 +37,6 @@ public:
 private:
     void PublishGameStateChanges();
     void PublishScoringMode(TeleopControl *controller);
-    void PublishClimbMode(TeleopControl *controller);
 
     RobotState();
     ~RobotState();
@@ -45,10 +44,8 @@ private:
     SwerveChassis *m_chassis;
     std::vector<RobotStateChangeBroker *> m_brokers;
     RobotStateChanges::ScoringMode m_scoringMode;
-    RobotStateChanges::ClimbMode m_climbMode;
     RobotStateChanges::GamePeriod m_gamePhase;
 
     bool m_scoringModeButtonReleased;
-    bool m_climbModeButtonReleased;
     static RobotState *m_instance;
 };

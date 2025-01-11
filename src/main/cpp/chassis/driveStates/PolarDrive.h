@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2025 Lake Orion Robotics FIRST Team 302
+// Copyright 2024 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -15,17 +15,26 @@
 
 #pragma once
 
-// Team302 Includes
-#include "chassis/headingStates/FaceTarget.h"
+#include <string>
 
-class FaceLeftStage : public FaceTarget
+// FRC Includes
+#include <frc/kinematics/SwerveModuleState.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+
+// Team302 Includes
+#include "chassis/driveStates/RobotDrive.h"
+
+class PolarDrive : public RobotDrive
 {
 public:
-    FaceLeftStage();
-    ~FaceLeftStage() = default;
+    PolarDrive(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-    std::string GetHeadingStateName() const override;
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
-protected:
-    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+    void Init(ChassisMovement &chassisMovement) override;
+
+private:
+    RobotDrive *m_robotDrive;
+    double m_loopRate = 0.02;
 };

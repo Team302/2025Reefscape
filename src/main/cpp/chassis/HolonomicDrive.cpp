@@ -115,35 +115,22 @@ void HolonomicDrive::Run()
         auto isResetPoseSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
         // auto isAlignGamePieceSelected = controller->IsButtonPressed(TeleopControlFunctions::DRIVE_TO_NOTE);
         auto isAlignGamePieceSelected = false;
-        auto isRobotOriented = controller->IsButtonPressed(TeleopControlFunctions::CLIMB_MODE) || controller->IsButtonPressed(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
-        auto isAlignWithSpeakerSelected = controller->IsButtonPressed(TeleopControlFunctions::AUTO_SPEAKER);
-        auto isAlignWithStageSelected = controller->IsButtonPressed(TeleopControlFunctions::AUTO_STAGE);
-        auto isAlignWithAmpSelected = controller->IsButtonPressed(TeleopControlFunctions::AUTO_AMP);
+        auto isRobotOriented = controller->IsButtonPressed(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
         auto isHoldPositionSelected = controller->IsButtonPressed(TeleopControlFunctions::HOLD_POSITION);
         auto isFaceForward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_FORWARD);
         auto isFaceBackward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_BACKWARD);
         auto isSlowMode = controller->IsButtonPressed(TeleopControlFunctions::SLOW_MODE);
         auto checkTipping = controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
-        auto isTurnToPassAngle = controller->IsButtonPressed(TeleopControlFunctions::TURN_TO_PASS_ANGLE);
+        auto isPolarDriveSelected = controller->IsButtonPressed(TeleopControlFunctions::POLAR_DRIVE);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
         {
             DriveToGamePiece(forward, strafe, rotate);
         }
-
-        else if (isAlignWithAmpSelected)
+        else if (isPolarDriveSelected)
         {
-            AlignToAmp();
-        }
-        else if (isAlignWithStageSelected)
-        {
-            AlignToStage();
-            m_previousDriveState = m_moveInfo.driveOption;
-        }
-        else if (isAlignWithSpeakerSelected)
-        {
-            AlignToSpeaker();
+            PolarDrive();
         }
         else
         {
@@ -159,10 +146,6 @@ void HolonomicDrive::Run()
             else if (isFaceBackward)
             {
                 TurnBackward();
-            }
-            else if (isTurnToPassAngle)
-            {
-                TurnToPassAngle();
             }
             // Switch Drive Modes
             if (isHoldPositionSelected)
@@ -273,19 +256,6 @@ void HolonomicDrive::AlignGamePiece()
 {
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
 }
-void HolonomicDrive::AlignToStage()
-{
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_STAGE;
-}
-void HolonomicDrive::AlignToSpeaker()
-{
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_SPEAKER;
-}
-void HolonomicDrive::AlignToAmp()
-{
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
-    m_moveInfo.yawAngle = units::angle::degree_t(-90.0);
-}
 void HolonomicDrive::HoldPosition()
 {
     m_previousDriveState = m_moveInfo.driveOption;
@@ -334,24 +304,17 @@ void HolonomicDrive::TurnBackward()
     }
 }
 
-void HolonomicDrive::TurnToPassAngle()
-{
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
-
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(135.0);
-    }
-    else
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(35.0);
-    }
-}
 void HolonomicDrive::SlowMode()
 {
     m_moveInfo.chassisSpeeds.vx *= m_slowModeMultiplier;
     m_moveInfo.chassisSpeeds.vy *= m_slowModeMultiplier;
     m_moveInfo.chassisSpeeds.omega *= m_slowModeMultiplier;
+}
+
+void HolonomicDrive::PolarDrive()
+{
+    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::POLAR_DRIVE;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF;
 }
 
 void HolonomicDrive::CheckTipping(bool isSelected)

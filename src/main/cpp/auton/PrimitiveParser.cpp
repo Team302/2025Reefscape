@@ -53,12 +53,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
+
     headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
-    headingOptionMap["FACE_SPEAKER"] = ChassisOptionEnums::HeadingOption::FACE_SPEAKER;
-    headingOptionMap["FACE_AMP"] = ChassisOptionEnums::HeadingOption::FACE_AMP;
-    headingOptionMap["FACE_LEFT_STAGE"] = ChassisOptionEnums::HeadingOption::FACE_LEFT_STAGE;
-    headingOptionMap["FACE_RIGHT_STAGE"] = ChassisOptionEnums::HeadingOption::FACE_RIGHT_STAGE;
-    headingOptionMap["FACE_CENTER_STAGE"] = ChassisOptionEnums::HeadingOption::FACE_CENTER_STAGE;
 
     map<string, ChassisOptionEnums::PathGainsType> pathGainsMap;
     pathGainsMap["LongPath"] = ChassisOptionEnums::PathGainsType::LONG;
