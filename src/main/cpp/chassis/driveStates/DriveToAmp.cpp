@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -17,7 +17,7 @@
 #include "chassis/driveStates/DriveToAmp.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "pathplanner/lib/path/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "chassis/driveStates/RobotDrive.h"
 #include "chassis/ChassisMovement.h"
 
@@ -82,14 +82,16 @@ pathplanner::PathPlannerTrajectory DriveToAmp::CreateDriveToAmpTrajectory(frc::P
         frc::Pose2d(targetPose2d.X(), (targetPose2d.Y() - 1.0_m), targetPose2d.Rotation()),
         targetPose2d,
     };
-    std::vector<frc::Translation2d> bezierPoints = pathplanner::PathPlannerPath::bezierFromPoses(poses);
+    std::vector<pathplanner::Waypoint> bezierPoints = pathplanner::PathPlannerPath::waypointsFromPoses(poses);
 
-    auto createPath = std::make_shared<pathplanner::PathPlannerPath>(
-        bezierPoints,
-        pathplanner::PathConstraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel),
-        pathplanner::GoalEndState(0.0_mps, targetPose2d.Rotation(), false));
-    createPath->preventFlipping = true;
-    trajectory = createPath->getTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation());
+    // TODO:  update to new signature
+    // auto createPath = std::make_shared<pathplanner::PathPlannerPath>(
+    //     bezierPoints,
+    //     pathplanner::PathConstraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel),
+    //     pathplanner::GoalEndState(0.0_mps, targetPose2d.Rotation(), false));
+    // createPath->preventFlipping = true;
+    // TODO: need robotconfig object
+    // trajectory = createPath->getTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation());
 
     return trajectory;
 }

@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -35,9 +35,7 @@
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
-#include "mechanisms/MechanismTypes.h"
+// #include "mechanisms/MechanismTypes.h"
 
 // Third Party Includes
 
@@ -72,8 +70,7 @@ void CyclePrimitives::Init()
 	m_currentPrim = nullptr;
 	m_zones.clear();
 
-	Logger::GetLogger()
-		->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("About to parse XML file "), m_autonSelector->GetSelectedAutoFile().c_str());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("About to parse XML file "), m_autonSelector->GetSelectedAutoFile().c_str());
 
 	m_primParams = PrimitiveParser::ParseXML(m_autonSelector->GetSelectedAutoFile());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("nPrims"), double(m_primParams.size()));
@@ -113,15 +110,17 @@ void CyclePrimitives::Run()
 
 					if (isInZone)
 					{
-						auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
-						if (config != nullptr && zone->IsNoteStateChanging())
+						/**
+					auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+					if (config != nullptr && zone->IsNoteStateChanging())
+					{
+						auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
+						if (noteMgr != nullptr)
 						{
-							auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-							if (noteMgr != nullptr)
-							{
-								noteMgr->SetCurrentState(zone->GetNoteOption(), true);
-							}
+							noteMgr->SetCurrentState(zone->GetNoteOption(), true);
 						}
+					}
+						**/
 
 						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
 						{
@@ -200,10 +199,6 @@ void CyclePrimitives::RunDriveStop()
 										  ChassisOptionEnums::PathGainsType::LONG,
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
-										  false,
-										  noteManagerGen::STATE_NAMES::STATE_OFF,
-										  false,
-										  ClimberManagerGen::STATE_NAMES::STATE_OFF,
 										  ChassisOptionEnums::PathUpdateOption::NONE);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
 		m_driveStop->Init(params);
@@ -216,6 +211,7 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 	auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
+		/**
 		auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
 		if (noteMgr != nullptr && params->IsNoteStateChanging())
 		{
@@ -227,5 +223,6 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 		{
 			noteMgr->SetCurrentState(params->GetClimberState(), true);
 		}
+		**/
 	}
 }

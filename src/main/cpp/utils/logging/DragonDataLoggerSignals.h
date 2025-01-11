@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -39,14 +39,14 @@ public:
 
     enum BoolSignals
     {
-        NOTE_MANAGER_HAS_VISION, // TODO: should this be more generic; should this be part of a vision logging?
-        NOTE_MANAGER_FRONT_SENSOR,
-        NOTE_MANAGER_BACK_SENSOR,
-        NOTE_MANAGER_FEEDER_SENSOR,
-        NOTE_MANAGER_LAUNCHER_SENSOR,
-        NOTE_MANAGER_PLACER_IN_SENSOR,
-        NOTE_MANAGER_PLACER_MID_SENSOR,
-        NOTE_MANAGER_PLACER_OUT_SENSOR,
+        // NOTE_MANAGER_HAS_VISION, // TODO: should this be more generic; should this be part of a vision logging?
+        // NOTE_MANAGER_FRONT_SENSOR,
+        // NOTE_MANAGER_BACK_SENSOR,
+        // NOTE_MANAGER_FEEDER_SENSOR,
+        // NOTE_MANAGER_LAUNCHER_SENSOR,
+        // NOTE_MANAGER_PLACER_IN_SENSOR,
+        // NOTE_MANAGER_PLACER_MID_SENSOR,
+        // NOTE_MANAGER_PLACER_OUT_SENSOR,
         FRONT_LEFT_SWERVE_MODULE_SPLIPING,
         FRONT_RIGHT_SWERVE_MODULE_SPLIPING,
         BACK_LEFT_SWERVE_MODULE_SPLIPING,
@@ -56,21 +56,21 @@ public:
     enum DoubleSignals
     {
         CHASSIS_STORED_HEADING_DEGREES,
-        CHASSIS_YAW_DEGREES,
-        NOTE_MANAGER_TARGET_ANGLE_DEGREES,
-        NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
-        NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
-        NOTE_MANAGER_TARGET_BOTTOM_WHEEL_SPEED_RPM,
-        NOTE_MANAGER_ACTUAL_TOP_WHEEL_SPEED_RPM,
-        NOTE_MANAGER_ACTUAL_BOTTOM_WHEEL_SPEED_RPM,
-        NOTE_MANAGER_DISTANCE_FROM_SPEAKER_METERS // TODO: should this be more generic - the whole robot is a certain distance; do we need angle too?
+        CHASSIS_YAW_DEGREES //,
+        // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
+        // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
+        // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
+        // NOTE_MANAGER_TARGET_BOTTOM_WHEEL_SPEED_RPM,
+        // NOTE_MANAGER_ACTUAL_TOP_WHEEL_SPEED_RPM,
+        // NOTE_MANAGER_ACTUAL_BOTTOM_WHEEL_SPEED_RPM,
+        // NOTE_MANAGER_DISTANCE_FROM_SPEAKER_METERS // TODO: should this be more generic - the whole robot is a certain distance; do we need angle too?
     };
 
     enum StringSignals
     {
         CHASSIS_HEADING_STATE,
-        CHASSIS_DRIVE_STATE,
-        NOTE_MANAGER_STATE
+        CHASSIS_DRIVE_STATE //,
+        // NOTE_MANAGER_STATE
     };
 
     enum PoseSingals
@@ -169,8 +169,8 @@ private:
     wpi::log::StringLogEntry m_driveState;
     std::string m_currDriveState{""};
 
-    wpi::log::StringLogEntry m_noteMgrState;
-    std::string m_currNoteMgrState{""};
+    // wpi::log::StringLogEntry m_noteMgrState;
+    // std::string m_currNoteMgrState{""};
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose;
     frc::Pose2d m_currPose{};

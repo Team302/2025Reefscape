@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,7 +26,7 @@
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/SwerveChassis.h"
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "utils/logging/Logger.h"
 #include "utils/FMSData.h"
 
@@ -51,41 +51,44 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
         auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
         if (AutonUtils::IsValidPath(path))
         {
-            auto initialPose = path.get()->getPreviewStartingHolonomicPose();
-
-            auto vision = DragonVision::GetDragonVision();
-
-            auto visionPosition = vision->GetRobotPosition();
-            auto hasVisionPose = visionPosition.has_value();
-            auto initialRot = hasVisionPose ? visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees() : initialPose.Rotation().Degrees();
-
-            // use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
-            auto megaTag2Position = vision->GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0),
-                                                                     units::angle::degree_t(0.0),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0),
-                                                                     units::angle::degree_t(0.0),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0));
-
-            auto hasMegaTag2Position = megaTag2Position.has_value() && std::abs(chassis->GetRotationRateDegreesPerSecond()) < m_maxAngularVelocityDegreesPerSecond;
-
-            // Check to see if current post is within 1 meter (distanceThreshold) of path position (initialPose), if it is, don't reset pose
-            auto poseDiff = chassis->GetPose().Translation().Distance(initialPose.Translation());
-            bool poseNeedsUpdating = poseDiff > distanceThreshold;
-
-            if (poseNeedsUpdating)
+            auto initialPose = path.get()->getStartingHolonomicPose();
+            if (initialPose)
             {
-                if (hasMegaTag2Position)
+
+                auto vision = DragonVision::GetDragonVision();
+
+                auto visionPosition = vision->GetRobotPosition();
+                auto hasVisionPose = visionPosition.has_value();
+                auto initialRot = hasVisionPose ? visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees() : initialPose.value().Rotation().Degrees();
+
+                // use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
+                auto megaTag2Position = vision->GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
+                                                                         units::angular_velocity::degrees_per_second_t(0.0),
+                                                                         units::angle::degree_t(0.0),
+                                                                         units::angular_velocity::degrees_per_second_t(0.0),
+                                                                         units::angle::degree_t(0.0),
+                                                                         units::angular_velocity::degrees_per_second_t(0.0));
+
+                auto hasMegaTag2Position = megaTag2Position.has_value() && std::abs(chassis->GetRotationRateDegreesPerSecond()) < m_maxAngularVelocityDegreesPerSecond;
+
+                // Check to see if current post is within 1 meter (distanceThreshold) of path position (initialPose), if it is, don't reset pose
+                auto poseDiff = chassis->GetPose().Translation().Distance(initialPose.value().Translation());
+                bool poseNeedsUpdating = poseDiff > distanceThreshold;
+
+                if (poseNeedsUpdating)
                 {
-                    ResetPose(megaTag2Position.value().estimatedPose.ToPose2d());
-                }
-                else if (hasVisionPose)
-                {
-                    ResetPose(visionPosition.value().estimatedPose.ToPose2d());
-                }
-                else
-                {
-                    ResetPose(initialPose);
+                    if (hasMegaTag2Position)
+                    {
+                        ResetPose(megaTag2Position.value().estimatedPose.ToPose2d());
+                    }
+                    else if (hasVisionPose)
+                    {
+                        ResetPose(visionPosition.value().estimatedPose.ToPose2d());
+                    }
+                    else if (initialPose)
+                    {
+                        ResetPose(initialPose.value());
+                    }
                 }
             }
         }

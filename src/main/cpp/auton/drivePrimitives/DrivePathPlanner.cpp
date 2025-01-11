@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -36,18 +36,22 @@
 #include "chassis/driveStates/TrajectoryDrivePathPlanner.h"
 #include "configs/RobotConfig.h"
 #include "configs/RobotConfigMgr.h"
-#include "DragonVision/DragonVision.h"
-#include "mechanisms/base/StateMgr.h"
-#include "mechanisms/MechanismTypes.h"
+#include "vision/DragonVision.h"
+#include "state/StateMgr.h"
+// #include "mechanisms/MechanismTypes.h"
 #include "utils/FMSData.h"
 #include "utils/logging/Logger.h"
 #include "chassis/driveStates/RobotDrive.h"
 
 // third party includes
-#include "pathplanner/lib/path/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "pathplanner/lib/config/ModuleConfig.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
+#include "pathplanner/lib/config/RobotConfig.h"
 
-using namespace pathplanner;
+using pathplanner::ModuleConfig;
+using pathplanner::PathPlannerPath;
+using pathplanner::PathPlannerTrajectory;
 
 using namespace std;
 using namespace frc;
@@ -73,6 +77,16 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
     if (m_chassis != nullptr)
     {
+        auto swMod = m_chassis->GetFrontLeft();
+        if (swMod != nullptr)
+        {
+            m_moduleConfig = ModuleConfig(swMod->GetWheelDiameter() / 2.0,
+                                          swMod->GetMaxSpeed(),
+                                          swMod->GetCoefficientOfFriction(),
+                                          swMod->GetDriveMotorDef(),
+                                          swMod->GetDriveCurrentLimit(), 1);
+            m_robotConfig = pathplanner::RobotConfig(m_chassis->GetMass(), m_chassis->GetMomenOfInertia(), m_moduleConfig, m_chassis->GetTrack());
+        }
         m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
     }
 }
@@ -133,7 +147,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
-            m_trajectory = path.get()->getTrajectory(speed, pose.Rotation());
+            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_robotConfig);
         }
         else
         {
@@ -142,7 +156,7 @@ void DrivePathPlanner::InitMoveInfo()
     }
 
     auto endstate = m_trajectory.getEndState();
-    m_finalPose = endstate.getTargetHolonomicPose();
+    m_finalPose = endstate.pose;
     m_moveInfo.pathplannerTrajectory = m_trajectory;
     m_totalTrajectoryTime = m_trajectory.getTotalTime();
 }

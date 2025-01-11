@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -20,17 +20,18 @@
 #include <string>
 
 // FRC Includes
+#include "frc/filter/SlewRateLimiter.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/kinematics/SwerveModuleState.h"
+#include "frc/system/plant/DCMotor.h"
 #include "networktables/DoubleTopic.h"
 #include "networktables/NetworkTable.h"
 #include "units/angular_velocity.h"
+#include "units/dimensionless.h"
 #include "units/velocity.h"
 #include "utils/logging/LoggableItem.h"
-#include <frc/filter/SlewRateLimiter.h>
-#include <units/dimensionless.h>
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
@@ -39,7 +40,7 @@
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/CANcoder.hpp"
-#include "grpl/LaserCan.h"
+// #include "grpl/LaserCan.h"
 
 class SwerveModule : public LoggableItem
 {
@@ -90,17 +91,20 @@ public:
 
     /// @brief Return which module this is
     /// @returns SwerveModuleConstants.ModuleID
-    SwerveModuleConstants::ModuleID GetModuleID()
-    {
-        return m_moduleID;
-    }
+    SwerveModuleConstants::ModuleID GetModuleID() { return m_moduleID; }
+
+    frc::DCMotor GetDriveMotorDef() const { return m_driveMotorDef; }
+    frc::DCMotor GetTurnMotorDef() const { return m_turnMotorDef; }
     units::length::inch_t GetWheelDiameter() const { return m_wheelDiameter; }
     units::velocity::feet_per_second_t GetMaxSpeed() const { return m_maxSpeed; }
+    double GetCoefficientOfFriction() const { return m_coeffOfFriction; }
+    units::current::ampere_t GetDriveCurrentLimit() const { return m_driveTalon->GetStatorCurrent().GetValue(); }
+    units::current::ampere_t GetTurnCurrentLimit() const { return m_turnTalon->GetStatorCurrent().GetValue(); }
 
     void StopMotors();
     void LogInformation() override;
 
-    std::optional<uint16_t> GetLaserValue();
+    // std::optional<uint16_t> GetLaserValue();
 
 private:
     void InitDriveMotor(bool inverted);
@@ -112,6 +116,8 @@ private:
     void SetDriveSpeed(units::velocity::meters_per_second_t speed);
     void SetTurnAngle(units::angle::degree_t angle);
     void ReadConstants(std::string configfilename);
+    frc::DCMotor m_driveMotorDef = frc::DCMotor::KrakenX60FOC();
+    frc::DCMotor m_turnMotorDef = frc::DCMotor::KrakenX60FOC();
 
     SwerveModuleConstants::ModuleID m_moduleID;
     ctre::phoenix6::hardware::TalonFX *m_driveTalon;
@@ -147,10 +153,12 @@ private:
     double m_turnMaxAcc = 0.0;
     units::length::inch_t m_wheelDiameter = units::length::inch_t(4.0);
     units::velocity::feet_per_second_t m_maxSpeed = units::velocity::feet_per_second_t(17.3);
+    double m_coeffOfFriction = 0.9;
+
     bool m_velocityControlled = false;
     bool m_useFOC = false;
     std::string m_networkTableName;
 
-    void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
-    grpl::LaserCan *m_laserCan;
+    // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
+    // grpl::LaserCan *m_laserCan;
 };

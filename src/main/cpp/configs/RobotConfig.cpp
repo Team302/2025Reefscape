@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -24,17 +24,7 @@ RobotConfig::RobotConfig()
 void RobotConfig::BuildRobot()
 {
     DefineBuiltInControlItems();
-    DefineAnalogInputSensors();
-    DefineDigitalInputSensors();
-    DefineCANSensors();
-    DefineI2CSensors();
-    DefinePWMIO();
-    DefineMotorControllers();
-    DefineSolenoids();
-    DefineServos();
-
     DefineChassis();
-    DefineVisionSensors();
     DefineMechanisms();
     DefineLEDs();
 }
@@ -44,41 +34,6 @@ RobotConfig::~RobotConfig()
 }
 
 void RobotConfig::DefineBuiltInControlItems()
-{
-}
-
-void RobotConfig::DefineMotorControllers()
-{
-}
-
-void RobotConfig::DefineSolenoids()
-{
-}
-
-void RobotConfig::DefineServos()
-{
-}
-void RobotConfig::DefineCANSensors()
-{
-}
-
-void RobotConfig::DefineDigitalInputSensors()
-{
-}
-
-void RobotConfig::DefineAnalogInputSensors()
-{
-}
-
-void RobotConfig::DefinePWMIO()
-{
-}
-
-void RobotConfig::DefineI2CSensors()
-{
-}
-
-void RobotConfig::DefineVisionSensors()
 {
 }
 
@@ -99,31 +54,6 @@ SwerveChassis *RobotConfig::GetSwerveChassis() const
     return nullptr;
 }
 IChassis *RobotConfig::GetIChassis() const
-{
-    return nullptr;
-}
-
-IDragonMotorController *RobotConfig::GetMotorController(RobotElementNames::MOTOR_CONTROLLER_USAGE usage)
-{
-    return nullptr;
-}
-
-DragonSolenoid *RobotConfig::GetSolenoid(RobotElementNames::SOLENOID_USAGE usage)
-{
-    return nullptr;
-}
-
-DragonServo *RobotConfig::GetServo(RobotElementNames::SERVO_USAGE usage)
-{
-    return nullptr;
-}
-
-DragonCanCoder *RobotConfig::GetCanCoder(RobotElementNames::CANCODER_USAGE usage)
-{
-    return nullptr;
-}
-
-IDragonPigeon *RobotConfig::GetPigeon(RobotElementNames::PIGEON_USAGE usage)
 {
     return nullptr;
 }

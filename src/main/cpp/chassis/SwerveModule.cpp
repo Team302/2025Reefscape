@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,8 +31,6 @@
 #include "chassis/SwerveChassis.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
-#include "hw/DragonCanCoder.h"
-#include "mechanisms/controllers/ControlData.h"
 #include "utils/AngleUtils.h"
 #include "utils/logging/Logger.h"
 
@@ -40,6 +38,8 @@
 #include "ctre/phoenix6/CANcoder.hpp"
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "pugixml/pugixml.hpp"
+#include "units/current.h"
+#include "units/voltage.h"
 
 using namespace std;
 using namespace frc;
@@ -58,7 +58,6 @@ using ctre::phoenix6::controls::PositionVoltage;
 using ctre::phoenix6::controls::VelocityTorqueCurrentFOC;
 using ctre::phoenix6::hardware::CANcoder;
 using ctre::phoenix6::hardware::TalonFX;
-using ctre::phoenix6::signals::AbsoluteSensorRangeValue;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::NeutralModeValue;
@@ -163,7 +162,8 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     // finally, get the value between -90 and 90
     units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
-    m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
+    // m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
+    m_optimizedState.Optimize(currAngle);
     // m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
 
     m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
@@ -299,8 +299,8 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
 
         configs::TalonFXConfiguration configs{};
 
-        configs.Voltage.PeakForwardVoltage = 10.0;
-        configs.Voltage.PeakReverseVoltage = -10.0;
+        configs.Voltage.PeakForwardVoltage = units::volt_t(10.0);
+        configs.Voltage.PeakReverseVoltage = units::volt_t(-10.0);
 
         /// TO DO : Need code gen updates to be able to be implemented
         configs.Slot0.kS = m_driveKs; // To account for friction, static feedforward
@@ -314,12 +314,12 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
         configs.MotorOutput.PeakReverseDutyCycle = -1.0;
         configs.MotorOutput.DutyCycleNeutralDeadband = 0.0;
 
-        configs.CurrentLimits.StatorCurrentLimit = 80.0;
+        configs.CurrentLimits.StatorCurrentLimit = units::ampere_t(80.0);
         configs.CurrentLimits.StatorCurrentLimitEnable = true;
-        configs.CurrentLimits.SupplyCurrentLimit = 60.0;
+        configs.CurrentLimits.SupplyCurrentLimit = units::ampere_t(60.0);
         configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        configs.CurrentLimits.SupplyCurrentThreshold = 80.0;
-        configs.CurrentLimits.SupplyTimeThreshold = 0.15;
+        configs.CurrentLimits.SupplyCurrentLowerLimit = units::ampere_t(80.0); // TODO Double check
+        configs.CurrentLimits.SupplyCurrentLowerTime = units::second_t(0.15);  // TODO Double check
         configs.Feedback.SensorToMechanismRatio = m_gearRatio;
 
         m_driveTalon->GetConfigurator().Apply(configs);
@@ -336,8 +336,6 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
         {
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "SwerveModule::InitDriveMotor", string("Could not apply configs, error code"), status.GetName());
         }
-
-        m_driveTalon->SetInverted(driveInverted);
     }
 }
 
@@ -360,17 +358,17 @@ void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
         fxconfigs.MotorOutput.PeakReverseDutyCycle = -1.0;
         fxconfigs.MotorOutput.DutyCycleNeutralDeadband = 0.0;
 
-        fxconfigs.Voltage.PeakForwardVoltage = 10.0;
-        fxconfigs.Voltage.PeakReverseVoltage = -10.0;
+        fxconfigs.Voltage.PeakForwardVoltage = units::volt_t(10.0);
+        fxconfigs.Voltage.PeakReverseVoltage = units::volt_t(-10.0);
 
         // Peak output of 120 amps
-        fxconfigs.TorqueCurrent.PeakForwardTorqueCurrent = 120;
-        fxconfigs.TorqueCurrent.PeakReverseTorqueCurrent = -120;
+        fxconfigs.TorqueCurrent.PeakForwardTorqueCurrent = units::ampere_t(120.0);  // TODO check this
+        fxconfigs.TorqueCurrent.PeakReverseTorqueCurrent = units::ampere_t(-120.0); // TODO check this
 
-        fxconfigs.CurrentLimits.SupplyCurrentLimit = 60.0;
+        fxconfigs.CurrentLimits.SupplyCurrentLimit = units::ampere_t(60.0);
         fxconfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        fxconfigs.CurrentLimits.SupplyCurrentThreshold = 80.0;
-        fxconfigs.CurrentLimits.SupplyTimeThreshold = 0.15;
+        // fxconfigs.CurrentLimits.SupplyCurrentThreshold = units::ampere_t(80.0); // TODO check this
+        // fxconfigs.CurrentLimits.SupplyTimeThreshold = units::second_t(0.15);  // TODO check this
 
         fxconfigs.Slot0.kP = m_turnKp;
         fxconfigs.Slot0.kI = m_turnKi;
@@ -385,14 +383,12 @@ void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
         fxconfigs.Feedback.RotorToSensorRatio = attrs.rotorToSensorRatio;
         m_turnTalon->GetConfigurator().Apply(fxconfigs);
 
-        m_turnTalon->SetInverted(turnInverted);
-
         CANcoderConfiguration ccConfigs{};
         m_turnCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
 
-        ccConfigs.MagnetSensor.MagnetOffset = angleOffset;
+        ccConfigs.MagnetSensor.MagnetOffset = units::angle::degree_t(angleOffset);
         ccConfigs.MagnetSensor.SensorDirection = canCoderInverted ? SensorDirectionValue::Clockwise_Positive : SensorDirectionValue::CounterClockwise_Positive;
-        ccConfigs.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
+        ccConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = units::degree_t(180.0);
 
         m_turnCancoder->GetConfigurator().Apply(ccConfigs);
     }
@@ -504,6 +500,7 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
     }
 }
 
+/**
 void SwerveModule::DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget)
 {
     m_laserCan = new grpl::LaserCan(m_driveTalon->GetDeviceID());
@@ -524,3 +521,4 @@ std::optional<uint16_t> SwerveModule::GetLaserValue()
         return distance.value().distance_mm;
     }
 }
+**/

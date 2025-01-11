@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -23,10 +23,9 @@
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-#include "mechanisms/MechanismTypes.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
+// #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
+// #include "mechanisms/MechanismTypes.h"
+// #include "mechanisms/noteManager/generated/noteManagerGen.h"
 #include "utils/logging/Logger.h"
 
 #include <pugixml/pugixml.hpp>
@@ -137,11 +136,11 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
-                    auto noteStates = noteManagerGen::STATE_OFF;
-                    bool changeNoteState = false;
-                    auto climberState = ClimberManagerGen::STATE_OFF;
-                    bool changeClimberState = false;
-                    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+                    // auto noteStates = noteManagerGen::STATE_OFF;
+                    // bool changeNoteState = false;
+                    // auto climberState = ClimberManagerGen::STATE_OFF;
+                    // bool changeClimberState = false;
+                    // auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
@@ -224,6 +223,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
+                        /**
                         else if (strcmp(attr.name(), "noteOption") == 0)
                         {
                             if (config != nullptr && config->GetMechanism(MechanismTypes::NOTE_MANAGER) != nullptr)
@@ -248,6 +248,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 }
                             }
                         }
+                        **/
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
                             auto visionAlignmentItr = xmlStringToVisionAlignmentEnumMap.find(attr.value());
@@ -291,10 +292,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      zones, // vector of all zones included as part of the path
                                                                             // can have multiple zones as part of a complex path
                                                                      visionAlignment,
-                                                                     changeNoteState,
-                                                                     noteStates,
-                                                                     changeClimberState,
-                                                                     climberState,
+                                                                     // changeNoteState,
+                                                                     // noteStates,
+                                                                     // changeClimberState,
+                                                                     // climberState,
                                                                      updateHeadingOption));
                     }
                     else
@@ -329,10 +330,10 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Path Name"), param->GetPathName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
-        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
-        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
-        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));
-        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber state"), param->GetClimberState());
+        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
+        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
+        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));
+        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber state"), param->GetClimberState());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("num zones"), (double)param->GetZones().size());
 
         slot++;

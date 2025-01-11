@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,14 +29,14 @@
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "State.h"
+#include "state/State.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/FMSData.h"
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "utils/logging/Logger.h"
-#include "chassis/driveStates/DriveToNote.h"
-#include "mechanisms/noteManager/decoratormods/noteManager.h"
+// #include "chassis/driveStates/DriveToNote.h"
+// #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using std::string;
 using namespace frc;
@@ -113,7 +113,8 @@ void HolonomicDrive::Run()
 
         // teleop buttons to check for mode changes
         auto isResetPoseSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
-        auto isAlignGamePieceSelected = controller->IsButtonPressed(TeleopControlFunctions::DRIVE_TO_NOTE);
+        // auto isAlignGamePieceSelected = controller->IsButtonPressed(TeleopControlFunctions::DRIVE_TO_NOTE);
+        auto isAlignGamePieceSelected = false;
         auto isRobotOriented = controller->IsButtonPressed(TeleopControlFunctions::CLIMB_MODE) || controller->IsButtonPressed(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
         auto isAlignWithSpeakerSelected = controller->IsButtonPressed(TeleopControlFunctions::AUTO_SPEAKER);
         auto isAlignWithStageSelected = controller->IsButtonPressed(TeleopControlFunctions::AUTO_STAGE);
@@ -292,7 +293,7 @@ void HolonomicDrive::HoldPosition()
 }
 void HolonomicDrive::DriveToGamePiece(double forward, double strafe, double rot)
 {
-
+    /**
     StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
     auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
     if (!noteMgr->HasNote() && abs(forward) < 0.2 && abs(strafe) < 0.2 && abs(rot) < 0.2)
@@ -302,9 +303,10 @@ void HolonomicDrive::DriveToGamePiece(double forward, double strafe, double rot)
     }
     else
     {
-        m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
-        m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
-    }
+    **/
+    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+    //}
 }
 void HolonomicDrive::TurnForward()
 {

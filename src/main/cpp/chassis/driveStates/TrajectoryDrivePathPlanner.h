@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,7 +26,8 @@
 
 // Third party includes
 #include "pathplanner/lib/path/PathPlannerPath.h"
-#include "pathplanner/lib/path/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
 #include "pathplanner/lib/controllers/PPHolonomicDriveController.h"
 
 class TrajectoryDrivePathPlanner : public RobotDrive
@@ -53,13 +54,13 @@ private:
     bool IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
     void LogPose(frc::Pose2d pose) const;
-    void LogState(pathplanner::PathPlannerTrajectory::State state) const;
+    void LogState(pathplanner::PathPlannerTrajectoryState state) const;
     pathplanner::PathPlannerTrajectory m_trajectory;
     RobotDrive *m_robotDrive;
     pathplanner::PPHolonomicDriveController m_longpathHolonomicController;
     pathplanner::PPHolonomicDriveController m_shortpathHolonomicController;
-    std::vector<pathplanner::PathPlannerTrajectory::State> m_trajectoryStates;
-    pathplanner::PathPlannerTrajectory::State m_finalState = pathplanner::PathPlannerTrajectory::State();
+    std::vector<pathplanner::PathPlannerTrajectoryState> m_trajectoryStates;
+    pathplanner::PathPlannerTrajectoryState m_finalState = pathplanner::PathPlannerTrajectoryState();
     frc::Pose2d m_prevPose;
     bool m_wasMoving;
     frc::Transform2d m_delta;

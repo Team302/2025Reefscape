@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -566,6 +566,7 @@ void SwerveChassis::ReadConstants(string configfilename)
     }
 }
 
+/**
 void SwerveChassis::DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget)
 {
     m_laserCan = new grpl::LaserCan(m_pigeon->GetDeviceID());
@@ -586,3 +587,4 @@ std::optional<uint16_t> SwerveChassis::GetLaserValue()
         return distance.value().distance_mm;
     }
 }
+**/

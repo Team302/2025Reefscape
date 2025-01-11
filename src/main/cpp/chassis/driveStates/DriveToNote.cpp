@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -23,14 +23,14 @@
 #include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/driveStates/DriveToNote.h"
 #include "utils/FMSData.h"
-#include "DragonVision/DragonVisionStructs.h"
-#include "DragonVision/DragonVisionStructLogger.h"
+#include "vision/DragonVisionStructs.h"
+#include "vision/DragonVisionStructLogger.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "mechanisms/noteManager/decoratormods/noteManager.h"
+// #include "mechanisms/noteManager/decoratormods/noteManager.h"
 #include "chassis/SwerveChassis.h"
 
 #include "utils/logging/Logger.h"
@@ -75,10 +75,10 @@ void DriveToNote::InitFromTrajectory(ChassisMovement &chassisMovement, pathplann
 
 pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNote()
 {
-
+    pathplanner::PathPlannerTrajectory trajectory;
+    /**
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    pathplanner::PathPlannerTrajectory trajectory;
 
     if (chassis != nullptr)
     {
@@ -91,10 +91,13 @@ pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNote()
         }
     }
     return trajectory;
+    **/
+    return trajectory;
 }
 pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNoteTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
     pathplanner::PathPlannerTrajectory trajectory;
+    /**
     std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
 
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
@@ -107,10 +110,13 @@ pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNoteTrajectory(frc:
     notepath->preventFlipping = true;
 
     return notepath->getTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation());
+`   **/
+    return trajectory;
 }
 
 bool DriveToNote::IsDone()
 {
+    /**
     auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
     if (config != nullptr)
     {
@@ -129,5 +135,6 @@ bool DriveToNote::IsDone()
             }
         }
     }
+    **/
     return false;
 }

@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -29,7 +29,11 @@
 #include "chassis/DragonDriveTargetFinder.h"
 #include "chassis/driveStates/DriveToNote.h"
 
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
+
 using frc::Pose2d;
+using pathplanner::PathPlannerTrajectoryState;
 using std::string;
 
 TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
@@ -38,13 +42,13 @@ TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) :
                                                                                  // TODO need to tune this also update radius as it is probably wrong
                                                                                  m_longpathHolonomicController(pathplanner::PIDConstants(1.45, 0.5, 0.0), //(1.95, 0.95, 0.0)
                                                                                                                pathplanner::PIDConstants(2.5, 2.0, 0.0),
-                                                                                                               robotDrive->GetChassis()->GetMaxSpeed(),
-                                                                                                               units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
+                                                                                                               // robotDrive->GetChassis()->GetMaxSpeed(),
+                                                                                                               // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                units::time::second_t(0.02)),
                                                                                  m_shortpathHolonomicController(pathplanner::PIDConstants(1.5, 0.65, 0.0),
                                                                                                                 pathplanner::PIDConstants(2.5, 2.0, 0.0),
-                                                                                                                robotDrive->GetChassis()->GetMaxSpeed(),
-                                                                                                                units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
+                                                                                                                // robotDrive->GetChassis()->GetMaxSpeed(),
+                                                                                                                // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                 units::time::second_t(0.02)),
                                                                                  m_trajectoryStates(),
                                                                                  m_prevPose(),
@@ -89,7 +93,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
     }
     if (!m_trajectoryStates.empty()) // If we have a path parsed / have states to run
     {
-        if (m_trajectory.getInitialTargetHolonomicPose() != chassisMovement.pathplannerTrajectory.getInitialTargetHolonomicPose())
+        if (m_trajectory.getInitialPose() != chassisMovement.pathplannerTrajectory.getInitialPose())
         {
             Init(chassisMovement);
         }
@@ -100,7 +104,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
 
         if (type == DragonDriveTargetFinder::TARGET_INFO::VISION_BASED && chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE)
         {
-            frc::Pose2d currentTargetPos = m_trajectory.getEndState().getTargetHolonomicPose();
+            frc::Pose2d currentTargetPos = m_trajectory.getEndState().pose;
             units::length::meter_t distance = currentTargetPos.Translation().Distance(newNotePos.Translation());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "New Note Distance", distance.to<double>());
         }
@@ -155,11 +159,11 @@ bool TrajectoryDrivePathPlanner::IsDone()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Y", currentPose.Y().value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Rotation", currentPose.Rotation().Degrees().value());
 
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose X", m_finalState.getTargetHolonomicPose().X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.getTargetHolonomicPose().Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.getTargetHolonomicPose().Rotation().Degrees().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose X", m_finalState.pose.X().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.pose.Y().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.pose.Rotation().Degrees().value());
 
-            isDone = IsSamePose(currentPose, m_finalState.getTargetHolonomicPose(), m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5);
+            isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5);
         }
     }
     else
@@ -221,7 +225,7 @@ void TrajectoryDrivePathPlanner::LogPose(Pose2d pose) const
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "Target Y", pose.Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "Target Angle", pose.Rotation().Degrees().to<double>());
 }
-void TrajectoryDrivePathPlanner::LogState(pathplanner::PathPlannerTrajectory::State state) const
+void TrajectoryDrivePathPlanner::LogState(PathPlannerTrajectoryState state) const
 {
-    LogPose(state.getTargetHolonomicPose());
+    LogPose(state.pose);
 }

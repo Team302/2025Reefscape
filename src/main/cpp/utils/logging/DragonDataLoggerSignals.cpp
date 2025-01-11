@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -32,6 +32,7 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
 {
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
+    /**
     m_hasVision = wpi::log::BooleanLogEntry(log, "/NoteManager/HasVision");
     m_hasVision.Append(m_currHasVision);
 
@@ -55,11 +56,14 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
 
     m_placerOutSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/PlacerOutSensor");
     m_placerOutSensor.Append(m_currPlacerOutSensor);
+    **/
 
     m_storedHeading = wpi::log::DoubleLogEntry(log, "/Chassis/StoredHeading(Degrees)");
     m_storedHeading.Append(m_currStoredHeading);
     m_chassisYaw = wpi::log::DoubleLogEntry(log, "/Chassis/Yaw(Degrees)");
     m_chassisYaw.Append(m_currChassisYaw);
+
+    /**
     m_nmTargetAngle = wpi::log::DoubleLogEntry(log, "/NoteManager/TargetAngle(Degrees)");
     m_nmTargetAngle.Append(m_currNmTargetAngle);
     m_nmActualAngle = wpi::log::DoubleLogEntry(log, "/NoteManager/ActualAngle(Degrees)");
@@ -74,13 +78,14 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_nmBottomActual.Append(m_currNmBottomActual);
     m_distFromSpeaker = wpi::log::DoubleLogEntry(log, "/NoteManager/DistanceFromSpeaker(Meters)");
     m_distFromSpeaker.Append(m_currDistFromSpeaker);
+    **/
 
     m_headingState = wpi::log::StringLogEntry(log, "/Chassis/HeadingState");
     m_headingState.Append(m_currHeadingState);
     m_driveState = wpi::log::StringLogEntry(log, "/Chassis/DriveState");
     m_driveState.Append(m_currDriveState);
-    m_noteMgrState = wpi::log::StringLogEntry(log, "/NoteManager/State");
-    m_noteMgrState.Append(m_currNoteMgrState);
+    // m_noteMgrState = wpi::log::StringLogEntry(log, "/NoteManager/State");
+    // m_noteMgrState.Append(m_currNoteMgrState);
 
     m_pose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Chassis/Pose");
     m_pose.Append(m_currPose);

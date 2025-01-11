@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -34,9 +34,12 @@
 #include "auton/PrimitiveParser.h"
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "utils/logging/Logger.h"
+#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/SwerveChassis.h"
+#include "chassis/SwerveModule.h"
 
 // Thirdparty includes
-#include "pathplanner/lib/path/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
 
 using namespace pathplanner;
@@ -83,34 +86,52 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
 
     Rotation2d heading(units::angle::degree_t(0.0));
 
-    auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
-    for (auto param : params)
+    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+
+    if (chassis != nullptr)
     {
-        std::vector<Trajectory::State> states;
-
-        if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER && false)
+        auto swMod = chassis->GetFrontLeft();
+        if (swMod != nullptr)
         {
-            auto pathname = param->GetPathName();
-            auto path = AutonUtils::GetPathFromPathFile(pathname);
-            if (AutonUtils::IsValidPath(path))
+            auto moduleConfig = ModuleConfig(swMod->GetWheelDiameter() / 2.0,
+                                             swMod->GetMaxSpeed(),
+                                             swMod->GetCoefficientOfFriction(),
+                                             swMod->GetDriveMotorDef(),
+                                             swMod->GetDriveCurrentLimit(), 1);
+            auto robotConfig = pathplanner::RobotConfig(chassis->GetMass(), chassis->GetMomenOfInertia(), moduleConfig, chassis->GetTrack());
+
+            auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
+
+            for (auto param : params)
             {
-                auto pptrajectory = path.get()->getTrajectory(speeds, heading);
-                auto endstate = pptrajectory.getEndState();
-                heading = endstate.heading;
-                speeds.vx = endstate.velocity * heading.Cos();
-                speeds.vy = endstate.velocity * heading.Sin();
+                std::vector<Trajectory::State> states;
 
-                auto ppstates = pptrajectory.getStates();
-                for (auto ppstate : ppstates)
+                if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER && false)
                 {
-                    Trajectory::State state;
-                    state.t = ppstate.time;
-                    state.acceleration = ppstate.acceleration;
-                    state.velocity = ppstate.velocity;
-                    state.pose = ppstate.getTargetHolonomicPose();
-                    state.curvature = ppstate.curvature;
+                    auto pathname = param->GetPathName();
+                    auto path = AutonUtils::GetPathFromPathFile(pathname);
+                    if (AutonUtils::IsValidPath(path))
+                    {
+                        auto trajectory = path.get()->generateTrajectory(speeds, chassis->GetPose().Rotation(), robotConfig);
+                        auto endstate = trajectory.getEndState();
+                        heading = endstate.heading;
+                        speeds.vx = endstate.linearVelocity * heading.Cos();
+                        speeds.vy = endstate.linearVelocity * heading.Sin();
 
-                    states.emplace_back(state);
+                        auto ppstates = trajectory.getStates();
+                        for (auto ppstate : ppstates)
+                        {
+                            Trajectory::State state;
+                            state.t = ppstate.time;
+                            state.acceleration = ppstate.constraints.getMaxAcceleration();
+                            state.velocity = ppstate.linearVelocity;
+                            state.pose = ppstate.pose;
+                            state.curvature = units::curvature_t(0.1); // ppstate.constraints. curvature;
+
+                            states.emplace_back(state);
+                        }
+                    }
                 }
             }
         }

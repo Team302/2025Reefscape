@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,7 +31,6 @@
 #include "chassis/ChassisMovement.h"
 #include "configs/RobotConfig.h"
 #include "configs/RobotConfigMgr.h"
-#include "mechanisms/controllers/ControlModes.h"
 #include "utils/logging/Logger.h"
 
 // Third Party Includes
@@ -55,8 +54,8 @@ DriveStop::DriveStop() : IPrimitive(),
 	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
 	// get reference to notemanager in drivestop to check for state
-	StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-	m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
+	// StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
+	// m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
 }
 
 /// @brief initialize this usage of the primitive
@@ -99,6 +98,7 @@ bool DriveStop::IsDone()
 
 	// if note manager is in a launch mode,
 	// don't end the drive stop state as we haven't launched yet
+	/**
 	if (m_noteManager != nullptr)
 	{
 		if ((m_noteManager->GetCurrentState() == noteManagerGen::STATE_AUTO_LAUNCH) || (m_noteManager->GetCurrentState() == noteManagerGen::STATE_MANUAL_LAUNCH))
@@ -107,5 +107,6 @@ bool DriveStop::IsDone()
 				return false;
 		}
 	}
+	**/
 	return m_timer->AdvanceIfElapsed(m_maxTime);
 }

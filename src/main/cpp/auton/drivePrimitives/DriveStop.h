@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -25,7 +25,7 @@
 // Team 302 includes
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/SwerveChassis.h"
-#include "mechanisms/noteManager/decoratormods/noteManager.h"
+// #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 // Third Party Includes
 
@@ -70,6 +70,6 @@ private:
 	SwerveChassis *m_chassis;
 	std::unique_ptr<frc::Timer> m_timer;
 	double m_heading;
-	noteManager *m_noteManager;
+	// noteManager *m_noteManager;
 	ChassisOptionEnums::HeadingOption m_headingOption;
 };

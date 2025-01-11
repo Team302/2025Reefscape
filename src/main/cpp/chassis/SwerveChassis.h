@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,9 +27,11 @@
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"
+#include "units/mass.h"
+#include "units/moment_of_inertia.h"
 #include "units/velocity.h"
 #include "wpi/DataLog.h"
-#include "grpl/LaserCan.h"
+// #include "grpl/LaserCan.h"
 
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/driveStates/ISwerveDriveState.h"
@@ -37,7 +39,7 @@
 #include "chassis/IChassis.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/ChassisMovement.h"
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/LoggableItem.h"
 
@@ -113,7 +115,7 @@ public:
 
     // Dummy functions for IChassis Implementation
     inline IChassis::CHASSIS_TYPE GetType() const override { return IChassis::CHASSIS_TYPE::SWERVE; };
-    inline void Initialize() override{};
+    inline void Initialize() override {};
 
     void SetTargetHeading(units::angle::degree_t targetYaw) override;
 
@@ -124,12 +126,15 @@ public:
     ISwerveDriveState *GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType driveOption);
 
     bool IsRotating() const { return m_isRotating; }
-    double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetRate() : 0.0; }
+    double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     units::velocity::meters_per_second_t GetInertialVelocity();
     void LogInformation() override;
     void DataLog() override;
 
-    std::optional<uint16_t> GetLaserValue();
+    units::mass::kilogram_t GetMass() const { return m_mass; }
+    units::moment_of_inertia::kilogram_square_meter_t GetMomenOfInertia() const { return m_momentOfInertia; }
+
+    // std::optional<uint16_t> GetLaserValue();
 
 private:
     ISwerveDriveOrientation *GetHeadingState(const ChassisMovement &moveInfo);
@@ -183,8 +188,11 @@ private:
     DragonVision *m_vision;
     std::array<frc::SwerveModuleState, 4U> m_targetStates;
 
+    units::mass::kilogram_t m_mass = units::mass::kilogram_t(52.0);                                                                // TODO put a real value in
+    units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
+
     frc::Timer m_velocityTimer;
 
-    grpl::LaserCan *m_laserCan = nullptr;
-    void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
+    // grpl::LaserCan *m_laserCan = nullptr;
+    // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
 };

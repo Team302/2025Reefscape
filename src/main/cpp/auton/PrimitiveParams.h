@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -26,11 +26,8 @@
 // Team 302 includes
 #include "auton/PrimitiveEnums.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
-// @ADDMECH include for your mechanism
 
 // Third Party Includes
 
@@ -53,10 +50,10 @@ public:
                     ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
                     VISION_ALIGNMENT visionAlignment,
-                    bool changeNoteState,
-                    noteManagerGen::STATE_NAMES noteState,
-                    bool changeClimberState,
-                    ClimberManagerGen::STATE_NAMES climberState,
+                    // bool changeNoteState,
+                    // noteManagerGen::STATE_NAMES noteState,
+                    // bool changeClimberState,
+                    // ClimberManagerGen::STATE_NAMES climberState,
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption); // create zones parameter of type ZonesParamsVector
 
     PrimitiveParams() = delete;
@@ -74,11 +71,11 @@ public:
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
     ChassisOptionEnums::PathUpdateOption GetPathUpdateOption() const { return m_pathUpdateOption; }
 
-    bool IsNoteStateChanging() const { return m_changeNoteState; }
-    noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
+    // bool IsNoteStateChanging() const { return m_changeNoteState; }
+    // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
 
-    bool IsClimberStateChanging() const { return m_changeClimberState; }
-    ClimberManagerGen::STATE_NAMES GetClimberState() const { return m_climberState; }
+    // bool IsClimberStateChanging() const { return m_changeClimberState; }
+    // ClimberManagerGen::STATE_NAMES GetClimberState() const { return m_climberState; }
 
     // Setters
     void SetPathName(std::string path) { m_pathName = path; }
@@ -94,10 +91,10 @@ private:
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
-    bool m_changeNoteState;
-    noteManagerGen::STATE_NAMES m_noteState;
-    bool m_changeClimberState;
-    ClimberManagerGen::STATE_NAMES m_climberState;
+    // bool m_changeNoteState;
+    // noteManagerGen::STATE_NAMES m_noteState;
+    // bool m_changeClimberState;
+    // ClimberManagerGen::STATE_NAMES m_climberState;
     ZoneParamsVector m_zones;
     ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
 };

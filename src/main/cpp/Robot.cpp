@@ -15,12 +15,10 @@
 #include "chassis/SwerveChassis.h"
 #include "configs/RobotConfig.h"
 #include "configs/RobotConfigMgr.h"
-#include "driveteamfeedback/DriverFeedback.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
+#include "feedback/DriverFeedback.h"
 #include "PeriodicLooper.h"
 #include "Robot.h"
-#include "robotstate/RobotState.h"
+#include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
 #include "utils/logging/DragonDataLoggerMgr.h"
@@ -28,7 +26,7 @@
 #include "utils/logging/Logger.h"
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
-#include "DragonVision/DragonVision.h"
+#include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
 
 using std::string;
@@ -153,34 +151,6 @@ void Robot::TeleopInit()
         m_holonomic->Init();
     }
 
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
-
-    if (config != nullptr)
-    {
-        auto stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-        auto noteMgr = stateMgr != nullptr ? dynamic_cast<noteManagerGen *>(stateMgr) : nullptr;
-
-        if (noteMgr != nullptr)
-        {
-            bool allSensorsOff = ((!noteMgr->getfeederSensor()->Get()) &&
-                                  (!noteMgr->getlauncherSensor()->Get()) &&
-                                  (!noteMgr->getplacerInSensor()->Get()) &&
-                                  (!noteMgr->getplacerMidSensor()->Get()) &&
-                                  (!noteMgr->getplacerOutSensor()->Get()) &&
-                                  (!noteMgr->getbackIntakeSensor()->Get()) &&
-                                  (!noteMgr->getfrontIntakeSensor()->Get()));
-            if (stateMgr != nullptr && allSensorsOff)
-            {
-                stateMgr->SetCurrentState(noteManagerGen::STATE_NAMES::STATE_READY, true);
-            }
-        }
-        auto climberMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER);
-        if (climberMgr != nullptr)
-        {
-            climberMgr->SetCurrentState(ClimberManagerGen::STATE_NAMES::STATE_HOLD, true);
-        }
-    }
-
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 
     if (!isFMSAttached)
@@ -294,6 +264,7 @@ void Robot::LogSensorData()
 
     if (config != nullptr)
     {
+        /**
         auto stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
         auto noteMgr = stateMgr != nullptr ? dynamic_cast<noteManagerGen *>(stateMgr) : nullptr;
         if (noteMgr != nullptr)
@@ -310,6 +281,7 @@ void Robot::LogSensorData()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerOut"), noteMgr->getplacerOutSensor()->Get());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerHomeSwitch"), noteMgr->getPlacer()->IsReverseLimitSwitchClosed());
         }
+        **/
     }
 }
 
@@ -319,30 +291,7 @@ void Robot::LogMotorData()
 
     if (config != nullptr)
     {
-        auto stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-        auto noteMgr = stateMgr != nullptr ? dynamic_cast<noteManagerGen *>(stateMgr) : nullptr;
-        if (noteMgr != nullptr)
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ("MotorDiagnosticsIntake"), string("Front Intake"), noteMgr->getfrontIntake()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsIntake"), string("Back Intake"), noteMgr->getbackIntake()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsIntake"), string("Transfer"), noteMgr->getTransfer()->GetCounts());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsPlacer"), string("Elevator"), noteMgr->getElevator()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsPlacer"), string("Placer"), noteMgr->getPlacer()->GetCounts());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsLauncher"), string("Feeder"), noteMgr->getFeeder()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsLauncher"), string("Launcher angle"), units::angle::degree_t(noteMgr->getlauncherAngleEncoder()->GetAbsolutePosition()).value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsLauncher"), string("Launcher top"), noteMgr->getlauncherTop()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsLauncher"), string("Launcher bottom"), noteMgr->getlauncherBottom()->GetCounts());
-        }
-
-        stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER);
-        auto climberMgr = stateMgr != nullptr ? dynamic_cast<ClimberManagerGen *>(stateMgr) : nullptr;
-        if (climberMgr != nullptr)
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsClimber"), string("Left climber"), climberMgr->getleftClimber()->GetCounts());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("MotorDiagnosticsClimber"), string("Right climber"), climberMgr->getrightClimber()->GetCounts());
-        }
+        // TODO implement mechanism states logging
     }
 }
 

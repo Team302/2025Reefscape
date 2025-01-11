@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -17,7 +17,7 @@
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParams.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
+// #include "mechanisms/noteManager/generated/noteManagerGen.h"
 
 // @ADDMECH include for your mechanism state mgr
 
@@ -26,15 +26,15 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 					   AutonGrid::YGRID ygrid1,
 					   AutonGrid::XGRID xgrid2,
 					   AutonGrid::YGRID ygrid2,
-					   bool isNoteStateChanging,
-					   noteManagerGen::STATE_NAMES noteoption,
+					   // bool isNoteStateChanging,
+					   // noteManagerGen::STATE_NAMES noteoption,
 					   ChassisOptionEnums::AutonChassisOptions autonchassisoption,
 					   ChassisOptionEnums::AutonAvoidOptions autonavoidoption) : m_xgrid1(xgrid1),
 																				 m_ygrid1(ygrid1),
 																				 m_xgrid2(xgrid2),
 																				 m_ygrid2(ygrid2),
-																				 m_isNoteStateChanging(isNoteStateChanging),
-																				 m_noteoption(noteoption),
+																				 // m_isNoteStateChanging(isNoteStateChanging),
+																				 // m_noteoption(noteoption),
 																				 m_chassisoption(autonchassisoption),
 																				 m_avoidoption(autonavoidoption)
 {

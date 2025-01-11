@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,6 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/configs/ChassisConfig.h"
-#include "mechanisms/controllers/ControlModes.h"
 
 // Third Party Includes
 
@@ -47,25 +46,6 @@ void DriveHoldPosition::Init(PrimitiveParams *params)
 
 	// Get timeRemaining from m_params
 	m_timeRemaining = params->GetTime();
-	auto cd = make_shared<ControlData>(ControlModes::CONTROL_TYPE::POSITION_INCH,
-									   ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER,
-									   string("DriveHoldPosition"),
-									   10.0,
-									   0.0,
-									   0.0,
-									   0.0,
-									   ControlData::FEEDFORWARD_TYPE::DUTY_CYCLE,
-									   0.0,
-									   0.0,
-									   0.0,
-									   1.0,
-									   0.0,
-									   false);
-	// m_chassis->SetControlConstants( cd.get() );
-	// auto left = m_chassis->GetCurrentLeftPosition();
-	// auto right = m_chassis->GetCurrentRightPosition();
-
-	// m_chassis->SetOutput( ControlModes::CONTROL_TYPE::POSITION_INCH, left, right );
 }
 
 void DriveHoldPosition::Run()

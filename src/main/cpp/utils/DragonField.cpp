@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -67,14 +67,13 @@ void DragonField::ResetField()
 
 void DragonField::UpdateObject(std::string name, frc::Pose2d object)
 {
-    frc::FieldObject2d* fieldObject = m_field.GetObject(name);
+    frc::FieldObject2d *fieldObject = m_field.GetObject(name);
     fieldObject->SetPose(object);
-     
 }
 
 void DragonField::UpdateObjectVisionPose(std::string name, std::optional<VisionPose> visionPose)
 {
-    frc::FieldObject2d* fieldObject = m_field.GetObject(name);
+    frc::FieldObject2d *fieldObject = m_field.GetObject(name);
     if (visionPose.has_value())
     {
         frc::Pose3d pose3d = visionPose.value().estimatedPose;

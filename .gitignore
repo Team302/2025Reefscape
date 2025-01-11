@@ -19,7 +19,6 @@
 *.so
 *.dylib
 *.dll
-!codeGenerator/tool/*.dll
 
 # Fortran module files
 *.mod
@@ -33,9 +32,6 @@
 
 # Executables
 *.exe
-!DataTrace/*.exe
-!codeGenerator/tool/*.exe
-!codeGenerator/src/XSD_to_CSharp/*.exe
 *.out
 *.app
 
@@ -57,7 +53,7 @@
 *.war
 *.nar
 *.ear
-#*.zip - removed for photonvision
+*.zip
 *.tar.gz
 *.rar
 
@@ -162,15 +158,6 @@ gradle-app.setting
 .settings/
 bin/
 
-#Visual Studio code generator ignores
-codeGenerator/src/*/*/Debug
-codeGenerator/src/*/*/Release
-codeGenerator/src/.vs
-codeGenerator/src/packages
-codeGenerator/guiTests/configuration
-codeGenerator/guiTests/robotConfiguration
-*.csproj.user
-
 # IntelliJ
 *.iml
 *.ipr
@@ -182,6 +169,8 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
+networktables.json
+simgui.json
 *-window.json
 
 # Simulation data log directory
@@ -189,3 +178,10 @@ logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
+
+# clangd
+/.cache
+compile_commands.json
+
+# Eclipse generated file for annotation processors
+.factorypath

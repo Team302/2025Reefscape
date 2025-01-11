@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -23,7 +23,7 @@ class PrimitiveParams;
 class IPrimitive
 {
 public:
-    const units::time::second_t LOOP_LENGTH = units::time::second_t(0.020); 
+    const units::time::second_t LOOP_LENGTH = units::time::second_t(0.020);
 
     IPrimitive() = default;
     virtual ~IPrimitive() = default;

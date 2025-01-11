@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -17,10 +17,6 @@
 #include "auton/PrimitiveEnums.h"
 #include "auton/PrimitiveParams.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
-
-// @ADDMECH include for your mechanism state mgr
 
 // @ADDMECH mechanism state for mech as parameter
 PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
@@ -32,10 +28,10 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 								 ChassisOptionEnums::PathGainsType pathgainstype,
 								 ZoneParamsVector zones,
 								 VISION_ALIGNMENT visionAlignment,
-								 bool noteStateChanged,
-								 noteManagerGen::STATE_NAMES noteState,
-								 bool climberStateChanged,
-								 ClimberManagerGen::STATE_NAMES climberState,
+								 // bool noteStateChanged,
+								 // noteManagerGen::STATE_NAMES noteState,
+								 // bool climberStateChanged,
+								 // ClimberManagerGen::STATE_NAMES climberState,
 								 ChassisOptionEnums::PathUpdateOption updatePathOption) : m_id(id), // Primitive ID
 																						  m_time(time),
 																						  m_headingOption(headingOpt),
@@ -44,10 +40,10 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																						  m_choreoTrajectoryName(choreoTrajectoryName),
 																						  m_pathGainsType(pathgainstype),
 																						  m_visionAlignment(visionAlignment),
-																						  m_changeNoteState(noteStateChanged),
-																						  m_noteState(noteState),
-																						  m_changeClimberState(climberStateChanged),
-																						  m_climberState(climberState),
+																						  // m_changeNoteState(noteStateChanged),
+																						  // m_noteState(noteState),
+																						  // m_changeClimberState(climberStateChanged),
+																						  // m_climberState(climberState),
 																						  m_zones(zones),
 																						  m_pathUpdateOption(updatePathOption)
 

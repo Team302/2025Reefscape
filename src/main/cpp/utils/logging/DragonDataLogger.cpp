@@ -1,6 +1,6 @@
 
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -31,6 +31,7 @@ void DragonDataLogger::LogBoolData(DragonDataLoggerSignals::BoolSignals signalID
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
     {
+        /**
         switch (signalID)
         {
         case DragonDataLoggerSignals::BoolSignals::NOTE_MANAGER_HAS_VISION:
@@ -92,6 +93,7 @@ void DragonDataLogger::LogBoolData(DragonDataLoggerSignals::BoolSignals signalID
         default:
             break;
         }
+        **/
     }
 }
 
@@ -116,6 +118,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currChassisYaw = value;
             }
             break;
+            /**
         case DragonDataLoggerSignals::DoubleSignals::NOTE_MANAGER_TARGET_ANGLE_DEGREES:
             if (std::abs(value - signals->m_currNmTargetAngle) > m_doubleTolerance)
             {
@@ -171,7 +174,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currDistFromSpeaker = value;
             }
             break;
-
+        **/
         default:
             break;
         }
@@ -201,13 +204,15 @@ void DragonDataLogger::LogStringData(DragonDataLoggerSignals::StringSignals sign
             }
             break;
 
-        case DragonDataLoggerSignals::StringSignals::NOTE_MANAGER_STATE:
-            if (signals->m_currNoteMgrState != value)
-            {
-                signals->m_noteMgrState.Append(value);
-                signals->m_currNoteMgrState = value;
-            }
-            break;
+            /**
+            case DragonDataLoggerSignals::StringSignals::NOTE_MANAGER_STATE:
+                if (signals->m_currNoteMgrState != value)
+                {
+                    signals->m_noteMgrState.Append(value);
+                    signals->m_currNoteMgrState = value;
+                }
+                break;
+                **/
 
         default:
             break;

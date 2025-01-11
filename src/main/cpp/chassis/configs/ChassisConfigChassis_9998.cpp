@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -28,7 +28,7 @@ void ChassisConfigChassis_9998::DefinePigeon()
 {
     m_pigeon2 = new Pigeon2(0, m_canbusName);
     MountPoseConfigs config{};
-    config.MountPoseYaw = 90;
+    config.MountPoseYaw = 90_deg;
     m_pigeon2->GetConfigurator().Apply(config);
 }
 

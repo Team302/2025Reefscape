@@ -1,5 +1,5 @@
 //====================================================================================================================================================
-// Copyright 2024 Lake Orion Robotics FIRST Team 302
+// Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -21,7 +21,7 @@
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
-#include "mechanisms/noteManager/generated/noteManagerGen.h"
+// #include "mechanisms/noteManager/generated/noteManagerGen.h"
 #include "utils/logging/Logger.h"
 
 #include "pugixml/pugixml.hpp"
@@ -115,8 +115,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"24", AutonGrid::YGRID::Y_24},
         {"25", AutonGrid::YGRID::Y_25},
         {"26", AutonGrid::YGRID::Y_26},
-        {"27", AutonGrid::YGRID::Y_27},
-    };
+        {"27", AutonGrid::YGRID::Y_27}};
 
     static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
         {"VISION_DRIVE_NOTE", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_NOTE},
@@ -142,35 +141,29 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
     if (result)
     {
         xml_node auton = doc.root();
-        for (xml_node zonenode = auton.first_child().first_child(); zonenode; zonenode = zonenode.next_sibling())
+        for (xml_node zonenode = auton.first_child(); zonenode; zonenode = zonenode.next_sibling())
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PrimitiveParser", "ZoneNode", zonenode.name());
 
             AutonGrid::XGRID xgrid1 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid1 = AutonGrid::YGRID::NONE;
             AutonGrid::XGRID xgrid2 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid2 = AutonGrid::YGRID::NONE;
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
-            bool isNoteStateChanging = false;
-            noteManagerGen::STATE_NAMES noteChosenOption = noteManagerGen::STATE_NAMES::STATE_OFF;
+            // bool isNoteStateChanging = false;
+            // noteManagerGen::STATE_NAMES noteChosenOption = noteManagerGen::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
-            int X1 = 0;
-            int Y1 = 0;
-            int X2 = 0;
-            int Y2 = 0;
 
             // looping through the zone xml attributes to define the location of a given zone (based on 2 sets grid coordinates)
 
             for (xml_attribute attr = zonenode.first_attribute(); attr; attr = attr.next_attribute())
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), attr.name(), attr.value());
 
                 if (strcmp(attr.name(), "xgrid1") == 0)
                 {
                     auto itr = X_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != X_xmlStringToGridEnumMap.end())
                     {
-                        X1 = attr.as_int();
+                        xgrid1 = itr->second;
                     }
                     else
                     {
@@ -182,7 +175,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != Y_xmlStringToGridEnumMap.end())
                     {
-                        Y1 = attr.as_int();
+                        ygrid1 = itr->second;
                     }
                     else
                     {
@@ -194,7 +187,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     auto itr = X_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != X_xmlStringToGridEnumMap.end())
                     {
-                        X2 = attr.as_int();
+                        xgrid2 = itr->second;
                     }
                     else
                     {
@@ -206,26 +199,28 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != Y_xmlStringToGridEnumMap.end())
                     {
-                        Y2 = attr.as_int();
+                        ygrid2 = itr->second;
                     }
                     else
                     {
                         hasError = true;
                     }
                 }
+                /**
                 else if (strcmp(attr.name(), "noteOption") == 0)
                 {
                     auto itr = noteManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
                     if (itr != noteManagerGen::stringToSTATE_NAMESEnumMap.end())
                     {
                         noteChosenOption = itr->second;
-                        isNoteStateChanging = true;
+                        isNoteStateChanging = false;
                     }
                     else
                     {
                         hasError = true;
                     }
                 }
+                **/
                 else if (strcmp(attr.name(), "chassisOption") == 0)
                 {
                     auto itr = xmlStringToChassisOptionEnumMap.find(attr.value());
@@ -254,36 +249,17 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 
             if (!hasError) // if no error returns the zone parameters
             {
-
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ZoneParser"), string("X1"), X1);
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ZoneParser"), string("X2"), X2);
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ZoneParser"), string("Y1"), Y1);
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ZoneParser"), string("Y2"), Y2);
-
-                int temp = X1;
-                X1 = min(X1, X2);
-                X2 = max(temp, X2);
-
-                temp = Y1;
-                Y1 = min(Y1, Y2);
-                Y2 = max(temp, Y2);
-
-                xgrid1 = static_cast<AutonGrid::XGRID>(X1);
-                ygrid1 = static_cast<AutonGrid::YGRID>(Y1);
-                xgrid2 = static_cast<AutonGrid::XGRID>(X2);
-                ygrid2 = static_cast<AutonGrid::YGRID>(Y2);
-
                 return (new ZoneParams(xgrid1,
                                        ygrid1,
                                        xgrid2,
                                        ygrid2,
-                                       isNoteStateChanging,
-                                       noteChosenOption,
+                                       // isNoteStateChanging,
+                                       // noteChosenOption,
                                        chassisChosenOption,
                                        avoidChosenOption));
             }
 
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML"), string("Has Error"));
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("ZoneParser"), string("ParseXML"), string("Has Error"));
         }
     }
     return nullptr; // if error, return nullptr
