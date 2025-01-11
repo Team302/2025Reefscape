@@ -13,20 +13,28 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
+#include <string>
+
+// FRC Includes
+#include <frc/kinematics/SwerveModuleState.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+
 // Team302 Includes
-#include "chassis/headingStates/FaceAmp.h"
-#include "chassis/headingStates/FaceTarget.h"
-#include "vision/DragonVision.h"
+#include "chassis/driveStates/RobotDrive.h"
 
-FaceAmp::FaceAmp() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_AMP)
+class PolarDrive : public RobotDrive
 {
-}
+public:
+    PolarDrive(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-std::string FaceAmp::GetHeadingStateName() const
-{
-    return std::string("FaceAmp");
-}
-DragonVision::VISION_ELEMENT FaceAmp::GetVisionElement() const
-{
-    return DragonVision::VISION_ELEMENT::AMP;
-}
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+
+    void Init(ChassisMovement &chassisMovement) override;
+
+private:
+    RobotDrive *m_robotDrive;
+    double m_loopRate = 0.02;
+};

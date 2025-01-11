@@ -24,7 +24,6 @@
 #include "frc/apriltag/AprilTagFieldLayout.h"
 #include "frc/apriltag/AprilTagFields.h"
 
-
 // Team 302 Includes
 #include "vision/DragonVisionStructs.h"
 #include "vision/DragonCamera.h"
@@ -53,6 +52,7 @@ public:
         RIGHT_STAGE,
         CENTER_STAGE,
         SOURCE,
+        REEF,
         NEAREST_APRILTAG
     };
 
@@ -113,5 +113,4 @@ private:
     static DragonVision *m_dragonVision;
 
     std::map<RobotElementNames::CAMERA_USAGE, DragonCamera *> m_dragonCameraMap;
-
 };

@@ -23,12 +23,7 @@ public:
         MAINTAIN,
         SPECIFIED_ANGLE,
         FACE_GAME_PIECE,
-        FACE_SPEAKER,
-        FACE_AMP,
-        FACE_LEFT_STAGE,
-        FACE_RIGHT_STAGE,
-        FACE_CENTER_STAGE,
-        FACE_STAGE,
+        FACE_REEF,
         IGNORE
     };
 
@@ -37,18 +32,10 @@ public:
         ROBOT_DRIVE,
         FIELD_DRIVE,
         TRAJECTORY_DRIVE_PLANNER,
-        DRIVE_TO_NOTE,
         HOLD_DRIVE,
-        STOP_DRIVE,
-        STAGE_DRIVE,
-        AUTO_BALANCE
-    };
-
-    enum RELATIVE_POSITION
-    {
-        LEFT = 1,
-        CENTER = 2,
-        RIGHT = 3
+        POLAR_DRIVE,
+        DRIVE_TO_NOTE,
+        STOP_DRIVE
     };
 
     enum NoMovementOption

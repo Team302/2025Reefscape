@@ -13,26 +13,21 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
-
 // Team302 Includes
-#include "chassis/driveStates/RobotDrive.h"
+#include "chassis/headingStates/FaceReef.h"
+#include "chassis/headingStates/FaceTarget.h"
+#include "vision/DragonVision.h"
 
-class StageDrive : public RobotDrive
+FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
 {
-public:
-    StageDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+}
 
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+std::string FaceReef::GetHeadingStateName() const
+{
+    return std::string("FaceReef");
+}
 
-    void Init(ChassisMovement &chassisMovement) override;
-
-private:
-    RobotDrive *m_robotDrive;
-    double m_stageVisionKp = 3.0;
-};
+DragonVision::VISION_ELEMENT FaceReef::GetVisionElement() const
+{
+    return DragonVision::VISION_ELEMENT::REEF;
+}

@@ -31,20 +31,13 @@
 #include "chassis/driveStates/FieldDrive.h"
 #include "chassis/driveStates/HoldDrive.h"
 #include "chassis/driveStates/RobotDrive.h"
-#include "chassis/driveStates/StageDrive.h"
 #include "chassis/driveStates/StopDrive.h"
 #include "chassis/driveStates/TrajectoryDrivePathPlanner.h"
-#include "chassis/headingStates/FaceAmp.h"
-#include "chassis/headingStates/FaceCenterStage.h"
-#include "chassis/headingStates/FaceGamePiece.h"
-#include "chassis/headingStates/FaceLeftStage.h"
-#include "chassis/headingStates/FaceRightStage.h"
-#include "chassis/headingStates/FaceSpeaker.h"
-#include "chassis/headingStates/FaceStage.h"
 #include "chassis/headingStates/IgnoreHeading.h"
 #include "chassis/headingStates/ISwerveDriveOrientation.h"
 #include "chassis/headingStates/MaintainHeading.h"
 #include "chassis/headingStates/SpecifiedHeading.h"
+#include "chassis/headingStates/FaceGamePiece.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
@@ -117,7 +110,6 @@ void SwerveChassis::InitStates()
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::HOLD_DRIVE] = new HoldDrive();
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::STAGE_DRIVE] = new StageDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER] = new TrajectoryDrivePathPlanner(m_robotDrive);
@@ -127,12 +119,6 @@ void SwerveChassis::InitStates()
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE] = new FaceGamePiece();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::IGNORE] = new IgnoreHeading();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_AMP] = new FaceAmp();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_SPEAKER] = new FaceSpeaker();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_CENTER_STAGE] = new FaceCenterStage();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_LEFT_STAGE] = new FaceLeftStage();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_RIGHT_STAGE] = new FaceRightStage();
-    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_STAGE] = new FaceStage();
 }
 
 //==================================================================================
@@ -395,6 +381,7 @@ void SwerveChassis::ResetPose(const Pose2d &pose)
 void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
 {
     auto status = m_pigeon->SetYaw(newYaw, units::time::second_t(0.1));
+    SetStoredHeading(newYaw);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassis::SetYaw", string("status"), status.GetName());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassis::SetYaw", string("status error"), status.IsError() ? "true" : "false");
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassis::SetYaw", string("status ok"), status.IsOK() ? "true" : "false");

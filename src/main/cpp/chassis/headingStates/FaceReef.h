@@ -18,13 +18,14 @@
 // Team302 Includes
 #include "chassis/headingStates/FaceTarget.h"
 
-class FaceLeftStage : public FaceTarget
+class FaceReef : public FaceTarget
 {
 public:
-    FaceLeftStage();
-    ~FaceLeftStage() = default;
+    FaceReef();
+    ~FaceReef() = default;
 
     std::string GetHeadingStateName() const override;
+    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
 
 protected:
     DragonVision::VISION_ELEMENT GetVisionElement() const override;
