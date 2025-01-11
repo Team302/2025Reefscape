@@ -103,6 +103,7 @@ void DriverFeedback::Update(RobotStateChanges::StateChange change, int value)
     else if (RobotStateChanges::StateChange::DesiredScoringMode == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
     **/
+    //
 }
 
 void DriverFeedback::CheckControllers()
