@@ -44,7 +44,7 @@ DragonVision *DragonVision::GetDragonVision()
 bool DragonVision::HealthCheck(RobotElementNames::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
-	return camera->HealthCheck();
+	return true; // TODO update to use new camera's camera->HealthCheck();
 }
 
 frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
