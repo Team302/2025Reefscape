@@ -22,8 +22,6 @@
 
 // Third Party Includes
 
-using namespace std;
-
 LoggableItemMgr *LoggableItemMgr::m_instance = nullptr;
 LoggableItemMgr *LoggableItemMgr::GetInstance()
 {

@@ -25,8 +25,6 @@
 
 // Third Party Includes
 
-using namespace std;
-
 /// @brief find the angle from the startingAngle to the targetAngle
 /// @param [in] startingAngle - angle to start from
 /// @param [in] targetAngle - angle to go to

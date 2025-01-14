@@ -30,8 +30,6 @@
 
 // Third Party Includes
 
-using namespace std;
-
 //==================================================================================
 /// @brief    Static singleton method to create the object
 /// @return   CubedProfile*  Singleton cubed profile object

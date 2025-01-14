@@ -37,7 +37,6 @@
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
 
-using namespace pathplanner;
 
 DriveToNote::DriveToNote(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)

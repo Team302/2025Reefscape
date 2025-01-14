@@ -43,7 +43,13 @@ DragonVision *DragonVision::GetDragonVision()
 
 bool DragonVision::HealthCheck(RobotElementNames::CAMERA_USAGE position)
 {
+
 	auto camera = m_dragonCameraMap[position];
+	if (camera == nullptr)
+	{
+		return false;
+	}
+
 	return camera->HealthCheck();
 }
 
