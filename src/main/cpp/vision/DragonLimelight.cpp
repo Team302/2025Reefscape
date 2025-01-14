@@ -250,7 +250,7 @@ std::optional<units::angle::degree_t> DragonLimelight::GetTargetYaw()
     {
         return -1.0 * GetTy();
     }
-    return units::angle::degree_t(0.0);
+    return GetTx();
 }
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
