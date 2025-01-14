@@ -34,6 +34,6 @@
 class DragonLimelight270 : public DragonLimelight
 {
 public:
-    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return -1.0 * GetTy(); }
-    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTy(); }
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return -1.0 * GetTx(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTx(); }
 };
