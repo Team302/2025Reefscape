@@ -16,6 +16,7 @@
 
 #pragma once
 #include <vector>
+#include "SensorData.h"
 
 class SensorDataMgr
 {
@@ -23,11 +24,13 @@ public:
     static SensorDataMgr *GetInstance();
 
     // register methods
-    void RegisterSensorData();
+    void RegisterSensorData(SensorData *sd);
+    void CacheData() const;
 
 private:
     SensorDataMgr();
     ~SensorDataMgr();
 
+    std::vector<SensorData *> m_SensorData;
     static SensorDataMgr *m_instance;
 };

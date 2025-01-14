@@ -205,6 +205,7 @@ bool DragonLimelight::HasTarget()
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
+
         return (nt->GetNumber("tv", 0.0) > 0.1);
     }
     return false;

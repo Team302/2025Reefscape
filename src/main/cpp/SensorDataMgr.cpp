@@ -14,7 +14,28 @@
 //======================================================\==============================================================================================
 
 #include <SensorDataMgr.h>
+#include <SensorData.h>
 
 #include <vector>
 
 using std::vector;
+using namespace std;
+
+SensorDataMgr *SensorDataMgr::m_instance = nullptr;
+SensorDataMgr *SensorDataMgr::GetInstance()
+{
+    if (SensorDataMgr::m_instance == nullptr)
+    {
+        SensorDataMgr::m_instance = new SensorDataMgr();
+    }
+    return SensorDataMgr::m_instance;
+}
+
+SensorDataMgr::SensorDataMgr() : m_SensorData()
+{
+}
+void SensorDataMgr::RegisterSensorData(
+    SensorData *sd)
+{
+    m_SensorData.emplace_back(sd);
+}

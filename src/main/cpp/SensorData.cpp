@@ -14,15 +14,19 @@
 //====================================================================================================================================================
 
 // FRC includes
+#include "frc/geometry/Rotation3d.h"
 
 // Team 302 includes
-#include "utils/logging/LoggableItem.h"
-#include <utils/logging/LoggableItemMgr.h>
+#include "SensorData.h"
+#include <SensorDataMgr.h>
 
-// Third Party Includes
-
-/// @brief    initialize the state manager, parse the configuration file and create the states.
-LoggableItem::LoggableItem()
+SensorData::SensorData()
 {
-    LoggableItemMgr::GetInstance()->RegisterLoggableItem(this);
+    SensorDataMgr::GetInstance()->RegisterSensorData(this);
+}
+void SensorData::PeriodicCacheData()
+{
+    bool tv;
+    units::angle::degree_t tx;
+    units::angle::degree_t ty;
 }

@@ -29,11 +29,12 @@
 
 // Team 302 includes
 #include "vision/DragonCamera.h"
+#include "SensorData.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera
+class DragonLimelight : public DragonCamera, public SensorData
 {
 public:
     enum LED_MODE

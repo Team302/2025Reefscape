@@ -17,12 +17,11 @@
 #pragma once
 
 ///  @brief	    Interface for loggable items that can be mixed in with other interfaces
-class LoggableItem
+class SensorData
 {
 public:
-	LoggableItem();
-	virtual ~LoggableItem() = default;
+	SensorData();
+	virtual ~SensorData() = default;
 
-	/// @brief log data to the network table if it is activated and time period has past
-	virtual void LogInformation() = 0;
+	virtual void PeriodicCacheData();
 };
