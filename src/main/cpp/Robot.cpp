@@ -7,6 +7,7 @@
 
 #include <string>
 
+#include "auton/drivePrimitives/DrivePathPlanner.h"
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
 #include "chassis/configs/ChassisConfig.h"
@@ -126,7 +127,10 @@ void Robot::AutonomousPeriodic()
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Run();
+        auto ChassisPose = m_chassis->GetPose();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisPose: "), print(ChassisPose));
     }
+
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
     if (!isFMSAttached)
     {
