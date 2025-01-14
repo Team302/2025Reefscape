@@ -41,8 +41,9 @@ public:
 	std::string GetSelectedAutoFile();
 	std::string GetAlianceColor();
 	std::string GetStartPos();
-	std::string GetNumofPiecesinautonWing();
-	std::string GetNumofPiecesinautonCenter();
+	std::string GetTargetGamePiece();
+	std::string GetDesiredScoringLevel();
+	std::string GetTargetFace();
 	//---------------------------------------------------------------------
 	// Method: 		GetSelectedAutoFile
 	// Description: This returns the selected auton file to run.  If it
@@ -64,6 +65,7 @@ private:
 	bool FileValid(const std::string &name);
 	// Attributues
 	frc::SendableChooser<std::string> m_startposchooser;
-	frc::SendableChooser<std::string> m_numofgamepiecewing;
-	frc::SendableChooser<std::string> m_numofgamepiececenter;
+	frc::SendableChooser<std::string> m_targetFace;
+	frc::SendableChooser<std::string> m_targetGamePiece;
+	frc::SendableChooser<std::string> m_desiredScoringLevel;
 };
