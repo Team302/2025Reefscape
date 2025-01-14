@@ -29,8 +29,6 @@
 
 // Team 302 Includes
 
-using namespace frc;
-
 class TractionControlController
 {
 public:
