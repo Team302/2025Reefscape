@@ -28,7 +28,7 @@ void ChassisConfigChassis_9998::DefinePigeon()
 {
     m_pigeon2 = new Pigeon2(0, m_canbusName);
     MountPoseConfigs config{};
-    config.MountPoseYaw = 90_deg;
+    config.MountPoseYaw = 0_deg;
     m_pigeon2->GetConfigurator().Apply(config);
 }
 

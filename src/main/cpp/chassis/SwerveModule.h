@@ -148,6 +148,11 @@ private:
     double m_driveKs = 0.0;
     double m_driveKf = 0.0;
 
+    double m_staticCoF = 0.0;
+    double m_dynamicCoF = 0.0;
+    double m_optimalSlipRatio = 0.0;
+    double m_mass = 0.0;
+
     double m_gearRatio = 0.0;
     double m_turnCruiseVel = 0.0;
     double m_turnMaxAcc = 0.0;

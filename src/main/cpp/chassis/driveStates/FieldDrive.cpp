@@ -42,6 +42,9 @@ std::array<frc::SwerveModuleState, 4> FieldDrive::UpdateSwerveModuleStates(Chass
                                                                                chassisMovement.chassisSpeeds.vy,
                                                                                chassisMovement.chassisSpeeds.omega,
                                                                                rot2d);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("FieldDrive"), string("Vx"), chassisMovement.chassisSpeeds.vx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("FieldDrive"), string("Vy"), chassisMovement.chassisSpeeds.vy.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("FieldDrive"), string("Omega"), chassisMovement.chassisSpeeds.omega());
 
         // chassisMovement.chassisSpeeds = frc::ChassisSpeeds::Discretize(fieldRelativeSpeeds, units::time::millisecond_t(20.0));
     }

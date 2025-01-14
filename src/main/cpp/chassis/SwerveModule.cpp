@@ -166,14 +166,15 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     m_optimizedState.Optimize(currAngle);
     // m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
 
-    m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
-    //  Set Turn Target
+    // m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
+    //   Set Turn Target
     SetTurnAngle(m_optimizedState.angle.Degrees());
 
     // Set Drive Target
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Speed", m_optimizedState.speed.value());
+
     SetDriveSpeed(m_optimizedState.speed);
 }
-
 bool SwerveModule::IsSlipping() { return m_tractionController->isSlipping(); }
 
 //==================================================================================
@@ -194,7 +195,6 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
     m_activeState.speed = units::velocity::meters_per_second_t(std::clamp(m_activeState.speed.value(), -m_maxSpeed.value(), m_maxSpeed.value()));
     if (m_activeState.speed != 0_mps)
     {
-
         if (m_velocityControlled)
         {
             units::angular_velocity::turns_per_second_t omega = units::angular_velocity::turns_per_second_t(m_activeState.speed.value() / (numbers::pi * units::length::meter_t(m_wheelDiameter).value())); // convert mps to unitless rps by taking the speed and dividing by the circumference of the wheel
@@ -206,6 +206,7 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
         else // Run Open Loop
         {
             auto percent = m_activeState.speed / m_maxSpeed;
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Percent", percent.value());
             DutyCycleOut out{percent};
             m_driveTalon->SetControl(out);
         }
@@ -415,13 +416,29 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
                     {
                         m_useFOC = attr.as_bool();
                     }
-                    if (strcmp(attr.name(), "useVelocityControl") == 0)
+                    else if (strcmp(attr.name(), "useVelocityControl") == 0)
                     {
                         m_velocityControlled = attr.as_bool();
                     }
-                    if (strcmp(attr.name(), "max_speed") == 0)
+                    else if (strcmp(attr.name(), "max_speed") == 0)
                     {
                         m_maxSpeed = units::velocity::meters_per_second_t(attr.as_double());
+                    }
+                    else if (strcmp(attr.name(), "static_CoF") == 0)
+                    {
+                        m_staticCoF = (attr.as_double());
+                    }
+                    else if (strcmp(attr.name(), "dynamic_CoF") == 0)
+                    {
+                        m_dynamicCoF = (attr.as_double());
+                    }
+                    else if (strcmp(attr.name(), "optimalSlipRatio") == 0)
+                    {
+                        m_optimalSlipRatio = (attr.as_double());
+                    }
+                    else if (strcmp(attr.name(), "mass") == 0)
+                    {
+                        m_mass = (attr.as_double());
                     }
                     if (m_useFOC)
                     {
