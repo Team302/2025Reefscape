@@ -30,3 +30,10 @@
 // Team 302 includes
 #include "vision/DragonCamera.h"
 #include "vision/DragonLimelight.h"
+
+class DragonLimelight90 : public DragonLimelight
+{
+public:
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTy(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return GetTy(); }
+};
