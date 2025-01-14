@@ -154,6 +154,7 @@ void AutonSelector::PutChoicesOnDashboard()
 	// Game Piece Option
 	m_targetGamePiece.AddOption("Coral", "Coral");
 	m_targetGamePiece.AddOption("Algae", "Algae");
+	m_targetGamePiece.SetDefaultOption("Coral", "Coral");
 	frc::SmartDashboard::PutData("Target Game Piece", &m_targetGamePiece);
 
 	// Target Face Option
