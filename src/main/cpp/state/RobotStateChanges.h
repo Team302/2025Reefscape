@@ -27,14 +27,13 @@ public:
         DriveAssistMode,
         GameState,
         CompressorChange,
-        HasNote,
         LoopCounter
     };
 
     enum ScoringMode
     {
-        Launcher,
-        Placer
+        Coral,
+        Algae
     };
 
     enum ClimbMode
