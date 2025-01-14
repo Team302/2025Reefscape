@@ -36,9 +36,6 @@
 #include <frc/DriverStation.h>
 #include "utils/logging/Logger.h"
 
-// using namespace frc;
-// using namespace std;
-
 using frc::DriverStation;
 using frc::GenericHID;
 using std::make_pair;
