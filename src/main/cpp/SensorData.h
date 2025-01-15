@@ -16,12 +16,24 @@
 
 #pragma once
 
+#include "frc/geometry/Rotation3d.h"
+
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+
 ///  @brief	    Interface for loggable items that can be mixed in with other interfaces
 class SensorData
 {
 public:
-	SensorData();
+	SensorData(std::string name);
 	virtual ~SensorData() = default;
 
 	virtual void PeriodicCacheData();
+
+protected:
+	std::shared_ptr<nt::NetworkTable> m_networktable;
+	bool m_tv;
+	units::angle::degree_t m_tx;
+	units::angle::degree_t m_ty;
 };

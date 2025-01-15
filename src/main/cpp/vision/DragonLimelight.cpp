@@ -61,7 +61,7 @@ DragonLimelight::DragonLimelight(
     CAM_MODE camMode,
     STREAM_MODE streamMode,
     SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, initialPipeline, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
-                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+                              SensorData(networkTableName)
 {
     SetPipeline(initialPipeline);
     SetLEDMode(ledMode);
@@ -202,35 +202,17 @@ std::vector<double> DragonLimelight::Get3DSolve()
 
 bool DragonLimelight::HasTarget()
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-
-        return (nt->GetNumber("tv", 0.0) > 0.1);
-    }
-    return false;
+    return SensorData::m_tv;
 }
 
 units::angle::degree_t DragonLimelight::GetTx() const
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        return units::angle::degree_t(nt->GetNumber("tx", 0.0));
-    }
-    return units::angle::degree_t(0.0);
+    return SensorData::m_tx;
 }
 
 units::angle::degree_t DragonLimelight::GetTy() const
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        double v = nt->GetNumber("ty", 0.0);
-
-        return units::angle::degree_t(v);
-    }
-    return units::angle::degree_t(0.0);
+    return SensorData::m_ty;
 }
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYaw()

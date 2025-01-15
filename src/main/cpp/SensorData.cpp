@@ -18,15 +18,33 @@
 
 // Team 302 includes
 #include "SensorData.h"
-#include <SensorDataMgr.h>
+#include "SensorDataMgr.h"
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
 
-SensorData::SensorData()
+bool m_tv;
+units::angle::degree_t m_tx;
+units::angle::degree_t m_ty;
+
+SensorData::SensorData(std::string networkTableName) : m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SensorDataMgr::GetInstance()->RegisterSensorData(this);
 }
 void SensorData::PeriodicCacheData()
 {
-    bool tv;
-    units::angle::degree_t tx;
-    units::angle::degree_t ty;
+    auto nt = m_networktable.get();
+    if (nt != nullptr)
+    {
+
+        m_tv = (nt->GetNumber("tv", 0.0) > 0.1);
+        m_tx = units::angle::degree_t(nt->GetNumber("tx", 0.0));
+        m_ty = units::angle::degree_t(nt->GetNumber("ty", 0.0));
+    }
+    else
+    {
+        m_tv = false;
+        m_tx = units::angle::degree_t(0.0);
+        m_ty = units::angle::degree_t(0.0);
+    }
 }

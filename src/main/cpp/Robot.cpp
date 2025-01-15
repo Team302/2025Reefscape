@@ -28,6 +28,8 @@
 #include "utils/logging/LoggerEnums.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
+#include "SensorData.h"
+#include "SensorDataMgr.h"
 
 using std::string;
 
@@ -132,6 +134,8 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
     }
+    SensorData *sd = new SensorData("");
+    SensorData::PeriodicCacheData;
 }
 
 void Robot::TeleopInit()

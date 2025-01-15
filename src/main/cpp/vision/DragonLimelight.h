@@ -146,7 +146,7 @@ protected:
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
-    std::shared_ptr<nt::NetworkTable> m_networktable;
+
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
