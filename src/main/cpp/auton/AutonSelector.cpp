@@ -164,7 +164,7 @@ void AutonSelector::PutChoicesOnDashboard()
 	m_targetFace.AddOption("G-J", "GJ");
 	m_targetFace.AddOption("I-L", "IL");
 	m_targetFace.AddOption("K-B", "KB");
-	m_targetFace.SetDefaultOption("GH", "GH");
+	m_targetFace.SetDefaultOption("G-H", "GH");
 	frc::SmartDashboard::PutData("Target Face", &m_targetFace);
 
 	// Level Option
