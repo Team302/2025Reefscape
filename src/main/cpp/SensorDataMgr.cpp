@@ -39,3 +39,11 @@ void SensorDataMgr::RegisterSensorData(
 {
     m_SensorData.emplace_back(sd);
 }
+
+void SensorDataMgr::CacheData() const
+{
+    for (SensorData *sensor : m_SensorData)
+    {
+        sensor->PeriodicCacheData();
+    }
+}
