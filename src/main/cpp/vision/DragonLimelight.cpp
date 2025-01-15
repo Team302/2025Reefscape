@@ -234,23 +234,7 @@ units::angle::degree_t DragonLimelight::GetTy() const
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYaw()
 {
-    if (std::abs(GetCameraRoll().to<double>()) < 1.0)
-    {
-        return -1.0 * GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 90.0) < 1.0)
-    {
-        return GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 180.0) < 1.0)
-    {
-        return GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 270.0) < 1.0)
-    {
-        return -1.0 * GetTy();
-    }
-    return GetTx();
+    return -1.0 * GetTx();
 }
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
@@ -275,22 +259,6 @@ std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetPitch()
 {
-    if (std::abs(GetCameraRoll().to<double>()) < 1.0)
-    {
-        return GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 90.0) < 1.0)
-    {
-        return GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 180.0) < 1.0)
-    {
-        return -1.0 * GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 270.0) < 1.0)
-    {
-        return -1.0 * GetTx();
-    }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("DragonLimelight"), std::string("GetTargetVerticalOffset"), std::string("Invalid limelight rotation"));
     return GetTy();
 }
