@@ -34,4 +34,7 @@ public:
 
     // Voltage interpolation
     units::voltage::volt_t linearInterpolate(const units::voltage::volt_t x[], const units::voltage::volt_t y[], int size, units::voltage::volt_t targetX);
+
+    // Double interpolation
+    double linearInterpolate(const double x[], const double y[], int size, double targetX);
 };

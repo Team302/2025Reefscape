@@ -14,7 +14,7 @@
 //====================================================================================================================================================
 
 #include "InterpolateUtils.h"
-
+#include <cmath>
 /// @brief This method performs a linear interpolation for position
 ///              given x and y arrays and the target x.  This assumes
 ///              that the x array is in ascending order.
@@ -45,13 +45,7 @@ units::length::meter_t InterpolateUtils::linearInterpolate(const units::length::
         i++;
     }
 
-    // Perform linear interpolation
-    double x1 = x[i - 1].value();
-    double x2 = x[i].value();
-    double y1 = y[i - 1].value();
-    double y2 = y[i].value();
-
-    return units::length::meter_t{y1 + (targetX.value() - x1) * (y2 - y1) / (x2 - x1)};
+    return units::length::meter_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
 }
 
 /// @brief This method performs a linear interpolation for velocity
@@ -85,13 +79,7 @@ units::velocity::meters_per_second_t InterpolateUtils::linearInterpolate(
         i++;
     }
 
-    // Perform linear interpolation
-    double x1 = x[i - 1].value();
-    double x2 = x[i].value();
-    double y1 = y[i - 1].value();
-    double y2 = y[i].value();
-
-    return units::velocity::meters_per_second_t{y1 + (targetX.value() - x1) * (y2 - y1) / (x2 - x1)};
+    return units::velocity::meters_per_second_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
 }
 
 /// @brief This method performs a linear interpolation for angle
@@ -125,13 +113,7 @@ units::angle::degree_t InterpolateUtils::linearInterpolate(
         i++;
     }
 
-    // Perform linear interpolation
-    double x1 = x[i - 1].value();
-    double x2 = x[i].value();
-    double y1 = y[i - 1].value();
-    double y2 = y[i].value();
-
-    return units::angle::degree_t{y1 + (targetX.value() - x1) * (y2 - y1) / (x2 - x1)};
+    return units::angle::degree_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
 }
 
 /// @brief This method performs a linear interpolation for voltage
@@ -165,11 +147,39 @@ units::voltage::volt_t InterpolateUtils::linearInterpolate(
         i++;
     }
 
-    // Perform linear interpolation
-    double x1 = x[i - 1].value();
-    double x2 = x[i].value();
-    double y1 = y[i - 1].value();
-    double y2 = y[i].value();
+    return units::voltage::volt_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
+}
 
-    return units::voltage::volt_t{y1 + (targetX.value() - x1) * (y2 - y1) / (x2 - x1)};
+/// @brief This method performs a linear interpolation for double
+///              given x and y arrays and the target x.  This assumes
+///              that the x array is in ascending order.
+/// @param [in] x - x array
+/// @param [in] y - y array
+/// @param [in] size - number of elements in the array
+/// @param [in] targetX - target x value to interpolate
+/// @returns double  - interpolated value
+double InterpolateUtils::linearInterpolate(
+    const double x[],
+    const double y[],
+    int size,
+    double targetX)
+{
+    // Handle edge cases (targetX outside the range of x values)
+    if (targetX <= x[0])
+    {
+        return y[0];
+    }
+    else if (targetX >= x[size - 1])
+    {
+        return y[size - 1];
+    }
+
+    // Find the indices of the x values surrounding targetX
+    int i = 0;
+    while (i < size - 1 && x[i] < targetX)
+    {
+        i++;
+    }
+
+    return std::lerp(x[i - 1], x[i], targetX);
 }
