@@ -145,6 +145,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
     rotations = m_driveTalon->GetPosition().GetValueAsDouble();
     units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Current Angle", currAngle.Degrees().value());
 
     return {rotations * m_wheelDiameter * numbers::pi, // distance travled by drive motor
             currAngle};                                // angle of the swerve module from sensor
@@ -162,7 +163,7 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     // finally, get the value between -90 and 90
     units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
-    // m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
+    m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
     m_optimizedState.Optimize(currAngle);
     // m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
 
@@ -172,6 +173,8 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
 
     // Set Drive Target
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Speed", m_optimizedState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Target Angle", m_optimizedState.angle.Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Current Angle", currAngle.Degrees().value());
 
     SetDriveSpeed(m_optimizedState.speed);
 }
@@ -183,6 +186,9 @@ bool SwerveModule::IsSlipping() { return m_tractionController->isSlipping(); }
 void SwerveModule::RunCurrentState()
 {
     SetDriveSpeed(m_activeState.speed);
+    // Set Drive Target
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Speed", m_optimizedState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Swerve", "Target Angle", m_optimizedState.angle.Degrees().value());
 }
 
 //==================================================================================
