@@ -61,6 +61,6 @@ private:
     int m_firstloop = true;
 
     static DriverFeedback *m_instance;
-    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Launcher;
+    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 };
