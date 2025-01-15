@@ -134,8 +134,7 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
     }
-    SensorData *sd = new SensorData("");
-    SensorData::PeriodicCacheData;
+    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::TeleopInit()
@@ -180,6 +179,7 @@ void Robot::TeleopPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
     }
+    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::DisabledInit()
