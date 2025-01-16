@@ -27,6 +27,7 @@ class TeleopControlFunctions
 public:
     enum FUNCTION
     {
+        READY,
         UNKNOWN_FUNCTION,
         ROBOT_ORIENTED_DRIVE,
         HOLONOMIC_DRIVE_FORWARD,
@@ -34,6 +35,9 @@ public:
         HOLONOMIC_DRIVE_STRAFE,
         AUTO_TURN_FORWARD,
         AUTO_TURN_BACKWARD,
+        AUTO_ALIGN_LEFT,
+        AUTO_ALIGN_RIGHT,
+        AUTO_ALIGN_HUMAN_PLAYER_STATION,
         ALIGN_FLOOR_GAME_PIECE,
         RESET_POSITION,
         POLAR_DRIVE,
@@ -45,7 +49,18 @@ public:
 
         MANUAL_LAUNCH_INC,
         MANUAL_LAUNCH_DEC,
+        CLIMB_MODE,
+        INTAKE,
+        ELAVATOR,
+        ARM,
+        L1_SCORING_POSITION,
+        L2_SCORING_POSITION,
+        L3_SCORING_POSITION,
+        L4_SCORING_POSITION,
+        SCORE,
         SCORING_MODE,
-        CLIMB_MODE
+        HUMAN_PLAYER_STATION,
+        ALGAE_INTAKE
+
     };
 };
