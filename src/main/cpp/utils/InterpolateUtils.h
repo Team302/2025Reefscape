@@ -18,6 +18,7 @@
 #include <units/angle.h>
 #include <units/length.h>
 #include <units/velocity.h>
+#include <units/angular_velocity.h>
 #include <units/voltage.h>
 
 class InterpolateUtils
@@ -31,6 +32,9 @@ public:
 
     // Angle interpolation
     units::angle::degree_t linearInterpolate(const units::angle::degree_t x[], const units::angle::degree_t y[], int size, units::angle::degree_t targetX);
+
+    // Angular Velocity interpolation
+    units::angular_velocity::radians_per_second_t linearInterpolate(const units::angular_velocity::radians_per_second_t x[], const units::angular_velocity::radians_per_second_t y[], int size, units::angular_velocity::radians_per_second_t targetX);
 
     // Voltage interpolation
     units::voltage::volt_t linearInterpolate(const units::voltage::volt_t x[], const units::voltage::volt_t y[], int size, units::voltage::volt_t targetX);

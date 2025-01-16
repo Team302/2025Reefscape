@@ -150,6 +150,40 @@ units::voltage::volt_t InterpolateUtils::linearInterpolate(
     return units::voltage::volt_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
 }
 
+/// @brief This method performs a linear interpolation for angular velocity
+///              given x and y arrays and the target x.  This assumes
+///              that the x array is in ascending order.
+/// @param [in] x - x array
+/// @param [in] y - y array
+/// @param [in] size - number of elements in the array
+/// @param [in] targetX - target x value to interpolate
+/// @returns units::angular velocity::radians_per_second_t  - interpolated value
+units::angular_velocity::radians_per_second_t InterpolateUtils::linearInterpolate(
+    const units::angular_velocity::radians_per_second_t x[],
+    const units::angular_velocity::radians_per_second_t y[],
+    int size,
+    units::angular_velocity::radians_per_second_t targetX)
+{
+    // Handle edge cases (targetX outside the range of x values)
+    if (targetX <= x[0])
+    {
+        return y[0];
+    }
+    else if (targetX >= x[size - 1])
+    {
+        return y[size - 1];
+    }
+
+    // Find the indices of the x values surrounding targetX
+    int i = 0;
+    while (i < size - 1 && x[i] < targetX)
+    {
+        i++;
+    }
+
+    return units::angular_velocity::radians_per_second_t(std::lerp(x[i - 1].value(), x[i].value(), targetX.value()));
+}
+
 /// @brief This method performs a linear interpolation for double
 ///              given x and y arrays and the target x.  This assumes
 ///              that the x array is in ascending order.
