@@ -69,7 +69,8 @@ public:
     enum StringSignals
     {
         CHASSIS_HEADING_STATE,
-        CHASSIS_DRIVE_STATE //,
+        CHASSIS_DRIVE_STATE, //,
+        AUTON_PATH_NAME
         // NOTE_MANAGER_STATE
     };
 

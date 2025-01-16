@@ -97,6 +97,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_choreoTrajectoryName = params->GetTrajectoryName();
     m_pathGainsType = params->GetPathGainsType();
 
+    (DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
     m_isVisionDrive = (m_pathname == "DRIVE_TO_NOTE");
