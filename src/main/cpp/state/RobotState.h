@@ -45,8 +45,8 @@ private:
     SwerveChassis *m_chassis;
     std::vector<RobotStateChangeBroker *> m_brokers;
     RobotStateChanges::ScoringMode m_scoringMode;
-    RobotStateChanges::ClimbMode m_climbMode;
     RobotStateChanges::GamePeriod m_gamePhase;
+    RobotStateChanges::ClimbMode m_climbMode;
 
     bool m_scoringModeButtonReleased;
     bool m_climbModeButtonReleased;

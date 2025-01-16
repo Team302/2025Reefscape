@@ -13,20 +13,20 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
 // Team302 Includes
-#include "chassis/headingStates/FaceAmp.h"
 #include "chassis/headingStates/FaceTarget.h"
-#include "vision/DragonVision.h"
 
-FaceAmp::FaceAmp() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_AMP)
+class FaceReef : public FaceTarget
 {
-}
+public:
+    FaceReef();
+    ~FaceReef() = default;
 
-std::string FaceAmp::GetHeadingStateName() const
-{
-    return std::string("FaceAmp");
-}
-DragonVision::VISION_ELEMENT FaceAmp::GetVisionElement() const
-{
-    return DragonVision::VISION_ELEMENT::AMP;
-}
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
+
+protected:
+    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+};

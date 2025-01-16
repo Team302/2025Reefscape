@@ -95,9 +95,9 @@ public:
     bool HealthCheck();
     bool HasTarget();
 
-    std::optional<units::angle::degree_t> GetTargetYaw();
+    virtual std::optional<units::angle::degree_t> GetTargetYaw();
     std::optional<units::angle::degree_t> GetTargetYawRobotFrame();
-    std::optional<units::angle::degree_t> GetTargetPitch();
+    virtual std::optional<units::angle::degree_t> GetTargetPitch();
     std::optional<units::angle::degree_t> GetTargetPitchRobotFrame();
     std::optional<double> GetTargetArea();
     std::optional<units::angle::degree_t> GetTargetSkew();

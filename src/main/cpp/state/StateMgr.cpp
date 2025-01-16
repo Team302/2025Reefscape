@@ -24,10 +24,6 @@
 #include "state/StateMgr.h"
 #include "utils/logging/Logger.h"
 
-// Third Party Includes
-
-using namespace std;
-
 State *myState;
 
 /// @brief    initialize the state manager, parse the configuration file and create the states.

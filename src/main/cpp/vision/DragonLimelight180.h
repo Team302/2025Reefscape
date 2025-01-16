@@ -13,21 +13,26 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// Team302 Includes
-#include "chassis/headingStates/FaceCenterStage.h"
-#include "chassis/headingStates/FaceTarget.h"
-#include "vision/DragonVision.h"
+#pragma once
 
-FaceCenterStage::FaceCenterStage() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CENTER_STAGE)
-{
-}
+// C++ Includes
+#include <string>
+#include <vector>
 
-std::string FaceCenterStage::GetHeadingStateName() const
-{
-    return std::string("FaceCenterStage");
-}
+// FRC includes
+#include "frc/Timer.h"
+#include "networktables/NetworkTable.h"
+#include "units/angle.h"
+#include "units/length.h"
+#include "units/time.h"
+#include "frc/geometry/Pose2d.h"
 
-DragonVision::VISION_ELEMENT FaceCenterStage::GetVisionElement() const
+// Team 302 includes
+#include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
+class DragonLimelight180 : public DragonLimelight
 {
-    return DragonVision::VISION_ELEMENT::CENTER_STAGE;
-}
+public:
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTx(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTy(); }
+};

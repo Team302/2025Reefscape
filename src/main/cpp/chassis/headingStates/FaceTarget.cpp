@@ -21,6 +21,7 @@
 #include "chassis/headingStates/FaceTarget.h"
 #include "frc/geometry/Pose2d.h"
 #include "utils/FMSData.h"
+#include "utils/AngleUtils.h"
 
 #include "utils/logging/Logger.h"
 
@@ -51,6 +52,25 @@ units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMoveme
 
                 units::angle::degree_t fieldRelativeAngle = (allianceColor == frc::DriverStation::Alliance::kBlue && GetVisionElement() == DragonVision::VISION_ELEMENT::SPEAKER) ? (units::angle::degree_t(180) + targetPose.Rotation().Degrees()) : targetPose.Rotation().Degrees();
 
+                if (GetVisionElement() == DragonVision::VISION_ELEMENT::REEF)
+                {
+                    frc::Pose2d currentPose = chassis->GetPose();
+
+                    units::length::meter_t xDiff = targetPose.X() - currentPose.X();
+                    units::length::meter_t yDiff = targetPose.Y() - currentPose.Y();
+                    units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
+
+                    // Adjust angleToReefCenter to be between -180 and 180 degrees
+                    angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
+
+                    // Calculate the angle relative to the closest 60-degree increment
+                    units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
+
+                    // Adjust the angle to the nearest 60-degree increment
+                    units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace;
+
+                    fieldRelativeAngle = AngleUtils::GetEquivAngle(closestMultiple);
+                }
                 chassisMovement.yawAngle = fieldRelativeAngle;
                 return fieldRelativeAngle;
             }

@@ -15,24 +15,25 @@
 
 #pragma once
 
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
+// C++ Includes
+#include <string>
+#include <vector>
 
-// Team302 Includes
-#include "chassis/driveStates/RobotDrive.h"
+// FRC includes
+#include "frc/Timer.h"
+#include "networktables/NetworkTable.h"
+#include "units/angle.h"
+#include "units/length.h"
+#include "units/time.h"
+#include "frc/geometry/Pose2d.h"
 
-class StageDrive : public RobotDrive
+// Team 302 includes
+#include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
+
+class DragonLimelight90 : public DragonLimelight
 {
 public:
-    StageDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
-
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
-
-    void Init(ChassisMovement &chassisMovement) override;
-
-private:
-    RobotDrive *m_robotDrive;
-    double m_stageVisionKp = 3.0;
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTy(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return GetTx(); }
 };

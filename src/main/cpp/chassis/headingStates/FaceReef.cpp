@@ -14,20 +14,20 @@
 //====================================================================================================================================================
 
 // Team302 Includes
-#include "chassis/headingStates/FaceLeftStage.h"
+#include "chassis/headingStates/FaceReef.h"
 #include "chassis/headingStates/FaceTarget.h"
 #include "vision/DragonVision.h"
 
-FaceLeftStage::FaceLeftStage() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_LEFT_STAGE)
+FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
 {
 }
 
-std::string FaceLeftStage::GetHeadingStateName() const
+std::string FaceReef::GetHeadingStateName() const
 {
-    return std::string("FaceLeftStage");
+    return std::string("FaceReef");
 }
 
-DragonVision::VISION_ELEMENT FaceLeftStage::GetVisionElement() const
+DragonVision::VISION_ELEMENT FaceReef::GetVisionElement() const
 {
-    return DragonVision::VISION_ELEMENT::LEFT_STAGE;
+    return DragonVision::VISION_ELEMENT::REEF;
 }

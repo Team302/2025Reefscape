@@ -15,17 +15,26 @@
 
 #pragma once
 
-// Team302 Includes
-#include "chassis/headingStates/FaceTarget.h"
+#include <string>
 
-class FaceSpeaker : public FaceTarget
+// FRC Includes
+#include <frc/kinematics/SwerveModuleState.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+
+// Team302 Includes
+#include "chassis/driveStates/RobotDrive.h"
+
+class PolarDrive : public RobotDrive
 {
 public:
-    FaceSpeaker();
-    ~FaceSpeaker() = default;
+    PolarDrive(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-    std::string GetHeadingStateName() const override;
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
-protected:
-    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+    void Init(ChassisMovement &chassisMovement) override;
+
+private:
+    RobotDrive *m_robotDrive;
+    double m_loopRate = 0.02;
 };

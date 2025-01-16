@@ -15,17 +15,25 @@
 
 #pragma once
 
-// Team302 Includes
-#include "chassis/headingStates/FaceTarget.h"
+// C++ Includes
+#include <string>
+#include <vector>
 
-class FaceLeftStage : public FaceTarget
+// FRC includes
+#include "frc/Timer.h"
+#include "networktables/NetworkTable.h"
+#include "units/angle.h"
+#include "units/length.h"
+#include "units/time.h"
+#include "frc/geometry/Pose2d.h"
+
+// Team 302 includes
+#include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
+
+class DragonLimelight270 : public DragonLimelight
 {
 public:
-    FaceLeftStage();
-    ~FaceLeftStage() = default;
-
-    std::string GetHeadingStateName() const override;
-
-protected:
-    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return -1.0 * GetTy(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTx(); }
 };
