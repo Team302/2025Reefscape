@@ -14,6 +14,10 @@
 //====================================================================================================================================================
 
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/NetworkTableInstance.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
 #include <string>
 #include <vector>
 #include "frc/geometry/Pose2d.h"
@@ -34,4 +38,7 @@ public:
     void ZeroPosition();
     void CleanUpQuestMessages();
     double GetOculusYaw();
+
+private:
+    std::shared_ptr<nt::NetworkTable> m_networktable;
 };

@@ -16,4 +16,5 @@
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
+    auto table = nt::NetworkTableInstance::GetDefault().GetTable("questnav");
 }
