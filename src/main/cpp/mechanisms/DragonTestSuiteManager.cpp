@@ -33,7 +33,7 @@ void DragonTestSuiteManager::RegisterTest(string testSuiteName, DragonTestCase *
     // otherwise make new vector
     else
     {
-        m_testSuites.emplace(std::vector<DragonTestCase *>{tc});
+        m_testSuites.emplace(testSuiteName, std::vector<DragonTestCase *>{tc});
         m_testSuiteNames.emplace_back(testSuiteName);
     }
 }
