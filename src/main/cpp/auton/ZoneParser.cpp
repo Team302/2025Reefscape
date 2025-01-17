@@ -144,10 +144,17 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         for (xml_node zonenode = auton.first_child(); zonenode; zonenode = zonenode.next_sibling())
         {
 
+            double radius = -1;
+            double circleX = 0;
+            double circleY = 0;
+
             AutonGrid::XGRID xgrid1 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid1 = AutonGrid::YGRID::NONE;
             AutonGrid::XGRID xgrid2 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid2 = AutonGrid::YGRID::NONE;
+
+            AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
+
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
             // bool isNoteStateChanging = false;
             // noteManagerGen::STATE_NAMES noteChosenOption = noteManagerGen::STATE_NAMES::STATE_OFF;
@@ -163,6 +170,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     auto itr = X_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != X_xmlStringToGridEnumMap.end())
                     {
+                        zoneMode = AutonGrid::RECTANGLE;
                         xgrid1 = itr->second;
                     }
                     else
@@ -206,6 +214,19 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
+                else if (strcmp(attr.name(), "centerx") == 0)
+                {
+                    zoneMode = AutonGrid::CIRCLE;
+                    circleX = attr.as_double();
+                }
+                else if (strcmp(attr.name(), "centery") == 0)
+                {
+                    circleY = attr.as_double();
+                }
+                else if (strcmp(attr.name(), "radius") == 0)
+                {
+                    radius = attr.as_double();
+                }
                 /**
                 else if (strcmp(attr.name(), "noteOption") == 0)
                 {
@@ -246,8 +267,16 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     }
                 }
             }
-
-            if (!hasError) // if no error returns the zone parameters
+            if (radius != -1)
+            {
+                return new ZoneParams(circleX,
+                                      circleY,
+                                      radius,
+                                      chassisChosenOption,
+                                      avoidChosenOption,
+                                      zoneMode);
+            }
+            else if (!hasError) // if no error returns the zone parameters
             {
                 return (new ZoneParams(xgrid1,
                                        ygrid1,
@@ -256,7 +285,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        // isNoteStateChanging,
                                        // noteChosenOption,
                                        chassisChosenOption,
-                                       avoidChosenOption));
+                                       avoidChosenOption,
+                                       zoneMode));
             }
 
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("ZoneParser"), string("ParseXML"), string("Has Error"));

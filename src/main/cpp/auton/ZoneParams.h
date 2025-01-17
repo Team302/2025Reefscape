@@ -38,7 +38,16 @@ public:
                // bool isNoteStateChanging,
                // noteManagerGen::STATE_NAMES noteoption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
-               ChassisOptionEnums::AutonAvoidOptions autonavoidoption); // declare ZoneParams public constructor with parameters xgrid1, etc.
+               ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
+               AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
+    ZoneParams(double circleX,
+               double circleY,
+               double radius,
+               // bool isNoteStateChanging,
+               // noteManagerGen::STATE_NAMES noteoption,
+               ChassisOptionEnums::AutonChassisOptions autonchassisoption,
+               ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
+               AutonGrid::ZoneMode zoneMode);
 
     ZoneParams() = delete;
     ~ZoneParams() = default; // Destructor
@@ -47,6 +56,13 @@ public:
     AutonGrid::XGRID GetXGrid2() const { return m_xgrid2; }
     AutonGrid::YGRID GetYGrid1() const { return m_ygrid1; }
     AutonGrid::YGRID GetYGrid2() const { return m_ygrid2; }
+
+    AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
+
+    double getCircleX() const { return m_circleX; }
+    double getCircleY() const { return m_circleY; }
+    double getRadius() const { return m_radius; }
+
     // bool IsNoteStateChanging() const { return m_isNoteStateChanging; }
     // noteManagerGen::STATE_NAMES GetNoteOption() const { return m_noteoption; }
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
@@ -61,6 +77,12 @@ private:
     // noteManagerGen::STATE_NAMES m_noteoption;
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
+
+    AutonGrid::ZoneMode m_zoneMode;
+
+    double m_circleX;
+    double m_circleY;
+    double m_radius;
 };
 
 typedef std::vector<ZoneParams *> ZoneParamsVector; // create typedef ZoneParamsVector
