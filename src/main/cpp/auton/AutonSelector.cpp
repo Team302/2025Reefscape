@@ -158,13 +158,13 @@ void AutonSelector::PutChoicesOnDashboard()
 	frc::SmartDashboard::PutData("Target Game Piece", &m_targetGamePiece);
 
 	// Target Face Option
-	m_targetFace.AddOption("Far Right", "FarRight");
-	m_targetFace.AddOption("Far Center", "FarCenter");
-	m_targetFace.AddOption("Far Left", "FarLeft");
-	m_targetFace.AddOption("Near Right", "NearRight");
-	m_targetFace.AddOption("Near Center", "NearCenter");
-	m_targetFace.AddOption("NearLeft", "NearLeft");
-	m_targetFace.SetDefaultOption("Far Center", "FarCenter");
+	m_targetFace.AddOption("A-D", "AD");
+	m_targetFace.AddOption("C-F", "CF");
+	m_targetFace.AddOption("E-H", "EH");
+	m_targetFace.AddOption("G-J", "GJ");
+	m_targetFace.AddOption("I-L", "IL");
+	m_targetFace.AddOption("K-B", "KB");
+	m_targetFace.SetDefaultOption("G-H", "GH");
 	frc::SmartDashboard::PutData("Target Face", &m_targetFace);
 
 	// Level Option
