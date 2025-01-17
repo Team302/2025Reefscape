@@ -13,20 +13,36 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "vision/DragonQuest.h"
-
+DragonQuest::DragonQuest()
+{
+    m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
+}
+DragonQuest *DragonQuest::m_dragonquest = nullptr;
+DragonQuest *DragonQuest::GetDragonQuest()
+{
+    if (DragonQuest::m_dragonquest == nullptr)
+    {
+        DragonQuest::m_dragonquest = new DragonQuest();
+    }
+    return DragonQuest::m_dragonquest;
+}
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
-    auto table = nt::NetworkTableInstance::GetDefault().GetTable("questnav");
+    auto postopic = m_networktable.get()->GetDoubleArrayTopic(std::string("position"));
+    auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
+
+    std::vector<double> posarray = postopic.GetEntry(std::array<double, 3>{}).Get();
+    std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
+
+    frc::Rotation2d rotation = frc::Rotation2d{units::angle::degree_t(rotationarray[2])};
+    frc::Pose2d currentpos = frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), rotation};
+    return currentpos;
 }
 
-double getOculusYaw()
+units::angle::degree_t DragonQuest::GetOculusYaw()
 {
-    float eulerAngles = questEulerAngles.get();
-    double ret = eulerAngles - yaw_offset;
-    ret %= 360;
-    if (ret < 0)
-    {
-        ret += 360;
-    }
-    return ret;
+    auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
+    std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
+    units::angle::degree_t yaw = units::degree_t(rotationarray[2]);
+    return yaw;
 }

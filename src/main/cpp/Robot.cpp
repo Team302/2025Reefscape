@@ -28,6 +28,7 @@
 #include "utils/logging/LoggerEnums.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
+#include "vision/DragonQuest.h"
 
 using std::string;
 
@@ -85,6 +86,11 @@ void Robot::RobotPeriodic()
 
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
+
+    frc::Pose2d pose = DragonQuest::GetDragonQuest()->GetEstimatedPose();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), pose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), pose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), pose.Rotation().Degrees().value());
 }
 
 /**

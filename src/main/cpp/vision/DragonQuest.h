@@ -18,6 +18,7 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
+#include "networktables/DoubleArrayTopic.h"
 #include <string>
 #include <vector>
 #include "frc/geometry/Pose2d.h"
@@ -28,8 +29,6 @@ class DragonQuest
 
 {
 public:
-    DragonQuest();
-    ~DragonQuest() = default;
     frc::Pose2d GetEstimatedPose();
     bool IsConnected();
     double GetBatteryPercent();
@@ -37,8 +36,12 @@ public:
     void ZeroHeading();
     void ZeroPosition();
     void CleanUpQuestMessages();
-    double GetOculusYaw();
+    units::angle::degree_t GetOculusYaw();
+    static DragonQuest *GetDragonQuest();
 
 private:
+    DragonQuest();
+    ~DragonQuest() = default;
     std::shared_ptr<nt::NetworkTable> m_networktable;
+    static DragonQuest *m_dragonquest;
 };
