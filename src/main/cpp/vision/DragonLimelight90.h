@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,52 +14,26 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <feedback/LEDStates.h>
-#include <state/IRobotStateChangeSubscriber.h>
 
-class DriverFeedback : public IRobotStateChangeSubscriber
+// C++ Includes
+#include <string>
+#include <vector>
+
+// FRC includes
+#include "frc/Timer.h"
+#include "networktables/NetworkTable.h"
+#include "units/angle.h"
+#include "units/length.h"
+#include "units/time.h"
+#include "frc/geometry/Pose2d.h"
+
+// Team 302 includes
+#include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
+
+class DragonLimelight90 : public DragonLimelight
 {
 public:
-    void UpdateFeedback();
-
-    static DriverFeedback *GetInstance();
-
-    void UpdateLEDStates();
-
-    void UpdateCompressorState();
-
-    void Update(RobotStateChanges::StateChange change, int value) override;
-
-private:
-    void UpdateRumble();
-    void UpdateDiagnosticLEDs();
-    void CheckControllers();
-    void DisplayPressure() const;
-    void DisplayDesiredGamePiece();
-    void ResetRequests(void);
-    DriverFeedback();
-    ~DriverFeedback() = default;
-
-    bool m_AutonomousEnabled = false;
-    bool m_TeleopEnabled = false;
-
-    DragonLeds::Colors oldState = DragonLeds::WHITE;
-    DragonLeds::Colors currentState = DragonLeds::BLACK;
-
-    enum DriverFeedbackStates
-    {
-        NONE
-    };
-
-    LEDStates *m_LEDStates = LEDStates::GetInstance();
-    int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
-    int m_rumbleLoopCounter = 0;
-    int m_firstloop = true;
-
-    static DriverFeedback *m_instance;
-    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
-    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTy(); }
+    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return GetTx(); }
 };

@@ -55,8 +55,9 @@ string AutonSelector::GetSelectedAutoFile()
 	autonfile += std::string("/auton/");
 	autonfile += GetAlianceColor();
 	autonfile += GetStartPos();
-	autonfile += GetNumofPiecesinautonWing();
-	autonfile += GetNumofPiecesinautonCenter();
+	autonfile += GetTargetFace();
+	autonfile += GetTargetGamePiece();
+	autonfile += GetDesiredScoringLevel();
 	autonfile += std::string(".xml");
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("auton"), string("file"), autonfile);
@@ -121,14 +122,18 @@ string AutonSelector::GetStartPos()
 	return m_startposchooser.GetSelected();
 }
 
-string AutonSelector::GetNumofPiecesinautonWing()
+string AutonSelector::GetTargetGamePiece()
 {
-	return m_numofgamepiecewing.GetSelected();
+	return m_targetGamePiece.GetSelected();
 }
 
-string AutonSelector::GetNumofPiecesinautonCenter()
+string AutonSelector::GetDesiredScoringLevel()
 {
-	return m_numofgamepiececenter.GetSelected();
+	return m_desiredScoringLevel.GetSelected();
+}
+string AutonSelector::GetTargetFace()
+{
+	return m_targetFace.GetSelected();
 }
 
 //---------------------------------------------------------------------
@@ -139,26 +144,34 @@ string AutonSelector::GetNumofPiecesinautonCenter()
 //---------------------------------------------------------------------
 void AutonSelector::PutChoicesOnDashboard()
 {
-	m_startposchooser.AddOption("Amp", "Amp");
-	m_startposchooser.AddOption("Subwoofer", "Subwoofer");
-	m_startposchooser.AddOption("Podium", "Podium");
-	m_startposchooser.AddOption("Wide", "Wide");
-	m_startposchooser.SetDefaultOption("Subwoofer", "Subwoofer");
+	// Starting Position
+	m_startposchooser.AddOption("Left", "Left");
+	m_startposchooser.AddOption("Center", "Center");
+	m_startposchooser.AddOption("Right", "Right");
+	m_startposchooser.SetDefaultOption("Center", "Center");
 	frc::SmartDashboard::PutData("StartPos", &m_startposchooser);
 
-	m_numofgamepiecewing.AddOption("0", "Wing0");
-	m_numofgamepiecewing.AddOption("1", "Wing1");
-	m_numofgamepiecewing.AddOption("2", "Wing2");
-	m_numofgamepiecewing.AddOption("3", "Wing3");
-	m_numofgamepiecewing.SetDefaultOption("0", "Wing0");
-	frc::SmartDashboard::PutData("NumofWingpcs", &m_numofgamepiecewing);
+	// Game Piece Option
+	m_targetGamePiece.AddOption("Coral", "Coral");
+	m_targetGamePiece.AddOption("Algae", "Algae");
+	m_targetGamePiece.SetDefaultOption("Coral", "Coral");
+	frc::SmartDashboard::PutData("Target Game Piece", &m_targetGamePiece);
 
-	m_numofgamepiececenter.AddOption("0", "Center0");
-	m_numofgamepiececenter.AddOption("1", "Center1");
-	m_numofgamepiececenter.AddOption("2", "Center2");
-	m_numofgamepiececenter.AddOption("3", "Center3");
-	m_numofgamepiececenter.AddOption("4", "Center4");
-	m_numofgamepiececenter.AddOption("5", "Center5");
-	m_numofgamepiececenter.SetDefaultOption("0", "Center0");
-	frc::SmartDashboard::PutData("NumofCenterpcs", &m_numofgamepiececenter);
+	// Target Face Option
+	m_targetFace.AddOption("A-D", "AD");
+	m_targetFace.AddOption("C-F", "CF");
+	m_targetFace.AddOption("E-H", "EH");
+	m_targetFace.AddOption("G-J", "GJ");
+	m_targetFace.AddOption("I-L", "IL");
+	m_targetFace.AddOption("K-B", "KB");
+	m_targetFace.SetDefaultOption("G-H", "GH");
+	frc::SmartDashboard::PutData("Target Face", &m_targetFace);
+
+	// Level Option
+	m_desiredScoringLevel.AddOption("L1", "L1");
+	m_desiredScoringLevel.AddOption("L2", "L2");
+	m_desiredScoringLevel.AddOption("L3", "L3");
+	m_desiredScoringLevel.AddOption("L4", "L4");
+	m_desiredScoringLevel.SetDefaultOption("L4", "L4");
+	frc::SmartDashboard::PutData("Desired Level", &m_desiredScoringLevel);
 }

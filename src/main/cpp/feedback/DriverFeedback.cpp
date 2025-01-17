@@ -62,6 +62,32 @@ void DriverFeedback::UpdateRumble()
 void DriverFeedback::UpdateLEDStates()
 {
     oldState = currentState;
+    if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
+    {
+        currentState = DragonLeds::RED;
+        if (oldState != currentState)
+        {
+            m_LEDStates->ResetVariables();
+        }
+        m_LEDStates->SolidColorPattern(currentState);
+    }
+    else
+    {
+        if (oldState != currentState)
+        {
+            m_LEDStates->ResetVariables();
+        }
+        if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
+        {
+            currentState = DragonLeds::WHITE;
+            m_LEDStates->SolidColorPattern(currentState);
+        }
+        else if (m_scoringMode == RobotStateChanges::ScoringMode::Algae)
+        {
+            currentState = DragonLeds::AZUL;
+            m_LEDStates->SolidColorPattern(currentState);
+        }
+    }
 }
 
 void DriverFeedback::UpdateDiagnosticLEDs()
@@ -90,20 +116,17 @@ void DriverFeedback::ResetRequests(void)
 DriverFeedback::DriverFeedback() : IRobotStateChangeSubscriber()
 {
 
-    // RobotState *RobotStates = RobotState::GetInstance();
-    //  RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode);
-    //  RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus);
+    RobotState *RobotStates = RobotState::GetInstance();
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus);
 }
 void DriverFeedback::Update(RobotStateChanges::StateChange change, int value)
 {
-    /**
     if (RobotStateChanges::StateChange::ClimbModeStatus == change)
         m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 
     else if (RobotStateChanges::StateChange::DesiredScoringMode == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
-    **/
-    //
 }
 
 void DriverFeedback::CheckControllers()

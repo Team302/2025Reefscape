@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,52 +14,31 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <feedback/LEDStates.h>
-#include <state/IRobotStateChangeSubscriber.h>
 
-class DriverFeedback : public IRobotStateChangeSubscriber
+#include <units/angle.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/angular_velocity.h>
+#include <units/voltage.h>
+
+class InterpolateUtils
 {
 public:
-    void UpdateFeedback();
+    // Position interpolation
+    units::length::meter_t linearInterpolate(const units::length::meter_t x[], const units::length::meter_t y[], int size, units::length::meter_t targetX);
 
-    static DriverFeedback *GetInstance();
+    // Velocity interpolation
+    units::velocity::meters_per_second_t linearInterpolate(const units::velocity::meters_per_second_t x[], const units::velocity::meters_per_second_t y[], int size, units::velocity::meters_per_second_t targetX);
 
-    void UpdateLEDStates();
+    // Angle interpolation
+    units::angle::degree_t linearInterpolate(const units::angle::degree_t x[], const units::angle::degree_t y[], int size, units::angle::degree_t targetX);
 
-    void UpdateCompressorState();
+    // Angular Velocity interpolation
+    units::angular_velocity::radians_per_second_t linearInterpolate(const units::angular_velocity::radians_per_second_t x[], const units::angular_velocity::radians_per_second_t y[], int size, units::angular_velocity::radians_per_second_t targetX);
 
-    void Update(RobotStateChanges::StateChange change, int value) override;
+    // Voltage interpolation
+    units::voltage::volt_t linearInterpolate(const units::voltage::volt_t x[], const units::voltage::volt_t y[], int size, units::voltage::volt_t targetX);
 
-private:
-    void UpdateRumble();
-    void UpdateDiagnosticLEDs();
-    void CheckControllers();
-    void DisplayPressure() const;
-    void DisplayDesiredGamePiece();
-    void ResetRequests(void);
-    DriverFeedback();
-    ~DriverFeedback() = default;
-
-    bool m_AutonomousEnabled = false;
-    bool m_TeleopEnabled = false;
-
-    DragonLeds::Colors oldState = DragonLeds::WHITE;
-    DragonLeds::Colors currentState = DragonLeds::BLACK;
-
-    enum DriverFeedbackStates
-    {
-        NONE
-    };
-
-    LEDStates *m_LEDStates = LEDStates::GetInstance();
-    int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
-    int m_rumbleLoopCounter = 0;
-    int m_firstloop = true;
-
-    static DriverFeedback *m_instance;
-    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
-    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+    // Double interpolation
+    double linearInterpolate(const double x[], const double y[], int size, double targetX);
 };
