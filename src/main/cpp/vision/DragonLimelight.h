@@ -67,13 +67,23 @@ public:
         SNAP_ON
     };
 
+    enum LIMELIGHT_MODE
+    {
+
+        APRIL_DETECTION,
+        POSE_ESTIMATION,
+        MACHINE_LEARNING
+
+    };
+
     ///-----------------------------------------------------------------------------------
     /// Method:         DragonLimelight (constructor)
     /// Description:    Create the object
     ///-----------------------------------------------------------------------------------
     DragonLimelight() = delete;
     DragonLimelight(
-        std::string name,                      /// <I> - network table name
+        std::string name, /// <I> - network table name'
+        LIMELIGHT_MODE usage,
         PIPELINE initialPipeline,              /// <I> enum for starting pipeline
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
@@ -95,9 +105,9 @@ public:
     bool HealthCheck();
     bool HasTarget();
 
-    std::optional<units::angle::degree_t> GetTargetYaw();
+    virtual std::optional<units::angle::degree_t> GetTargetYaw();
     std::optional<units::angle::degree_t> GetTargetYawRobotFrame();
-    std::optional<units::angle::degree_t> GetTargetPitch();
+    virtual std::optional<units::angle::degree_t> GetTargetPitch();
     std::optional<units::angle::degree_t> GetTargetPitchRobotFrame();
     std::optional<double> GetTargetArea();
     std::optional<units::angle::degree_t> GetTargetSkew();
@@ -150,4 +160,5 @@ protected:
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
+    LIMELIGHT_MODE m_usage;
 };

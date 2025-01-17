@@ -49,7 +49,8 @@
 /// Description:    Create the object
 ///-----------------------------------------------------------------------------------
 DragonLimelight::DragonLimelight(
-    std::string networkTableName,           /// <I> networkTableName
+    std::string networkTableName, /// <I> networkTableName
+    LIMELIGHT_MODE usage,
     DragonCamera::PIPELINE initialPipeline, /// <I> enum for pipeline
     units::length::inch_t mountingXOffset,  /// <I> x offset of cam from robot center (forward relative to robot)
     units::length::inch_t mountingYOffset,  /// <I> y offset of cam from robot center (left relative to robot)
@@ -61,7 +62,8 @@ DragonLimelight::DragonLimelight(
     CAM_MODE camMode,
     STREAM_MODE streamMode,
     SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, initialPipeline, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
-                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
+                              m_usage(usage)
 {
     SetPipeline(initialPipeline);
     SetLEDMode(ledMode);
@@ -234,23 +236,7 @@ units::angle::degree_t DragonLimelight::GetTy() const
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYaw()
 {
-    if (std::abs(GetCameraRoll().to<double>()) < 1.0)
-    {
-        return -1.0 * GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 90.0) < 1.0)
-    {
-        return GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 180.0) < 1.0)
-    {
-        return GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 270.0) < 1.0)
-    {
-        return -1.0 * GetTy();
-    }
-    return GetTx();
+    return -1.0 * GetTx();
 }
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
@@ -275,22 +261,6 @@ std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
 
 std::optional<units::angle::degree_t> DragonLimelight::GetTargetPitch()
 {
-    if (std::abs(GetCameraRoll().to<double>()) < 1.0)
-    {
-        return GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 90.0) < 1.0)
-    {
-        return GetTx();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 180.0) < 1.0)
-    {
-        return -1.0 * GetTy();
-    }
-    else if (std::abs(GetCameraRoll().to<double>() - 270.0) < 1.0)
-    {
-        return -1.0 * GetTx();
-    }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("DragonLimelight"), std::string("GetTargetVerticalOffset"), std::string("Invalid limelight rotation"));
     return GetTy();
 }
