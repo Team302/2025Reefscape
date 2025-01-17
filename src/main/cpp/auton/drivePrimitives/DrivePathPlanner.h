@@ -35,18 +35,19 @@
 #include "pathplanner/lib/config/RobotConfig.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 
-class DrivePathPlanner : public IPrimitive
+class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
 public:
     DrivePathPlanner();
-    ~DrivePathPlanner() = default;
+    ~DrivePathPlanner();
 
     void Init(PrimitiveParams *params) override;
     void Run() override;
     bool IsDone() override;
 
 private:
-    void InitMoveInfo();
+    void
+    InitMoveInfo();
     void CheckForDriveToNote();
     bool ShouldConsiderNote(units::length::meter_t xposition);
     SwerveChassis *m_chassis;
