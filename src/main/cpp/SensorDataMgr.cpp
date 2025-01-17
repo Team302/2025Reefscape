@@ -19,7 +19,6 @@
 #include <vector>
 
 using std::vector;
-using namespace std;
 
 SensorDataMgr *SensorDataMgr::m_instance = nullptr;
 SensorDataMgr *SensorDataMgr::GetInstance()

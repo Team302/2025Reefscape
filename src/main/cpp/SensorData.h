@@ -26,14 +26,8 @@
 class SensorData
 {
 public:
-	SensorData(std::string name);
+	SensorData();
 	virtual ~SensorData() = default;
 
-	virtual void PeriodicCacheData();
-
-protected:
-	std::shared_ptr<nt::NetworkTable> m_networktable;
-	bool m_tv;
-	units::angle::degree_t m_tx;
-	units::angle::degree_t m_ty;
+	virtual void PeriodicCacheData() = 0;
 };

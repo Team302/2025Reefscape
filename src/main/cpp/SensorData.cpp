@@ -23,28 +23,7 @@
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
 
-bool m_tv;
-units::angle::degree_t m_tx;
-units::angle::degree_t m_ty;
-
-SensorData::SensorData(std::string networkTableName) : m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+SensorData::SensorData()
 {
     SensorDataMgr::GetInstance()->RegisterSensorData(this);
-}
-void SensorData::PeriodicCacheData()
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-
-        m_tv = (nt->GetNumber("tv", 0.0) > 0.1);
-        m_tx = units::angle::degree_t(nt->GetNumber("tx", 0.0));
-        m_ty = units::angle::degree_t(nt->GetNumber("ty", 0.0));
-    }
-    else
-    {
-        m_tv = false;
-        m_tx = units::angle::degree_t(0.0);
-        m_ty = units::angle::degree_t(0.0);
-    }
 }
