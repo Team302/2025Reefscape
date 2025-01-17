@@ -18,3 +18,15 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
 {
     auto table = nt::NetworkTableInstance::GetDefault().GetTable("questnav");
 }
+
+double getOculusYaw()
+{
+    float eulerAngles = questEulerAngles.get();
+    double ret = eulerAngles - yaw_offset;
+    ret %= 360;
+    if (ret < 0)
+    {
+        ret += 360;
+    }
+    return ret;
+}
