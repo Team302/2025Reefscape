@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -12,52 +11,38 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//======================================================\==============================================================================================
 
-#pragma once
+#include <SensorDataMgr.h>
+#include <SensorData.h>
 
-class RobotStateChanges
+#include <vector>
+
+using std::vector;
+
+SensorDataMgr *SensorDataMgr::m_instance = nullptr;
+SensorDataMgr *SensorDataMgr::GetInstance()
 {
-public:
-    enum StateChange
+    if (SensorDataMgr::m_instance == nullptr)
     {
-        DesiredScoringMode,
-        ClimbModeStatus,
-        ChassisTipStatus,
-        DriveAssistMode,
-        GameState,
-        CompressorChange,
-        LoopCounter
-    };
+        SensorDataMgr::m_instance = new SensorDataMgr();
+    }
+    return SensorDataMgr::m_instance;
+}
 
-    enum ScoringMode
-    {
-        Coral,
-        Algae
-    };
+SensorDataMgr::SensorDataMgr() : m_SensorData()
+{
+}
+void SensorDataMgr::RegisterSensorData(
+    SensorData *sd)
+{
+    m_SensorData.emplace_back(sd);
+}
 
-    enum ClimbMode
+void SensorDataMgr::CacheData() const
+{
+    for (SensorData *sensor : m_SensorData)
     {
-        ClimbModeOff,
-        ClimbModeOn
-    };
-
-    enum ChassisTilt
-    {
-        NotTilted,
-        Tilted
-    };
-
-    enum DriveAssist
-    {
-        DriveAssistOff,
-        DriveAssistOn
-    };
-
-    enum GamePeriod
-    {
-        Auton,
-        Teleop,
-        Disabled
-    };
-};
+        sensor->PeriodicCacheData();
+    }
+}

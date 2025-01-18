@@ -12,39 +12,18 @@
 /// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 /// OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include <vector>
 
 // FRC includes
+#include "frc/geometry/Rotation3d.h"
 
 // Team 302 includes
-#include <utils/logging/LoggableItemMgr.h>
-#include "utils/logging/LoggableItem.h"
+#include "SensorData.h"
+#include "SensorDataMgr.h"
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
 
-// Third Party Includes
-
-LoggableItemMgr *LoggableItemMgr::m_instance = nullptr;
-LoggableItemMgr *LoggableItemMgr::GetInstance()
+SensorData::SensorData()
 {
-    if (LoggableItemMgr::m_instance == nullptr)
-    {
-        LoggableItemMgr::m_instance = new LoggableItemMgr();
-    }
-    return LoggableItemMgr::m_instance;
-}
-
-/// @brief    initialize the state manager, parse the configuration file and create the states.
-LoggableItemMgr::LoggableItemMgr() : m_loggableItems()
-{
-}
-void LoggableItemMgr::RegisterLoggableItem(
-    LoggableItem *item)
-{
-    m_loggableItems.emplace_back(item);
-}
-void LoggableItemMgr::LogData() const
-{
-    for (auto item : m_loggableItems)
-    {
-        item->LogInformation();
-    }
+    SensorDataMgr::GetInstance()->RegisterSensorData(this);
 }

@@ -46,5 +46,6 @@ public:
         MANUAL_LAUNCH_INC,
         MANUAL_LAUNCH_DEC,
         SCORING_MODE,
+        CLIMB_MODE
     };
 };

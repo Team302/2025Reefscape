@@ -15,52 +15,22 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <feedback/LEDStates.h>
-#include <state/IRobotStateChangeSubscriber.h>
+#include <vector>
+#include "SensorData.h"
 
-class DriverFeedback : public IRobotStateChangeSubscriber
+class SensorDataMgr
 {
 public:
-    void UpdateFeedback();
+    static SensorDataMgr *GetInstance();
 
-    static DriverFeedback *GetInstance();
-
-    void UpdateLEDStates();
-
-    void UpdateCompressorState();
-
-    void Update(RobotStateChanges::StateChange change, int value) override;
+    // register methods
+    void RegisterSensorData(SensorData *sd);
+    void CacheData() const;
 
 private:
-    void UpdateRumble();
-    void UpdateDiagnosticLEDs();
-    void CheckControllers();
-    void DisplayPressure() const;
-    void DisplayDesiredGamePiece();
-    void ResetRequests(void);
-    DriverFeedback();
-    ~DriverFeedback() = default;
+    SensorDataMgr();
+    ~SensorDataMgr();
 
-    bool m_AutonomousEnabled = false;
-    bool m_TeleopEnabled = false;
-
-    DragonLeds::Colors oldState = DragonLeds::WHITE;
-    DragonLeds::Colors currentState = DragonLeds::BLACK;
-
-    enum DriverFeedbackStates
-    {
-        NONE
-    };
-
-    LEDStates *m_LEDStates = LEDStates::GetInstance();
-    int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
-    int m_rumbleLoopCounter = 0;
-    int m_firstloop = true;
-
-    static DriverFeedback *m_instance;
-    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
-    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+    std::vector<SensorData *> m_SensorData;
+    static SensorDataMgr *m_instance;
 };

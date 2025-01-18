@@ -15,52 +15,19 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <feedback/LEDStates.h>
-#include <state/IRobotStateChangeSubscriber.h>
 
-class DriverFeedback : public IRobotStateChangeSubscriber
+#include "frc/geometry/Rotation3d.h"
+
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+
+///  @brief	    Interface for loggable items that can be mixed in with other interfaces
+class SensorData
 {
 public:
-    void UpdateFeedback();
+	SensorData();
+	virtual ~SensorData() = default;
 
-    static DriverFeedback *GetInstance();
-
-    void UpdateLEDStates();
-
-    void UpdateCompressorState();
-
-    void Update(RobotStateChanges::StateChange change, int value) override;
-
-private:
-    void UpdateRumble();
-    void UpdateDiagnosticLEDs();
-    void CheckControllers();
-    void DisplayPressure() const;
-    void DisplayDesiredGamePiece();
-    void ResetRequests(void);
-    DriverFeedback();
-    ~DriverFeedback() = default;
-
-    bool m_AutonomousEnabled = false;
-    bool m_TeleopEnabled = false;
-
-    DragonLeds::Colors oldState = DragonLeds::WHITE;
-    DragonLeds::Colors currentState = DragonLeds::BLACK;
-
-    enum DriverFeedbackStates
-    {
-        NONE
-    };
-
-    LEDStates *m_LEDStates = LEDStates::GetInstance();
-    int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
-    int m_rumbleLoopCounter = 0;
-    int m_firstloop = true;
-
-    static DriverFeedback *m_instance;
-    RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
-    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+	virtual void PeriodicCacheData() = 0;
 };
