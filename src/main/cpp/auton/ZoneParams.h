@@ -40,9 +40,8 @@ public:
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
-    ZoneParams(double circleX,
-               double circleY,
-               double radius,
+    ZoneParams(frc::Pose2d circleZonePose,
+               units::length::inch_t radius,
                // bool isNoteStateChanging,
                // noteManagerGen::STATE_NAMES noteoption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
@@ -59,9 +58,8 @@ public:
 
     AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
 
-    double getCircleX() const { return m_circleX; }
-    double getCircleY() const { return m_circleY; }
-    double getRadius() const { return m_radius; }
+    frc::Pose2d getCircleZonePose() const { return m_circleZonePose; }
+    units::length::inch_t getRadius() const { return m_radius; }
 
     // bool IsNoteStateChanging() const { return m_isNoteStateChanging; }
     // noteManagerGen::STATE_NAMES GetNoteOption() const { return m_noteoption; }
@@ -80,9 +78,8 @@ private:
 
     AutonGrid::ZoneMode m_zoneMode;
 
-    double m_circleX;
-    double m_circleY;
-    double m_radius;
+    frc::Pose2d m_circleZonePose;
+    units::length::inch_t m_radius;
 };
 
 typedef std::vector<ZoneParams *> ZoneParamsVector; // create typedef ZoneParamsVector

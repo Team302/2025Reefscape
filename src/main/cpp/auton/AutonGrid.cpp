@@ -47,10 +47,9 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
     return ((robotPose.X().value() >= units::length::meter_t(x1 * m_gridRes).value()) && (robotPose.X().value() <= units::length::meter_t(x2 * m_gridRes).value()) &&
             (robotPose.Y().value() >= units::length::meter_t(y1 * m_gridRes).value()) && (robotPose.Y().value() <= units::length::meter_t(y2 * m_gridRes).value()));
 }
-bool AutonGrid::IsPoseInZone(double circleX, double circleY, double radius, frc::Pose2d robotPose)
+bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
 {
-    double diffX = abs(robotPose.X().value() - circleX);
-    double diffY = abs(robotPose.Y().value() - circleY);
-    return (sqrt((pow(diffX, 2) + pow(diffY, 2))) <= radius);
+    auto distanceToTheReef = circleZonePose.Translation().Distance(robotPose.Translation());
+    return distanceToTheReef <= radius;
     // math.. :(
 }

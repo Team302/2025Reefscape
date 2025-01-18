@@ -113,8 +113,7 @@ void CyclePrimitives::Run()
 					}
 					else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
 					{
-						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleX(),
-																		  zone->getCircleY(),
+						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
 																		  zone->getRadius(),
 																		  m_chassis->GetPose());
 					}

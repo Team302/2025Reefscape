@@ -269,9 +269,9 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             }
             if (radius != -1)
             {
-                return new ZoneParams(circleX,
-                                      circleY,
-                                      radius,
+                auto circlePose2d = frc::Pose2d(units::length::meter_t(circleX), units::length::meter_t(circleY), units::degree_t(0));
+                return new ZoneParams(circlePose2d,
+                                      units::inch_t(radius),
                                       chassisChosenOption,
                                       avoidChosenOption,
                                       zoneMode);
