@@ -112,6 +112,11 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_timer.get()->Start();
 }
 
+void DrivePathPlanner::DataLog()
+{
+    LogStringData(DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
+}
+
 void DrivePathPlanner::InitMoveInfo()
 {
     m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;

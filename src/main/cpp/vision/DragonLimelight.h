@@ -29,11 +29,12 @@
 
 // Team 302 includes
 #include "vision/DragonCamera.h"
+#include "SensorData.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera
+class DragonLimelight : public DragonCamera, public SensorData
 {
 public:
     enum LED_MODE
@@ -147,6 +148,8 @@ public:
     void SetCrosshairPos(double crosshairPosX, double crosshairPosY);
     void SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY);
 
+    void PeriodicCacheData() override;
+
     bool UpdatePipeline();
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
@@ -155,7 +158,13 @@ protected:
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
+
     std::shared_ptr<nt::NetworkTable> m_networktable;
+
+    bool m_tv;
+    units::angle::degree_t m_tx;
+    units::angle::degree_t m_ty;
+
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
