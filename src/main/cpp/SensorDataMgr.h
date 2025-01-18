@@ -15,24 +15,22 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <array>
 #include <vector>
-#include "utils/logging/DragonDataLogger.h"
+#include "SensorData.h"
 
-class DragonDataLoggerMgr
+class SensorDataMgr
 {
 public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    static SensorDataMgr *GetInstance();
+
+    // register methods
+    void RegisterSensorData(SensorData *sd);
+    void CacheData() const;
 
 private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
+    SensorDataMgr();
+    ~SensorDataMgr();
 
-    std::vector<DragonDataLogger *> m_items;
-
-    static DragonDataLoggerMgr *m_instance;
+    std::vector<SensorData *> m_SensorData;
+    static SensorDataMgr *m_instance;
 };

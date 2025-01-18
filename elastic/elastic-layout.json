@@ -1,0 +1,132 @@
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Alliance If NO FMS",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Alliance If NO FMS",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "StartPos",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/StartPos",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Logging Options",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Logging Options",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Logging Levels",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Logging Levels",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Target Game Piece",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Target Game Piece",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Target Face",
+            "x": 0.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Target Face",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Desired Level",
+            "x": 0.0,
+            "y": 768.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Desired Level",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Field",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 1152.0,
+            "height": 768.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/SmartDashboard/Field",
+              "period": 0.06,
+              "field_game": "Crescendo",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
+      }
+    }
+  ]
+}

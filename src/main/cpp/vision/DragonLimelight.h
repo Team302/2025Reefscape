@@ -29,11 +29,12 @@
 
 // Team 302 includes
 #include "vision/DragonCamera.h"
+#include "SensorData.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera
+class DragonLimelight : public DragonCamera, public SensorData
 {
 public:
     enum LED_MODE
@@ -67,13 +68,23 @@ public:
         SNAP_ON
     };
 
+    enum LIMELIGHT_MODE
+    {
+
+        APRIL_DETECTION,
+        POSE_ESTIMATION,
+        MACHINE_LEARNING
+
+    };
+
     ///-----------------------------------------------------------------------------------
     /// Method:         DragonLimelight (constructor)
     /// Description:    Create the object
     ///-----------------------------------------------------------------------------------
     DragonLimelight() = delete;
     DragonLimelight(
-        std::string name,                      /// <I> - network table name
+        std::string name, /// <I> - network table name'
+        LIMELIGHT_MODE usage,
         PIPELINE initialPipeline,              /// <I> enum for starting pipeline
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
@@ -137,6 +148,8 @@ public:
     void SetCrosshairPos(double crosshairPosX, double crosshairPosY);
     void SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY);
 
+    void PeriodicCacheData() override;
+
     bool UpdatePipeline();
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
@@ -145,9 +158,16 @@ protected:
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
+
     std::shared_ptr<nt::NetworkTable> m_networktable;
+
+    bool m_tv;
+    units::angle::degree_t m_tx;
+    units::angle::degree_t m_ty;
+
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
+    LIMELIGHT_MODE m_usage;
 };
