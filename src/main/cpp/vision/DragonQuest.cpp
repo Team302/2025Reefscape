@@ -14,10 +14,6 @@
 //====================================================================================================================================================
 #include "vision/DragonQuest.h"
 
-DragonQuest::DragonQuest()
-{
-    m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
-}
 DragonQuest *DragonQuest::m_dragonquest = nullptr;
 DragonQuest *DragonQuest::GetDragonQuest()
 {
@@ -27,6 +23,14 @@ DragonQuest *DragonQuest::GetDragonQuest()
     }
     return DragonQuest::m_dragonquest;
 }
+
+DragonQuest::DragonQuest()
+{
+    m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
+    m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
+    m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
+}
+
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
     auto postopic = m_networktable.get()->GetDoubleArrayTopic(std::string("position"));
@@ -73,4 +77,13 @@ void DragonQuest::ZeroHeading()
 
 void DragonQuest::ZeroPosition()
 {
+    if (m_questMiso.Get() != 99)
+    {
+        m_questMosi.Set(1);
+    }
+}
+
+void DragonQuest::DataLog()
+{
+    LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, DragonQuest::GetEstimatedPose());
 }

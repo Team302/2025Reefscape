@@ -19,6 +19,7 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include "networktables/DoubleArrayTopic.h"
+#include "utils/logging/DragonDataLogger.h"
 #include <string>
 #include <vector>
 #include "frc/geometry/Pose2d.h"
@@ -26,7 +27,7 @@
 
 using namespace std;
 
-class DragonQuest
+class DragonQuest : public DragonDataLogger
 
 {
 public:
@@ -46,6 +47,7 @@ private:
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
     double yawoffset;
-    nt::IntegerSubscriber questMiso = m_networktable->GetIntegerTopic("mosi").Subscribe(0);
-    nt::IntegerPublisher questMosi = m_networktable->GetIntegerTopic("mosi").Publish();
+    nt::IntegerSubscriber m_questMiso;
+    nt::IntegerPublisher m_questMosi;
+    void DataLog() override;
 };
