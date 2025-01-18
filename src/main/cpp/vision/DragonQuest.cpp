@@ -41,8 +41,12 @@ units::angle::degree_t DragonQuest::GetOculusYaw()
 {
     auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
     std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
-    units::angle::degree_t yaw = units::degree_t(rotationarray[2]);
-    return yaw;
+    double yaw = units::degree_t(rotationarray[2]).value() - yawoffset;
+    if (yaw > 180)
+    {
+        yaw -= -360;
+    }
+    return units::angle::degree_t(yaw);
 }
 
 bool DragonQuest::IsConnected()
@@ -58,4 +62,15 @@ double DragonQuest::GetBatteryPercent()
 double DragonQuest::GetTimeStamp()
 {
     return m_networktable.get()->GetNumber(std::string("timestamp"), 0.0);
+}
+
+void DragonQuest::ZeroHeading()
+{
+    auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
+    std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
+    yawoffset = rotationarray[2];
+}
+
+void DragonQuest::ZeroPosition()
+{
 }

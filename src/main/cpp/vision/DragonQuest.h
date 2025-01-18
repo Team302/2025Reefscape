@@ -44,4 +44,5 @@ private:
     ~DragonQuest() = default;
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
+    double yawoffset;
 };
