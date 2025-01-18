@@ -35,6 +35,7 @@ public:
         AUTO_TURN_FORWARD,
         AUTO_TURN_BACKWARD,
         ALIGN_FLOOR_GAME_PIECE,
+        ALIGN_CORALSTATION,
         RESET_POSITION,
         POLAR_DRIVE,
         SLOW_MODE,

@@ -41,6 +41,7 @@ private:
     void InitSpeeds(double forwardScale, double strafeScale, double rotateScale);
     void ResetPose();
     void AlignGamePiece();
+    void AlignCoralStation();
     void HoldPosition();
     void TurnForward();
     void TurnBackward();

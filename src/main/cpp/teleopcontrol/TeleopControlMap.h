@@ -162,6 +162,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
     {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
+    {TeleopControlFunctions::ALIGN_CORALSTATION, driverAButton},
 };
 
 const TeleopControlAxis driverLJoystickX = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::LEFT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::AXIS_PROFILE::LINEAR, TeleopControlMappingEnums::REVERSED, 1.0};
