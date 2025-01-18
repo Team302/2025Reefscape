@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.4 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.4">
   <diagram name="Page-1" id="7JSrTSUAfBA1Y6AAACkT">
-    <mxGraphModel dx="2127" dy="3534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1835" dy="3335" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -29,11 +29,13 @@
         <mxCell id="Jm4u1WT2hWWi50uBgEos-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Intake&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;br&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Intake: 100%&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;IntakeExtender: On/Intake Pos deg&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Exit: N/A&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
           <mxGeometry x="2550" y="-1330" width="254" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="sE4ZRas46_IIxG0Z2Xrk-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Jm4u1WT2hWWi50uBgEos-5" target="sE4ZRas46_IIxG0Z2Xrk-2">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="Jm4u1WT2hWWi50uBgEos-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="Jm4u1WT2hWWi50uBgEos-5" target="Jm4u1WT2hWWi50uBgEos-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3000" y="-1045" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="sE4ZRas46_IIxG0Z2Xrk-4" value="Score&lt;div&gt;Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="sE4ZRas46_IIxG0Z2Xrk-3">
-          <mxGeometry x="-0.175" y="-3" relative="1" as="geometry">
+        <mxCell id="Jm4u1WT2hWWi50uBgEos-11" value="Score&lt;div&gt;Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Jm4u1WT2hWWi50uBgEos-10" vertex="1" connectable="0">
+          <mxGeometry x="-0.0128" y="-1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
@@ -56,31 +58,22 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="Jm4u1WT2hWWi50uBgEos-12" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Process&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;br&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Intake: -100%&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;IntakeExtender: Off/Intake Hold or 0 deg&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Exit: N/A&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
+          <mxGeometry x="3010" y="-1110" width="254" height="130" as="geometry" />
+        </mxCell>
         <mxCell id="NSvRCxmy2Cwi4IC1grca-1" value="&lt;div&gt;Control Data:&lt;/div&gt;&lt;div&gt;Intake: Percent Out&lt;/div&gt;&lt;div&gt;Intake Extender: Position Deg (if motor)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="2850" y="-1700" width="230" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="f2aJ67SrucSnJBSP6uEp-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="Jm4u1WT2hWWi50uBgEos-5" target="FIMyjUegxXdDTG1FlUWc-6" edge="1">
+        <mxCell id="f2aJ67SrucSnJBSP6uEp-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Jm4u1WT2hWWi50uBgEos-12" target="FIMyjUegxXdDTG1FlUWc-6">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="3420" y="-1045" />
               <mxPoint x="3420" y="-1481" />
             </Array>
-            <mxPoint x="3264" y="-1045" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="sE4ZRas46_IIxG0Z2Xrk-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Process&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;br&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Intake: -100%&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;IntakeExtender: Off/Intake Hold or 0 deg&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Exit: N/A&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2550" y="-900" width="254" height="130" as="geometry" />
-        </mxCell>
-        <mxCell id="sE4ZRas46_IIxG0Z2Xrk-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="sE4ZRas46_IIxG0Z2Xrk-2" target="FIMyjUegxXdDTG1FlUWc-6">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="3420" y="-835" />
-              <mxPoint x="3420" y="-1481" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="sE4ZRas46_IIxG0Z2Xrk-9" value="Intake Sensor = False" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="sE4ZRas46_IIxG0Z2Xrk-8">
-          <mxGeometry x="0.0586" y="-3" relative="1" as="geometry">
+        <mxCell id="f2aJ67SrucSnJBSP6uEp-2" value="Intake Sensor = False" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="f2aJ67SrucSnJBSP6uEp-1">
+          <mxGeometry x="-0.3444" y="-2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
