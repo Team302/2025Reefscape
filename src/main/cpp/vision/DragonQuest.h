@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include "frc/geometry/Pose2d.h"
+#include "networktables\IntegerTopic.h"
 
 using namespace std;
 
@@ -45,4 +46,6 @@ private:
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
     double yawoffset;
+    nt::IntegerSubscriber questMiso = m_networktable->GetIntegerTopic("mosi").Subscribe(0);
+    nt::IntegerPublisher questMosi = m_networktable->GetIntegerTopic("mosi").Publish();
 };
