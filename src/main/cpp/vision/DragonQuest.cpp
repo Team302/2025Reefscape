@@ -34,7 +34,6 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     std::vector<double> posarray = postopic.GetEntry(std::array<double, 3>{}).Get();
 
     frc::Pose2d currentpos = frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), DragonQuest::GetOculusYaw()};
-    LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, currentpos);
     return currentpos;
 }
 
