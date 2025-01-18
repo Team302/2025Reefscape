@@ -28,7 +28,6 @@ public:
     enum FUNCTION
     {
         READY,
-        UNKNOWN_FUNCTION,
         ROBOT_ORIENTED_DRIVE,
         HOLONOMIC_DRIVE_FORWARD,
         HOLONOMIC_DRIVE_ROTATE,
