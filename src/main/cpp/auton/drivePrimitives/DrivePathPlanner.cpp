@@ -96,9 +96,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
     m_pathGainsType = params->GetPathGainsType();
-    LogStringData(DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
 
-    (DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
     m_isVisionDrive = (m_pathname == "DRIVE_TO_NOTE");
@@ -112,6 +110,11 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_timer.get()->Reset();
     m_timer.get()->Start();
+}
+
+void DrivePathPlanner::DataLog()
+{
+    LogStringData(DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
 }
 
 void DrivePathPlanner::InitMoveInfo()
