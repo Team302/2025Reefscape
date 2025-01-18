@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "zone.dtd">
+
+<auton>
+    <zone 
+        circlex = "4.4821"
+        circley = "4.008"
+        radius = "65.25" 
+        noteOption="STATE_PREPARE_PLACE_AMP"/>
+</auton>

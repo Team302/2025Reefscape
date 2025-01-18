@@ -49,7 +49,7 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
 }
 bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
 {
+
     auto distanceToTheReef = circleZonePose.Translation().Distance(robotPose.Translation());
     return distanceToTheReef <= radius;
-    // math.. :(
 }
