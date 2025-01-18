@@ -13,6 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "vision/DragonQuest.h"
+
 DragonQuest::DragonQuest()
 {
     m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
@@ -29,13 +30,11 @@ DragonQuest *DragonQuest::GetDragonQuest()
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
     auto postopic = m_networktable.get()->GetDoubleArrayTopic(std::string("position"));
-    auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
 
     std::vector<double> posarray = postopic.GetEntry(std::array<double, 3>{}).Get();
-    std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
 
-    frc::Rotation2d rotation = frc::Rotation2d{units::angle::degree_t(rotationarray[2])};
-    frc::Pose2d currentpos = frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), rotation};
+    frc::Pose2d currentpos = frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), DragonQuest::GetOculusYaw()};
+    LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, currentpos);
     return currentpos;
 }
 
@@ -45,4 +44,19 @@ units::angle::degree_t DragonQuest::GetOculusYaw()
     std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
     units::angle::degree_t yaw = units::degree_t(rotationarray[2]);
     return yaw;
+}
+
+bool DragonQuest::IsConnected()
+{
+    return m_networktable.get()->GetBoolean(std::string("isconnected"), false);
+}
+
+double DragonQuest::GetBatteryPercent()
+{
+    return m_networktable.get()->GetNumber(std::string("batterypercent"), 0.0);
+}
+
+double DragonQuest::GetTimeStamp()
+{
+    return m_networktable.get()->GetNumber(std::string("timestamp"), 0.0);
 }
