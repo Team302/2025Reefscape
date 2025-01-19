@@ -15,24 +15,19 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <array>
-#include <vector>
-#include "utils/logging/DragonDataLogger.h"
 
-class DragonDataLoggerMgr
+#include "frc/geometry/Rotation3d.h"
+
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+
+///  @brief	    Interface for loggable items that can be mixed in with other interfaces
+class SensorData
 {
 public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+	SensorData();
+	virtual ~SensorData() = default;
 
-private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
-
-    std::vector<DragonDataLogger *> m_items;
-
-    static DragonDataLoggerMgr *m_instance;
+	virtual void PeriodicCacheData() = 0;
 };
