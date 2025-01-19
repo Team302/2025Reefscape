@@ -87,10 +87,10 @@ void Robot::RobotPeriodic()
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
 
-    frc::Pose2d pose = DragonQuest::GetDragonQuest()->GetEstimatedPose();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), pose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), pose.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), pose.Rotation().Degrees().value());
+    m_pose = DragonQuest::GetDragonQuest()->GetEstimatedPose();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), m_pose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), m_pose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), m_pose.Rotation().Degrees().value());
 }
 
 /**

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include "frc/geometry/Pose2d.h"
 
 class CyclePrimitives;
 class HolonomicDrive;
@@ -73,4 +74,5 @@ private:
     RobotDefinition *m_robot;
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
+    frc::Pose2d m_pose;
 };
