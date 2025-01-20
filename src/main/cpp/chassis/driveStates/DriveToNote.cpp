@@ -37,7 +37,6 @@
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
 
-
 DriveToNote::DriveToNote(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)
 {
@@ -116,7 +115,7 @@ pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNoteTrajectory(frc:
 bool DriveToNote::IsDone()
 {
     /**
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
     if (config != nullptr)
     {
         auto noteStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);

@@ -1,0 +1,26 @@
+$$_COPYRIGHT_$$
+$$_GEN_NOTICE_$$
+
+#include <string>
+
+#include "PeriodicLooper.h"
+#include "utils/logging/Logger.h"
+#include "configs/MechanismConfigMgr.h"
+#include "configs/MechanismConfig$$_ROBOT_NAME_$$.h"
+#include "configs/RobotElementNames.h"
+$$_INCLUDE_$$
+
+using std::string;
+
+void MechanismConfig$$_ROBOT_NAME_$$::DefineMechanisms(){
+    $$_MECHANISMS_INITIALIZATION_$$}
+
+StateMgr *MechanismConfig$$_ROBOT_NAME_$$::GetMechanism(MechanismTypes::MECHANISM_TYPE mechType)
+{
+    auto itr = m_mechanismMap.find(mechType);
+    if (itr != m_mechanismMap.end())
+    {
+        return itr->second;
+    }
+    return nullptr;
+}

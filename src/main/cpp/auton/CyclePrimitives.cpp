@@ -111,7 +111,7 @@ void CyclePrimitives::Run()
 					if (isInZone)
 					{
 						/**
-					auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+					auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 					if (config != nullptr && zone->IsNoteStateChanging())
 					{
 						auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
@@ -208,7 +208,7 @@ void CyclePrimitives::RunDriveStop()
 
 void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 {
-	auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
 		/**
