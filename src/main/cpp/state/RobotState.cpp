@@ -45,9 +45,9 @@ RobotState::RobotState() : m_chassis(nullptr),
                            m_climbMode(RobotStateChanges::ClimbModeOff),
                            m_scoringModeButtonReleased(true)
 {
-    m_brokers.reserve(RobotStateChanges::LoopCounter);
-    auto start = static_cast<int>(RobotStateChanges::DesiredScoringMode);
-    auto end = static_cast<int>(RobotStateChanges::LoopCounter);
+    m_brokers.reserve(RobotStateChanges::LoopCounterStart);
+    auto start = static_cast<int>(RobotStateChanges::DesiredScoringMode_Int);
+    auto end = static_cast<int>(RobotStateChanges::LoopCounterEnd);
     for (auto i = start; i < end; ++i)
     {
         m_brokers.emplace_back(new RobotStateChangeBroker(static_cast<RobotStateChanges::StateChange>(i)));
@@ -100,7 +100,54 @@ void RobotState::PublishStateChange(RobotStateChanges::StateChange change, int n
         m_brokers[slot]->Notify(newValue);
     }
 }
-
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, double newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, units::length::meter_t newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, units::angle::degree_t newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, frc::Pose2d newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
 void RobotState::PublishGameStateChanges()
 {
     auto gameState = m_gamePhase;
@@ -123,7 +170,7 @@ void RobotState::PublishGameStateChanges()
     if (gameState != m_gamePhase)
     {
         m_gamePhase = gameState;
-        PublishStateChange(RobotStateChanges::GameState, gameState);
+        PublishStateChange(RobotStateChanges::GameState_Int, gameState);
     }
 }
 void RobotState::PublishScoringMode(TeleopControl *controller)
@@ -133,7 +180,7 @@ void RobotState::PublishScoringMode(TeleopControl *controller)
         if (m_scoringModeButtonReleased)
         {
             m_scoringMode = (m_scoringMode == RobotStateChanges::Coral) ? RobotStateChanges::Algae : RobotStateChanges::Coral;
-            PublishStateChange(RobotStateChanges::DesiredScoringMode, m_scoringMode);
+            PublishStateChange(RobotStateChanges::DesiredScoringMode_Int, m_scoringMode);
         }
     }
     m_scoringModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::SCORING_MODE);
@@ -147,7 +194,7 @@ void RobotState::PublishClimbMode(TeleopControl *controller)
         {
             m_climbMode = (m_climbMode == RobotStateChanges::ClimbModeOff) ? RobotStateChanges::ClimbModeOn : RobotStateChanges::ClimbModeOff;
 
-            PublishStateChange(RobotStateChanges::ClimbModeStatus, m_climbMode);
+            PublishStateChange(RobotStateChanges::ClimbModeStatus_Int, m_climbMode);
         }
     }
 

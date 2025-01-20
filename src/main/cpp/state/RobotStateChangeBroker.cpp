@@ -54,7 +54,7 @@ void RobotStateChangeBroker::Notify(units::length::meter_t value)
         subscriber->Update(m_change, value);
     }
 }
-void RobotStateChangeBroker::Notfiy(units::angle::degree_t value)
+void RobotStateChangeBroker::Notify(units::angle::degree_t value)
 {
     for (auto subscriber : m_subscribers)
     {

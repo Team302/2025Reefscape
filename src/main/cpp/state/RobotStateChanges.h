@@ -21,13 +21,16 @@ class RobotStateChanges
 public:
     enum StateChange
     {
-        DesiredScoringMode,
-        ClimbModeStatus,
-        ChassisTipStatus,
-        DriveAssistMode,
-        GameState,
-        CompressorChange,
-        LoopCounter
+        LoopCounterStart,
+        DesiredScoringMode_Int,
+        ClimbModeStatus_Int,
+        ChassisTipStatus_Int,
+        DriveAssistMode_Int,
+        GameState_Int,
+        CompressorChange_Int,
+        ChassisPose_Pose2D,
+        LoopCounterEnd,
+
     };
 
     enum ScoringMode
