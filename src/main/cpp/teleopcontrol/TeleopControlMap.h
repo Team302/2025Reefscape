@@ -164,6 +164,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
+    {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::INTAKE, driverLBumper},
 
