@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,20 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <string>
+#pragma once
 
-// FRC includes
-#include "units/time.h"
+// Team302 Includes
+#include "chassis/states/FaceTarget.h"
 
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
-
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+class FaceReef : public FaceTarget
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-}
+public:
+    FaceReef();
+    ~FaceReef() = default;
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
-{
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
 
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
-}
-
-void DriveHoldPosition::Run()
-{
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
-
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
-}
+protected:
+    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+};

@@ -22,7 +22,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
-#include "chassis/driveStates/DriveToNote.h"
+#include "chassis/states/DriveToNote.h"
 #include "utils/logging/DragonDataLogger.h"
 
 // FRC,WPI Includes

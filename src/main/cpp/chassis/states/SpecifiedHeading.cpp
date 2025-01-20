@@ -13,57 +13,44 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
+// Team302 Includes
+#include "chassis/ChassisOptionEnums.h"
+#include "chassis/states/SpecifiedHeading.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+
 #include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+SpecifiedHeading::SpecifiedHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE),
+                                       m_targetAngle(units::angle::degree_t(0.0))
 {
 }
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
+SpecifiedHeading::SpecifiedHeading(ChassisOptionEnums::HeadingOption option) : ISwerveDriveOrientation(option),
+                                                                               m_targetAngle(units::angle::degree_t(0.0))
 {
+}
+
+std::string SpecifiedHeading::GetHeadingStateName() const
+{
+    return std::string("SpecifiedHeading");
+}
+
+void SpecifiedHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
+{
+    m_targetAngle = GetTargetAngle(chassisMovement);
+
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
     if (chassis != nullptr)
     {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
+        auto correction = CalcHeadingCorrection(m_targetAngle, kPSpecifiedHeading);
+        chassisMovement.chassisSpeeds.omega += correction;
+        chassis->SetStoredHeading(m_targetAngle);
     }
 }
 
-void ResetPositionPathPlannerNoVision::Run()
+units::angle::degree_t SpecifiedHeading::GetTargetAngle(ChassisMovement &chassisMovement) const
 {
-}
-
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
+    return chassisMovement.yawAngle;
 }

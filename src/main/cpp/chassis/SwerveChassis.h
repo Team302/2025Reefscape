@@ -34,8 +34,8 @@
 // #include "grpl/LaserCan.h"
 
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/driveStates/ISwerveDriveState.h"
-#include "chassis/headingStates/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveState.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "chassis/IChassis.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/ChassisMovement.h"

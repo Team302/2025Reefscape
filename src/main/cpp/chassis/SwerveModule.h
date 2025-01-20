@@ -35,7 +35,7 @@
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
-#include "chassis/TractionControlController.h"
+#include "chassis/modifiers/TractionControlController.h"
 
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
