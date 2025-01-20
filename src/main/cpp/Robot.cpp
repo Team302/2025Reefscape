@@ -250,8 +250,6 @@ void Robot::LogDiagnosticData()
         LogSensorData();
     else if (step == 1)
         LogMotorData();
-    else if (step == 3)
-        LogCameraData();
     else if (step == 4)
     {
         if (m_chassis != nullptr)
@@ -300,11 +298,6 @@ void Robot::LogMotorData()
     {
         // TODO implement mechanism states logging
     }
-}
-
-void Robot::LogCameraData()
-{
-    // TODO: implement encoder logging for chassis
 }
 
 void Robot::SimulationInit()

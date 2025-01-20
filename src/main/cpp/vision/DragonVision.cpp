@@ -225,8 +225,8 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 		return selectedData;
 	}
 
-	return std::nullopt;
 	*/
+	return std::nullopt;
 }
 
 std::optional<VisionData> DragonVision::GetDataToNearestAprilTag(RobotElementNames::CAMERA_USAGE position)
