@@ -20,8 +20,6 @@
 // Team302 Includes
 #include "auton/PrimitiveParams.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "configs/MechanismConfig.h"
-#include "configs/MechanismConfigMgr.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
