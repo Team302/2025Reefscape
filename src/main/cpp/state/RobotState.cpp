@@ -78,6 +78,7 @@ void RobotState::Run()
         if (controller != nullptr)
         {
             PublishScoringMode(controller);
+            PublishClimbMode(controller);
         }
     }
 }

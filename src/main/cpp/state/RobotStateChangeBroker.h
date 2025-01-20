@@ -30,6 +30,12 @@ public:
 	void AddSubscriber(IRobotStateChangeSubscriber *subscriber);
 
 	void Notify(int value);
+	void Notify(double value);
+	void Notify(units::length::meter_t value);
+	void Notfiy(units::angle::degree_t value);
+	void Notify(units::velocity::meters_per_second_t value);
+	void Notify(units::angular_velocity::degrees_per_second_t value);
+	void Notify(frc::Pose2d value);
 
 private:
 	RobotStateChanges::StateChange m_change;
