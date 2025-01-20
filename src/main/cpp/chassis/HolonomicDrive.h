@@ -23,7 +23,7 @@
 #include "chassis/ChassisMovement.h"
 #include "state/State.h"
 
-class SwerveChassis;
+class DragonSwerveChassis;
 
 class HolonomicDrive : public State
 {
@@ -51,7 +51,7 @@ private:
 
     void DriveToGamePiece(double forward, double strafe, double rot);
 
-    SwerveChassis *m_swerve;
+    DragonSwerveChassis *m_swerve;
     ChassisOptionEnums::DriveStateType m_previousDriveState;
     const double m_slowModeMultiplier = 0.5;
     bool m_CheckTipping = false;

@@ -12,7 +12,7 @@
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "configs/RobotConfig.h"
 #include "configs/RobotConfigMgr.h"
 #include "feedback/DriverFeedback.h"
@@ -191,7 +191,7 @@ void Robot::DisabledPeriodic()
 {
     // TODO Make method in DragonVision for next year
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    auto chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 
     if (chassis != nullptr)
     {
@@ -250,10 +250,10 @@ void Robot::LogDiagnosticData()
         LogCameraData();
     else if (step == 4)
     {
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
+        m_chassis->LogSwerveEncoderData(DragonSwerveChassis::SWERVE_MODULES::LEFT_BACK);
+        m_chassis->LogSwerveEncoderData(DragonSwerveChassis::SWERVE_MODULES::RIGHT_BACK);
+        m_chassis->LogSwerveEncoderData(DragonSwerveChassis::SWERVE_MODULES::LEFT_FRONT);
+        m_chassis->LogSwerveEncoderData(DragonSwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
     }
     loopCounter++;
 }
@@ -319,7 +319,7 @@ void Robot::InitializeRobot()
     RobotConfigMgr::GetInstance()->InitRobot((RobotConfigMgr::RobotIdentifier)teamNumber);
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotConfigMgr::RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+    m_chassis = chassisConfig != nullptr ? chassisConfig->GetDragonSwerveChassis() : nullptr;
     m_holonomic = nullptr;
     if (m_chassis != nullptr)
     {

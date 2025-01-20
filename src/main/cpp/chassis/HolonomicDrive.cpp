@@ -35,7 +35,7 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/Logger.h"
-// #include "chassis/driveStates/DriveToNote.h"
+// #include "chassis/states/DriveToNote.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using std::string;
@@ -43,7 +43,7 @@ using namespace frc;
 
 /// @brief initialize the object and validate the necessary items are not nullptrs
 HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
-                                   m_swerve(ChassisConfigMgr::GetInstance()->GetCurrentConfig() != nullptr ? ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis() : nullptr),
+                                   m_swerve(ChassisConfigMgr::GetInstance()->GetCurrentConfig() != nullptr ? ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetDragonSwerveChassis() : nullptr),
                                    m_previousDriveState(ChassisOptionEnums::DriveStateType::FIELD_DRIVE),
                                    m_checkTippingLatch(false)
 {

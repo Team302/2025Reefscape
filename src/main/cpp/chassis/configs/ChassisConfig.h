@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "chassis/SwerveChassis.h"
-#include "chassis/SwerveModule.h"
+#include "chassis/DragonSwerveChassis.h"
+#include "chassis/DragonSwerveModule.h"
 #include "ctre/phoenix6/Pigeon2.hpp"
 
 class ChassisConfig
@@ -36,8 +36,8 @@ public:
 
     void BuildChassis();
 
-    SwerveChassis *GetSwerveChassis() const { return m_chassis; }
-    SwerveModule *GetSwerveModule(SWERVE_MODULE module) const;
+    DragonSwerveChassis *GetDragonSwerveChassis() const { return m_chassis; }
+    DragonSwerveModule *GetDragonSwerveModule(SWERVE_MODULE module) const;
 
     ctre::phoenix6::hardware::Pigeon2 *GetPigeon() const { return m_pigeon2; }
 
@@ -47,10 +47,10 @@ protected:
 
     ctre::phoenix6::hardware::Pigeon2 *m_pigeon2 = nullptr;
 
-    SwerveModule *m_leftBackModule;
-    SwerveModule *m_leftFrontModule;
-    SwerveModule *m_rightBackModule;
-    SwerveModule *m_rightFrontModule;
+    DragonSwerveModule *m_leftBackModule;
+    DragonSwerveModule *m_leftFrontModule;
+    DragonSwerveModule *m_rightBackModule;
+    DragonSwerveModule *m_rightFrontModule;
 
-    SwerveChassis *m_chassis;
+    DragonSwerveChassis *m_chassis;
 };

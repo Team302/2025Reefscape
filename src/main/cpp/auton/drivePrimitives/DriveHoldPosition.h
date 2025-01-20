@@ -26,7 +26,7 @@
 
 // Third Party Includes
 
-class SwerveChassis;
+class DragonSwerveChassis;
 class PrimitiveParams;
 
 class DriveHoldPosition : public IPrimitive
@@ -44,6 +44,6 @@ private:
 	const float kD = 0.0;
 	const float kF = 0.0;
 	// Objects
-	SwerveChassis *m_chassis;
+	DragonSwerveChassis *m_chassis;
 	units::time::second_t m_timeRemaining;
 };

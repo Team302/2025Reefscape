@@ -22,7 +22,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "configs/RobotConfig.h"
 #include "configs/RobotConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
 
@@ -49,7 +49,7 @@ public:
     bool IsDone() override;
 
 private:
-    SwerveChassis *m_chassis;
+    DragonSwerveChassis *m_chassis;
     ChassisOptionEnums::HeadingOption m_headingOption;
     std::string m_ntName;
     DragonCamera::PIPELINE m_pipelineMode;

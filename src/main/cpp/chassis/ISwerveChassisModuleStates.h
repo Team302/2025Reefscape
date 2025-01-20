@@ -29,15 +29,15 @@
 namespace frc
 {
     struct ChassisSpeeds;
-    struct SwerveModuleState;
+    struct DragonSwerveModuleState;
 }
 class DragonPigeon;
 
-class ISwerveChassisModuleStates
+class IDragonSwerveChassisModuleStates
 {
 public:
     virtual wpi::array<frc::SwerveModuleState, 4> CalcModuleStates(frc::ChassisSpeeds speeds) = 0;
 
-    ISwerveChassisModuleStates() = default;
-    virtual ~ISwerveChassisModuleStates() = default;
+    IDragonSwerveChassisModuleStates() = default;
+    virtual ~IDragonSwerveChassisModuleStates() = default;
 };

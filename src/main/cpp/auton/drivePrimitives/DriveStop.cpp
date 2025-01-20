@@ -51,7 +51,7 @@ DriveStop::DriveStop() : IPrimitive(),
 						 m_timer(make_unique<Timer>())
 {
 	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+	m_chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 
 	// get reference to notemanager in drivestop to check for state
 	// StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);

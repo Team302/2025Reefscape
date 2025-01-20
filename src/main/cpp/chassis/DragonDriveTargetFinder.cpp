@@ -24,7 +24,7 @@
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "chassis/headingStates/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "utils/FMSData.h"
 #include "utils/FieldConstants.h"
@@ -56,7 +56,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
 
     if (chassisConfig != nullptr)
     {
-        auto chassis = chassisConfig->GetSwerveChassis();
+        auto chassis = chassisConfig->GetDragonSwerveChassis();
         auto currentPose{Pose3d(chassis->GetPose())};
 
         auto vision = DragonVision::GetDragonVision();
@@ -212,7 +212,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, units::length::meter_t> DragonDriveT
     return targetInfo;
 }
 void DragonDriveTargetFinder::SetCorrection(ChassisMovement &chassisMovement,
-                                            SwerveChassis *chassis,
+                                            DragonSwerveChassis *chassis,
                                             units::angle::degree_t target,
                                             double kp)
 {
@@ -230,12 +230,12 @@ void DragonDriveTargetFinder::SetCorrection(ChassisMovement &chassisMovement,
     }
 }
 
-SwerveChassis *DragonDriveTargetFinder::GetChassis()
+DragonSwerveChassis *DragonDriveTargetFinder::GetChassis()
 {
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     if (chassisConfig != nullptr)
     {
-        return chassisConfig->GetSwerveChassis();
+        return chassisConfig->GetDragonSwerveChassis();
     }
     return nullptr;
 }

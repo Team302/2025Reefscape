@@ -20,7 +20,7 @@
 
 class CyclePrimitives;
 class HolonomicDrive;
-class SwerveChassis;
+class DragonSwerveChassis;
 class TeleopControl;
 class FMSData;
 class DragonField;
@@ -61,7 +61,7 @@ private:
     void LogCameraData();
 
     TeleopControl *m_controller;
-    SwerveChassis *m_chassis;
+    DragonSwerveChassis *m_chassis;
     CyclePrimitives *m_cyclePrims;
     HolonomicDrive *m_holonomic;
 

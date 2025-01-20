@@ -21,8 +21,8 @@
 #include "auton/PrimitiveParams.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/SwerveChassis.h"
-#include "chassis/driveStates/DriveToNote.h"
+#include "chassis/DragonSwerveChassis.h"
+#include "chassis/states/DriveToNote.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
@@ -49,7 +49,7 @@ private:
     void InitMoveInfo();
     void CheckForDriveToNote();
     bool ShouldConsiderNote(units::length::meter_t xposition);
-    SwerveChassis *m_chassis;
+    DragonSwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
     DriveToNote *m_driveToNote;

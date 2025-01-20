@@ -35,8 +35,8 @@
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "utils/logging/Logger.h"
 #include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "chassis/SwerveModule.h"
+#include "chassis/DragonSwerveChassis.h"
+#include "chassis/DragonSwerveModule.h"
 
 // Thirdparty includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
@@ -87,7 +87,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
     Rotation2d heading(units::angle::degree_t(0.0));
 
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    auto chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 
     if (chassis != nullptr)
     {

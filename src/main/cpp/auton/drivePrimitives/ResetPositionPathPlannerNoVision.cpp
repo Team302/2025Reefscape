@@ -24,7 +24,7 @@
 #include "auton/PrimitiveParams.h"
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "utils/logging/Logger.h"
 #include "utils/FMSData.h"
 
@@ -42,7 +42,7 @@ ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitiv
 void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    auto chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 
     if (chassis != nullptr)
     {

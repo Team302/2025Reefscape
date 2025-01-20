@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "chassis/IChassis.h"
 
 #include "configs/RobotElementNames.h"
@@ -31,7 +31,7 @@ public:
 
     void BuildRobot();
 
-    virtual SwerveChassis *GetSwerveChassis() const;
+    virtual DragonSwerveChassis *GetDragonSwerveChassis() const;
     virtual IChassis *GetIChassis() const;
 
     virtual StateMgr *GetMechanism() = 0;

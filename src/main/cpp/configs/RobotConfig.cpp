@@ -15,7 +15,7 @@
 //====================================================================================================================================================
 
 #include "configs/RobotConfig.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 
 RobotConfig::RobotConfig()
 {
@@ -49,7 +49,7 @@ void RobotConfig::DefineLEDs()
 {
 }
 
-SwerveChassis *RobotConfig::GetSwerveChassis() const
+DragonSwerveChassis *RobotConfig::GetDragonSwerveChassis() const
 {
     return nullptr;
 }

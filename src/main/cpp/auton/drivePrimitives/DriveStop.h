@@ -24,7 +24,7 @@
 
 // Team 302 includes
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 // Third Party Includes
@@ -67,7 +67,7 @@ public:
 private:
 	units::time::second_t m_maxTime; // Target time
 	float m_currentTime;			 // Time since init
-	SwerveChassis *m_chassis;
+	DragonSwerveChassis *m_chassis;
 	std::unique_ptr<frc::Timer> m_timer;
 	double m_heading;
 	// noteManager *m_noteManager;

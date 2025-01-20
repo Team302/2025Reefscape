@@ -60,7 +60,7 @@ CyclePrimitives::CyclePrimitives() : State(string("CyclePrimitives"), 0),
 									 m_updatedHeadingOption()
 {
 	auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+	m_chassis = chassisConfig != nullptr ? chassisConfig->GetDragonSwerveChassis() : nullptr;
 }
 
 void CyclePrimitives::Init()

@@ -20,7 +20,7 @@
 
 #include "chassis/configs/ChassisConfig.h"
 #include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "state/RobotStateChangeBroker.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
@@ -66,7 +66,7 @@ RobotState::~RobotState()
 void RobotState::Init()
 {
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+    m_chassis = chassisConfig != nullptr ? chassisConfig->GetDragonSwerveChassis() : nullptr;
 }
 
 void RobotState::Run()

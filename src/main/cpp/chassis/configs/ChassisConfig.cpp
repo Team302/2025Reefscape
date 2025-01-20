@@ -15,7 +15,7 @@
 //====================================================================================================================================================
 
 #include "chassis/configs/ChassisConfig.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 
 ChassisConfig::ChassisConfig()
 {
@@ -39,7 +39,7 @@ void ChassisConfig::DefineChassis()
 {
 }
 
-SwerveModule *ChassisConfig::GetSwerveModule(ChassisConfig::SWERVE_MODULE module) const
+DragonSwerveModule *ChassisConfig::GetDragonSwerveModule(ChassisConfig::SWERVE_MODULE module) const
 {
     if (module == SWERVE_MODULE::LEFT_BACK)
         return m_leftBackModule;

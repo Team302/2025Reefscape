@@ -38,7 +38,7 @@ DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
 										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
 {
 	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+	m_chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 }
 
 void DriveHoldPosition::Init(PrimitiveParams *params)

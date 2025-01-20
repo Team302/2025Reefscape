@@ -23,7 +23,7 @@
 #include "units/angle.h"
 
 #include "chassis/ChassisMovement.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/DragonSwerveChassis.h"
 #include "vision/DragonVision.h"
 
 class DragonDriveTargetFinder
@@ -52,7 +52,7 @@ public:
     std::tuple<TARGET_INFO, units::length::meter_t> GetDistance(FINDER_OPTION option, DragonVision::VISION_ELEMENT item);
 
     static void SetCorrection(ChassisMovement &chassisMovement,
-                              SwerveChassis *chassis,
+                              DragonSwerveChassis *chassis,
                               units::angle::degree_t target,
                               double kp);
 
@@ -61,7 +61,7 @@ private:
     ~DragonDriveTargetFinder() = default;
     static DragonDriveTargetFinder *m_instance;
 
-    SwerveChassis *GetChassis();
+    DragonSwerveChassis *GetChassis();
     int GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose2d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);

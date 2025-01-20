@@ -20,7 +20,7 @@
 #include "frc/DriverStation.h"
 #include "state/RobotStateChanges.h"
 
-class SwerveChassis;
+class DragonSwerveChassis;
 class IRobotStateChangeSubscriber;
 class RobotStateChangeBroker;
 class TeleopControl;
@@ -42,7 +42,7 @@ private:
     RobotState();
     ~RobotState();
 
-    SwerveChassis *m_chassis;
+    DragonSwerveChassis *m_chassis;
     std::vector<RobotStateChangeBroker *> m_brokers;
     RobotStateChanges::ScoringMode m_scoringMode;
     RobotStateChanges::GamePeriod m_gamePhase;

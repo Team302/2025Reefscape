@@ -37,7 +37,7 @@ VisionDrivePrimitive::VisionDrivePrimitive() : IPrimitive(),
                                                m_timeout(0.0)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    m_chassis = config != nullptr ? config->GetDragonSwerveChassis() : nullptr;
 }
 
 void VisionDrivePrimitive::Init(PrimitiveParams *params)
