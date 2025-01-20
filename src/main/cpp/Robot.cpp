@@ -254,7 +254,8 @@ void Robot::LogDiagnosticData()
         LogCameraData();
     else if (step == 4)
     {
-        if (m_chassis != nullptr){
+        if (m_chassis != nullptr)
+        {
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
@@ -304,9 +305,6 @@ void Robot::LogMotorData()
 void Robot::LogCameraData()
 {
     // TODO: implement encoder logging for chassis
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("PLACER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::PINTAKE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LINTAKE));
 }
 
 void Robot::SimulationInit()
