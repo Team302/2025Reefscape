@@ -24,6 +24,7 @@
 #include <vector>
 #include "frc/geometry/Pose2d.h"
 #include "networktables\IntegerTopic.h"
+#include "utils/logging/Logger.h"
 
 using namespace std;
 
@@ -46,8 +47,12 @@ private:
     ~DragonQuest() = default;
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
-    double yawoffset;
+    double yawoffset = 0;
     nt::IntegerSubscriber m_questMiso;
     nt::IntegerPublisher m_questMosi;
+    nt::DoubleArrayTopic m_posTopic;
+    nt::DoubleArrayTopic m_rotationTopic;
+    frc::Pose2d m_currentpos;
+    double m_yaw = 0;
     void DataLog() override;
 };

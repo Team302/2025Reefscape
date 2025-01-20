@@ -88,9 +88,6 @@ void Robot::RobotPeriodic()
     LogDiagnosticData();
 
     m_pose = DragonQuest::GetDragonQuest()->GetEstimatedPose();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), m_pose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), m_pose.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), m_pose.Rotation().Degrees().value());
 }
 
 /**
@@ -256,7 +253,8 @@ void Robot::LogDiagnosticData()
         LogCameraData();
     else if (step == 4)
     {
-        if (m_chassis != nullptr){
+        if (m_chassis != nullptr)
+        {
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
