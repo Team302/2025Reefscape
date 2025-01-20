@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <toolConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <rootOutputFolder>..\..\..\..\BasicRobot\src\main\cpp</rootOutputFolder>
+  <sourceCodeRelativePath>main\cpp</sourceCodeRelativePath>
+  <deployRelativePath>main\deploy</deployRelativePath>
   <robotConfiguration>..\Robots\2025Reefscape.xml</robotConfiguration>
   <appDataConfigurations>
     <string>../Minimal/minimalRobot.xml</string>
@@ -11,7 +12,6 @@
     <string>ApplicationData.MotorController</string>
     <string>ApplicationData.SparkController</string>
     <string>ApplicationData.Camera</string>
-    <string>ApplicationData.PriceChange</string>
     <string>ApplicationData.parameter</string>
   </collectionBaseTypes>
   <physicalUnits>
