@@ -37,23 +37,18 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    m_currentpos = frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), DragonQuest::GetOculusYaw()};
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), m_currentpos.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), m_currentpos.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), m_currentpos.Rotation().Degrees().value());
-    return m_currentpos;
+    return frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), DragonQuest::GetOculusYaw()};
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
 {
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yaw = units::degree_t(rotationarray[1]).value(); //- yawoffset;
+    m_yaw = rotationarray[1] - yawoffset;
     if (m_yaw > 180)
     {
         m_yaw -= 360;
     }
-
     return units::angle::degree_t(m_yaw);
 }
 

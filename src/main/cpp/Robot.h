@@ -74,5 +74,4 @@ private:
     RobotDefinition *m_robot;
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
-    frc::Pose2d m_pose;
 };

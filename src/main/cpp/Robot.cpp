@@ -86,8 +86,9 @@ void Robot::RobotPeriodic()
 
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
-
-    m_pose = DragonQuest::GetDragonQuest()->GetEstimatedPose();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), DragonQuest::GetDragonQuest()->GetEstimatedPose().X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Degrees().value());
 }
 
 /**
@@ -323,14 +324,14 @@ void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
     RobotConfigMgr::GetInstance()->InitRobot((RobotConfigMgr::RobotIdentifier)teamNumber);
-    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotConfigMgr::RobotIdentifier>(teamNumber));
-    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
-    m_holonomic = nullptr;
-    if (m_chassis != nullptr)
-    {
-        m_holonomic = new HolonomicDrive();
-    }
+    // ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotConfigMgr::RobotIdentifier>(teamNumber));
+    // auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    // m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+    // m_holonomic = nullptr;
+    // if (m_chassis != nullptr)
+    // {
+    //     m_holonomic = new HolonomicDrive();
+    // }
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
