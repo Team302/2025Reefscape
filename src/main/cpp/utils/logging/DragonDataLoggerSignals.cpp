@@ -87,8 +87,11 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     // m_noteMgrState = wpi::log::StringLogEntry(log, "/NoteManager/State");
     // m_noteMgrState.Append(m_currNoteMgrState);
 
-    m_pose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Chassis/Pose");
-    m_pose.Append(m_currPose);
+    m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Chassis/Pose");
+    m_pose2d.Append(m_currPose2D);
+
+    m_pose3d = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose");
+    m_pose3d.Append(m_currPose3D);
 
     m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/TargetFrontLeftModuleState");
     m_frontLeftTarget.Append(m_currFrontLeftTarget);

@@ -24,6 +24,8 @@
 #include <vector>
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
+#include "frc/geometry/Rotation3d.h"
+
 #include "networktables\IntegerTopic.h"
 #include "utils/logging/Logger.h"
 

@@ -34,10 +34,13 @@ DragonQuest::DragonQuest()
 frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     auto m_posTopic = m_networktable.get()->GetDoubleArrayTopic(std::string("position"));
+    auto m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic(std::string("euler angles"));
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
+    std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    return frc::Pose3d{units::length::meter_t(posarray[2]), units::meter_t(posarray[0]), DragonQuest::GetOculusYaw()};
+    frc::Pose3d estPose = frc::Pose3d{units::length::meter_t(posarray[2]), units::length::meter_t(posarray[0]), units::length::meter_t(posarray[1]), frc::Rotation3d{units::angle::degree_t(rotationarray[0]), units::angle::degree_t(rotationarray[2]), units::angle::degree_t(rotationarray[1])}};
+    return estPose;
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
@@ -84,5 +87,5 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog()
 {
-    LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, DragonQuest::GetEstimatedPose());
+    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE3D, DragonQuest::GetEstimatedPose());
 }

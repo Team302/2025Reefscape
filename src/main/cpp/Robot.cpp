@@ -88,7 +88,7 @@ void Robot::RobotPeriodic()
     LogDiagnosticData();
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), DragonQuest::GetDragonQuest()->GetEstimatedPose().X().value());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Rotation"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Angle().value());
     DragonQuest::GetDragonQuest()->DataLog();
 }
 
