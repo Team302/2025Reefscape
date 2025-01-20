@@ -17,8 +17,8 @@
 #include "chassis/ChassisMovement.h"
 #include "chassis/states/RobotDrive.h"
 #include "chassis/states/StopDrive.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 
 #include "utils/logging/Logger.h"
 

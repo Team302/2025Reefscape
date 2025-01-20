@@ -16,8 +16,8 @@
 // Team302 Includes
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/states/SpecifiedHeading.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 
 #include "utils/logging/Logger.h"
 

@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,22 +14,41 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/DragonSwerveChassis.h"
 
-#include "chassis/configs/ChassisConfig.h"
-#include "configs/RobotConfigMgr.h"
-
-class ChassisConfigMgr
+ChassisConfig::ChassisConfig()
 {
-public:
-	static ChassisConfigMgr *GetInstance();
-	ChassisConfig *GetCurrentConfig() const { return m_config; }
-	void InitChassis(RobotConfigMgr::RobotIdentifier id);
+}
 
-private:
-	ChassisConfigMgr();
-	~ChassisConfigMgr() = default;
+void ChassisConfig::BuildChassis()
+{
+    DefinePigeon();
+    DefineChassis();
+}
 
-	static ChassisConfigMgr *m_instance;
-	ChassisConfig *m_config;
-};
+ChassisConfig::~ChassisConfig()
+{
+}
+
+void ChassisConfig::DefinePigeon()
+{
+}
+
+void ChassisConfig::DefineChassis()
+{
+}
+
+DragonSwerveModule *ChassisConfig::GetDragonSwerveModule(ChassisConfig::SWERVE_MODULE module) const
+{
+    if (module == SWERVE_MODULE::LEFT_BACK)
+        return m_leftBackModule;
+
+    if (module == SWERVE_MODULE::LEFT_FRONT)
+        return m_leftFrontModule;
+
+    if (module == SWERVE_MODULE::RIGHT_BACK)
+        return m_rightBackModule;
+
+    return m_rightFrontModule;
+}

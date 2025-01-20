@@ -24,7 +24,7 @@
 
 // Team302 Includes
 #include "vision/DragonVision.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/DriveToNote.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructs.h"

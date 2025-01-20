@@ -27,8 +27,8 @@
 // 302 Includes
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "auton/drivePrimitives/DrivePathPlanner.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/DragonDriveTargetFinder.h"

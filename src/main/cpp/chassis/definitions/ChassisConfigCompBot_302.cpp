@@ -15,27 +15,31 @@
 
 #include <string>
 
+#include "ctre/phoenix6/StatusSignal.hpp"
+
 #include "chassis/DragonSwerveModule.h"
 #include "chassis/DragonSwerveModuleConstants.h"
-#include "chassis/configs/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/ChassisConfigCompBot_302.h"
 #include "utils/logging/Logger.h"
 
 using ctre::phoenix6::configs::MountPoseConfigs;
 using ctre::phoenix6::hardware::Pigeon2;
 using std::string;
 
-void ChassisConfigChassis_9998::DefinePigeon()
+void ChassisConfigCompBot_302::DefinePigeon()
 {
     m_pigeon2 = new Pigeon2(0, m_canbusName);
     MountPoseConfigs config{};
-    config.MountPoseYaw = 90_deg;
+    config.MountPoseYaw = 0_deg;
     m_pigeon2->GetConfigurator().Apply(config);
+    m_pigeon2->Reset();
+    ctre::phoenix6::BaseStatusSignal::SetUpdateFrequencyForAll(200_Hz, m_pigeon2->GetYaw());
 }
 
-void ChassisConfigChassis_9998::DefineChassis()
+void ChassisConfigCompBot_302::DefineChassis()
 {
-    string moduleconfig{string("DragonSwerveModule_9998.xml")};
-    string chassisconfig{string("DragonSwerveChassis_9998.xml")};
+    string moduleconfig{string("DragonSwerveModule_302.xml")};
+    string chassisconfig{string("DragonSwerveChassis_302.xml")};
     string networkTableName{string("swerve")};
 
     m_leftFrontModule = new DragonSwerveModule(m_canbusName,

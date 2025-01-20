@@ -17,7 +17,7 @@
 
 // Team302 Includes
 #include "chassis/states/ISwerveDriveOrientation.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/FaceGamePiece.h"
 

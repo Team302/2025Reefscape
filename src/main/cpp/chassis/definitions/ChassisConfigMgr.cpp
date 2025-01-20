@@ -16,11 +16,11 @@
 #include <string>
 
 #include "utils/logging/Logger.h"
-#include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigCompBot_302.h"
-#include "chassis/configs/ChassisConfigChassis_9998.h"
-#include "chassis/configs/ChassisConfigChassis_9997.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigCompBot_302.h"
+#include "chassis/definitions/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/ChassisConfigChassis_9997.h"
 
 using namespace std;
 

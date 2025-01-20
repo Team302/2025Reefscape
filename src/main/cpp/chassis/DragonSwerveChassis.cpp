@@ -27,7 +27,6 @@
 // #include "wpi/DataLog.h"
 
 // Team 302 includes
-#include "chassis/configs/IChassisConfig.h"
 #include "chassis/states/DriveToNote.h"
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/HoldDrive.h"

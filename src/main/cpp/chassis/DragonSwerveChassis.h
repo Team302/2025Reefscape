@@ -39,6 +39,7 @@
 #include "chassis/IChassis.h"
 #include "chassis/DragonSwerveModule.h"
 #include "chassis/ChassisMovement.h"
+#include "chassis/definitions/TunerSwerveDrivetrain9997.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/LoggableItem.h"
@@ -195,6 +196,8 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
 
     frc::Timer m_velocityTimer;
+
+    TunerSwerveDrive m_swerveDrivetrain;
 
     // grpl::LaserCan *m_laserCan = nullptr;
     // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);

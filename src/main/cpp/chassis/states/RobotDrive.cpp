@@ -21,8 +21,8 @@
 #include "units/angle.h"
 
 // Team302 Includes
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisMovement.h"
 #include "chassis/modifiers/AntiTip.h"
 #include "chassis/states/RobotDrive.h"

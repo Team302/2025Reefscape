@@ -25,8 +25,8 @@
 #include "auton/PrimitiveParams.h"
 #include "auton/drivePrimitives/DriveHoldPosition.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/configs/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
 
 // Third Party Includes
 

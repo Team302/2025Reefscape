@@ -16,8 +16,8 @@
 #include <cmath>
 
 // Team302 Includes
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/states/MaintainHeading.h"
 #include "utils/AngleUtils.h"
