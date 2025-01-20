@@ -31,20 +31,20 @@ DragonQuest::DragonQuest()
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
 }
 
-frc::Pose2d DragonQuest::GetEstimatedPose()
+frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     auto m_posTopic = m_networktable.get()->GetDoubleArrayTopic(std::string("position"));
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    return frc::Pose2d{units::length::meter_t(posarray[0]), units::meter_t(posarray[1]), DragonQuest::GetOculusYaw()};
+    return frc::Pose3d{units::length::meter_t(posarray[2]), units::meter_t(posarray[0]), DragonQuest::GetOculusYaw()};
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
 {
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yaw = rotationarray[1] - yawoffset;
+    m_yaw = rotationarray[1] - m_yawoffset;
     if (m_yaw > 180)
     {
         m_yaw -= 360;
@@ -71,7 +71,7 @@ void DragonQuest::ZeroHeading()
 {
     auto rotationtopic = m_networktable.get()->GetDoubleArrayTopic(std::string("eulerAngles"));
     std::vector<double> rotationarray = rotationtopic.GetEntry(std::array<double, 3>{}).Get();
-    yawoffset = rotationarray[2];
+    m_yawoffset = rotationarray[2];
 }
 
 void DragonQuest::ZeroPosition()
