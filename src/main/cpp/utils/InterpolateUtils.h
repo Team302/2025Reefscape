@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,24 +14,31 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <array>
-#include <vector>
-#include "utils/logging/DragonDataLogger.h"
 
-class DragonDataLoggerMgr
+#include <units/angle.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/angular_velocity.h>
+#include <units/voltage.h>
+
+class InterpolateUtils
 {
 public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    // Position interpolation
+    units::length::meter_t linearInterpolate(const units::length::meter_t x[], const units::length::meter_t y[], int size, units::length::meter_t targetX);
 
-private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
+    // Velocity interpolation
+    units::velocity::meters_per_second_t linearInterpolate(const units::velocity::meters_per_second_t x[], const units::velocity::meters_per_second_t y[], int size, units::velocity::meters_per_second_t targetX);
 
-    std::vector<DragonDataLogger *> m_items;
+    // Angle interpolation
+    units::angle::degree_t linearInterpolate(const units::angle::degree_t x[], const units::angle::degree_t y[], int size, units::angle::degree_t targetX);
 
-    static DragonDataLoggerMgr *m_instance;
+    // Angular Velocity interpolation
+    units::angular_velocity::radians_per_second_t linearInterpolate(const units::angular_velocity::radians_per_second_t x[], const units::angular_velocity::radians_per_second_t y[], int size, units::angular_velocity::radians_per_second_t targetX);
+
+    // Voltage interpolation
+    units::voltage::volt_t linearInterpolate(const units::voltage::volt_t x[], const units::voltage::volt_t y[], int size, units::voltage::volt_t targetX);
+
+    // Double interpolation
+    double linearInterpolate(const double x[], const double y[], int size, double targetX);
 };

@@ -63,7 +63,11 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 
         chassisSpeeds.vx = units::velocity::meters_per_second_t(vxNew);
         chassisSpeeds.vy = units::velocity::meters_per_second_t(vyNew);
-
+        auto rot2d = Rotation2d(m_chassis->GetYaw());
+        chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
+                                                                               chassisMovement.chassisSpeeds.vy,
+                                                                               chassisMovement.chassisSpeeds.omega,
+                                                                               rot2d);
         return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
     }
     else

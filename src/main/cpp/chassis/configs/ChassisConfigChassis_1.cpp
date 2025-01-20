@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,25 +13,19 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-#include <array>
-#include <vector>
-#include "utils/logging/DragonDataLogger.h"
+#include <string>
 
-class DragonDataLoggerMgr
+#include "chassis/configs/ChassisConfigChassis_1.h"
+#include "utils/logging/Logger.h"
+
+using std::string;
+
+void ChassisConfigChassis_1::DefinePigeon()
 {
-public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    
+}
 
-private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
+void ChassisConfigChassis_1::DefineChassis()
+{
 
-    std::vector<DragonDataLogger *> m_items;
-
-    static DragonDataLoggerMgr *m_instance;
-};
+}

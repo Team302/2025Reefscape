@@ -28,6 +28,8 @@
 #include "utils/logging/LoggerEnums.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
+#include "SensorData.h"
+#include "SensorDataMgr.h"
 
 using std::string;
 
@@ -132,6 +134,7 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
     }
+    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::TeleopInit()
@@ -176,6 +179,7 @@ void Robot::TeleopPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
     }
+    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::DisabledInit()
@@ -250,10 +254,12 @@ void Robot::LogDiagnosticData()
         LogCameraData();
     else if (step == 4)
     {
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
-        m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
+        if (m_chassis != nullptr){
+            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
+            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
+            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
+            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
+        }
     }
     loopCounter++;
 }

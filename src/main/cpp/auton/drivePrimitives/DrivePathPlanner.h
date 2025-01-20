@@ -23,6 +23,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/driveStates/DriveToNote.h"
+#include "utils/logging/DragonDataLogger.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
@@ -35,7 +36,7 @@
 #include "pathplanner/lib/config/RobotConfig.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 
-class DrivePathPlanner : public IPrimitive
+class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
 public:
     DrivePathPlanner();
@@ -44,6 +45,7 @@ public:
     void Init(PrimitiveParams *params) override;
     void Run() override;
     bool IsDone() override;
+    void DataLog() override;
 
 private:
     void InitMoveInfo();

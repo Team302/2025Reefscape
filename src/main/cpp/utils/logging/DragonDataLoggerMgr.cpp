@@ -19,6 +19,7 @@
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
 #include "wpi/DataLog.h"
+#include <filesystem>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
 
 DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignals(), m_boolDatalogSignals(), m_stringDatalogSignals()
 {
-    frc::DataLogManager::Start();
+    frc::DataLogManager::Start(GetLoggingDir(), CreateLogFileName());
     frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
     DragonDataLoggerSignals::GetInstance();
 }
@@ -42,6 +43,34 @@ DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignal
 DragonDataLoggerMgr::~DragonDataLoggerMgr()
 {
     frc::DataLogManager::Stop();
+}
+
+/**
+ * @brief Create a log file name based on the current date and time
+ */
+std::string DragonDataLoggerMgr::CreateLogFileName()
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char buffer[80];
+    strftime(buffer, 80, "%Y%m%d-%H%M%S", ltm);
+    string time(buffer);
+
+    string filename = "frc302-" + time + ".wpilog";
+    return filename;
+}
+
+std::string DragonDataLoggerMgr::GetLoggingDir()
+{
+    // check if usb log directory exists
+    if (std::filesystem::exists("/media/sda1/logs/"))
+    {
+        return "/media/sda1/logs/";
+    }
+    else
+    {
+        return "/home/lvuser/logs/";
+    }
 }
 
 void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)

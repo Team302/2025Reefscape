@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -12,27 +11,38 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//======================================================\==============================================================================================
 
-#pragma once
-#include <array>
+#include <SensorDataMgr.h>
+#include <SensorData.h>
+
 #include <vector>
-#include "utils/logging/DragonDataLogger.h"
 
-class DragonDataLoggerMgr
+using std::vector;
+
+SensorDataMgr *SensorDataMgr::m_instance = nullptr;
+SensorDataMgr *SensorDataMgr::GetInstance()
 {
-public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    if (SensorDataMgr::m_instance == nullptr)
+    {
+        SensorDataMgr::m_instance = new SensorDataMgr();
+    }
+    return SensorDataMgr::m_instance;
+}
 
-private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
+SensorDataMgr::SensorDataMgr() : m_SensorData()
+{
+}
+void SensorDataMgr::RegisterSensorData(
+    SensorData *sd)
+{
+    m_SensorData.emplace_back(sd);
+}
 
-    std::vector<DragonDataLogger *> m_items;
-
-    static DragonDataLoggerMgr *m_instance;
-};
+void SensorDataMgr::CacheData() const
+{
+    for (SensorData *sensor : m_SensorData)
+    {
+        sensor->PeriodicCacheData();
+    }
+}
