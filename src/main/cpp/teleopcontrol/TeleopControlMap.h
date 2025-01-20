@@ -162,6 +162,22 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
     {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
+    {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
+    {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
+    {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
+    {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
+    {TeleopControlFunctions::INTAKE, driverLBumper},
+
+    {TeleopControlFunctions::READY, copilotStartButton},
+    {TeleopControlFunctions::L1_SCORING_POSITION, copilotRTriggerPressed},
+    {TeleopControlFunctions::L2_SCORING_POSITION, copilotAButton},
+    {TeleopControlFunctions::L3_SCORING_POSITION, copilotXButton},
+    {TeleopControlFunctions::L4_SCORING_POSITION, copilotYButton},
+    {TeleopControlFunctions::ALGAE_INTAKE, copilotLBumper},
+    {TeleopControlFunctions::SCORE, copilotRBumper},
+    {TeleopControlFunctions::SCORING_MODE, copilotSelectButton},
+    {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
+
 };
 
 const TeleopControlAxis driverLJoystickX = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::LEFT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::AXIS_PROFILE::LINEAR, TeleopControlMappingEnums::REVERSED, 1.0};
@@ -210,5 +226,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlA
     {TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD, driverLJoystickY},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE, driverLJoystickX},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE, driverRJoystickX},
+    {TeleopControlFunctions::ELAVATOR, copilotLJoystickY},
+    {TeleopControlFunctions::ARM, copilotRJoystickY},
 
 };
