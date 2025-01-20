@@ -23,9 +23,9 @@ void $$_MECHANISM_INSTANCE_NAME_$$::CreateAndRegisterStates(){
 
         $$_STATE_TRANSITION_REGISTRATION_$$}
 
-$$_MECHANISM_INSTANCE_NAME_$$::$$_MECHANISM_INSTANCE_NAME_$$(RobotConfigMgr::RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::$$_MECHANISM_TYPE_NAME_$$, std::string("$$_MECHANISM_INSTANCE_NAME_$$")),
-                                                                                                              m_activeRobotId(activeRobotId),
-                                                                                                              m_stateMap()
+$$_MECHANISM_INSTANCE_NAME_$$::$$_MECHANISM_INSTANCE_NAME_$$(MechanismConfigMgr::RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::$$_MECHANISM_TYPE_NAME_$$, std::string("$$_MECHANISM_INSTANCE_NAME_$$")),
+                                                                                                                  m_activeRobotId(activeRobotId),
+                                                                                                                  m_stateMap()
 {
     PeriodicLooper::GetInstance()->RegisterAll(this);
 }

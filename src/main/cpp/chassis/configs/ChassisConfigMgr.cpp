@@ -38,19 +38,19 @@ ChassisConfigMgr::ChassisConfigMgr() : m_config(nullptr)
 {
 }
 
-void ChassisConfigMgr::InitChassis(RobotConfigMgr::RobotIdentifier id)
+void ChassisConfigMgr::InitChassis(MechanismConfigMgr::RobotIdentifier id)
 {
 	switch (id)
 	{
-	case RobotConfigMgr::RobotIdentifier::COMP_BOT_302:
+	case MechanismConfigMgr::RobotIdentifier::COMP_BOT_302:
 		m_config = new ChassisConfigCompBot_302();
 		break;
 
-	case RobotConfigMgr::RobotIdentifier::CHASSISBOT_9998:
+	case MechanismConfigMgr::RobotIdentifier::CHASSISBOT_9998:
 		m_config = new ChassisConfigChassis_9998();
 		break;
 
-	case RobotConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
+	case MechanismConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
 		break;
 

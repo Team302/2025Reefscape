@@ -25,7 +25,7 @@
 #include <frc/DriverStation.h>
 
 #include "teleopcontrol/TeleopControl.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfigMgr.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using frc::DriverStation;
@@ -93,7 +93,7 @@ void DriverFeedback::UpdateLEDStates()
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
     /**
-    StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
+    StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
     auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManagerGen *>(noteStateManager) : nullptr;
     if (noteMgr != nullptr)
     {

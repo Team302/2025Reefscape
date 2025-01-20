@@ -16,14 +16,14 @@
 #pragma once
 
 #include "chassis/configs/ChassisConfig.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfigMgr.h"
 
 class ChassisConfigMgr
 {
 public:
 	static ChassisConfigMgr *GetInstance();
 	ChassisConfig *GetCurrentConfig() const { return m_config; }
-	void InitChassis(RobotConfigMgr::RobotIdentifier id);
+	void InitChassis(MechanismConfigMgr::RobotIdentifier id);
 
 private:
 	ChassisConfigMgr();

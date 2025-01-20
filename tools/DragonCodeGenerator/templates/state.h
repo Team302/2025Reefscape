@@ -18,7 +18,7 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
         $$_STATE_NAME_$$State(std::string stateName,
                               int stateId,
                               $$_MECHANISM_INSTANCE_NAME_$$ *mech,
-                              RobotConfigMgr::RobotIdentifier activeRobotId);
+                              MechanismConfigMgr::RobotIdentifier activeRobotId);
         ~$$_STATE_NAME_$$State() = default;
         void Init() override;
         void Run() override;
@@ -29,6 +29,6 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
     private:
         $$_MECHANISM_INSTANCE_NAME_$$ *m_mechanism;
         $$_STATE_INIT_FUNCTION_DECLS_$$
-        RobotConfigMgr::RobotIdentifier m_RobotId;
+        MechanismConfigMgr::RobotIdentifier m_RobotId;
     };
 }

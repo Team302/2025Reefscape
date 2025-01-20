@@ -16,7 +16,7 @@ $$_INCLUDE_FILES_$$
 #include "mechanisms/controllers/ControlData.h"
 
 #include "configs/RobotElementNames.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfigMgr.h"
 
 class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_
 {
@@ -26,7 +26,7 @@ public:
         $$_STATE_NAMES_$$
     };
 
-    $$_MECHANISM_INSTANCE_NAME_$$(RobotConfigMgr::RobotIdentifier activeRobotId);
+    $$_MECHANISM_INSTANCE_NAME_$$(MechanismConfigMgr::RobotIdentifier activeRobotId);
     $$_MECHANISM_INSTANCE_NAME_$$() = delete;
     ~$$_MECHANISM_INSTANCE_NAME_$$() = default;
 
@@ -66,14 +66,14 @@ public:
     void Cyclic();
     void RunCommonTasks() override;
 
-    RobotConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+    MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
     $$_MECHANISM_ELEMENTS_GETTERS_$$
 
     static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-    RobotConfigMgr::RobotIdentifier m_activeRobotId;
+    MechanismConfigMgr::RobotIdentifier m_activeRobotId;
     std::string m_ntName;
     std::string m_tuningIsEnabledStr;
     bool m_tuning = false;

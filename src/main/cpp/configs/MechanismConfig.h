@@ -14,46 +14,22 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "configs/RobotConfig.h"
-#include "chassis/SwerveChassis.h"
+#pragma once
 
-RobotConfig::RobotConfig()
-{
-}
+#include "configs/RobotElementNames.h"
+#include "state/StateMgr.h"
+#include "mechanisms/MechanismTypes.h"
 
-void RobotConfig::BuildRobot()
+class MechanismConfig
 {
-    DefineBuiltInControlItems();
-    DefineChassis();
-    DefineMechanisms();
-    DefineLEDs();
-}
+public:
+    MechanismConfig();
+    ~MechanismConfig();
 
-RobotConfig::~RobotConfig()
-{
-}
+    void BuildRobot();
 
-void RobotConfig::DefineBuiltInControlItems()
-{
-}
+    virtual StateMgr *GetMechanism(MechanismTypes::MECHANISM_TYPE mechType);
 
-void RobotConfig::DefineChassis()
-{
-}
-
-void RobotConfig::DefineMechanisms()
-{
-}
-
-void RobotConfig::DefineLEDs()
-{
-}
-
-SwerveChassis *RobotConfig::GetSwerveChassis() const
-{
-    return nullptr;
-}
-IChassis *RobotConfig::GetIChassis() const
-{
-    return nullptr;
-}
+protected:
+    virtual void DefineMechanisms();
+};

@@ -4,27 +4,27 @@ $$_GEN_NOTICE_$$
 #include <string>
 
 #include "utils/logging/Logger.h"
-#include "configs/RobotConfigMgr.h"
-#include "configs/RobotConfig.h"
+#include "configs/MechanismConfigMgr.h"
+#include "configs/MechanismConfig.h"
 $$_ROBOT_CONFIG_INCLUDES_$$
 
 using namespace std;
 
-RobotConfigMgr *RobotConfigMgr::m_instance = nullptr;
-RobotConfigMgr *RobotConfigMgr::GetInstance()
+MechanismConfigMgr *MechanismConfigMgr::m_instance = nullptr;
+MechanismConfigMgr *MechanismConfigMgr::GetInstance()
 {
-    if (RobotConfigMgr::m_instance == nullptr)
+    if (MechanismConfigMgr::m_instance == nullptr)
     {
-        RobotConfigMgr::m_instance = new RobotConfigMgr();
+        MechanismConfigMgr::m_instance = new MechanismConfigMgr();
     }
-    return RobotConfigMgr::m_instance;
+    return MechanismConfigMgr::m_instance;
 }
 
-RobotConfigMgr::RobotConfigMgr() : m_config(nullptr)
+MechanismConfigMgr::MechanismConfigMgr() : m_config(nullptr)
 {
 }
 
-void RobotConfigMgr::InitRobot(RobotIdentifier id)
+void MechanismConfigMgr::InitRobot(RobotIdentifier id)
 {
     switch (id)
     {
