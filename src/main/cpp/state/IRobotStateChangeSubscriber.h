@@ -17,6 +17,11 @@
 #pragma once
 
 #include <state/RobotStateChanges.h>
+#include <units/length.h>
+#include <units/angle.h>
+#include <units/velocity.h>
+#include <units/angular_velocity.h>
+#include <frc/geometry/Pose2d.h>
 
 class IRobotStateChangeSubscriber
 {
@@ -24,5 +29,11 @@ public:
     IRobotStateChangeSubscriber() = default;
     ~IRobotStateChangeSubscriber() = default;
 
-    virtual void Update(RobotStateChanges::StateChange change, int value) = 0;
+    virtual void Update(RobotStateChanges::StateChange change, int value) {}
+    virtual void Update(RobotStateChanges::StateChange change, double value) {}
+    virtual void Update(RobotStateChanges::StateChange change, units::length::meter_t value) {}
+    virtual void Update(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
+    virtual void Update(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
+    virtual void Update(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
+    virtual void Update(RobotStateChanges::StateChange change, frc::Pose2d value) {}
 };
