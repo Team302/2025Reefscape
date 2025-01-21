@@ -36,6 +36,12 @@ class DragonQuest : public DragonDataLogger
 {
 public:
     frc::Pose3d GetEstimatedPose();
+    static DragonQuest *GetDragonQuest();
+    void DataLog() override;
+
+private:
+    DragonQuest();
+    ~DragonQuest() = default;
     bool IsConnected();
     double GetBatteryPercent();
     double GetTimeStamp();
@@ -43,12 +49,8 @@ public:
     void ZeroPosition();
     void CleanUpQuestMessages();
     units::angle::degree_t GetOculusYaw();
-    static DragonQuest *GetDragonQuest();
-    void DataLog() override;
+    void DoStuff();
 
-private:
-    DragonQuest();
-    ~DragonQuest() = default;
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
     double m_yawoffset = 0;
@@ -56,6 +58,7 @@ private:
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
+
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
 };
