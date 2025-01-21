@@ -25,7 +25,7 @@
 #include <frc/DriverStation.h>
 
 #include "teleopcontrol/TeleopControl.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfigMgr.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using frc::DriverStation;
@@ -93,7 +93,7 @@ void DriverFeedback::UpdateLEDStates()
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
     /**
-    StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
+    StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
     auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManagerGen *>(noteStateManager) : nullptr;
     if (noteMgr != nullptr)
     {
@@ -117,15 +117,15 @@ DriverFeedback::DriverFeedback() : IRobotStateChangeSubscriber()
 {
 
     RobotState *RobotStates = RobotState::GetInstance();
-    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode);
-    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 void DriverFeedback::Update(RobotStateChanges::StateChange change, int value)
 {
-    if (RobotStateChanges::StateChange::ClimbModeStatus == change)
+    if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
         m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 
-    else if (RobotStateChanges::StateChange::DesiredScoringMode == change)
+    else if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }
 

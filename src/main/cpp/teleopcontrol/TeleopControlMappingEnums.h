@@ -31,14 +31,6 @@ public:
         MAX_CONTROLLERS
     };
 
-    enum CONTROL_MODE
-    {
-        ALL,
-        CUBE,
-        CONE,
-        MAX_CONTROL_MODES
-    };
-
     enum BUTTON_IDENTIFIER
     {
         UNDEFINED_BUTTON = -1,

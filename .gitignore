@@ -185,3 +185,7 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+# do not ignore the Dragon code generator exe and dlls
+!tools/DragonCodeGenerator/tool/*.dll
+!tools/DragonCodeGenerator/tool/*.exe

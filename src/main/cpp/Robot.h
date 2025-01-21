@@ -59,7 +59,6 @@ private:
     void LogDiagnosticData();
     void LogSensorData();
     void LogMotorData();
-    void LogCameraData();
 
     TeleopControl *m_controller;
     SwerveChassis *m_chassis;

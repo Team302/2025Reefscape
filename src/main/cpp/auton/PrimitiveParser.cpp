@@ -136,7 +136,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     // bool changeNoteState = false;
                     // auto climberState = ClimberManagerGen::STATE_OFF;
                     // bool changeClimberState = false;
-                    // auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+                    // auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;

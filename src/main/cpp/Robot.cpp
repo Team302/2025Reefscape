@@ -13,8 +13,8 @@
 #include "chassis/configs/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
 #include "chassis/SwerveChassis.h"
-#include "configs/RobotConfig.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfig.h"
+#include "configs/MechanismConfigMgr.h"
 #include "feedback/DriverFeedback.h"
 #include "PeriodicLooper.h"
 #include "Robot.h"
@@ -255,8 +255,6 @@ void Robot::LogDiagnosticData()
         LogSensorData();
     else if (step == 1)
         LogMotorData();
-    else if (step == 3)
-        LogCameraData();
     else if (step == 4)
     {
         if (m_chassis != nullptr)
@@ -272,7 +270,7 @@ void Robot::LogDiagnosticData()
 
 void Robot::LogSensorData()
 {
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 
     if (config != nullptr)
     {
@@ -299,20 +297,12 @@ void Robot::LogSensorData()
 
 void Robot::LogMotorData()
 {
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 
     if (config != nullptr)
     {
         // TODO implement mechanism states logging
     }
-}
-
-void Robot::LogCameraData()
-{
-    // TODO: implement encoder logging for chassis
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("PLACER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::PINTAKE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LINTAKE));
 }
 
 void Robot::SimulationInit()
@@ -328,15 +318,15 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    RobotConfigMgr::GetInstance()->InitRobot((RobotConfigMgr::RobotIdentifier)teamNumber);
-    // ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotConfigMgr::RobotIdentifier>(teamNumber));
-    // auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    // m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
-    // m_holonomic = nullptr;
-    // if (m_chassis != nullptr)
-    // {
-    //     m_holonomic = new HolonomicDrive();
-    // }
+    MechanismConfigMgr::GetInstance()->InitRobot((MechanismConfigMgr::RobotIdentifier)teamNumber);
+    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
+    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+    m_holonomic = nullptr;
+    if (m_chassis != nullptr)
+    {
+        m_holonomic = new HolonomicDrive();
+    }
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
