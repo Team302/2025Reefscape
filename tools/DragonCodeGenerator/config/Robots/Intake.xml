@@ -680,7 +680,22 @@
   <states>
     <state>
       <name>Off</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Intake</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Expel</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
@@ -716,13 +731,35 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PercentOutput</controlDataName>
+          <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
     <state>
       <name>Intake</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Hold</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Expel</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
@@ -758,13 +795,35 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PercentOutput</controlDataName>
+          <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
     <state>
       <name>Hold</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Process</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Expel</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
@@ -800,13 +859,21 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PercentOutput</controlDataName>
+          <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
     <state>
       <name>TransferIn</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Hold</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
@@ -842,13 +909,21 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PercentOutput</controlDataName>
+          <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
     <state>
       <name>TransferOut</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
@@ -884,13 +959,71 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PercentOutput</controlDataName>
+          <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
     <state>
       <name>Process</name>
-      <transitionsTo />
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
+      <motorTargets>
+        <motorTarget>
+          <name>Intake</name>
+          <target>
+            <unitsFamily>none</unitsFamily>
+            <name>Target</name>
+            <__units__ />
+            <type>Double</type>
+          </target>
+          <motorName>Intake</motorName>
+          <Enabled>
+            <unitsFamily>none</unitsFamily>
+            <name>boolParameter</name>
+            <__units__ />
+            <type>Boolean</type>
+            <value>true</value>
+          </Enabled>
+          <controlDataName>PercentOutput</controlDataName>
+        </motorTarget>
+        <motorTarget>
+          <name>Extender</name>
+          <target>
+            <unitsFamily>none</unitsFamily>
+            <name>Target</name>
+            <__units__ />
+            <type>Double</type>
+          </target>
+          <motorName>Extender</motorName>
+          <Enabled>
+            <unitsFamily>none</unitsFamily>
+            <name>boolParameter</name>
+            <__units__ />
+            <type>Boolean</type>
+            <value>true</value>
+          </Enabled>
+          <controlDataName>PositionDegree</controlDataName>
+        </motorTarget>
+      </motorTargets>
+    </state>
+    <state>
+      <name>Expel</name>
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
       <motorTargets>
         <motorTarget>
           <name>Intake</name>
