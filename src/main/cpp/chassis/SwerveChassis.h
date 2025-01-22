@@ -44,6 +44,7 @@
 #include "utils/logging/LoggableItem.h"
 
 #include "ctre/phoenix6/Pigeon2.hpp"
+#include "pathplanner/lib/config/RobotConfig.h"
 
 class RobotDrive;
 
@@ -134,6 +135,12 @@ public:
     units::mass::kilogram_t GetMass() const { return m_mass; }
     units::moment_of_inertia::kilogram_square_meter_t GetMomenOfInertia() const { return m_momentOfInertia; }
 
+    frc::Translation2d GetFrontLeftOffset() const { return m_frontLeftLocation; }
+    frc::Translation2d GetFrontRightOffset() const { return m_frontRightLocation; }
+    frc::Translation2d GetBackLeftOffset() const { return m_backLeftLocation; }
+    frc::Translation2d GetBackRightOffset() const { return m_backRightLocation; }
+
+    pathplanner::RobotConfig GetRobotConfig() { return m_robotConfig; }
     // std::optional<uint16_t> GetLaserValue();
 
 private:
@@ -192,6 +199,7 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
 
     frc::Timer m_velocityTimer;
+    pathplanner::RobotConfig m_robotConfig;
 
     // grpl::LaserCan *m_laserCan = nullptr;
     // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);

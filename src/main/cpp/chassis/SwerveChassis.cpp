@@ -100,6 +100,18 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
     m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
+
+    m_robotConfig.mass = GetMass();
+    m_robotConfig.MOI = GetMomenOfInertia();
+    m_robotConfig.moduleConfig = frontLeft->GetModuleConfig();
+    std::vector<frc::Translation2d> moduleLocs;
+    moduleLocs.emplace_back(GetFrontLeftOffset());
+    moduleLocs.emplace_back(GetFrontRightOffset());
+    moduleLocs.emplace_back(GetBackLeftOffset());
+    moduleLocs.emplace_back(GetBackRightOffset());
+    m_robotConfig.numModules = moduleLocs.size();
+    m_robotConfig.moduleLocations = moduleLocs;
+    m_robotConfig.isHolonomic = true;
 }
 
 //==================================================================================

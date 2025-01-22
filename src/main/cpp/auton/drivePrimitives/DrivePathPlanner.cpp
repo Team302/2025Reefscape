@@ -75,20 +75,7 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    if (m_chassis != nullptr)
-    {
-        auto swMod = m_chassis->GetFrontLeft();
-        if (swMod != nullptr)
-        {
-            m_moduleConfig = ModuleConfig(swMod->GetWheelDiameter() / 2.0,
-                                          swMod->GetMaxSpeed(),
-                                          swMod->GetCoefficientOfFriction(),
-                                          swMod->GetDriveMotorDef(),
-                                          swMod->GetDriveCurrentLimit(), 1);
-            m_robotConfig = pathplanner::RobotConfig(m_chassis->GetMass(), m_chassis->GetMomenOfInertia(), m_moduleConfig, m_chassis->GetTrack());
-        }
-        m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
-    }
+    m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 }
 
 void DrivePathPlanner::Init(PrimitiveParams *params)
@@ -151,7 +138,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
-            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_robotConfig);
+            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
         }
         else
         {
