@@ -13,57 +13,22 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
+#pragma once
 #include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
+#include "units/length.h"
+#include "ctre/phoenix6/Pigeon2.hpp"
 
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+class ChassisConfigChassis_1 : public ChassisConfig
 {
-}
+public:
+	ChassisConfigChassis_1() = default;
+	~ChassisConfigChassis_1() = default;
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
-{
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+protected:
+	void DefinePigeon() override;
+	void DefineChassis() override;
 
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
-}
-
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
-
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
-}
+private:
+	std::string m_canbusName = std::string("rio");
+};

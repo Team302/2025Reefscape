@@ -22,7 +22,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
-#include "chassis/driveStates/DriveToNote.h"
+#include "chassis/states/DriveToNote.h"
 #include "utils/logging/DragonDataLogger.h"
 
 // FRC,WPI Includes
@@ -32,8 +32,6 @@
 #include "units/time.h"
 
 // third party includes
-#include "pathplanner/lib/config/ModuleConfig.h"
-#include "pathplanner/lib/config/RobotConfig.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 
 class DrivePathPlanner : public IPrimitive, public DragonDataLogger
@@ -74,7 +72,4 @@ private:
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(0.5);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
-
-    pathplanner::RobotConfig m_robotConfig;
-    pathplanner::ModuleConfig m_moduleConfig;
 };

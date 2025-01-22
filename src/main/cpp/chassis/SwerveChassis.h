@@ -34,8 +34,8 @@
 // #include "grpl/LaserCan.h"
 
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/driveStates/ISwerveDriveState.h"
-#include "chassis/headingStates/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveState.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "chassis/IChassis.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/ChassisMovement.h"
@@ -44,6 +44,7 @@
 #include "utils/logging/LoggableItem.h"
 
 #include "ctre/phoenix6/Pigeon2.hpp"
+#include "pathplanner/lib/config/RobotConfig.h"
 
 class RobotDrive;
 
@@ -127,13 +128,19 @@ public:
 
     bool IsRotating() const { return m_isRotating; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
-    units::velocity::meters_per_second_t GetInertialVelocity();
+    units::velocity::meters_per_second_t GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput);
     void LogInformation() override;
     void DataLog() override;
 
     units::mass::kilogram_t GetMass() const { return m_mass; }
     units::moment_of_inertia::kilogram_square_meter_t GetMomenOfInertia() const { return m_momentOfInertia; }
 
+    frc::Translation2d GetFrontLeftOffset() const { return m_frontLeftLocation; }
+    frc::Translation2d GetFrontRightOffset() const { return m_frontRightLocation; }
+    frc::Translation2d GetBackLeftOffset() const { return m_backLeftLocation; }
+    frc::Translation2d GetBackRightOffset() const { return m_backRightLocation; }
+
+    pathplanner::RobotConfig GetRobotConfig() { return m_robotConfig; }
     // std::optional<uint16_t> GetLaserValue();
 
 private:
@@ -161,8 +168,9 @@ private:
     units::velocity::meters_per_second_t m_steer = units::velocity::meters_per_second_t(0.0);
     units::angular_velocity::radians_per_second_t m_rotate = units::angular_velocity::radians_per_second_t(0.0);
 
-    static constexpr units::velocity::meters_per_second_t m_velocityDeadband = units::velocity::meters_per_second_t(0.025);
     static constexpr units::angular_velocity::radians_per_second_t m_angularDeadband = units::angular_velocity::radians_per_second_t(0.1);
+    static constexpr units::acceleration::meters_per_second_squared_t m_accelerationThreshold = 0.5_mps_sq;
+    static constexpr units::velocity::meters_per_second_t m_velocityThresold = units::velocity::meters_per_second_t(0.25);
 
     frc::Translation2d m_frontLeftLocation;
     frc::Translation2d m_frontRightLocation;
@@ -185,14 +193,23 @@ private:
     bool m_isRotating = false;
     bool m_rotatingLatch = false;
     bool m_initDataLog = false;
+    double m_coseAngle = 0.707;
     DragonVision *m_vision;
     std::array<frc::SwerveModuleState, 4U> m_targetStates;
 
     units::mass::kilogram_t m_mass = units::mass::kilogram_t(52.0);                                                                // TODO put a real value in
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
+    pathplanner::RobotConfig m_robotConfig;
 
     frc::Timer m_velocityTimer;
 
+    struct Velocity2D
+    {
+        units::velocity::meters_per_second_t x;
+        units::velocity::meters_per_second_t y;
+    };
+
+    Velocity2D m_currVelocity{0_mps, 0_mps}; // Store x and y components separately
     // grpl::LaserCan *m_laserCan = nullptr;
     // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
 };

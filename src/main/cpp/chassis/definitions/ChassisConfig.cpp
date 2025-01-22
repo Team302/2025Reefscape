@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,57 +14,41 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
 #include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+ChassisConfig::ChassisConfig()
 {
 }
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
+void ChassisConfig::BuildChassis()
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
+    DefinePigeon();
+    DefineChassis();
 }
 
-void ResetPositionPathPlannerNoVision::Run()
+ChassisConfig::~ChassisConfig()
 {
 }
 
-bool ResetPositionPathPlannerNoVision::IsDone()
+void ChassisConfig::DefinePigeon()
 {
-    return true;
+}
+
+void ChassisConfig::DefineChassis()
+{
+}
+
+SwerveModule *ChassisConfig::GetSwerveModule(ChassisConfig::SWERVE_MODULE module) const
+{
+    if (module == SWERVE_MODULE::LEFT_BACK)
+        return m_leftBackModule;
+
+    if (module == SWERVE_MODULE::LEFT_FRONT)
+        return m_leftFrontModule;
+
+    if (module == SWERVE_MODULE::RIGHT_BACK)
+        return m_rightBackModule;
+
+    return m_rightFrontModule;
 }

@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,30 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <string>
+#pragma once
+#include <optional>
 
-// FRC includes
-#include "units/time.h"
+#include "frc/apriltag/AprilTagFieldLayout.h"
+#include "frc/apriltag/AprilTagFields.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/geometry/Transform3d.h"
 
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
+// Team302 Includes
+#include "chassis/ChassisOptionEnums.h"
+#include "chassis/states/SpecifiedHeading.h"
+#include "vision/DragonVision.h"
 
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+class FaceTarget : public SpecifiedHeading
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-}
+public:
+    FaceTarget() = delete;
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
-{
+    FaceTarget(ChassisOptionEnums::HeadingOption headingOption);
+    ~FaceTarget() = default;
 
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
-}
+    std::string GetHeadingStateName() const override;
 
-void DriveHoldPosition::Run()
-{
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
-
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
-}
+protected:
+    virtual DragonVision::VISION_ELEMENT GetVisionElement() const = 0;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
+};
