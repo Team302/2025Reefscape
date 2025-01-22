@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,26 +13,10 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
+#include "DragonTestCase.h"
+#include "DragonTestSuiteManager.h"
 
-#include <state/RobotStateChanges.h>
-#include <units/length.h>
-#include <units/angle.h>
-#include <units/velocity.h>
-#include <units/angular_velocity.h>
-#include <frc/geometry/Pose2d.h>
-
-class IRobotStateChangeSubscriber
+DragonTestCase::DragonTestCase(string testSuiteName, string testCaseName) : m_testCaseName(testCaseName)
 {
-public:
-    IRobotStateChangeSubscriber() = default;
-    ~IRobotStateChangeSubscriber() = default;
-
-    virtual void Update(RobotStateChanges::StateChange change, int value) {}
-    virtual void Update(RobotStateChanges::StateChange change, double value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::length::meter_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, frc::Pose2d value) {}
-};
+    DragonTestSuiteManager::GetInstance()->RegisterTest(testSuiteName, this);
+}

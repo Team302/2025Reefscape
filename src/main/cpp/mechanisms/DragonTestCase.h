@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,24 +15,18 @@
 
 #pragma once
 
-#include <state/RobotStateChanges.h>
-#include <units/length.h>
-#include <units/angle.h>
-#include <units/velocity.h>
-#include <units/angular_velocity.h>
-#include <frc/geometry/Pose2d.h>
+#include <string>
 
-class IRobotStateChangeSubscriber
+using std::string;
+
+class DragonTestCase
 {
 public:
-    IRobotStateChangeSubscriber() = default;
-    ~IRobotStateChangeSubscriber() = default;
+    DragonTestCase(string testSuiteName, string testCaseName);
+    virtual void SetUp() = 0;
+    virtual bool Run() = 0;
+    virtual void CompareAndReport() = 0;
 
-    virtual void Update(RobotStateChanges::StateChange change, int value) {}
-    virtual void Update(RobotStateChanges::StateChange change, double value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::length::meter_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, frc::Pose2d value) {}
+private:
+    string m_testCaseName;
 };

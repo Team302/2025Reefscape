@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,25 +14,36 @@
 //====================================================================================================================================================
 
 #pragma once
+#include <string>
+#include <vector>
+#include <map>
+#include <optional>
+#include "DragonTestCase.h"
 
-#include <state/RobotStateChanges.h>
-#include <units/length.h>
-#include <units/angle.h>
-#include <units/velocity.h>
-#include <units/angular_velocity.h>
-#include <frc/geometry/Pose2d.h>
+using std::string;
 
-class IRobotStateChangeSubscriber
+class DragonTestSuiteManager
 {
 public:
-    IRobotStateChangeSubscriber() = default;
-    ~IRobotStateChangeSubscriber() = default;
+	static DragonTestSuiteManager *GetInstance();
+	void RegisterTest(string testSuiteName, DragonTestCase *testCase);
+	void Init();
+	void Run();
 
-    virtual void Update(RobotStateChanges::StateChange change, int value) {}
-    virtual void Update(RobotStateChanges::StateChange change, double value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::length::meter_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, frc::Pose2d value) {}
+private:
+	DragonTestSuiteManager();
+
+	// stores mapping between test suite name and associated test cases
+	std::map<string, std::vector<DragonTestCase *>> m_testSuites;
+	int m_currTestSlot;
+	DragonTestCase *m_currTest;
+
+	// list of all test suite names
+	std::vector<string> m_testSuiteNames;
+	// index of the current test suite name in m_testSuiteNames
+	int m_currTestSuiteIndex;
+
+	static DragonTestSuiteManager *m_instance;
+
+	void GetNextTest();
 };

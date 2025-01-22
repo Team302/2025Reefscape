@@ -117,15 +117,15 @@ DriverFeedback::DriverFeedback() : IRobotStateChangeSubscriber()
 {
 
     RobotState *RobotStates = RobotState::GetInstance();
-    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode);
-    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 void DriverFeedback::Update(RobotStateChanges::StateChange change, int value)
 {
-    if (RobotStateChanges::StateChange::ClimbModeStatus == change)
+    if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
         m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 
-    else if (RobotStateChanges::StateChange::DesiredScoringMode == change)
+    else if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }
 
