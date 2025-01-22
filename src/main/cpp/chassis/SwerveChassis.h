@@ -128,7 +128,7 @@ public:
 
     bool IsRotating() const { return m_isRotating; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
-    units::velocity::meters_per_second_t GetInertialVelocity();
+    units::velocity::meters_per_second_t GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput);
     void LogInformation() override;
     void DataLog() override;
 
@@ -168,8 +168,9 @@ private:
     units::velocity::meters_per_second_t m_steer = units::velocity::meters_per_second_t(0.0);
     units::angular_velocity::radians_per_second_t m_rotate = units::angular_velocity::radians_per_second_t(0.0);
 
-    static constexpr units::velocity::meters_per_second_t m_velocityDeadband = units::velocity::meters_per_second_t(0.025);
     static constexpr units::angular_velocity::radians_per_second_t m_angularDeadband = units::angular_velocity::radians_per_second_t(0.1);
+    static constexpr units::acceleration::meters_per_second_squared_t m_accelerationThreshold = 0.5_mps_sq;
+    static constexpr units::velocity::meters_per_second_t m_velocityThresold = units::velocity::meters_per_second_t(0.25);
 
     frc::Translation2d m_frontLeftLocation;
     frc::Translation2d m_frontRightLocation;
@@ -192,15 +193,23 @@ private:
     bool m_isRotating = false;
     bool m_rotatingLatch = false;
     bool m_initDataLog = false;
+    double m_coseAngle = 0.707;
     DragonVision *m_vision;
     std::array<frc::SwerveModuleState, 4U> m_targetStates;
 
     units::mass::kilogram_t m_mass = units::mass::kilogram_t(52.0);                                                                // TODO put a real value in
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
-
-    frc::Timer m_velocityTimer;
     pathplanner::RobotConfig m_robotConfig;
 
+    frc::Timer m_velocityTimer;
+
+    struct Velocity2D
+    {
+        units::velocity::meters_per_second_t x;
+        units::velocity::meters_per_second_t y;
+    };
+
+    Velocity2D m_currVelocity{0_mps, 0_mps}; // Store x and y components separately
     // grpl::LaserCan *m_laserCan = nullptr;
     // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
 };
