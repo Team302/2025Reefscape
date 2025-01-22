@@ -14,14 +14,10 @@
 //====================================================================================================================================================
 
 // FRC includes
-#include "frc/geometry/Rotation3d.h"
 
 // Team 302 includes
-#include "SensorData.h"
-#include "SensorDataMgr.h"
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableInstance.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
 
 SensorData::SensorData()
 {

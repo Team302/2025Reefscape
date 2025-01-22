@@ -11,35 +11,38 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//======================================================\==============================================================================================
 
-#pragma once
+#include "utils/sensors/SensorDataMgr.h"
+#include "utils/sensors/SensorData.h"
 
-// C++ Includes
-#include <string>
 #include <vector>
-#include <any>
-#include <map>
 
-class RobotDefinition
+using std::vector;
+
+SensorDataMgr *SensorDataMgr::m_instance = nullptr;
+SensorDataMgr *SensorDataMgr::GetInstance()
 {
-
-public:
-    enum Components
+    if (SensorDataMgr::m_instance == nullptr)
     {
-    };
+        SensorDataMgr::m_instance = new SensorDataMgr();
+    }
+    return SensorDataMgr::m_instance;
+}
 
-    /// strings will be used instead of mechanism and sensor parents classes until those are created
-    // RobotDefinition(std::vector<Mechanism> mechs, std::vector<Sensor> sensors);
-    RobotDefinition(std::vector<std::pair<Components, std::string>> components);
-    ~RobotDefinition() = default;
+SensorDataMgr::SensorDataMgr() : m_SensorData()
+{
+}
+void SensorDataMgr::RegisterSensorData(
+    SensorData *sd)
+{
+    m_SensorData.emplace_back(sd);
+}
 
-    /// NOTE: May create a component class to use instead of std::any
-    /// @brief Get a component (mechanism, sensor, solenoid, etc.) from a robot definition
-    /// @param component Which component to get from a definition
-    /// @return Returns the specfied component
-    std::any GetComponent(Components component) { return m_componentMap[component]; };
-
-private:
-    std::map<Components, std::string> m_componentMap;
-};
+void SensorDataMgr::CacheData() const
+{
+    for (SensorData *sensor : m_SensorData)
+    {
+        sensor->PeriodicCacheData();
+    }
+}
