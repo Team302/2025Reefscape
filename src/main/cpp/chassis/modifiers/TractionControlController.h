@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,46 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
 // C++ Includes
-#include <string>
+#include <vector>
+#include <cmath>
 
-// FRC includes
+// FRC Includes
+#include "units/angle.h"
+#include "units/angular_velocity.h"
+#include "units/length.h"
+#include "units/velocity.h"
 #include "units/time.h"
+#include "frc/filter/Debouncer.h"
 
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
+// Team 302 Includes
 
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+class TractionControlController
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-}
+public:
+    TractionControlController(double staticCoF, double dynamicCoF, double optimalSlipRatio, double mass, units::velocity::meters_per_second_t maxLinearSpeed);
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
-{
+    units::velocity::meters_per_second_t calculate(units::velocity::meters_per_second_t velocityRequest, units::velocity::meters_per_second_t inertialVelocity, units::velocity::meters_per_second_t wheelSpeed);
+    bool isSlipping() const;
 
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
-}
+private:
+    static constexpr double VELOCITY_CORRECTION_SCALAR = 0.7;
+    static constexpr double MIN_SLIP_RATIO = 0.01;
+    static constexpr double MAX_SLIP_RATIO = 0.40;
+    static constexpr int SIGMOID_K = 10;
+    static constexpr units::velocity::meters_per_second_t INERTIAL_VELOCITY_THRESHOLD{0.25};
+    static constexpr double m_robotLoopRate_Hz = 50.0;
 
-void DriveHoldPosition::Run()
-{
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
+    units::second_t MIN_SLIPPING_TIME{1.1};
 
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
-}
+    double m_staticCoF;
+    double m_dynamicCoF;
+    double m_optimalSlipRatio;
+    double m_mass;
+    units::velocity::meters_per_second_t m_maxLinearSpeed;
+    double m_maxPredictedSlipRatio;
+    bool m_isSlipping;
+    frc::Debouncer m_slippingDebouncer;
+};

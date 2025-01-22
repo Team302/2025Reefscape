@@ -13,57 +13,45 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
+// Team302 Includes
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+#include "utils/AngleUtils.h"
+
 #include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
+frc::PIDController *ISwerveDriveOrientation::m_pid = new frc::PIDController(6.0, 5.0, 0.0);
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+ISwerveDriveOrientation::ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption headingOption) : m_headingOption(headingOption)
 {
+    m_pid->EnableContinuousInput(-180.0, 180.0);
+    m_pid->SetIZone(20.0);
+    m_pid->SetIntegratorRange(-360.0, 360.0);
+    m_pid->Reset();
 }
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
+units::angular_velocity::degrees_per_second_t ISwerveDriveOrientation::CalcHeadingCorrection(units::angle::degree_t targetAngle, double kP)
 {
+    return CalcHeadingCorrection(targetAngle, {kP, 0.0});
+}
+
+units::angular_velocity::degrees_per_second_t ISwerveDriveOrientation::CalcHeadingCorrection(units::angle::degree_t targetAngle, std::pair<double, double> gains)
+{
+    units::angle::degree_t currentAngle = units::angle::degree_t(0.0);
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
     if (chassis != nullptr)
     {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
+        currentAngle = chassis->GetPose().Rotation().Degrees();
     }
-}
 
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
+    m_pid->SetP(gains.first);
+    if (units::math::abs(currentAngle - targetAngle) > units::angle::degree_t(1.0))
+        m_pid->SetI(gains.second);
+    else
+        m_pid->SetI(0);
 
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
+    auto correction = units::angular_velocity::degrees_per_second_t(m_pid->Calculate(currentAngle.value(), targetAngle.value()));
+
+    return correction;
 }

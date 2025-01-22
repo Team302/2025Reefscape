@@ -13,57 +13,38 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
 // C++ Includes
-#include <memory>
+#include <array>
 #include <string>
 
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
+#include "frc/kinematics/SwerveModuleState.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
+// Team302 Includes
+#include "chassis/ChassisMovement.h"
+#include "chassis/states/ISwerveDriveState.h"
+#include "chassis/states/RobotDrive.h"
 
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
+class SwerveChassis;
 
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+class StopDrive : public RobotDrive
 {
-}
+public:
+    using RobotDrive::RobotDrive;
+    StopDrive() = delete;
+    StopDrive(RobotDrive *RobotDrive);
+    ~StopDrive() = default;
+    std::string GetDriveStateName() const override;
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
-{
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
-}
+    void Init(ChassisMovement &chassisMovement) override;
 
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
-
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
-}
+private:
+    frc::SwerveModuleState *m_flState = new frc::SwerveModuleState();
+    frc::SwerveModuleState *m_frState = new frc::SwerveModuleState();
+    frc::SwerveModuleState *m_blState = new frc::SwerveModuleState();
+    frc::SwerveModuleState *m_brState = new frc::SwerveModuleState();
+    RobotDrive *m_robotDrive;
+};

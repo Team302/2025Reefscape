@@ -13,57 +13,22 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
+#pragma once
 
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
 #include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
+#include "configs/MechanismConfigMgr.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+class ChassisConfigMgr
 {
-}
+public:
+	static ChassisConfigMgr *GetInstance();
+	ChassisConfig *GetCurrentConfig() const { return m_config; }
+	void InitChassis(MechanismConfigMgr::RobotIdentifier id);
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
-{
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+private:
+	ChassisConfigMgr();
+	~ChassisConfigMgr() = default;
 
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
-}
-
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
-
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
-}
+	static ChassisConfigMgr *m_instance;
+	ChassisConfig *m_config;
+};
