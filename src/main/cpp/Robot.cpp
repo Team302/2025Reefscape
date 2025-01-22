@@ -86,12 +86,12 @@ void Robot::RobotPeriodic()
 
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), DragonQuest::GetDragonQuest()->GetEstimatedPose().X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Z"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Z().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("roll"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("pitch"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("yaw"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Z().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), DragonQuest::GetDragonQuest()->GetEstimatedPose().X().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Y().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Z"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Z().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("roll"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().X().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("pitch"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Y().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("yaw"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Z().to<double>());
 
     DragonQuest::GetDragonQuest()->DataLog();
 }
