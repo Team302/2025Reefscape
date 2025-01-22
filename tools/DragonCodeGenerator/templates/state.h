@@ -4,7 +4,7 @@ $$_GEN_NOTICE_$$
 #pragma once
 #include <string>
 
-#include "State.h"
+#include "state/State.h"
 #include "mechanisms/$$_MECHANISM_INSTANCE_NAME_$$/$$_MECHANISM_INSTANCE_NAME_$$.h"
 
 using namespace std;
