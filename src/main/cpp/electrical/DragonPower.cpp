@@ -33,20 +33,64 @@ DragonPower::DragonPower()
 {    
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
+    m_calcTimer = new frc::Timer();
+    m_logTimer = new frc::Timer();
 }
 
 void DragonPower::Initialize(int calcFrequency, int logFrequency)
 {
     m_calcFrequency = calcFrequency;
     m_logFrequency = logFrequency;
+    
 }
 
 void DragonPower::CalculateAndLogPower()
 {
-    
-    // need to determine if we met the calcFrequency threshold
-    double voltage = m_pdp->GetVoltage();
 
+    // need to determine if we met the calcFrequency threshold
+    if (m_pdp != nullptr){
+        double currentTimeCalc = m_calcTimer->Get().to<double>();
+        if (currentTimeCalc > m_calcFrequency)
+        {
+            m_calcTimer->Reset();
+            m_calcTimer->Start();
+            double current = m_pdp->GetTotalCurrent();
+            double voltage = m_pdp->GetVoltage();
+            double power = current * voltage;
+            double joules = power * currentTimeCalc;
+            m_matchWatts += power;
+            m_matchJoules += joules;
+            if (current > m_matchMaxCurrent)
+            {
+                m_matchMaxCurrent = current;
+            }
+            if (current < m_matchMinCurrent)
+            {
+                m_matchMinCurrent = current;
+            }
+            if (voltage > m_matchMaxVoltage)
+            {
+                m_matchMaxVoltage = voltage;
+            }
+            if (voltage < m_matchMinVoltage)
+            {
+                m_matchMinVoltage = voltage;
+            }
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Current", current);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Voltage", voltage);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Power", power);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Joules", joules);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Watts", m_matchWatts);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchJoules);
+        }
+        double currentTimeLog = m_logTimer->Get().to<double>();
+        if (currentTimeLog > m_logFrequency){
+            m_logTimer->Reset();
+            m_logTimer->Start();
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Logging", "current time");
+        }
+    }
 
 }
 
