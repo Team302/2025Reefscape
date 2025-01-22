@@ -460,7 +460,7 @@ void SwerveChassis::LogInformation()
 void SwerveChassis::DataLog()
 {
 
-    // LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, GetPose());
+    Log2DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
     LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
     LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
