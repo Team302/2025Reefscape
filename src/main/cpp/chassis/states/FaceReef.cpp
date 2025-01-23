@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,21 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <string>
+// Team302 Includes
+#include "chassis/states/FaceReef.h"
+#include "chassis/states/FaceTarget.h"
+#include "vision/DragonVision.h"
 
-// FRC includes
-#include "units/time.h"
-
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
-
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 }
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
+std::string FaceReef::GetHeadingStateName() const
 {
-
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
+    return std::string("FaceReef");
 }
 
-void DriveHoldPosition::Run()
+DragonVision::VISION_ELEMENT FaceReef::GetVisionElement() const
 {
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
-
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
+    return DragonVision::VISION_ELEMENT::REEF;
 }

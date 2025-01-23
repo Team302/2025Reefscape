@@ -13,57 +13,55 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
 #include <string>
 
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
-
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigCompBot_302.h"
+#include "chassis/definitions/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/ChassisConfigChassis_9997.h"
 
 using namespace std;
-using namespace frc;
-using namespace pathplanner;
 
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+ChassisConfigMgr *ChassisConfigMgr::m_instance = nullptr;
+ChassisConfigMgr *ChassisConfigMgr::GetInstance()
+{
+	if (ChassisConfigMgr::m_instance == nullptr)
+	{
+		ChassisConfigMgr::m_instance = new ChassisConfigMgr();
+	}
+	return ChassisConfigMgr::m_instance;
+}
+
+ChassisConfigMgr::ChassisConfigMgr() : m_config(nullptr)
 {
 }
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
+void ChassisConfigMgr::InitChassis(MechanismConfigMgr::RobotIdentifier id)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+	switch (id)
+	{
+	case MechanismConfigMgr::RobotIdentifier::COMP_BOT_302:
+		m_config = new ChassisConfigCompBot_302();
+		break;
 
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
-}
+	case MechanismConfigMgr::RobotIdentifier::CHASSISBOT_9998:
+		m_config = new ChassisConfigChassis_9998();
+		break;
 
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
+	case MechanismConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
+		m_config = new ChassisConfigChassis_9997();
+		break;
 
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
+	default:
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping chassis initialization because of unknown robot id "), string(""), id);
+		break;
+	}
+
+	if (m_config != nullptr)
+	{
+		m_config->BuildChassis();
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot "), string(""), id);
+	}
 }

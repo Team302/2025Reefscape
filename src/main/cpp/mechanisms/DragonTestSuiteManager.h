@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,37 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
+#pragma once
 #include <string>
+#include <vector>
+#include <map>
+#include <optional>
+#include "DragonTestCase.h"
 
-// FRC includes
-#include "units/time.h"
+using std::string;
 
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
-
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+class DragonTestSuiteManager
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-}
+public:
+	static DragonTestSuiteManager *GetInstance();
+	void RegisterTest(string testSuiteName, DragonTestCase *testCase);
+	void Init();
+	void Run();
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
-{
+private:
+	DragonTestSuiteManager();
 
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
-}
+	// stores mapping between test suite name and associated test cases
+	std::map<string, std::vector<DragonTestCase *>> m_testSuites;
+	int m_currTestSlot;
+	DragonTestCase *m_currTest;
 
-void DriveHoldPosition::Run()
-{
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
+	// list of all test suite names
+	std::vector<string> m_testSuiteNames;
+	// index of the current test suite name in m_testSuiteNames
+	int m_currTestSuiteIndex;
 
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
-}
+	static DragonTestSuiteManager *m_instance;
+
+	void GetNextTest();
+};

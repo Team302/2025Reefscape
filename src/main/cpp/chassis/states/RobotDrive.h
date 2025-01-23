@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,49 +13,43 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
+#pragma once
 #include <string>
 
-// FRC includes
+#include "frc/kinematics/SwerveModuleState.h"
+#include "units/length.h"
 #include "units/time.h"
+#include "units/velocity.h"
 
-// Team 302 includes
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
+// Team302 Includes
+#include "chassis/SwerveChassis.h"
+#include "chassis/states/ISwerveDriveState.h"
+#include "chassis/ChassisMovement.h"
+#include "teleopcontrol/TeleopControl.h"
 
-// Third Party Includes
-
-using namespace std;
-using namespace frc;
-
-DriveHoldPosition::DriveHoldPosition() : IPrimitive(),
-										 m_chassis(nullptr),
-										 m_timeRemaining(units::time::second_t(0.0)) // Value will be changed in init
+class RobotDrive : public ISwerveDriveState
 {
-	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-}
+public:
+    RobotDrive() = delete;
+    RobotDrive(SwerveChassis *chassis);
+    ~RobotDrive() = default;
+    std::string GetDriveStateName() const override;
 
-void DriveHoldPosition::Init(PrimitiveParams *params)
-{
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
-	// Get timeRemaining from m_params
-	m_timeRemaining = params->GetTime();
-}
+    void Init(ChassisMovement &chassisMovement) override;
+    SwerveChassis *GetChassis() const { return m_chassis; }
 
-void DriveHoldPosition::Run()
-{
-	// Decrement time remaining
-	m_timeRemaining -= IPrimitive::LOOP_LENGTH;
-}
+protected:
+    SwerveChassis *m_chassis;
 
-bool DriveHoldPosition::IsDone()
-{
-	// Return true when the time runs out
-	bool holdDone = ((m_timeRemaining <= (IPrimitive::LOOP_LENGTH / 2.0)));
-	return holdDone;
-}
+    frc::SwerveModuleState m_flState;
+    frc::SwerveModuleState m_frState;
+    frc::SwerveModuleState m_blState;
+    frc::SwerveModuleState m_brState;
+    frc::Translation2d m_centerOfRotation = frc::Translation2d(units::meter_t(0.0), units::meter_t(0.0));
+
+    units::length::inch_t m_wheelbase;
+    units::length::inch_t m_wheeltrack;
+    units::velocity::feet_per_second_t m_maxspeed;
+};
