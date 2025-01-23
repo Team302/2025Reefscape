@@ -16,6 +16,7 @@
 
 #include "electrical/DragonPower.h"
 #include "utils/logging/Logger.h"
+#include "utils/logging/DragonDataLogger.h"
 #include <string>
 
 DragonPower *DragonPower::m_dragonPowerInstance = nullptr;
@@ -54,36 +55,9 @@ void DragonPower::CalculateAndLogPower()
         {
             m_calcTimer->Reset();
             m_calcTimer->Start();
-            double current = m_pdp->GetTotalCurrent();
-            double voltage = m_pdp->GetVoltage();
-            double power = current * voltage;
-            double joules = power * currentTimeCalc;
-            m_matchWatts += power;
-            m_matchJoules += joules;
-            if (current > m_matchMaxCurrent)
-            {
-                m_matchMaxCurrent = current;
-            }
-            if (current < m_matchMinCurrent)
-            {
-                m_matchMinCurrent = current;
-            }
-            if (voltage > m_matchMaxVoltage)
-            {
-                m_matchMaxVoltage = voltage;
-            }
-            if (voltage < m_matchMinVoltage)
-            {
-                m_matchMinVoltage = voltage;
-            }
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Current", current);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Voltage", voltage);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Power", power);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Joules", joules);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Watts", m_matchWatts);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchJoules);
+            CalculatePowerData(currentTimeCalc);
         }
+
         double currentTimeLog = m_logTimer->Get().to<double>();
         if (currentTimeLog > m_logFrequency){
             m_logTimer->Reset();
@@ -94,24 +68,45 @@ void DragonPower::CalculateAndLogPower()
 
 }
 
-void DragonPower::PrintVoltages()
+void DragonPower::CalculatePowerData(double currentTimeCalc)
 {
-    double voltage = m_pdp->GetVoltage();           // Get the voltage of the PDP
-    if (voltage != 0){
-        double temperature = m_pdp->GetTemperature(); // Get the temperature of the PDP
-        double current = m_pdp->GetCurrent(0);        // Get the current of channel 0
-        double totalCurrent = m_pdp->GetTotalCurrent(); // Get the total current of all channels
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", std::string("Voltage"), voltage);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", std::string("Temperature"), temperature);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", std::string("Current on Channel 0"), current);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", std::string("Total Current"), totalCurrent);
-    } else {
-        //Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonPower", std::string("PDP not connected"));
+    m_currentCurrent = m_pdp->GetTotalCurrent();
+    m_currentVoltage = m_pdp->GetVoltage();
+    m_currentPower = m_currentCurrent * m_currentVoltage;
+    m_currentEnergy = m_currentPower * currentTimeCalc;
+    m_matchPower += m_currentPower;
+    m_matchEnergy += m_currentEnergy;
+    if (m_currentCurrent > m_matchMaxCurrent)
+    {
+        m_matchMaxCurrent = m_currentCurrent;
     }
+    if (m_currentCurrent < m_matchMinCurrent)
+    {
+        m_matchMinCurrent = m_currentCurrent;
+    }
+    if (m_currentVoltage > m_matchMaxVoltage)
+    {
+        m_matchMaxVoltage = m_currentVoltage;
+    }
+    if (m_currentVoltage < m_matchMinVoltage)
+    {
+        m_matchMinVoltage = m_currentVoltage;
+    }
+    PrintPowerData();
     
-
 }
 
+void DragonPower::PrintPowerData()
+{
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Current", m_currentCurrent);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Voltage", m_currentVoltage);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Power", m_currentPower);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Energy", m_currentEnergy);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Watts", m_matchPower);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
+}
 
-
+void DragonPower::LogPowerData()
+{
+    //DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::StringSignals::ELECTRICAL_VOLTAGE, m_currentVoltage->GetHeadingStateName());
+}

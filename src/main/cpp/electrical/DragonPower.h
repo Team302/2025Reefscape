@@ -24,18 +24,25 @@ public:
     static DragonPower *GetInstance();
     void Initialize(int calcFrequency, int logFrequency);
     void CalculateAndLogPower();
-    void PrintVoltages();
 
 private:
     DragonPower();
     ~DragonPower() = default;
 
+    void CalculatePowerData(double currentTimeCalc);
+    void LogPowerData();
+    void PrintPowerData();
+
     static DragonPower *m_dragonPowerInstance;
     int m_calcFrequency = 1000;
     int m_logFrequency = 5000;
+    double m_currentCurrent = 0.0;
+    double m_currentVoltage = 0.0;
+    double m_currentPower = 0.0;
+    double m_currentEnergy = 0.0;
     double m_matchTime = 0.0;
-    double m_matchWatts = 0.0;
-    double m_matchJoules = 0.0;
+    double m_matchPower = 0.0;
+    double m_matchEnergy = 0.0;
     double m_matchMaxCurrent = 0.0;
     double m_matchMaxVoltage = 0.0;
     double m_matchMinCurrent = 0.0;

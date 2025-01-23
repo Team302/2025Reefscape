@@ -118,6 +118,34 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currChassisYaw = value;
             }
             break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_VOLTAGE:
+            if (std::abs(value - signals->m_currElectricalVoltage) > m_doubleTolerance)
+            {
+                signals->m_electricalVoltage.Append(value);
+                signals->m_currElectricalVoltage = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_CURRENT:
+            if (std::abs(value - signals->m_currElectricalCurrent) > m_doubleTolerance)
+            {
+                signals->m_electricalCurrent.Append(value);
+                signals->m_currElectricalCurrent = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_ENERGY:
+            if (std::abs(value - signals->m_currElectricalEnergy) > m_doubleTolerance)
+            {
+                signals->m_electricalEnergy.Append(value);
+                signals->m_currElectricalEnergy = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_POWER:
+            if (std::abs(value - signals->m_currElectricalPower) > m_doubleTolerance)
+            {
+                signals->m_electricalPower.Append(value);
+                signals->m_currElectricalPower = value;
+            }
+            break;
             /**
         case DragonDataLoggerSignals::DoubleSignals::NOTE_MANAGER_TARGET_ANGLE_DEGREES:
             if (std::abs(value - signals->m_currNmTargetAngle) > m_doubleTolerance)
