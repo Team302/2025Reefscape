@@ -2,6 +2,8 @@
 <topLevelAppDataElement xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <robotFiles>
     <string>PRACTICE_BOT9999.xml</string>
+    <string>COMP_BOT302.xml</string>
+    <string>CHASSIS_BOT9997.xml</string>
   </robotFiles>
   <Robots />
   <Mechanisms>

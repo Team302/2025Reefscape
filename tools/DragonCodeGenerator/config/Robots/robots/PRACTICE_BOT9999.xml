@@ -198,9 +198,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -228,9 +228,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -639,9 +639,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -669,9 +669,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -882,9 +882,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -912,9 +912,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -1477,9 +1477,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -1507,9 +1507,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -1720,9 +1720,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -1750,9 +1750,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -1963,9 +1963,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -1993,9 +1993,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -4360,9 +4360,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -4390,9 +4390,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
@@ -4603,9 +4603,9 @@
                 <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
@@ -4633,9 +4633,9 @@
                 <value>false</value>
               </reverseResetPosition>
               <reversePosition>
-                <unitsFamily>none</unitsFamily>
+                <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__ />
+                <__units__>deg</__units__>
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
