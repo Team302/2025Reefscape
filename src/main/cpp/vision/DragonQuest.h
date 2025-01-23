@@ -50,15 +50,28 @@ private:
     void CleanUpQuestMessages();
     units::angle::degree_t GetOculusYaw();
     void DoStuff();
+    void ResetWithLimelightData();
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
+    std::shared_ptr<nt::NetworkTable> m_limelightNetworktable;
     static DragonQuest *m_dragonquest;
-    double m_yawoffset = 0;
+    double m_yawoffsetzero = 0;
     nt::IntegerSubscriber m_questMiso;
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
+    nt::DoubleArrayTopic m_limelightPoseTopic;
+
+    double m_xOffset = -0.254;
+    double m_yOffset = 0;
+    double m_zOffset = 0.47625;
+
+    double m_rollOffset = 0;
+    double m_pitchOffset = 0;
+    double m_yawOffset = 180;
 
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
+
+    int m_loopcounter = 0;
 };

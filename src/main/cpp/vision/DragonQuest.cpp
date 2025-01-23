@@ -27,6 +27,7 @@ DragonQuest *DragonQuest::GetDragonQuest()
 DragonQuest::DragonQuest()
 {
     m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
+    m_limelightNetworktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-test"));
     m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
@@ -38,16 +39,28 @@ DragonQuest::DragonQuest()
 frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     DoStuff();
+    if (m_loopcounter > 10)
+    {
+        ResetWithLimelightData();
+    }
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    return frc::Pose3d{units::length::meter_t(posarray[2]), units::length::meter_t(posarray[0]), units::length::meter_t(posarray[1]), frc::Rotation3d{units::angle::degree_t(rotationarray[0]), units::angle::degree_t(rotationarray[1]), units::angle::degree_t(rotationarray[2])}};
+    double x = posarray[2] + m_xOffset;
+    double y = posarray[0] + m_yOffset;
+    double z = posarray[1] + m_zOffset;
+
+    double roll = rotationarray[0] + m_rollOffset;
+    double pitch = rotationarray[1] + m_pitchOffset;
+    double yaw = rotationarray[2] + m_yawOffset;
+
+    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)}};
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
 {
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yaw = rotationarray[1] - m_yawoffset;
+    m_yaw = rotationarray[1] - m_yawoffsetzero;
     if (m_yaw > 180)
     {
         m_yaw -= 360;
@@ -73,7 +86,7 @@ double DragonQuest::GetTimeStamp()
 void DragonQuest::ZeroHeading()
 {
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yawoffset = rotationarray[2];
+    m_yawoffsetzero = rotationarray[2];
 }
 
 void DragonQuest::ZeroPosition()
@@ -86,11 +99,26 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog()
 {
-    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE3D, GetEstimatedPose());
+    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
+    std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
+    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, frc::Pose3d{units::length::meter_t(limelightpose[0]), units::length::meter_t(limelightpose[1]), units::length::meter_t(limelightpose[2]), frc::Rotation3d{units::angle::degree_t(limelightpose[3]), units::angle::degree_t(limelightpose[4]), units::angle::degree_t(limelightpose[5])}});
 }
 
 void DragonQuest::DoStuff()
 {
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
+    m_limelightPoseTopic = m_limelightNetworktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
+    m_loopcounter++;
+}
+
+void DragonQuest::ResetWithLimelightData()
+{
+    std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
+    m_xOffset + limelightpose[0];
+    m_yOffset + limelightpose[1];
+    m_zOffset + limelightpose[2];
+    m_rollOffset + limelightpose[3];
+    m_pitchOffset + limelightpose[4];
+    m_yawOffset + limelightpose[5];
 }

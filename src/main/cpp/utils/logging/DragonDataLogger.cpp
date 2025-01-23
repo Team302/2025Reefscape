@@ -243,8 +243,12 @@ void DragonDataLogger::Log3DPoseData(DragonDataLoggerSignals::PoseSingals signal
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE3D:
-            signals->m_pose3d.Append(value); // always do this as the Pose2d isn't easy to set
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
+            signals->m_pose3dLimelight.Append(value); // always do this as the Pose2d isn't easy to set
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
+            signals->m_pose3dQuest.Append(value); // always do this as the Pose2d isn't easy to set
             break;
 
         default:

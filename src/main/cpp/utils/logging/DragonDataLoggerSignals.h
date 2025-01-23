@@ -79,7 +79,8 @@ public:
     enum PoseSingals
     {
         CURRENT_CHASSIS_POSE2D,
-        CURRENT_CHASSIS_POSE3D
+        CURRENT_CHASSIS_LIMELIGHT_POSE3D,
+        CURRENT_CHASSIS_QUEST_POSE3D
     };
 
     enum ChassisSpeedSignals
@@ -177,7 +178,8 @@ private:
     // std::string m_currNoteMgrState{""};
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
-    wpi::log::StructLogEntry<frc::Pose3d> m_pose3d;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
 
     frc::Pose2d m_currPose2D{};
     frc::Pose3d m_currPose3D{};
