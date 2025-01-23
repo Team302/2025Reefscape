@@ -87,6 +87,7 @@ private:
     units::time::second_t m_time;
     ChassisOptionEnums::HeadingOption m_headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     float m_heading;
+
     std::string m_pathName;
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;

@@ -174,4 +174,8 @@ void AutonSelector::PutChoicesOnDashboard()
 	m_desiredScoringLevel.AddOption("L4", "L4");
 	m_desiredScoringLevel.SetDefaultOption("L4", "L4");
 	frc::SmartDashboard::PutData("Desired Level", &m_desiredScoringLevel);
+
+	frc::SmartDashboard::PutNumber(m_startDelay, 0);
+	frc::SmartDashboard::PutNumber(m_placeCoralDelay, 0);
+	frc::SmartDashboard::PutNumber(m_pickupCoralDelay, 0);
 }

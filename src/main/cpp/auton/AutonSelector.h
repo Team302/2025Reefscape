@@ -44,7 +44,8 @@ public:
 	std::string GetTargetGamePiece();
 	std::string GetDesiredScoringLevel();
 	std::string GetTargetFace();
-	//---------------------------------------------------------------------
+
+		//---------------------------------------------------------------------
 	// Method: 		GetSelectedAutoFile
 	// Description: This returns the selected auton file to run.  If it
 	//  			returns "Do Nothing", it is indicating no auton should
