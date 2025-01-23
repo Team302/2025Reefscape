@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -11,38 +12,25 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//======================================================\==============================================================================================
+//====================================================================================================================================================
 
-#include <SensorDataMgr.h>
-#include <SensorData.h>
-
+#pragma once
 #include <vector>
+#include "utils/sensors/SensorData.h"
 
-using std::vector;
+class SensorDataMgr
+{
+public:
+    static SensorDataMgr *GetInstance();
 
-SensorDataMgr *SensorDataMgr::m_instance = nullptr;
-SensorDataMgr *SensorDataMgr::GetInstance()
-{
-    if (SensorDataMgr::m_instance == nullptr)
-    {
-        SensorDataMgr::m_instance = new SensorDataMgr();
-    }
-    return SensorDataMgr::m_instance;
-}
+    // register methods
+    void RegisterSensorData(SensorData *sd);
+    void CacheData() const;
 
-SensorDataMgr::SensorDataMgr() : m_SensorData()
-{
-}
-void SensorDataMgr::RegisterSensorData(
-    SensorData *sd)
-{
-    m_SensorData.emplace_back(sd);
-}
+private:
+    SensorDataMgr();
+    ~SensorDataMgr();
 
-void SensorDataMgr::CacheData() const
-{
-    for (SensorData *sensor : m_SensorData)
-    {
-        sensor->PeriodicCacheData();
-    }
-}
+    std::vector<SensorData *> m_SensorData;
+    static SensorDataMgr *m_instance;
+};

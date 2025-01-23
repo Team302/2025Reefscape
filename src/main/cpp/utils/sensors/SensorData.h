@@ -16,12 +16,6 @@
 
 #pragma once
 
-#include "frc/geometry/Rotation3d.h"
-
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableInstance.h"
-
 ///  @brief	    Interface for loggable items that can be mixed in with other interfaces
 class SensorData
 {

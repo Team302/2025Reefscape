@@ -16,7 +16,7 @@
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
 #include "feedback/DriverFeedback.h"
-#include "PeriodicLooper.h"
+#include "utils/PeriodicLooper.h"
 #include "Robot.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -28,8 +28,8 @@
 #include "utils/logging/LoggerEnums.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
-#include "SensorData.h"
-#include "SensorDataMgr.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
 
 using std::string;
 
