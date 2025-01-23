@@ -17,35 +17,59 @@
 #pragma once
 
 // C++ Includes
+#include <memory>
 
 // FRC includes
+#include "units/time.h"
 
 // Team 302 includes
+#include "auton/drivePrimitives/IPrimitive.h"
+#include "chassis/SwerveChassis.h"
+// #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 // Third Party Includes
 
-#include <auton/PrimitiveEnums.h>
-
-class IPrimitive;
+// forward declares
 class PrimitiveParams;
 
-class PrimitiveFactory
+namespace frc
+{
+    class Timer;
+}
+
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
+
+class DriveStopDelay : public IPrimitive
 {
 public:
-    static PrimitiveFactory *GetInstance();
-    IPrimitive *GetIPrimitive(PrimitiveParams *primitivePasser);
+    /// @brief constructor that creates/initializes the object
+    DriveStopDelay();
+
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopDelay() = default;
+
+    /// @brief initialize this usage of the primitive
+    /// @param PrimitiveParms* params the drive parameters
+    /// @return void
+    void Init(PrimitiveParams *params) override;
+
+    /// @brief run the primitive (periodic routine)
+    /// @return void
+    void Run() override;
+
+    /// @brief check if the end condition has been met
+    /// @return bool true means the end condition was reached, false means it hasn't
+    bool IsDone() override;
 
 private:
-    PrimitiveFactory();
-    virtual ~PrimitiveFactory();
-
-    static PrimitiveFactory *m_instance;
-    IPrimitive *m_DriveStop;
-    IPrimitive *m_DriveHoldPosition;
-    IPrimitive *m_resetPositionPathPlanner;
-    IPrimitive *m_resetPositionPathPlannerNoVision;
-    IPrimitive *m_visionAlign;
-    IPrimitive *m_drivePathPlanner;
-    IPrimitive *m_driveToNote;
-    IPrimitive *m_DriveStopDelay;
+    units::time::second_t m_maxTime; // Target time
+    float m_currentTime;             // Time since init
+    SwerveChassis *m_chassis;
+    std::unique_ptr<frc::Timer> m_timer;
+    double m_heading;
+    // noteManager *m_noteManager;
+    ChassisOptionEnums::HeadingOption m_headingOption;
 };

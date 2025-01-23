@@ -68,4 +68,8 @@ private:
 	frc::SendableChooser<std::string> m_targetFace;
 	frc::SendableChooser<std::string> m_targetGamePiece;
 	frc::SendableChooser<std::string> m_desiredScoringLevel;
+
+	const std::string m_startDelay = "StartDelay";
+	const std::string m_placeCoralDelay = "PlaceCoralDelay";
+	const std::string m_pickupCoralDelay = "PickupCoralDelay";
 };

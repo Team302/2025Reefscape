@@ -25,6 +25,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionPathPlanner.h"
 #include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
+#include "auton/drivePrimitives/DriveStopDelay.h"
 
 PrimitiveFactory *PrimitiveFactory::m_instance = nullptr;
 
@@ -60,6 +61,13 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
             m_DriveStop = new DriveStop();
         }
         primitive = m_DriveStop;
+        break;
+    case DO_NOTHING_DELAY:
+        if (m_DriveStopDelay)
+        {
+            m_DriveStopDelay = new DriveStopDelay();
+        }
+        primitive = m_DriveStopDelay;
         break;
 
     case HOLD_POSITION:
