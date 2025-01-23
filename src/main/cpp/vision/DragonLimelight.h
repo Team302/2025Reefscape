@@ -29,7 +29,7 @@
 
 // Team 302 includes
 #include "vision/DragonCamera.h"
-#include "SensorData.h"
+#include "utils/sensors/SensorData.h"
 
 // Third Party Includes
 

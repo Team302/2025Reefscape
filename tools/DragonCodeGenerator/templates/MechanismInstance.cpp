@@ -9,7 +9,7 @@ $$_GEN_NOTICE_$$
 
 #include "$$_MECHANISM_INSTANCE_NAME_$$.h"
 #include "utils/logging/Logger.h"
-#include "PeriodicLooper.h"
+#include "utils/PeriodicLooper.h"
 
 $$_INCLUDE_FILES_$$
 
