@@ -21,10 +21,10 @@
 #include "frc/geometry/Transform3d.h"
 #include "units/angle.h"
 
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "chassis/headingStates/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "utils/FMSData.h"
 #include "utils/FieldConstants.h"

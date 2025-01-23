@@ -93,34 +93,25 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_pose3d = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose3d");
     m_pose3d.Append(m_currPose3D);
 
-    m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/TargetFrontLeftModuleState");
+    m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/TargetState");
     m_frontLeftTarget.Append(m_currFrontLeftTarget);
-    m_frontRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/TargetFrontRighttModuleState");
+    m_frontRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontRighttModule/TargetState");
     m_frontRightTarget.Append(m_currFrontRightTarget);
-    m_backLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/TargetBackLeftModuleState");
+    m_backLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackLeftModule/TargetState");
     m_backLeftTarget.Append(m_currBackLeftTarget);
-    m_backRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/TargetBackRightModuleState");
+    m_backRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackRightModule/TargetState");
     m_backRightTarget.Append(m_currBackRightTarget);
-    m_frontLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/ActualFrontLeftModuleState");
+    m_frontLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/ActualState");
     m_frontLeftActual.Append(m_currFrontLeftActual);
-    m_frontRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/ActualBackLeftModuleState");
+    m_frontRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontRighttModule/ActualState");
     m_frontRightActual.Append(m_currFrontRightActual);
-    m_backLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/ActualBackLeftModuleState");
+    m_backLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackLeftModule/ActualState");
     m_backLeftActual.Append(m_currBackLeftActual);
-    m_backRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/ActualBackRightModuleState");
+    m_backRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackRightModule/ActualState");
     m_backRightActual.Append(m_currBackRightActual);
 
     m_actualSpeeds = wpi::log::StructLogEntry<frc::ChassisSpeeds>(log, "/Chassis/ActualSpeed");
     m_actualSpeeds.Append(m_currActualSpeeds);
     m_targetSpeeds = wpi::log::StructLogEntry<frc::ChassisSpeeds>(log, "/Chassis/TargetSpeed");
-    m_targetSpeeds.Append(m_currActualSpeeds);
-
-    m_frontLeftSwerveModuleslip = wpi::log::BooleanLogEntry(log, "/Chassis/Front Left Sliping");
-    m_frontLeftSwerveModuleslip.Append(m_currFrontLeftSwerveModuleslip);
-    m_frontRightSwerveModuleslip = wpi::log::BooleanLogEntry(log, "/Chassis/Front Right Sliping");
-    m_frontRightSwerveModuleslip.Append(m_currFrontRightSwerveModuleslip);
-    m_backLeftSwerveModuleslip = wpi::log::BooleanLogEntry(log, "/Chassis/Back Left Sliping");
-    m_backLeftSwerveModuleslip.Append(m_currBackLeftSwerveModuleslip);
-    m_backRightSwerveModuleslip = wpi::log::BooleanLogEntry(log, "/Chassis/Back Right Sliping");
-    m_backRightSwerveModuleslip.Append(m_currBackRightSwerveModuleslip);
+    m_targetSpeeds.Append(m_currTargetSpeeds);
 }

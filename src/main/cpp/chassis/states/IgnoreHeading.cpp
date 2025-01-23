@@ -13,57 +13,28 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
+// Team302 Includes
+#include "chassis/ChassisOptionEnums.h"
+#include "chassis/states/IgnoreHeading.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+IgnoreHeading::IgnoreHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::IGNORE)
 {
 }
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
+std::string IgnoreHeading::GetHeadingStateName() const
 {
+    return std::string("IgnoreHeading");
+}
+
+void IgnoreHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
+{
+    // update stored heading for transition to teleop from auton
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
     if (chassis != nullptr)
     {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
+        chassis->SetStoredHeading(chassis->GetPose().Rotation().Degrees());
     }
-}
-
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
-
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
 }

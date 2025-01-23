@@ -99,6 +99,12 @@ SwerveModule::SwerveModule(string canbusname,
     InitDriveMotor(driveInverted);
     InitTurnMotorEncoder(turnInverted, canCoderInverted, angleOffset, attrs);
     m_tractionController = std::make_unique<TractionControlController>(1.2, 1.0, 0.4, 145.0, m_maxSpeed);
+
+    m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
+    m_moduleConfig.maxDriveVelocityMPS = GetMaxSpeed();
+    m_moduleConfig.driveCurrentLimit = GetDriveCurrentLimit();
+    m_moduleConfig.driveMotor = GetDriveMotorDef();
+    m_moduleConfig.wheelCOF = GetCoefficientOfFriction();
 }
 
 //==================================================================================

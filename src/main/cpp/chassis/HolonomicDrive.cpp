@@ -26,8 +26,8 @@
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/HolonomicDrive.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
 #include "state/State.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -35,7 +35,7 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/Logger.h"
-// #include "chassis/driveStates/DriveToNote.h"
+// #include "chassis/states/DriveToNote.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using std::string;

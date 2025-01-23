@@ -13,57 +13,49 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <memory>
-#include <string>
-
-// Team 302 includes
-#include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/PrimitiveParams.h"
+#pragma once
 #include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
-#include "utils/FMSData.h"
 
-// Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
+#include "units/length.h"
+#include "ctre/phoenix6/Pigeon2.hpp"
 
-using namespace std;
-using namespace frc;
-using namespace pathplanner;
-
-ResetPositionPathPlannerNoVision::ResetPositionPathPlannerNoVision() : IPrimitive()
+class ChassisConfigCompBot_302 : public ChassisConfig
 {
-}
+public:
+	ChassisConfigCompBot_302() = default;
+	~ChassisConfigCompBot_302() = default;
 
-void ResetPositionPathPlannerNoVision::Init(PrimitiveParams *param)
-{
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+protected:
+	void DefinePigeon() override;
+	void DefineChassis() override;
 
-    if (chassis != nullptr)
-    {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
-        if (AutonUtils::IsValidPath(path))
-        {
-            auto initialPose = path.get()->getStartingHolonomicPose();
-            if (initialPose)
-            {
-                chassis->SetYaw(initialPose.value().Rotation().Degrees());
-                chassis->ResetPose(initialPose.value());
-            }
-        }
-    }
-}
+private:
+	std::string m_canbusName = std::string("canivore");
+	const int m_leftfrontdriveID = 10;
+	const int m_leftfrontturnID = 11;
+	const double m_leftfrontOffset = -0.18310546875;
+	const bool m_leftfrontdriveInvert = false;
+	const bool m_leftfrontturnInvert = true;
+	const bool m_leftfrontcancoderInvert = false;
 
-void ResetPositionPathPlannerNoVision::Run()
-{
-}
+	const int m_leftbackdriveID = 14;
+	const int m_leftbackturnID = 15;
+	const double m_leftbackOffset = 0.332763671875;
+	const bool m_leftbackdriveInvert = true;
+	const bool m_leftbackturnInvert = false;
+	const bool m_leftbackcancoderInvert = false;
 
-bool ResetPositionPathPlannerNoVision::IsDone()
-{
-    return true;
-}
+	const int m_rightfrontdriveID = 12;
+	const int m_rightfrontturnID = 13;
+	const double m_rightfrontOffset = 0.40063476;
+	const bool m_rightfrontdriveInvert = true;
+	const bool m_rightfrontturnInvert = false;
+	const bool m_rightfrontcancoderInvert = false;
+
+	const int m_rightbackdriveID = 8;
+	const int m_rightbackturnID = 9;
+	const double m_rightbackOffset = 0.35571289;
+	const bool m_rightbackdriveInvert = false;
+	const bool m_rightbackturnInvert = true;
+	const bool m_rightbackcancoderInvert = false;
+};
