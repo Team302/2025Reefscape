@@ -39,20 +39,20 @@ DragonQuest::DragonQuest()
 frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     DoStuff();
-    if (m_loopcounter > 10)
+    if (m_loopcounter == 10)
     {
         ResetWithLimelightData();
     }
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[2] + m_xOffset;
-    double y = posarray[0] + m_yOffset;
-    double z = posarray[1] + m_zOffset;
+    double x = posarray[2] += m_xOffset;
+    double y = posarray[0] += m_yOffset;
+    double z = posarray[1] += m_zOffset;
 
-    double roll = rotationarray[0] + m_rollOffset;
-    double pitch = rotationarray[1] + m_pitchOffset;
-    double yaw = rotationarray[2] + m_yawOffset;
+    double roll = rotationarray[0] += m_rollOffset;
+    double pitch = rotationarray[1] += m_pitchOffset;
+    double yaw = rotationarray[2] += m_yawOffset;
 
     return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)}};
 }
@@ -115,10 +115,10 @@ void DragonQuest::DoStuff()
 void DragonQuest::ResetWithLimelightData()
 {
     std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
-    m_xOffset + limelightpose[0];
-    m_yOffset + limelightpose[1];
-    m_zOffset + limelightpose[2];
-    m_rollOffset + limelightpose[3];
-    m_pitchOffset + limelightpose[4];
-    m_yawOffset + limelightpose[5];
+    m_xOffset += limelightpose[0];
+    m_yOffset += limelightpose[1];
+    m_zOffset += limelightpose[2];
+    m_rollOffset += limelightpose[3];
+    m_pitchOffset += limelightpose[4];
+    m_yawOffset += limelightpose[5];
 }
