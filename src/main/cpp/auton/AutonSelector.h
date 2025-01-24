@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <frc/smartdashboard/SendableChooser.h>
+#include "units/time.h"
 
 class AutonSelector
 {
@@ -38,6 +39,9 @@ public:
 	// Description: default cleanup
 	//---------------------------------------------------------------------
 	virtual ~AutonSelector() = default;
+
+	static AutonSelector *GetInstance();
+
 	std::string GetSelectedAutoFile();
 	std::string GetAlianceColor();
 	std::string GetStartPos();
@@ -45,7 +49,11 @@ public:
 	std::string GetDesiredScoringLevel();
 	std::string GetTargetFace();
 
-		//---------------------------------------------------------------------
+	units::time::second_t GetStartDelay();
+	units::time::second_t GetPlacedCoralDelay();
+	units::time::second_t GetCoralStationDelay();
+
+	//---------------------------------------------------------------------
 	// Method: 		GetSelectedAutoFile
 	// Description: This returns the selected auton file to run.  If it
 	//  			returns "Do Nothing", it is indicating no auton should
@@ -64,13 +72,15 @@ private:
 	void PutChoicesOnDashboard();
 	bool FileExists(const std::string &name);
 	bool FileValid(const std::string &name);
+
+	static AutonSelector *m_instance;
 	// Attributues
 	frc::SendableChooser<std::string> m_startposchooser;
 	frc::SendableChooser<std::string> m_targetFace;
 	frc::SendableChooser<std::string> m_targetGamePiece;
 	frc::SendableChooser<std::string> m_desiredScoringLevel;
 
-	const std::string m_startDelay = "StartDelay";
-	const std::string m_placeCoralDelay = "PlaceCoralDelay";
-	const std::string m_pickupCoralDelay = "PickupCoralDelay";
+	const std::string m_startDelay = "Start Delay";
+	const std::string m_placedCoralDelay = "Placed Coral Delay";
+	const std::string m_coralStationDelay = "Coral Station Delay";
 };

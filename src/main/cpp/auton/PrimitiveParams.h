@@ -28,6 +28,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
+#include "auton/drivePrimitives/DriveStopDelay.h"
 
 // Third Party Includes
 
@@ -54,7 +55,8 @@ public:
                     // noteManagerGen::STATE_NAMES noteState,
                     // bool changeClimberState,
                     // ClimberManagerGen::STATE_NAMES climberState,
-                    ChassisOptionEnums::PathUpdateOption updateHeadingOption); // create zones parameter of type ZonesParamsVector
+                    ChassisOptionEnums::PathUpdateOption updateHeadingOption,
+                    DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
 
     PrimitiveParams() = delete;
     virtual ~PrimitiveParams() = default; // Destructor
@@ -70,6 +72,7 @@ public:
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
     ChassisOptionEnums::PathUpdateOption GetPathUpdateOption() const { return m_pathUpdateOption; }
+    DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
 
     // bool IsNoteStateChanging() const { return m_changeNoteState; }
     // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
@@ -78,7 +81,10 @@ public:
     // ClimberManagerGen::STATE_NAMES GetClimberState() const { return m_climberState; }
 
     // Setters
-    void SetPathName(std::string path) { m_pathName = path; }
+    void SetPathName(std::string path)
+    {
+        m_pathName = path;
+    }
     void SetVisionAlignment(VISION_ALIGNMENT visionAlignment) { m_visionAlignment = visionAlignment; }
 
 private:
@@ -87,6 +93,8 @@ private:
     units::time::second_t m_time;
     ChassisOptionEnums::HeadingOption m_headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     float m_heading;
+
+    DriveStopDelay::DelayOption m_delayOption;
 
     std::string m_pathName;
     std::string m_choreoTrajectoryName;

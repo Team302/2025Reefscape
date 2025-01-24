@@ -72,6 +72,12 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
         {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
     };
 
+    map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
+        {"START", DriveStopDelay::DelayOption::START},
+        {"PLACED_CORAL", DriveStopDelay::DelayOption::PLACED_CORAL},
+        {"CORAL_STATION", DriveStopDelay::DelayOption::CORAL_STATION},
+    };
+
     xml_document doc;
     xml_parse_result result = doc.load_file(fulldirfile.c_str());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PrimitiveParser", "Original File", fulldirfile.c_str());
@@ -143,6 +149,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
                     ZoneParamsVector zones;
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
+                    DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());
@@ -188,6 +195,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             if (updateHeadingItr != pathUpdateOptionsMap.end())
                             {
                                 updateHeadingOption = updateHeadingItr->second;
+                            }
+                            else
+                            {
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
+                                hasError = true;
+                            }
+                        }
+                        else if (strcmp(attr.name(), "delayOption"))
+                        {
+                            auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
+                            if (delayOptionItr != pathDelayOptionsMap.end())
+                            {
+                                pathDelayOption = delayOptionItr->second;
                             }
                             else
                             {
@@ -293,7 +313,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      // noteStates,
                                                                      // changeClimberState,
                                                                      // climberState,
-                                                                     updateHeadingOption));
+                                                                     updateHeadingOption,
+                                                                     pathDelayOption));
                     }
                     else
                     {

@@ -25,6 +25,8 @@
 // Team 302 includes
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/SwerveChassis.h"
+#include "auton/AutonSelector.h"
+
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 // Third Party Includes
@@ -45,6 +47,13 @@ namespace frc
 class DriveStopDelay : public IPrimitive
 {
 public:
+    enum DelayOption
+    {
+        START,
+        PLACED_CORAL,
+        CORAL_STATION,
+        MAX_OPTIONS
+    };
     /// @brief constructor that creates/initializes the object
     DriveStopDelay();
 
@@ -65,11 +74,14 @@ public:
     bool IsDone() override;
 
 private:
+    units::time::second_t GetDelayTime();
     units::time::second_t m_maxTime; // Target time
     float m_currentTime;             // Time since init
     SwerveChassis *m_chassis;
     std::unique_ptr<frc::Timer> m_timer;
     double m_heading;
+    AutonSelector *m_autonSelector;
+    DelayOption m_delayOption;
     // noteManager *m_noteManager;
     ChassisOptionEnums::HeadingOption m_headingOption;
 };

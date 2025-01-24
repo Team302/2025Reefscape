@@ -48,7 +48,8 @@ DriveStopDelay::DriveStopDelay() : IPrimitive(),
                                    m_maxTime(units::time::second_t(0.0)),
                                    m_currentTime(0.0),
                                    m_chassis(nullptr),
-                                   m_timer(make_unique<Timer>())
+                                   m_timer(make_unique<Timer>()),
+                                   m_autonSelector(AutonSelector::GetInstance())
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
@@ -68,6 +69,7 @@ void DriveStopDelay::Init(PrimitiveParams *params)
     m_timer->Start();
     m_heading = params->GetHeading();
     m_headingOption = params->GetHeadingOption();
+    m_delayOption = params->GetDelayOption();
 }
 
 /// @brief run the primitive (periodic routine)
@@ -93,6 +95,20 @@ void DriveStopDelay::Run()
 
 /// @brief check if the end condition has been met
 /// @return bool true means the end condition was reached, false means it hasn't
+
+units::time::second_t DriveStopDelay::GetDelayTime()
+{
+    switch (m_delayOption)
+    {
+    case DelayOption::PLACED_CORAL:
+        return m_autonSelector->GetPlacedCoralDelay();
+    case DelayOption::CORAL_STATION:
+        return m_autonSelector->GetCoralStationDelay();
+    default:
+        return m_autonSelector->GetStartDelay();
+    }
+}
+
 bool DriveStopDelay::IsDone()
 {
 
@@ -108,5 +124,5 @@ bool DriveStopDelay::IsDone()
         }
     }
     **/
-    return m_timer->AdvanceIfElapsed(m_maxTime);
+    return m_timer->AdvanceIfElapsed(GetDelayTime());
 }

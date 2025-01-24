@@ -39,6 +39,7 @@ PrimitiveFactory *PrimitiveFactory::GetInstance()
 }
 
 PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
+                                       m_DriveStopDelay(nullptr),
                                        m_DriveHoldPosition(nullptr),
                                        m_resetPositionPathPlanner(nullptr),
                                        m_resetPositionPathPlannerNoVision(nullptr), m_drivePathPlanner(nullptr)

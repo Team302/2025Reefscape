@@ -53,7 +53,7 @@ CyclePrimitives::CyclePrimitives() : State(string("CyclePrimitives"), 0),
 									 m_currentPrim(nullptr),
 									 m_primFactory(PrimitiveFactory::GetInstance()),
 									 m_driveStop(nullptr),
-									 m_autonSelector(new AutonSelector()),
+									 m_autonSelector(AutonSelector::GetInstance()),
 									 m_timer(make_unique<Timer>()),
 									 m_maxTime(units::time::second_t(0.0)),
 									 m_isDone(false),
@@ -200,7 +200,8 @@ void CyclePrimitives::RunDriveStop()
 										  ChassisOptionEnums::PathGainsType::LONG,
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
-										  ChassisOptionEnums::PathUpdateOption::NONE);
+										  ChassisOptionEnums::PathUpdateOption::NONE,
+										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
 		m_driveStop->Init(params);
 	}
