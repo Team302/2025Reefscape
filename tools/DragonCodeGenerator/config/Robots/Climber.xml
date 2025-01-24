@@ -29,21 +29,21 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </openLoopRampTime>
         <closedLoopRampTime>
           <unitsFamily>time</unitsFamily>
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </closedLoopRampTime>
         <enableClosedLoop>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableClosedLoop>
       </voltageRamping>
       <canID>
@@ -83,7 +83,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -108,7 +108,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -136,28 +137,28 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableSupplyCurrentLimit>
         <supplyCurrentLimit>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>70</value>
         </supplyCurrentLimit>
         <supplyCurrentThreshold>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>35</value>
         </supplyCurrentThreshold>
         <supplyTimeThreshold>
           <unitsFamily>time</unitsFamily>
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </supplyTimeThreshold>
       </theCurrentLimits>
       <PIDFs />
@@ -245,6 +246,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
   </MotorControllers>
@@ -328,8 +330,9 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFOC>
+      <controlType>POSITION_DEGREES</controlType>
     </motorControlData>
   </stateMotorControlData>
   <states>
@@ -348,9 +351,9 @@
         <motorTarget>
           <name>Climber</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Climber</motorName>
@@ -387,9 +390,9 @@
         <motorTarget>
           <name>Climber</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Climber</motorName>
@@ -419,9 +422,9 @@
         <motorTarget>
           <name>Climber</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Climber</motorName>

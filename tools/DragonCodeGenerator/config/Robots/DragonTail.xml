@@ -36,14 +36,14 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.5</value>
         </closedLoopRampTime>
         <enableClosedLoop>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableClosedLoop>
       </voltageRamping>
       <canID>
@@ -83,16 +83,16 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>true</value>
+          <value>false</value>
         </enable>
         <fusedCANcoder>
-          <name>ArmAngle</name>
+          <name>CANcoderInstance</name>
         </fusedCANcoder>
         <sensorToMechanismRatio>
           <unitsFamily>none</unitsFamily>
@@ -108,7 +108,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -136,28 +137,28 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableSupplyCurrentLimit>
         <supplyCurrentLimit>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>70</value>
         </supplyCurrentLimit>
         <supplyCurrentThreshold>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>35</value>
         </supplyCurrentThreshold>
         <supplyTimeThreshold>
           <unitsFamily>time</unitsFamily>
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </supplyTimeThreshold>
       </theCurrentLimits>
       <PIDFs />
@@ -245,6 +246,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
     <MotorController
@@ -280,14 +282,14 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </closedLoopRampTime>
         <enableClosedLoop>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableClosedLoop>
       </voltageRamping>
       <canID>
@@ -327,16 +329,16 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>true</value>
+          <value>false</value>
         </enable>
         <fusedCANcoder>
-          <name>ElevatorHeight</name>
+          <name>CANcoderInstance</name>
         </fusedCANcoder>
         <sensorToMechanismRatio>
           <unitsFamily>none</unitsFamily>
@@ -352,7 +354,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -380,28 +383,28 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableSupplyCurrentLimit>
         <supplyCurrentLimit>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>70</value>
         </supplyCurrentLimit>
         <supplyCurrentThreshold>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>35</value>
         </supplyCurrentThreshold>
         <supplyTimeThreshold>
           <unitsFamily>time</unitsFamily>
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.5</value>
         </supplyTimeThreshold>
       </theCurrentLimits>
       <PIDFs />
@@ -489,6 +492,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
     <MotorController
@@ -517,7 +521,7 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </openLoopRampTime>
         <closedLoopRampTime>
           <unitsFamily>time</unitsFamily>
@@ -571,7 +575,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -596,7 +600,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -621,50 +626,31 @@
           <type>Boolean</type>
           <value>true</value>
         </EnableCurrentLimits>
-        <PeakCurrentLimit>
+        <currentLimit>
           <unitsFamily>current</unitsFamily>
           <name>intParameter</name>
           <__units__>A</__units__>
           <type>Int32</type>
-          <value>60</value>
-        </PeakCurrentLimit>
-        <PeakCurrentLimitTimeout>
+          <value>10</value>
+        </currentLimit>
+        <triggerThresholdCurrent>
           <unitsFamily>time</unitsFamily>
           <name>intParameter</name>
           <__units__>s</__units__>
           <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentLimitTimeout>
-        <PeakCurrentDuration>
+          <value>13</value>
+        </triggerThresholdCurrent>
+        <triggerThresholdTime>
           <unitsFamily>time</unitsFamily>
           <name>intParameter</name>
           <__units__>s</__units__>
           <type>Int32</type>
           <value>1</value>
-        </PeakCurrentDuration>
-        <PeakCurrentDurationTimeout>
-          <unitsFamily>time</unitsFamily>
-          <name>intParameter</name>
-          <__units__>s</__units__>
-          <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentDurationTimeout>
-        <ContinuousCurrentLimit>
-          <unitsFamily>current</unitsFamily>
-          <name>intParameter</name>
-          <__units__>A</__units__>
-          <type>Int32</type>
-          <value>40</value>
-        </ContinuousCurrentLimit>
-        <ContinuousCurrentLimitTimeout>
-          <unitsFamily>time</unitsFamily>
-          <name>intParameter</name>
-          <__units__>s</__units__>
-          <type>Int32</type>
-          <value>0</value>
-        </ContinuousCurrentLimitTimeout>
+        </triggerThresholdTime>
       </currentLimits>
-      <theConfigMotorSettings />
+      <theConfigMotorSettings>
+        <mode>Brake</mode>
+      </theConfigMotorSettings>
       <feedbackSensorConfig />
       <remoteFeedbackSensorConfig />
     </MotorController>
@@ -694,7 +680,7 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </openLoopRampTime>
         <closedLoopRampTime>
           <unitsFamily>time</unitsFamily>
@@ -748,7 +734,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -773,7 +759,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -798,50 +785,31 @@
           <type>Boolean</type>
           <value>false</value>
         </EnableCurrentLimits>
-        <PeakCurrentLimit>
+        <currentLimit>
           <unitsFamily>current</unitsFamily>
           <name>intParameter</name>
           <__units__>A</__units__>
           <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentLimit>
-        <PeakCurrentLimitTimeout>
+          <value>10</value>
+        </currentLimit>
+        <triggerThresholdCurrent>
           <unitsFamily>time</unitsFamily>
           <name>intParameter</name>
           <__units__>s</__units__>
           <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentLimitTimeout>
-        <PeakCurrentDuration>
+          <value>13</value>
+        </triggerThresholdCurrent>
+        <triggerThresholdTime>
           <unitsFamily>time</unitsFamily>
           <name>intParameter</name>
           <__units__>s</__units__>
           <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentDuration>
-        <PeakCurrentDurationTimeout>
-          <unitsFamily>time</unitsFamily>
-          <name>intParameter</name>
-          <__units__>s</__units__>
-          <type>Int32</type>
-          <value>0</value>
-        </PeakCurrentDurationTimeout>
-        <ContinuousCurrentLimit>
-          <unitsFamily>current</unitsFamily>
-          <name>intParameter</name>
-          <__units__>A</__units__>
-          <type>Int32</type>
-          <value>0</value>
-        </ContinuousCurrentLimit>
-        <ContinuousCurrentLimitTimeout>
-          <unitsFamily>time</unitsFamily>
-          <name>intParameter</name>
-          <__units__>s</__units__>
-          <type>Int32</type>
-          <value>0</value>
-        </ContinuousCurrentLimitTimeout>
+          <value>1</value>
+        </triggerThresholdTime>
       </currentLimits>
-      <theConfigMotorSettings />
+      <theConfigMotorSettings>
+        <mode>Brake</mode>
+      </theConfigMotorSettings>
       <feedbackSensorConfig />
       <remoteFeedbackSensorConfig />
     </MotorController>
@@ -878,14 +846,14 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </closedLoopRampTime>
         <enableClosedLoop>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableClosedLoop>
       </voltageRamping>
       <canID>
@@ -907,14 +875,14 @@
         <name>uintParameter</name>
         <__units__ />
         <type>UInt32</type>
-        <value>0</value>
+        <value>8</value>
       </followID>
       <enableFollowID>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFollowID>
       <remoteSensor>
         <CanID>
@@ -925,7 +893,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -934,7 +902,7 @@
           <value>false</value>
         </enable>
         <fusedCANcoder>
-          <name>ElevatorHeight</name>
+          <name>CANcoderInstance</name>
         </fusedCANcoder>
         <sensorToMechanismRatio>
           <unitsFamily>none</unitsFamily>
@@ -950,7 +918,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -978,28 +947,28 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableSupplyCurrentLimit>
         <supplyCurrentLimit>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>70</value>
         </supplyCurrentLimit>
         <supplyCurrentThreshold>
           <unitsFamily>current</unitsFamily>
           <name>doubleParameter</name>
           <__units__>A</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>40</value>
         </supplyCurrentThreshold>
         <supplyTimeThreshold>
           <unitsFamily>time</unitsFamily>
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.5</value>
         </supplyTimeThreshold>
       </theCurrentLimits>
       <PIDFs />
@@ -1087,6 +1056,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
   </MotorControllers>
@@ -1292,8 +1262,9 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFOC>
+      <controlType>POSITION_INCH</controlType>
     </motorControlData>
     <motorControlData>
       <name>PositionDegree</name>
@@ -1368,8 +1339,9 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFOC>
+      <controlType>POSITION_DEGREES</controlType>
     </motorControlData>
     <motorControlData>
       <name>PercentOutput</name>
@@ -1464,9 +1436,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -1482,9 +1454,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -1536,9 +1508,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -1582,9 +1554,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -1600,9 +1572,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -1654,9 +1626,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -1700,9 +1672,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -1718,9 +1690,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -1772,9 +1744,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -1825,9 +1797,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -1843,9 +1815,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -1897,9 +1869,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -1992,9 +1964,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2010,9 +1982,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2064,9 +2036,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2110,9 +2082,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2128,9 +2100,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2182,9 +2154,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2235,9 +2207,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2253,9 +2225,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2307,9 +2279,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2360,9 +2332,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2378,9 +2350,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2432,9 +2404,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2471,9 +2443,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2489,9 +2461,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2543,9 +2515,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2610,9 +2582,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2628,9 +2600,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2682,9 +2654,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2749,9 +2721,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2767,9 +2739,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2821,9 +2793,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -2888,9 +2860,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -2906,9 +2878,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -2960,9 +2932,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -3027,9 +2999,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -3045,9 +3017,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -3099,9 +3071,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>
@@ -3145,9 +3117,9 @@
         <motorTarget>
           <name>Arm</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Arm</motorName>
@@ -3163,9 +3135,9 @@
         <motorTarget>
           <name>ElevatorLeader</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorLeader</motorName>
@@ -3217,9 +3189,9 @@
         <motorTarget>
           <name>ElevatorFollower</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>length</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>m</__units__>
             <type>Double</type>
           </target>
           <motorName>ElevatorFollower</motorName>

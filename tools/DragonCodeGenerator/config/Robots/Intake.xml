@@ -29,7 +29,7 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </openLoopRampTime>
         <closedLoopRampTime>
           <unitsFamily>time</unitsFamily>
@@ -83,7 +83,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -108,7 +108,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -245,6 +246,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
     <MotorController
@@ -280,14 +282,14 @@
           <name>doubleParameter</name>
           <__units__>s</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>0.25</value>
         </closedLoopRampTime>
         <enableClosedLoop>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableClosedLoop>
       </voltageRamping>
       <canID>
@@ -327,7 +329,7 @@
           <value>0</value>
         </CanID>
       </remoteSensor>
-      <fusedCANcoder>
+      <fusedSyncCANcoder>
         <enable>
           <unitsFamily>none</unitsFamily>
           <name>boolParameter</name>
@@ -352,7 +354,8 @@
           <type>Double</type>
           <value>0</value>
         </rotorToSensorRatio>
-      </fusedCANcoder>
+        <fusedSyncChoice>FUSED</fusedSyncChoice>
+      </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
@@ -489,6 +492,7 @@
           <type>Double</type>
           <value>-1</value>
         </peakReverseDutyCycle>
+        <mode>Brake</mode>
       </theConfigMotorSettings>
     </MotorController>
   </MotorControllers>
@@ -673,8 +677,9 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFOC>
+      <controlType>POSITION_DEGREES</controlType>
     </motorControlData>
   </stateMotorControlData>
   <states>
@@ -718,9 +723,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -768,6 +773,7 @@
             <name>Target</name>
             <__units__ />
             <type>Double</type>
+            <value>1</value>
           </target>
           <motorName>Intake</motorName>
           <Enabled>
@@ -782,9 +788,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -846,9 +852,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -896,9 +902,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -946,9 +952,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -982,6 +988,7 @@
             <name>Target</name>
             <__units__ />
             <type>Double</type>
+            <value>-1</value>
           </target>
           <motorName>Intake</motorName>
           <Enabled>
@@ -996,9 +1003,9 @@
         <motorTarget>
           <name>Extender</name>
           <target>
-            <unitsFamily>none</unitsFamily>
+            <unitsFamily>angle</unitsFamily>
             <name>Target</name>
-            <__units__ />
+            <__units__>deg</__units__>
             <type>Double</type>
           </target>
           <motorName>Extender</motorName>
@@ -1032,6 +1039,7 @@
             <name>Target</name>
             <__units__ />
             <type>Double</type>
+            <value>-1</value>
           </target>
           <motorName>Intake</motorName>
           <Enabled>
