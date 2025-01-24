@@ -915,7 +915,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </reverseResetPosition>
               <reversePosition>
                 <unitsFamily>angle</unitsFamily>
@@ -1238,7 +1238,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </EnableCurrentLimits>
               <currentLimit>
                 <unitsFamily>current</unitsFamily>
