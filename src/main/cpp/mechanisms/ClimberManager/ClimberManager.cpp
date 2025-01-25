@@ -31,6 +31,7 @@
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
+#include "state/RobotState.h"
 
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -49,6 +50,7 @@ using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 
 using std::string;
 using namespace ClimberManagerStates;
+
 
 void ClimberManager::CreateAndRegisterStates()
 {
@@ -69,9 +71,11 @@ void ClimberManager::CreateAndRegisterStates()
 
 ClimberManager::ClimberManager ( MechanismConfigMgr::RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string ( "ClimberManager" ) ),
 	m_activeRobotId ( activeRobotId ),
-	m_stateMap()
+	m_stateMap(),
+	m_climbMode(RobotStateChanges::ClimbMode::ClimbModeOff)
 {
 	PeriodicLooper::GetInstance()->RegisterAll ( this );
+	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
 std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap
@@ -261,6 +265,11 @@ void ClimberManager::PushTuningParamsToNT()
 	m_table.get()->PutNumber ( "PositionDegree_pGain", m_PositionDegree->GetP() );
 	m_table.get()->PutNumber ( "PositionDegree_iGain", m_PositionDegree->GetI() );
 	m_table.get()->PutNumber ( "PositionDegree_dGain", m_PositionDegree->GetD() );
+}
+void ClimberManager::UpdateClimbMode(RobotStateChanges::StateChange statechange, int ival){
+	if (statechange==RobotStateChanges::StateChange::ClimbModeStatus_Int){
+		m_climbMode=static_cast<RobotStateChanges::ClimbMode>(ival);
+	}
 }
 
 ControlData *ClimberManager::GetControlData ( string name )
