@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -12,47 +13,28 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
+
 #pragma once
-
-// C++ Includes
-#include <memory>
-
-// Team302 Includes
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/SwerveChassis.h"
-#include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
 
-// FRC,WPI Includes
-#include "frc/controller/HolonomicDriveController.h"
-#include "frc/controller/RamseteController.h"
-#include "frc/Filesystem.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/trajectory/TrajectoryConfig.h"
-#include "frc/trajectory/TrajectoryUtil.h"
-#include "wpi/SmallString.h"
-#include "frc/Timer.h"
-#include "units/time.h"
-
-class VisionDrivePrimitive : public IPrimitive
+class CameraConfig
 {
 public:
-    VisionDrivePrimitive();
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        QUEST
+    };
 
-    virtual ~VisionDrivePrimitive() = default;
+    CameraConfig();
+    ~CameraConfig();
 
-    void Init(PrimitiveParams *params) override;
-    void Run() override;
-    bool IsDone() override;
+    void BuildCameraConfig();
 
-private:
-    SwerveChassis *m_chassis;
-    ChassisOptionEnums::HeadingOption m_headingOption;
-    std::string m_ntName;
+    DragonVision *GetDragonVision() const { return m_vision; }
 
-    frc::Timer *m_timer;
-    units::time::second_t m_timeout;
+protected:
+    virtual void DefineCameras();
 
     DragonVision *m_vision;
 };

@@ -27,18 +27,9 @@
 class DragonCamera
 {
 public:
-    enum PIPELINE
-    {
-        UNKNOWN = -1,
-        OFF,
-        MACHINE_LEARNING,
-        APRIL_TAG,
-        COLOR_THRESHOLD
-    };
 
     DragonCamera(
         std::string cameraName,                /// <I> camera name/type
-        PIPELINE pipeline,                     /// <I> enum for pipeline
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot is positive)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot is positive)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot is positive)
@@ -99,7 +90,6 @@ public:
     virtual std::optional<VisionData> GetDataToSpecifiedTag(int id) = 0;
 
     // Getters
-    PIPELINE GetPipeline() const { return m_pipeline; }
     units::angle::degree_t GetCameraPitch() const { return m_cameraPose.Rotation().Y(); }
     units::angle::degree_t GetCameraYaw() const { return m_cameraPose.Rotation().Z(); }
     units::angle::degree_t GetCameraRoll() const { return m_cameraPose.Rotation().X(); } // rotates around x-axis
@@ -113,12 +103,6 @@ public:
         return m_robotCenterToCam;
     }
 
-    // Setters
-    void SetPipeline(PIPELINE pipeline)
-    {
-        m_pipeline = pipeline;
-    }
-
     void SetCameraPosition(
         units::length::inch_t mountingXOffset,
         units::length::inch_t mountingYOffset,
@@ -126,12 +110,10 @@ public:
         units::angle::degree_t pitch,
         units::angle::degree_t yaw,
         units::angle::degree_t roll);
-    virtual bool UpdatePipeline() = 0; // children will handle updating the co-processor to current m_pipeline value
 
 protected:
     frc::Pose3d m_cameraPose;
     frc::Transform3d m_robotCenterToCam;
-    PIPELINE m_pipeline;
     std::string m_cameraName;
 
     const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0); // This represents the note being at the same level as center of robot
