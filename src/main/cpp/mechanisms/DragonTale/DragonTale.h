@@ -43,6 +43,7 @@
 #include "configs/MechanismConfigMgr.h"
 
 #include "state/IRobotStateChangeSubscriber.h"
+#include "frc/geometry/Pose2d.h"
 
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
@@ -123,6 +124,8 @@ public:
 
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
+	units::length::inch_t GetAlgaeHeight();
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
@@ -153,7 +156,8 @@ private:
 	ControlData* m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 
-
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(0.0); //change these later
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
