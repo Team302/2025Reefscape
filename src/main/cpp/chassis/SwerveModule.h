@@ -52,14 +52,18 @@ public:
     /// @brief Constructs a Swerve Module.  This is assuming 2 TalonFX (Falcons) with a CanCoder for the turn angle
     SwerveModule(std::string canbusname,
                  SwerveModuleConstants::ModuleID id,
-                 SwerveModuleConstants::ModuleType type,
+                 units::length::inch_t wheelDiameter,
+                 units::dimensionless::scalar_t driveGearRatio,
+                 double sensorToMechanismRatio,
+                 units::dimensionless::scalar_t rotorToSensorRatio,
+                 units::velocity::feet_per_second_t maxSpeed,
                  int driveMotorID,
                  bool driveInverted,
                  int turnMotorID,
                  bool turnInverted,
                  int canCoderID,
                  bool canCoderInverted,
-                 double angleOffset,
+                 const units::angle::turn_t angleOffset,
                  std::string configfilename,
                  std::string networkTableName);
 
@@ -117,8 +121,9 @@ private:
     void InitTurnMotorEncoder(
         bool turnInverted,
         bool canCoderInverted,
-        double angleOffset,
-        const SwerveModuleAttributes &attrs);
+        const units::angle::turn_t angleOffset,
+        double sensorToMechanismRatio,
+        units::dimensionless::scalar_t rotorToSensorRatio);
     void SetDriveSpeed(units::velocity::meters_per_second_t speed);
     void SetTurnAngle(units::angle::degree_t angle);
     void ReadConstants(std::string configfilename);

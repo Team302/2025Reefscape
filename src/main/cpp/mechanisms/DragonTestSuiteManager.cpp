@@ -26,7 +26,13 @@ DragonTestSuiteManager *DragonTestSuiteManager::GetInstance()
     return DragonTestSuiteManager::m_instance;
 }
 
-DragonTestSuiteManager::DragonTestSuiteManager() : m_currTestSlot(0), m_currTestSuiteIndex(0), m_currTest(nullptr) {}
+DragonTestSuiteManager::DragonTestSuiteManager() : m_testSuites(),
+                                                   m_currTestSlot(0),
+                                                   m_currTest(nullptr),
+                                                   m_testSuiteNames(),
+                                                   m_currTestSuiteIndex(0),
+{
+}
 
 // assumes we will run through all tests
 void DragonTestSuiteManager::Init()

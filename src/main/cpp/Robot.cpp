@@ -30,6 +30,7 @@
 #include "utils/logging/DataTrace.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
+#include "RobotIdentifier.h"
 
 using std::string;
 
@@ -313,8 +314,8 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    MechanismConfigMgr::GetInstance()->InitRobot((MechanismConfigMgr::RobotIdentifier)teamNumber);
-    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
+    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     m_holonomic = nullptr;

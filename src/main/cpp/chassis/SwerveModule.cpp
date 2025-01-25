@@ -65,24 +65,28 @@ using ctre::phoenix6::signals::SensorDirectionValue;
 
 using namespace ctre::phoenix6;
 //==================================================================================
-SwerveModule::SwerveModule(string canbusname,
+SwerveModule::SwerveModule(std::string canbusname,
                            SwerveModuleConstants::ModuleID id,
-                           SwerveModuleConstants::ModuleType type,
+                           units::length::inch_t wheelDiameter,
+                           units::dimensionless::scalar_t driveGearRatio,
+                           double sensorToMechanismRatio,
+                           units::dimensionless::scalar_t rotorToSensorRatio,
+                           units::velocity::feet_per_second_t maxSpeed,
                            int driveMotorID,
                            bool driveInverted,
                            int turnMotorID,
                            bool turnInverted,
                            int canCoderID,
                            bool canCoderInverted,
-                           double angleOffset,
-                           string configfilename,
-                           string networkTableName) : LoggableItem(),
-                                                      m_moduleID(id),
-                                                      m_driveTalon(new TalonFX(driveMotorID, canbusname)),
-                                                      m_turnTalon(new TalonFX(turnMotorID, canbusname)),
-                                                      m_turnCancoder(new CANcoder(canCoderID, canbusname)),
-                                                      m_activeState(),
-                                                      m_networkTableName(networkTableName)
+                           const units::angle::turn_t angleOffset,
+                           std::string configfilename,
+                           std::string networkTableName) : LoggableItem(),
+                                                           m_moduleID(id),
+                                                           m_driveTalon(new TalonFX(driveMotorID, canbusname)),
+                                                           m_turnTalon(new TalonFX(turnMotorID, canbusname)),
+                                                           m_turnCancoder(new CANcoder(canCoderID, canbusname)),
+                                                           m_activeState(),
+                                                           m_networkTableName(networkTableName)
 
 {
 
@@ -90,14 +94,13 @@ SwerveModule::SwerveModule(string canbusname,
     m_activeState.angle = ang;
     m_activeState.speed = 0_mps;
 
-    auto attrs = SwerveModuleConstants::GetSwerveModuleAttrs(type);
-    m_wheelDiameter = attrs.wheelDiameter;
-    m_maxSpeed = attrs.maxSpeed;
-    m_gearRatio = attrs.driveGearRatio;
+    m_wheelDiameter = wheelDiameter;
+    m_maxSpeed = maxSpeed;
+    m_gearRatio = driveGearRatio;
 
     ReadConstants(configfilename);
     InitDriveMotor(driveInverted);
-    InitTurnMotorEncoder(turnInverted, canCoderInverted, angleOffset, attrs);
+    InitTurnMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
     m_tractionController = std::make_unique<TractionControlController>(1.2, 1.0, 0.4, 145.0, m_maxSpeed);
 
     m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
@@ -348,8 +351,9 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
 //==================================================================================
 void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
                                         bool canCoderInverted,
-                                        double angleOffset,
-                                        const SwerveModuleAttributes &attrs)
+                                        const units::angle::turn_t angleOffset,
+                                        double sensorToMechanismRatio,
+                                        units::dimensionless::scalar_t rotorToSensorRatio)
 {
     if (m_turnTalon != nullptr && m_turnCancoder != nullptr)
     {
@@ -385,8 +389,8 @@ void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
         fxconfigs.Feedback.FeedbackRemoteSensorID = m_turnCancoder->GetDeviceID();
         // fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::SyncCANcoder;
         fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-        fxconfigs.Feedback.SensorToMechanismRatio = attrs.sensorToMechanismRatio;
-        fxconfigs.Feedback.RotorToSensorRatio = attrs.rotorToSensorRatio;
+        fxconfigs.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
+        fxconfigs.Feedback.RotorToSensorRatio = rotorToSensorRatio;
         m_turnTalon->GetConfigurator().Apply(fxconfigs);
 
         CANcoderConfiguration ccConfigs{};

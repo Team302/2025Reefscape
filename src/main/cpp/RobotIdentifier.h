@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,17 +14,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <string>
+#pragma once
 
-#include "chassis/definitions/ChassisConfigChassis_1.h"
-#include "utils/logging/Logger.h"
-
-using std::string;
-
-void ChassisConfigChassis_1::DefinePigeon()
+enum class RobotIdentifier
 {
-}
+    COMP_BOT_302 = 302,
+    PRACTICE_BOT_9999 = 9999,
+    CHASSIS_BOT_9998 = 9998,
+    CHASSIS_BOT_9997 = 9997,
 
-void ChassisConfigChassis_1::DefineChassis()
-{
-}
+    MAX_ROBOT_IDENTIFIERS
+};
