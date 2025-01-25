@@ -525,7 +525,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>2</value>
+              <value>12</value>
             </canID>
             <canBusName>canivore</canBusName>
             <offset>
@@ -540,7 +540,7 @@
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>true</value>
+              <value>false</value>
             </reverse>
           </CANcoder>
         </cancoder>
