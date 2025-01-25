@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,15 +14,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// Team 302 Includes
-#include <RobotDefinition.h>
+#pragma once
 
-/*RobotDefinition::RobotDefinition(std::vector<std::any> mechs, std::vector<std::any> other) : m_mechs(mechs),
-                                                                                             m_other(other)*/
-RobotDefinition::RobotDefinition(std::vector<std::pair<Components, std::string>> components)
+///  @brief	    Interface for loggable items that can be mixed in with other interfaces
+class SensorData
 {
-    for (std::pair<Components, std::string> component : components)
-    {
-        m_componentMap.emplace(component.first, component.second);
-    }
-}
+public:
+	SensorData();
+	virtual ~SensorData() = default;
+
+	virtual void PeriodicCacheData() = 0;
+};

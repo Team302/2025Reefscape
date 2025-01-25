@@ -167,6 +167,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::INTAKE, driverLBumper},
+    {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
 
     {TeleopControlFunctions::READY, copilotStartButton},
     {TeleopControlFunctions::L1_SCORING_POSITION, copilotRTriggerPressed},

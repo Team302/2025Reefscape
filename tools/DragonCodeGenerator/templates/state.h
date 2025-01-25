@@ -4,7 +4,7 @@ $$_GEN_NOTICE_$$
 #pragma once
 #include <string>
 
-#include "State.h"
+#include "state/State.h"
 #include "mechanisms/$$_MECHANISM_INSTANCE_NAME_$$/$$_MECHANISM_INSTANCE_NAME_$$.h"
 
 using namespace std;
@@ -30,5 +30,6 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
         $$_MECHANISM_INSTANCE_NAME_$$ *m_mechanism;
         $$_STATE_INIT_FUNCTION_DECLS_$$
         MechanismConfigMgr::RobotIdentifier m_RobotId;
+        $$_TARGET_VALUE_CONSTANT_$$
     };
 }

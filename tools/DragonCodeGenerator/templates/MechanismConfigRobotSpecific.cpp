@@ -3,7 +3,7 @@ $$_GEN_NOTICE_$$
 
 #include <string>
 
-#include "PeriodicLooper.h"
+#include "utils/PeriodicLooper.h"
 #include "utils/logging/Logger.h"
 #include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfig$$_ROBOT_NAME_$$.h"
