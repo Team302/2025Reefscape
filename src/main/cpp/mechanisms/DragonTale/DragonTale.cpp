@@ -50,6 +50,8 @@
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
 
+#include "state/RobotState.h"
+
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
@@ -179,6 +181,10 @@ DragonTale::DragonTale ( MechanismConfigMgr::RobotIdentifier activeRobotId ) : B
 	m_activeRobotId ( activeRobotId ),
 	m_stateMap()
 {
+	m_scoringMode = RobotStateChanges::ScoringMode::Coral;
+	RobotState *m_robotState = RobotState::GetInstance();
+
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	PeriodicLooper::GetInstance()->RegisterAll ( this );
 }
 
@@ -605,4 +611,14 @@ ControlData *DragonTale::GetControlData ( string name )
 
 
 	return nullptr;
+}
+/*==================================================================================================================
+
+Hand-Coded Things are here :)
+
+===================================================================================================================*/
+void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int value)
+{
+	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
+		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }

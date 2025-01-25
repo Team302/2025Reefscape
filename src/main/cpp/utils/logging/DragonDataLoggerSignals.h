@@ -56,7 +56,11 @@ public:
     enum DoubleSignals
     {
         CHASSIS_STORED_HEADING_DEGREES,
-        CHASSIS_YAW_DEGREES //,
+        CHASSIS_YAW_DEGREES,
+        ELECTRICAL_VOLTAGE,
+        ELECTRICAL_CURRENT,
+        ELECTRICAL_ENERGY,
+        ELECTRICAL_POWER
         // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
         // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
         // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
@@ -163,6 +167,18 @@ private:
 
     wpi::log::DoubleLogEntry m_distFromSpeaker;
     double m_currDistFromSpeaker{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalVoltage;
+    double m_currElectricalVoltage{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalCurrent;
+    double m_currElectricalCurrent{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalEnergy;
+    double m_currElectricalEnergy{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalPower;
+    double m_currElectricalPower{0.0};
 
     wpi::log::StringLogEntry m_headingState;
     std::string m_currHeadingState{""};

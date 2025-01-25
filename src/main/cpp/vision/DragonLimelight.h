@@ -77,6 +77,15 @@ public:
 
     };
 
+    enum LIMELIGHT_PIPELINE
+    {
+        UNKNOWN = -1,
+        OFF,
+        MACHINE_LEARNING_PL,
+        APRIL_TAG,
+        COLOR_THRESHOLD
+    };
+
     ///-----------------------------------------------------------------------------------
     /// Method:         DragonLimelight (constructor)
     /// Description:    Create the object
@@ -85,7 +94,7 @@ public:
     DragonLimelight(
         std::string name, /// <I> - network table name'
         LIMELIGHT_MODE usage,
-        PIPELINE initialPipeline,              /// <I> enum for starting pipeline
+        LIMELIGHT_PIPELINE initialPipeline,    /// <I> enum for starting pipeline
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
@@ -170,4 +179,5 @@ protected:
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
     LIMELIGHT_MODE m_usage;
+    LIMELIGHT_PIPELINE m_pipeline;
 };

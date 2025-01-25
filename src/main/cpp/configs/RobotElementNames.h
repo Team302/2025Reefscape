@@ -38,6 +38,8 @@ public:
 	enum CAMERA_USAGE
 	{
 		UNKNOWN_CAMERA = -1,
+		PLACER,
+		POSITION,
 		MAX_CAMERA
 	};
 
