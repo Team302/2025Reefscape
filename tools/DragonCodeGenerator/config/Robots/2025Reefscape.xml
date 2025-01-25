@@ -4,6 +4,7 @@
     <string>PRACTICE_BOT9999.xml</string>
     <string>COMP_BOT302.xml</string>
     <string>CHASSIS_BOT9997.xml</string>
+    <string>ThingThree3.xml</string>
   </robotFiles>
   <Robots />
   <Mechanisms>
@@ -36,6 +37,19 @@
     <mechanism>
       <GUID>178a8a32-a228-43f0-81f4-be4dc9132beb</GUID>
       <name>Intake</name>
+      <MotorControllers />
+      <closedLoopControlParameters />
+      <solenoid />
+      <servo />
+      <analogInput />
+      <digitalInput />
+      <cancoder />
+      <stateMotorControlData />
+      <states />
+    </mechanism>
+    <mechanism>
+      <GUID>e3f61f32-8b69-4a5a-8265-6b1d7f722a28</GUID>
+      <name>LeaderFollwerTest</name>
       <MotorControllers />
       <closedLoopControlParameters />
       <solenoid />
