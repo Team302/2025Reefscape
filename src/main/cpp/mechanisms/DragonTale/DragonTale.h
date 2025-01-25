@@ -112,8 +112,8 @@ public:
 	bool GetCoralInSensorState() const {return m_CoralInSensor->Get();}
 	bool GetCoralOutSensorState() const {return m_CoralOutSensor->Get();}
 	bool GetAlgaeSensorState() const {return m_AlgaeSensor->Get();}
-	ctre::phoenix6::hardware::CANcoder* GetArmAngle() const {return m_ArmAngle;}
-	ctre::phoenix6::hardware::CANcoder* GetElevatorHeight() const {return m_ElevatorHeight;}
+	ctre::phoenix6::hardware::CANcoder* GetArmAngleSensor() const {return m_ArmAngleSensor;}
+	ctre::phoenix6::hardware::CANcoder* GetElevatorHeightSensor() const {return m_ElevatorHeightSensor;}
 	ControlData* GetPositionInch() const {return m_PositionInch;}
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
@@ -151,8 +151,8 @@ private:
 	frc::DigitalInput* m_CoralInSensor;
 	frc::DigitalInput* m_CoralOutSensor;
 	frc::DigitalInput* m_AlgaeSensor;
-	ctre::phoenix6::hardware::CANcoder* m_ArmAngle;
-	ctre::phoenix6::hardware::CANcoder* m_ElevatorHeight;
+	ctre::phoenix6::hardware::CANcoder* m_ArmAngleSensor;
+	ctre::phoenix6::hardware::CANcoder* m_ElevatorHeightSensor;
 	ControlData* m_PositionInch;
 	ControlData* m_PositionDegree;
 	ControlData* m_PercentOutput;
