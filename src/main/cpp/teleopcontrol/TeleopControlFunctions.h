@@ -43,6 +43,7 @@ public:
         POLAR_DRIVE,
         SLOW_MODE,
         HOLD_POSITION,
+        MANUAL_CLIMB,
 
         // tip correction controls
         TIPCORRECTION_TOGGLE,

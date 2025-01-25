@@ -43,10 +43,10 @@ public:
 
 private:
 	ClimberManager *m_mechanism;
-	double m_ManualClimbSeconds = 0.002;
+	double m_manualClimbRate = 0.002;
 	void InitPRACTICE_BOT9999();
 	MechanismConfigMgr::RobotIdentifier m_RobotId;
 	const units::angle::turn_t m_ClimberTarget = units::angle::turn_t ( 0 );
-	units::angle::degree_t m_ManualTarget;
+	units::angle::degree_t m_manualTarget;
 };
 }

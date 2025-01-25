@@ -44,7 +44,7 @@ ManualClimbState::ManualClimbState ( std::string stateName,
 void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualClimbState" ), string ( "Init" ) );
-	m_ManualTarget=m_ClimberTarget;
+	m_manualTarget=m_ClimberTarget;
 	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
@@ -58,8 +58,8 @@ void ManualClimbState::InitPRACTICE_BOT9999()
 void ManualClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
-	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::CLIMB_MODE)*m_ManualClimbSeconds);
-	m_ManualTarget=m_ManualTarget+TargetChange;
+	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB)*m_manualClimbRate);
+	m_manualTarget += TargetChange;
 }
 
 void ManualClimbState::Exit()
