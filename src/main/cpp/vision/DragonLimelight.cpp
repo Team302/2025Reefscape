@@ -51,7 +51,7 @@
 DragonLimelight::DragonLimelight(
     std::string networkTableName, /// <I> networkTableName
     LIMELIGHT_MODE usage,
-    DragonCamera::PIPELINE initialPipeline, /// <I> enum for pipeline
+    LIMELIGHT_PIPELINE initialPipeline, /// <I> enum for pipeline
     units::length::inch_t mountingXOffset,  /// <I> x offset of cam from robot center (forward relative to robot)
     units::length::inch_t mountingYOffset,  /// <I> y offset of cam from robot center (left relative to robot)
     units::length::inch_t mountingZOffset,  /// <I> z offset of cam from robot center (up relative to robot)
@@ -61,12 +61,11 @@ DragonLimelight::DragonLimelight(
     LED_MODE ledMode,
     CAM_MODE camMode,
     STREAM_MODE streamMode,
-    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, initialPipeline, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
+    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
                               SensorData(),
                               m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
                               m_usage(usage)
 {
-    SetPipeline(initialPipeline);
     SetLEDMode(ledMode);
     SetCamMode(camMode);
     SetStreamMode(streamMode);
@@ -417,6 +416,7 @@ void DragonLimelight::SetCamMode(DragonLimelight::CAM_MODE mode)
         nt->PutNumber("camMode", mode);
     }
 }
+
 
 bool DragonLimelight::UpdatePipeline()
 {
