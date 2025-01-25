@@ -17,30 +17,38 @@
 // Generated on Friday, January 24, 2025 8:21:52 PM
 
 #pragma once
+#include <string>
 
-//========================================================================================================
-///	 @class			MechanismTypes
-///  @brief      	This contains the enum for the mechanism types
-//========================================================================================================
-class MechanismTypes
+#include "state/State.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+
+using namespace std;
+
+namespace DragonTaleStates
+{
+class ReadyState : public State
 {
 public:
-	//==================================================================================
-	/// enum:           MECHANISM_TYPE
-	/// description:    Indicates the type of mechanism
-	//==================================================================================
-	enum MECHANISM_TYPE
-	{
-		UNKNOWN_MECHANISM = -1,
-
-		CLIMBER_MANAGER,
-		DRAGON_TALE,
-		INTAKE_MANAGER,
-
-		MAX_MECHANISM_TYPES
-	};
+	ReadyState() = delete;
+	ReadyState ( std::string stateName,
+	             int stateId,
+	             DragonTale *mech,
+	             MechanismConfigMgr::RobotIdentifier activeRobotId );
+	~ReadyState() = default;
+	void Init() override;
+	void Run() override;
+	void Exit() override;
+	bool AtTarget() override;
+	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
 
 private:
-	MechanismTypes() = delete;
-	~MechanismTypes() = delete;
+	DragonTale *m_mechanism;
+	void InitPRACTICE_BOT9999();
+	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	const units::angle::turn_t m_ArmTarget = units::angle::turn_t ( 0 );
+	const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t ( 0 );
+	const double m_CoralTarget = double ( 0 );
+	const double m_AlgaeTarget = double ( 0 );
+	const units::length::inch_t m_ElevatorFollowerTarget = units::length::inch_t ( 0 );
 };
+}

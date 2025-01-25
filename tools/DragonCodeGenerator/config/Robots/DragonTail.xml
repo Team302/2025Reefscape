@@ -345,14 +345,14 @@
           <name>doubleParameter</name>
           <__units__ />
           <type>Double</type>
-          <value>0</value>
+          <value>3.534291735</value>
         </sensorToMechanismRatio>
         <rotorToSensorRatio>
           <unitsFamily>none</unitsFamily>
           <name>doubleParameter</name>
           <__units__ />
           <type>Double</type>
-          <value>0</value>
+          <value>5.969026042</value>
         </rotorToSensorRatio>
         <fusedSyncChoice>FUSED</fusedSyncChoice>
       </fusedSyncCANcoder>
@@ -1447,7 +1447,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -1465,7 +1465,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1519,7 +1519,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1565,7 +1565,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -1583,7 +1583,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1637,7 +1637,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1683,7 +1683,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -1701,7 +1701,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1755,7 +1755,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1808,7 +1808,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -1826,7 +1826,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1880,7 +1880,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -1975,7 +1975,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -1993,7 +1993,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2047,7 +2047,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2093,7 +2093,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2111,7 +2111,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2165,7 +2165,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2218,7 +2218,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2236,7 +2236,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2290,7 +2290,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2343,7 +2343,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2361,7 +2361,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2415,7 +2415,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2454,7 +2454,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2472,7 +2472,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2526,7 +2526,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2593,7 +2593,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2611,7 +2611,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2665,7 +2665,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2732,7 +2732,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2750,7 +2750,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2804,7 +2804,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2871,7 +2871,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -2889,7 +2889,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -2943,7 +2943,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -3010,7 +3010,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -3028,7 +3028,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -3082,7 +3082,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -3128,7 +3128,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionDegree</controlDataName>
         </motorTarget>
@@ -3146,7 +3146,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>
@@ -3200,7 +3200,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PositionInch</controlDataName>
         </motorTarget>

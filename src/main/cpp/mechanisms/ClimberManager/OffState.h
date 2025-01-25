@@ -17,30 +17,34 @@
 // Generated on Friday, January 24, 2025 8:21:52 PM
 
 #pragma once
+#include <string>
 
-//========================================================================================================
-///	 @class			MechanismTypes
-///  @brief      	This contains the enum for the mechanism types
-//========================================================================================================
-class MechanismTypes
+#include "state/State.h"
+#include "mechanisms/ClimberManager/ClimberManager.h"
+
+using namespace std;
+
+namespace ClimberManagerStates
+{
+class OffState : public State
 {
 public:
-	//==================================================================================
-	/// enum:           MECHANISM_TYPE
-	/// description:    Indicates the type of mechanism
-	//==================================================================================
-	enum MECHANISM_TYPE
-	{
-		UNKNOWN_MECHANISM = -1,
-
-		CLIMBER_MANAGER,
-		DRAGON_TALE,
-		INTAKE_MANAGER,
-
-		MAX_MECHANISM_TYPES
-	};
+	OffState() = delete;
+	OffState ( std::string stateName,
+	           int stateId,
+	           ClimberManager *mech,
+	           MechanismConfigMgr::RobotIdentifier activeRobotId );
+	~OffState() = default;
+	void Init() override;
+	void Run() override;
+	void Exit() override;
+	bool AtTarget() override;
+	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
 
 private:
-	MechanismTypes() = delete;
-	~MechanismTypes() = delete;
+	ClimberManager *m_mechanism;
+	void InitPRACTICE_BOT9999();
+	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	const units::angle::turn_t m_ClimberTarget = units::angle::turn_t ( 0 );
 };
+}
