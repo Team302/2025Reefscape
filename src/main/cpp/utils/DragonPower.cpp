@@ -16,7 +16,6 @@
 
 #include "electrical/DragonPower.h"
 #include "utils/logging/Logger.h"
-#include "utils/logging/DragonDataLogger.h"
 #include <string>
 
 DragonPower *DragonPower::m_dragonPowerInstance = nullptr;
@@ -35,68 +34,30 @@ DragonPower::DragonPower()
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
     m_calcTimer = new frc::Timer();
-    m_logTimer = new frc::Timer();
 }
 
-void DragonPower::Initialize(int calcFrequency, int logFrequency)
+void DragonPower::CalculatePowerData()
 {
-    m_calcFrequency = calcFrequency;
-    m_logFrequency = logFrequency;
+
     
-}
-
-void DragonPower::CalculateAndLogPower()
-{
-
     // need to determine if we met the calcFrequency threshold
-    if (m_pdp != nullptr){
+    if (m_pdp != nullptr)
+    {
         double currentTimeCalc = m_calcTimer->Get().to<double>();
-        if (currentTimeCalc > m_calcFrequency)
-        {
-            m_calcTimer->Reset();
-            m_calcTimer->Start();
-            CalculatePowerData(currentTimeCalc);
-        }
-
-        double currentTimeLog = m_logTimer->Get().to<double>();
-        if (currentTimeLog > m_logFrequency){
-            m_logTimer->Reset();
-            m_logTimer->Start();
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Logging", "current time");
-        }
+        m_currentCurrent = m_pdp->GetTotalCurrent();
+        m_currentVoltage = m_pdp->GetVoltage();
+        m_currentPower = m_currentCurrent * m_currentVoltage;
+        m_currentEnergy = m_currentPower * currentTimeCalc;
+        m_matchPower += m_currentPower;
+        m_matchEnergy += m_currentEnergy;
+        m_calcTimer->Reset();
+        m_calcTimer->Start();
     }
 
-}
-
-void DragonPower::CalculatePowerData(double currentTimeCalc)
-{
-    m_currentCurrent = m_pdp->GetTotalCurrent();
-    m_currentVoltage = m_pdp->GetVoltage();
-    m_currentPower = m_currentCurrent * m_currentVoltage;
-    m_currentEnergy = m_currentPower * currentTimeCalc;
-    m_matchPower += m_currentPower;
-    m_matchEnergy += m_currentEnergy;
-    if (m_currentCurrent > m_matchMaxCurrent)
-    {
-        m_matchMaxCurrent = m_currentCurrent;
-    }
-    if (m_currentCurrent < m_matchMinCurrent)
-    {
-        m_matchMinCurrent = m_currentCurrent;
-    }
-    if (m_currentVoltage > m_matchMaxVoltage)
-    {
-        m_matchMaxVoltage = m_currentVoltage;
-    }
-    if (m_currentVoltage < m_matchMinVoltage)
-    {
-        m_matchMinVoltage = m_currentVoltage;
-    }
-    PrintPowerData();
     
 }
 
-void DragonPower::PrintPowerData()
+void DragonPower::LogInformation()
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Current", m_currentCurrent);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Voltage", m_currentVoltage);
@@ -106,7 +67,15 @@ void DragonPower::PrintPowerData()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
 }
 
-void DragonPower::LogPowerData()
+void DragonPower::DataLog()
 {
-    //DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::StringSignals::ELECTRICAL_VOLTAGE, m_currentVoltage->GetHeadingStateName());
+    CalculatePowerData();    
+
+
+    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
+    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
+    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
+    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentEnergy);
 }
+
+

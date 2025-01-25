@@ -17,21 +17,21 @@
 #pragma once
 #include "frc/Timer.h"
 #include <frc/PowerDistribution.h>
+#include "utils/logging/LoggableItem.h"
+#include "utils/logging/DragonDataLogger.h"
 
-class DragonPower
+class DragonPower: public LoggableItem, public DragonDataLogger
 {
 public:
     static DragonPower *GetInstance();
-    void Initialize(int calcFrequency, int logFrequency);
-    void CalculateAndLogPower();
+    void DataLog() override;
+    void LogInformation() override;
 
 private:
     DragonPower();
     ~DragonPower() = default;
 
-    void CalculatePowerData(double currentTimeCalc);
-    void LogPowerData();
-    void PrintPowerData();
+    void CalculatePowerData();
 
     static DragonPower *m_dragonPowerInstance;
     int m_calcFrequency = 1000;
@@ -40,14 +40,8 @@ private:
     double m_currentVoltage = 0.0;
     double m_currentPower = 0.0;
     double m_currentEnergy = 0.0;
-    double m_matchTime = 0.0;
     double m_matchPower = 0.0;
     double m_matchEnergy = 0.0;
-    double m_matchMaxCurrent = 0.0;
-    double m_matchMaxVoltage = 0.0;
-    double m_matchMinCurrent = 0.0;
-    double m_matchMinVoltage = 0.0;
     frc::PowerDistribution *m_pdp;
     frc::Timer *m_calcTimer;
-    frc::Timer *m_logTimer;
 };

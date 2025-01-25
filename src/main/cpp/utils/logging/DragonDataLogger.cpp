@@ -83,14 +83,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currElectricalPower = value;
             }
             break;
-            /**
-        case DragonDataLoggerSignals::DoubleSignals::NOTE_MANAGER_TARGET_ANGLE_DEGREES:
-            if (std::abs(value - signals->m_currNmTargetAngle) > m_doubleTolerance)
-            {
-                signals->m_nmTargetAngle.Append(value);
-                signals->m_currNmTargetAngle = value;
-            }
-            break;
+            
 
         default:
             break;
