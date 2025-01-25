@@ -32,6 +32,7 @@
 #include "utils/logging/DataTrace.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
+#include "utils/DragonPower.h"
 
 using std::string;
 
@@ -324,6 +325,7 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
+    m_dragonPower = DragonPower::GetInstance();
 
     //initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));

@@ -15,61 +15,33 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "frc/Timer.h"
+#include <frc/PowerDistribution.h>
+#include "utils/logging/LoggableItem.h"
+#include "utils/logging/DragonDataLogger.h"
 
-#include <frc/TimedRobot.h>
-
-class CyclePrimitives;
-class HolonomicDrive;
-class SwerveChassis;
-class TeleopControl;
-class FMSData;
-class DragonField;
-class DragonPower;
-class AutonPreviewer;
-class RobotState;
-class SomeMech;
-class DragonDataLoggerMgr;
-
-class Robot : public frc::TimedRobot
+class DragonPower: public LoggableItem, public DragonDataLogger
 {
 public:
-    Robot() = default;
-    ~Robot() = default;
-
-    void RobotInit() override;
-    void RobotPeriodic() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
-    void DisabledInit() override;
-    void DisabledPeriodic() override;
-    void TestInit() override;
-    void TestPeriodic() override;
-    void SimulationInit() override;
-    void SimulationPeriodic() override;
+    static DragonPower *GetInstance();
+    void DataLog() override;
+    void LogInformation() override;
 
 private:
-    void InitializeRobot();
-    void InitializeAutonOptions();
-    void InitializeDriveteamFeedback();
-    void InitializeDataTracing();
-    void UpdateDriveTeamFeedback();
-    void LogDiagnosticData();
-    void LogSensorData();
-    void LogMotorData();
+    DragonPower();
+    ~DragonPower() = default;
 
-    TeleopControl *m_controller;
-    SwerveChassis *m_chassis;
-    CyclePrimitives *m_cyclePrims;
-    HolonomicDrive *m_holonomic;
-    DragonPower *m_dragonPower;
+    void CalculatePowerData();
 
-    FMSData *m_fmsData;
-    DragonField *m_field;
-    AutonPreviewer *m_previewer;
-    RobotState *m_robotState;
-    SomeMech *m_someMech;
-    DragonDataLoggerMgr *m_datalogger;
-    bool isFMSAttached = false;
+    static DragonPower *m_dragonPowerInstance;
+    int m_calcFrequency = 1000;
+    int m_logFrequency = 5000;
+    double m_currentCurrent = 0.0;
+    double m_currentVoltage = 0.0;
+    double m_currentPower = 0.0;
+    double m_currentEnergy = 0.0;
+    double m_matchWattHours = 0.0;
+    double m_matchEnergy = 0.0;
+    frc::PowerDistribution *m_pdp;
+    frc::Timer *m_calcTimer;
 };
