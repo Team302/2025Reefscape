@@ -15,61 +15,26 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "vision/DragonVision.h"
 
-#include <frc/TimedRobot.h>
-
-class CyclePrimitives;
-class HolonomicDrive;
-class SwerveChassis;
-class TeleopControl;
-class FMSData;
-class DragonField;
-class DragonPower;
-class AutonPreviewer;
-class RobotState;
-class SomeMech;
-class DragonDataLoggerMgr;
-
-class Robot : public frc::TimedRobot
+class CameraConfig
 {
 public:
-    Robot() = default;
-    ~Robot() = default;
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        QUEST
+    };
 
-    void RobotInit() override;
-    void RobotPeriodic() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
-    void DisabledInit() override;
-    void DisabledPeriodic() override;
-    void TestInit() override;
-    void TestPeriodic() override;
-    void SimulationInit() override;
-    void SimulationPeriodic() override;
+    CameraConfig();
+    ~CameraConfig();
 
-private:
-    void InitializeRobot();
-    void InitializeAutonOptions();
-    void InitializeDriveteamFeedback();
-    void InitializeDataTracing();
-    void UpdateDriveTeamFeedback();
-    void LogDiagnosticData();
-    void LogSensorData();
-    void LogMotorData();
+    void BuildCameraConfig();
 
-    TeleopControl *m_controller;
-    SwerveChassis *m_chassis;
-    CyclePrimitives *m_cyclePrims;
-    HolonomicDrive *m_holonomic;
-    DragonPower *m_dragonPower;
+    DragonVision *GetDragonVision() const { return m_vision; }
 
-    FMSData *m_fmsData;
-    DragonField *m_field;
-    AutonPreviewer *m_previewer;
-    RobotState *m_robotState;
-    SomeMech *m_someMech;
-    DragonDataLoggerMgr *m_datalogger;
-    bool isFMSAttached = false;
+protected:
+    virtual void DefineCameras();
+
+    DragonVision *m_vision;
 };
