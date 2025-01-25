@@ -30,12 +30,14 @@
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
+#include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
+#include "state/RobotStateChanges.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
-class ClimberManager : public BaseMech, public StateMgr
+class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -78,6 +80,9 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 
+	bool IsClimbMode() const { if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn){return true;}};
+	void UpdateClimbMode(RobotStateChanges::StateChange stchange, int ival);
+
 	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX* GetClimber() const {return m_Climber;}
@@ -101,7 +106,7 @@ private:
 	ctre::phoenix6::hardware::TalonFX* m_Climber;
 	ControlData* m_PositionDegree;
 
-
+	RobotStateChanges::ClimbMode m_climbMode;
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
