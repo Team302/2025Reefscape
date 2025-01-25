@@ -123,6 +123,9 @@ public:
 
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
+	void SetArmTarget(units::angle::degree_t target) {m_armTarget = target;}
+	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = target;}
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
@@ -153,6 +156,8 @@ private:
 	ControlData* m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 
+	units::angle::degree_t m_armTarget = units::angle::degree_t(90);
+	units::length::inch_t m_elevatorTarget = units::length::inch_t(0);
 
 
 	void CheckForTuningEnabled();
