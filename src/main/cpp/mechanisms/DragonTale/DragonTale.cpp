@@ -502,6 +502,7 @@ void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+	UpdateTarget();
 }
 
 
@@ -621,4 +622,19 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 {
 	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+}
+void DragonTale::UpdateTarget()
+{
+	//TODO: If elevator is going up, dont raise elevator until a certain distance from reef 
+	units::angle::degree_t actualTargetAngle;
+	units::length::inch_t actualTargetHeight;
+
+	units::length::inch_t elevatorError = m_elevatorTarget - m_ElevatorHeight->GetPosition()
+
+	if(elevatorError > m_elevatorErrorThreshold)
+	{
+		actualTargetAngle = 90;
+	}
+	UpdateTargetArmPositionDegree(actualTargetAngle);
+	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }

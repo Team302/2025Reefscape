@@ -123,8 +123,10 @@ public:
 
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
-	void SetArmTarget(units::angle::degree_t target) {m_armTarget = target;}
-	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = target;}
+	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
+	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
+
+	void UpdateTarget();
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -158,6 +160,15 @@ private:
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0);
+
+	const units::angle::degree_t m_minAngle{-90.0};
+	const units::angle::degree_t m_maxAngle{90};
+
+	const units::length::inch_t m_minHeight{0};
+	const units::length::inch_t m_maxHeight{100};
+
+	const units::length::inch_t m_elevatorErrorThreshold{5};
+
 
 
 	void CheckForTuningEnabled();
