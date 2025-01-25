@@ -611,7 +611,7 @@ void DragonTale::UpdateTarget()
 
 	double circumference = 0.75 * std::numbers::pi;
 
-	m_ElevatorLeader->SetPosition(units::angle::turn_t(GetElevatorHeight() / circumference * 3));
+	m_ElevatorLeader->SetPosition(units::angle::turn_t(GetElevatorHeight().value() / circumference * 3));
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
