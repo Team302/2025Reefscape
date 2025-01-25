@@ -26,11 +26,11 @@
 #include "auton/drivePrimitives/DriveStop.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/PrimitiveParams.h"
-#include "chassis/configs/ChassisConfigMgr.h"
-#include "chassis/configs/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
 #include "chassis/ChassisMovement.h"
-#include "configs/RobotConfig.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfig.h"
+#include "configs/MechanismConfigMgr.h"
 #include "utils/logging/Logger.h"
 
 // Third Party Includes
@@ -54,7 +54,7 @@ DriveStop::DriveStop() : IPrimitive(),
 	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
 	// get reference to notemanager in drivestop to check for state
-	// StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
+	// StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
 	// m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
 }
 

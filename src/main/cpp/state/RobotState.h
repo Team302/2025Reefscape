@@ -19,6 +19,11 @@
 
 #include "frc/DriverStation.h"
 #include "state/RobotStateChanges.h"
+#include <units/length.h>
+#include <units/angle.h>
+#include <units/velocity.h>
+#include <units/angular_velocity.h>
+#include <frc/geometry/Pose2d.h>
 
 class SwerveChassis;
 class IRobotStateChangeSubscriber;
@@ -33,6 +38,12 @@ public:
     static RobotState *GetInstance();
     void RegisterForStateChanges(IRobotStateChangeSubscriber *subscriber, RobotStateChanges::StateChange change);
     void PublishStateChange(RobotStateChanges::StateChange change, int newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, double newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, units::length::meter_t newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, units::angle::degree_t newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, frc::Pose2d newValue);
 
 private:
     void PublishGameStateChanges();

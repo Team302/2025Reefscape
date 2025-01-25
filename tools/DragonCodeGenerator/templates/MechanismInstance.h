@@ -12,7 +12,7 @@ $$_GEN_NOTICE_$$
 $$_INCLUDE_FILES_$$
 
 #include "mechanisms/base/BaseMech.h"
-#include "mechanisms/base/StateMgr.h"
+#include "state/StateMgr.h"
 #include "mechanisms/controllers/ControlData.h"
 
 #include "configs/RobotElementNames.h"

@@ -9,14 +9,14 @@
 
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
 #include "chassis/SwerveChassis.h"
-#include "configs/RobotConfig.h"
-#include "configs/RobotConfigMgr.h"
+#include "configs/MechanismConfig.h"
+#include "configs/MechanismConfigMgr.h"
 #include "feedback/DriverFeedback.h"
-#include "PeriodicLooper.h"
+#include "utils/PeriodicLooper.h"
 #include "Robot.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -28,8 +28,8 @@
 #include "utils/logging/LoggerEnums.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
-#include "SensorData.h"
-#include "SensorDataMgr.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
 
 using std::string;
 
@@ -250,11 +250,10 @@ void Robot::LogDiagnosticData()
         LogSensorData();
     else if (step == 1)
         LogMotorData();
-    else if (step == 3)
-        LogCameraData();
     else if (step == 4)
     {
-        if (m_chassis != nullptr){
+        if (m_chassis != nullptr)
+        {
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
             m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
@@ -266,7 +265,7 @@ void Robot::LogDiagnosticData()
 
 void Robot::LogSensorData()
 {
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 
     if (config != nullptr)
     {
@@ -293,20 +292,12 @@ void Robot::LogSensorData()
 
 void Robot::LogMotorData()
 {
-    auto config = RobotConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 
     if (config != nullptr)
     {
         // TODO implement mechanism states logging
     }
-}
-
-void Robot::LogCameraData()
-{
-    // TODO: implement encoder logging for chassis
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("PLACER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::PINTAKE));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("LimelightDiagnostics"), string("LAUNCHER INTAKE Connected"), DragonVision::GetDragonVision()->HealthCheck(RobotElementNames::CAMERA_USAGE::LINTAKE));
 }
 
 void Robot::SimulationInit()
@@ -322,8 +313,8 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    RobotConfigMgr::GetInstance()->InitRobot((RobotConfigMgr::RobotIdentifier)teamNumber);
-    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotConfigMgr::RobotIdentifier>(teamNumber));
+    MechanismConfigMgr::GetInstance()->InitRobot((MechanismConfigMgr::RobotIdentifier)teamNumber);
+    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     m_holonomic = nullptr;

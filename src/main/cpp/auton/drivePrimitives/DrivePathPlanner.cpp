@@ -27,21 +27,21 @@
 // 302 Includes
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "auton/drivePrimitives/DrivePathPlanner.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/DragonDriveTargetFinder.h"
-#include "chassis/driveStates/DriveToNote.h"
-#include "chassis/driveStates/TrajectoryDrivePathPlanner.h"
-#include "configs/RobotConfig.h"
-#include "configs/RobotConfigMgr.h"
+#include "chassis/states/DriveToNote.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "configs/MechanismConfig.h"
+#include "configs/MechanismConfigMgr.h"
 #include "vision/DragonVision.h"
 #include "state/StateMgr.h"
 // #include "mechanisms/MechanismTypes.h"
 #include "utils/FMSData.h"
 #include "utils/logging/Logger.h"
-#include "chassis/driveStates/RobotDrive.h"
+#include "chassis/states/RobotDrive.h"
 
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
@@ -75,20 +75,7 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    if (m_chassis != nullptr)
-    {
-        auto swMod = m_chassis->GetFrontLeft();
-        if (swMod != nullptr)
-        {
-            m_moduleConfig = ModuleConfig(swMod->GetWheelDiameter() / 2.0,
-                                          swMod->GetMaxSpeed(),
-                                          swMod->GetCoefficientOfFriction(),
-                                          swMod->GetDriveMotorDef(),
-                                          swMod->GetDriveCurrentLimit(), 1);
-            m_robotConfig = pathplanner::RobotConfig(m_chassis->GetMass(), m_chassis->GetMomenOfInertia(), m_moduleConfig, m_chassis->GetTrack());
-        }
-        m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
-    }
+    m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 }
 
 void DrivePathPlanner::Init(PrimitiveParams *params)
@@ -151,7 +138,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
-            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_robotConfig);
+            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
         }
         else
         {

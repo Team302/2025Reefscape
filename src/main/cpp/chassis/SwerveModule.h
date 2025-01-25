@@ -35,16 +35,20 @@
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
-#include "chassis/TractionControlController.h"
+#include "chassis/modifiers/TractionControlController.h"
 
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/CANcoder.hpp"
 // #include "grpl/LaserCan.h"
+#include "pathplanner/lib/config/ModuleConfig.h"
 
 class SwerveModule : public LoggableItem
 {
 public:
+    SwerveModule() = delete;
+    ~SwerveModule() = default;
+
     /// @brief Constructs a Swerve Module.  This is assuming 2 TalonFX (Falcons) with a CanCoder for the turn angle
     SwerveModule(std::string canbusname,
                  SwerveModuleConstants::ModuleID id,
@@ -104,6 +108,8 @@ public:
     void StopMotors();
     void LogInformation() override;
 
+    pathplanner::ModuleConfig GetModuleConfig() { return m_moduleConfig; }
+
     // std::optional<uint16_t> GetLaserValue();
 
 private:
@@ -158,6 +164,7 @@ private:
     bool m_velocityControlled = false;
     bool m_useFOC = false;
     std::string m_networkTableName;
+    pathplanner::ModuleConfig m_moduleConfig;
 
     // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
     // grpl::LaserCan *m_laserCan;

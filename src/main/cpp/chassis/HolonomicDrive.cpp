@@ -26,8 +26,8 @@
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/HolonomicDrive.h"
-#include "chassis/configs/ChassisConfig.h"
-#include "chassis/configs/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
 #include "state/State.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -35,7 +35,7 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/Logger.h"
-// #include "chassis/driveStates/DriveToNote.h"
+// #include "chassis/states/DriveToNote.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using std::string;
@@ -264,7 +264,7 @@ void HolonomicDrive::HoldPosition()
 void HolonomicDrive::DriveToGamePiece(double forward, double strafe, double rot)
 {
     /**
-    StateMgr *noteStateManager = RobotConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
+    StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
     auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
     if (!noteMgr->HasNote() && abs(forward) < 0.2 && abs(strafe) < 0.2 && abs(rot) < 0.2)
     {
