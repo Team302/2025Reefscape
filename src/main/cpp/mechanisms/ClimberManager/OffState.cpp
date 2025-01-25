@@ -37,7 +37,7 @@ using namespace ClimberManagerStates;
 OffState::OffState ( std::string stateName,
                      int stateId,
                      ClimberManager *mech,
-                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId ) 
 {
 }
 
@@ -76,6 +76,9 @@ bool OffState::AtTarget()
 bool OffState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+	if (m_mechanism->IsClimbMode() != true) {
+		return true;
+	}
+	
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

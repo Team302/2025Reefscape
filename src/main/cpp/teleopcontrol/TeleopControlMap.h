@@ -160,6 +160,8 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
     {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
+    {TeleopControlFunctions::AUTO_CLIMB, driverDPad180},
+
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
     {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},

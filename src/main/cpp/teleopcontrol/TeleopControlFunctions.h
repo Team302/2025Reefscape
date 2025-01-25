@@ -50,6 +50,7 @@ public:
         MANUAL_LAUNCH_INC,
         MANUAL_LAUNCH_DEC,
         CLIMB_MODE,
+        AUTO_CLIMB,
         INTAKE,
         ELAVATOR,
         ARM,
