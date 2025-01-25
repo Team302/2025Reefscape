@@ -30,6 +30,7 @@
 #include "utils/logging/DataTrace.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
+#include "utils/DragonPower.h"
 
 using std::string;
 
@@ -322,6 +323,7 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
+    m_dragonPower = DragonPower::GetInstance();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
