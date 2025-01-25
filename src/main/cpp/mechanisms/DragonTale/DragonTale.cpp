@@ -607,11 +607,19 @@ void DragonTale::UpdateTarget()
 	units::angle::degree_t actualTargetAngle;
 	units::length::inch_t actualTargetHeight;
 
-	units::length::inch_t elevatorError = m_elevatorTarget - m_ElevatorHeight->GetPosition()
+	units::length::inch_t elevatorError = m_elevatorTarget - GetElevatorHeight();
 
-																 if (elevatorError > m_elevatorErrorThreshold)
+	double circumference = 0.75 * std::numbers::pi;
+
+	m_ElevatorLeader->SetPosition(units::angle::turn_t(GetElevatorHeight() / circumference * 3));
+
+	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = 90;
+		actualTargetAngle = units::angle::degree_t(90);
+	}
+	else
+	{
+		actualTargetAngle = m_armTarget;
 	}
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
