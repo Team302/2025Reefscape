@@ -60,7 +60,8 @@ public:
         SCORE,
         SCORING_MODE,
         HUMAN_PLAYER_STATION,
-        ALGAE_INTAKE
+        ALGAE_INTAKE,
+        EXPEL
 
     };
 };
