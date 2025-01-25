@@ -89,7 +89,7 @@ void DriveStopDelay::Run()
     }
     else
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("DriveStop"), string("DriveStop::Run"), string("chassis not found"));
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("DriveStopDelay"), string("DriveStop::Run"), string("chassis not found"));
     }
 }
 
@@ -124,5 +124,7 @@ bool DriveStopDelay::IsDone()
         }
     }
     **/
-    return m_timer->AdvanceIfElapsed(GetDelayTime());
+    auto delayTime = GetDelayTime();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Shuffleboard Time"), static_cast<double>(delayTime));
+    return m_timer->AdvanceIfElapsed(delayTime) || m_timer->AdvanceIfElapsed(m_maxTime);
 }
