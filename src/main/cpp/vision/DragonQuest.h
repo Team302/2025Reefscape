@@ -62,16 +62,19 @@ private:
     nt::DoubleArrayTopic m_rotationTopic;
     nt::DoubleArrayTopic m_limelightPoseTopic;
 
-    double m_xOffset = -0.254;
+    // use opposite values to transfrom the quest to the center of the robot
+
+    double m_xOffset = 0; //-0.254;
     double m_yOffset = 0;
-    double m_zOffset = 0.47625;
+    double m_zOffset = 0; // 0.47625;
 
     double m_rollOffset = 0;
     double m_pitchOffset = 0;
-    double m_yawOffset = 180;
+    double m_yawOffset = 0; //-180;
 
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
 
+    bool m_hasreset = false;
     int m_loopcounter = 0;
 };

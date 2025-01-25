@@ -91,9 +91,14 @@ void Robot::RobotPeriodic()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("X"), DragonQuest::GetDragonQuest()->GetEstimatedPose().X().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Y"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("Z"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Z().to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("roll"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().X().to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("pitch"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Y().to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("yaw"), DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Z().to<double>());
+
+    units::angle::degree_t roll = DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().X();
+    units::angle::degree_t pitch = DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Y();
+    units::angle::degree_t yaw = DragonQuest::GetDragonQuest()->GetEstimatedPose().Rotation().Z();
+
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("roll"), roll.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("pitch"), pitch.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("yaw"), yaw.to<double>());
 
     DragonQuest::GetDragonQuest()->DataLog();
 }
