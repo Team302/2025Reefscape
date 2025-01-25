@@ -157,6 +157,8 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
 
+    LogInformation();
+
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
@@ -174,12 +176,19 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), m_currentOrientationState->GetHeadingOption());
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
+    }
+    else
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), -1);
     }
 
     m_currentDriveState = GetDriveState(moveInfo);
     if (m_currentDriveState != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), m_currentDriveState->GetDriveStateName());
+
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
 
         m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
@@ -187,6 +196,11 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
     }
+    else
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), string("NONE"));
+    }
+
     m_rotate = moveInfo.chassisSpeeds.omega;
     UpdateOdometry();
 }
@@ -342,7 +356,6 @@ void SwerveChassis::UpdateOdometry()
         }
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Update With Vision"), std::string("Update With Vision:"), updateWithVision);
-    LogInformation();
 }
 
 //==================================================================================

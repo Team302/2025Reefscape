@@ -30,7 +30,7 @@ DragonTestSuiteManager::DragonTestSuiteManager() : m_testSuites(),
                                                    m_currTestSlot(0),
                                                    m_currTest(nullptr),
                                                    m_testSuiteNames(),
-                                                   m_currTestSuiteIndex(0),
+                                                   m_currTestSuiteIndex(0)
 {
 }
 

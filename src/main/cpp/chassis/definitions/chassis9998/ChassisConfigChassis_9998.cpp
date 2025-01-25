@@ -62,51 +62,51 @@ void ChassisConfigChassis_9998::DefineChassis()
                                          moduleconfig,
                                          networkTableName);
 
-    m_leftFrontModule = new SwerveModule(canbusName,
-                                         SwerveModuleConstants::ModuleID::LEFT_BACK,
-                                         wheeldiameter,
+    m_leftBackModule = new SwerveModule(canbusName,
+                                        SwerveModuleConstants::ModuleID::LEFT_BACK,
+                                        wheeldiameter,
 
-                                         TunerConstants9998::kDriveGearRatio,
-                                         1.0,
-                                         TunerConstants9998::kSteerGearRatio,
-                                         TunerConstants9998::kSpeedAt12Volts,
+                                        TunerConstants9998::kDriveGearRatio,
+                                        1.0,
+                                        TunerConstants9998::kSteerGearRatio,
+                                        TunerConstants9998::kSpeedAt12Volts,
 
-                                         TunerConstants9998::kBackLeftDriveMotorId,
-                                         TunerConstants9998::kInvertLeftSide,
+                                        TunerConstants9998::kBackLeftDriveMotorId,
+                                        TunerConstants9998::kInvertLeftSide,
 
-                                         TunerConstants9998::kBackLeftSteerMotorId,
-                                         TunerConstants9998::kBackLeftSteerMotorInverted,
+                                        TunerConstants9998::kBackLeftSteerMotorId,
+                                        TunerConstants9998::kBackLeftSteerMotorInverted,
 
-                                         TunerConstants9998::kBackLeftEncoderId,
-                                         TunerConstants9998::kBackLeftEncoderInverted,
-                                         TunerConstants9998::kBackLeftEncoderOffset,
+                                        TunerConstants9998::kBackLeftEncoderId,
+                                        TunerConstants9998::kBackLeftEncoderInverted,
+                                        TunerConstants9998::kBackLeftEncoderOffset,
 
-                                         moduleconfig,
-                                         networkTableName);
+                                        moduleconfig,
+                                        networkTableName);
 
-    m_leftFrontModule = new SwerveModule(canbusName,
-                                         SwerveModuleConstants::ModuleID::RIGHT_FRONT,
-                                         wheeldiameter,
+    m_rightFrontModule = new SwerveModule(canbusName,
+                                          SwerveModuleConstants::ModuleID::RIGHT_FRONT,
+                                          wheeldiameter,
 
-                                         TunerConstants9998::kDriveGearRatio,
-                                         1.0,
-                                         TunerConstants9998::kSteerGearRatio,
-                                         TunerConstants9998::kSpeedAt12Volts,
+                                          TunerConstants9998::kDriveGearRatio,
+                                          1.0,
+                                          TunerConstants9998::kSteerGearRatio,
+                                          TunerConstants9998::kSpeedAt12Volts,
 
-                                         TunerConstants9998::kFrontRightDriveMotorId,
-                                         TunerConstants9998::kInvertRightSide,
+                                          TunerConstants9998::kFrontRightDriveMotorId,
+                                          TunerConstants9998::kInvertRightSide,
 
-                                         TunerConstants9998::kFrontRightSteerMotorId,
-                                         TunerConstants9998::kFrontRightSteerMotorInverted,
+                                          TunerConstants9998::kFrontRightSteerMotorId,
+                                          TunerConstants9998::kFrontRightSteerMotorInverted,
 
-                                         TunerConstants9998::kFrontRightEncoderId,
-                                         TunerConstants9998::kFrontRightEncoderInverted,
-                                         TunerConstants9998::kFrontRightEncoderOffset,
+                                          TunerConstants9998::kFrontRightEncoderId,
+                                          TunerConstants9998::kFrontRightEncoderInverted,
+                                          TunerConstants9998::kFrontRightEncoderOffset,
 
-                                         moduleconfig,
-                                         networkTableName);
+                                          moduleconfig,
+                                          networkTableName);
 
-    m_leftFrontModule = new SwerveModule(canbusName,
+    m_rightBackModule = new SwerveModule(canbusName,
                                          SwerveModuleConstants::ModuleID::RIGHT_BACK,
                                          wheeldiameter,
 

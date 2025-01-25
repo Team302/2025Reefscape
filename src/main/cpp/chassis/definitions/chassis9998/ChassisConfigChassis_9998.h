@@ -14,11 +14,10 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/chassis9998/TunerConstants9998.h"
-
-#include "units/length.h"
+#include "chassis/definitions/ChassisConfig.h"
 #include "ctre/phoenix6/Pigeon2.hpp"
+#include "units/length.h"
 
 class ChassisConfigChassis_9998 : public ChassisConfig
 {
@@ -29,34 +28,4 @@ public:
 protected:
 	void DefinePigeon() override;
 	void DefineChassis() override;
-
-private:
-	std::string m_canbusName = std::string("Canivore");
-	const int m_leftfrontdriveID = 1;
-	const int m_leftfrontturnID = 3;
-	const double m_leftfrontOffset = 0.29541015625;
-	const bool m_leftfrontdriveInvert = true;
-	const bool m_leftfrontturnInvert = true;
-	const bool m_leftfrontcancoderInvert = true;
-
-	const int m_leftbackdriveID = 18;
-	const int m_leftbackturnID = 16;
-	const double m_leftbackOffset = -0.11328125;
-	const bool m_leftbackdriveInvert = true;
-	const bool m_leftbackturnInvert = true;
-	const bool m_leftbackcancoderInvert = true;
-
-	const int m_rightfrontdriveID = 0;
-	const int m_rightfrontturnID = 2;
-	const double m_rightfrontOffset = 0.34228515625;
-	const bool m_rightfrontdriveInvert = true;
-	const bool m_rightfrontturnInvert = true;
-	const bool m_rightfrontcancoderInvert = false;
-
-	const int m_rightbackdriveID = 17;
-	const int m_rightbackturnID = 19;
-	const double m_rightbackOffset = 0.036376953125;
-	const bool m_rightbackdriveInvert = true;
-	const bool m_rightbackturnInvert = true;
-	const bool m_rightbackcancoderInvert = true;
 };
