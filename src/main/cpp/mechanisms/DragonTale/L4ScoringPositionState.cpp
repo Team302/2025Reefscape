@@ -76,6 +76,7 @@ bool L4ScoringPositionState::AtTarget()
 bool L4ScoringPositionState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+
+	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L4_SCORING_POSITION)) && m_mechanism->IsCoralMode());
 }
