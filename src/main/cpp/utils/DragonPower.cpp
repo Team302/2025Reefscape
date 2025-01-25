@@ -35,7 +35,6 @@ DragonPower::DragonPower()
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
     m_calcTimer = new frc::Timer();
-    m_robotOnTimer = new frc::Timer();
 }
 
 void DragonPower::CalculatePowerData()

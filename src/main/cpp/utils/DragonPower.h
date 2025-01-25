@@ -43,6 +43,5 @@ private:
     double m_matchWattHours = 0.0;
     double m_matchEnergy = 0.0;
     frc::PowerDistribution *m_pdp;
-    frc::Timer *m_robotOnTimer;
     frc::Timer *m_calcTimer;
 };
