@@ -121,6 +121,8 @@ public:
 	bool IsCoralMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Coral;}
 	bool IsAlgaeMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Algae;}
 
+	void ManualControl();
+
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
 	void SetArmTarget(units::angle::degree_t target) {m_armTarget = target;}
@@ -177,4 +179,8 @@ private:
 
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
+
+	double m_loopRate = 0.02;
+	double m_armChangeRate = 1;
+	double m_elevatorChangeRate= 1;
 };

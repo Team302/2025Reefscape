@@ -50,6 +50,9 @@
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
 
+#include "teleopcontrol/TeleopControl.h"
+#include "teleopcontrol/TeleopControlFunctions.h"
+
 #include "state/RobotState.h"
 
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
@@ -498,9 +501,19 @@ void DragonTale::SetCurrentState ( int state, bool run )
 	PeriodicLooper::GetInstance()->RegisterAll ( this );
 }
 
+void DragonTale::ManualControl(){
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR)*m_loopRate*m_elevatorChangeRate);
+	units::inch_t ArmChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM)*m_loopRate*m_armChangeRate);
+	
+	m_elevatorTarget+=ElevatorChange;
+	m_armTarget+=ArmChange;
+
+}
+
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
+	ManualControl();
 	Cyclic();
 }
 
