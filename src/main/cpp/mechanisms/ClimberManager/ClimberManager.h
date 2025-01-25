@@ -80,7 +80,7 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 
-	bool IsClimbMode() const { if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn){return true;}};
+	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn;}
 	void UpdateClimbMode(RobotStateChanges::StateChange stchange, int ival);
 
 	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
