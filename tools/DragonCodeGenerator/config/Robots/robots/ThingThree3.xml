@@ -123,7 +123,7 @@
                 <type>Double</type>
                 <value>1</value>
               </rotorToSensorRatio>
-              <fusedSyncChoice>FUSED</fusedSyncChoice>
+              <fusedSyncChoice>SYNC</fusedSyncChoice>
             </fusedSyncCANcoder>
             <sensorIsInverted>
               <unitsFamily>none</unitsFamily>

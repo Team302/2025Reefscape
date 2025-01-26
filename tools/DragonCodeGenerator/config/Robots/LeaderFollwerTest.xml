@@ -109,7 +109,7 @@
           <type>Double</type>
           <value>1</value>
         </rotorToSensorRatio>
-        <fusedSyncChoice>FUSED</fusedSyncChoice>
+        <fusedSyncChoice>SYNC</fusedSyncChoice>
       </fusedSyncCANcoder>
       <sensorIsInverted>
         <unitsFamily>none</unitsFamily>
@@ -527,7 +527,7 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>true</value>
+        <value>false</value>
       </reverse>
     </CANcoder>
   </cancoder>

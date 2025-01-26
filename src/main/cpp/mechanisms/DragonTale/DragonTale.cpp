@@ -545,11 +545,6 @@ bool DragonTale::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE ide
 	return false;
 }
 
-
-
-
-
-
 void DragonTale::Cyclic()
 {
 	Update();
