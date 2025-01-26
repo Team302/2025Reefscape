@@ -98,11 +98,10 @@ void DriverFeedback::UpdateLEDStates()
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-
-    StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
-    StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
-    if (taleStateManager != nullptr && intakeStateManager != nullptr)
+    if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
+        StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
         auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
 
