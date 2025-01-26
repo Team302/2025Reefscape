@@ -42,13 +42,13 @@ private:
     LEDStates() = default;
     ~LEDStates() = default;
 
-    int loopThroughIndividualLEDs = -1;
-    int colorLoop = 0;
-    int timer = 0;
-    bool switchColor = false;
+    int m_loopThroughIndividualLEDs = -1;
+    int m_colorLoop = 0;
+    int m_timer = 0;
+    bool m_switchColor = false;
     std::array<int, 3U> color = m_LEDstring->getColorValues(DragonLeds::BLACK);
     static LEDStates *m_instance;
 
-    const int blinkPatternPeriod = 10;
-    const int alternatingColorBlinkPatternPeriod = 10;
+    const int m_blinkPatternPeriod = 10;
+    const int m_altColorBlinkPatternPeriod = 10;
 };
