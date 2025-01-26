@@ -52,9 +52,7 @@ void HighState::Init()
 void HighState::InitThingThree3()
 {
 	m_mechanism->SetPIDLeaderPosInch();
-	m_mechanism->UpdateTargetLeaderPosInch ( units::length::inch_t ( 20 ) );
-	m_mechanism->SetPIDFollowerPosInch();
-	m_mechanism->UpdateTargetFollowerPosInch ( units::length::inch_t ( 20 ) );
+	m_mechanism->UpdateTargetLeaderPosInch ( units::length::inch_t ( 10 ) );
 }
 
 void HighState::Run()

@@ -53,8 +53,7 @@ void OffState::InitThingThree3()
 {
 	m_mechanism->SetPIDLeaderPosInch();
 	m_mechanism->UpdateTargetLeaderPosInch ( units::length::inch_t ( 0 ) );
-	m_mechanism->SetPIDFollowerPosInch();
-	m_mechanism->UpdateTargetFollowerPosInch ( units::length::inch_t ( 0 ) );
+
 }
 
 void OffState::Run()

@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,27 +33,25 @@ using namespace LeaderFollowerManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-MidState::MidState ( std::string stateName,
-                     int stateId,
-                     LeaderFollowerManager *mech,
-                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+MidState::MidState(std::string stateName,
+				   int stateId,
+				   LeaderFollowerManager *mech,
+				   MechanismConfigMgr::RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void MidState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "MidState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("MidState"), string("Init"));
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::THING_THREE_3 )
+	if (m_RobotId == MechanismConfigMgr::RobotIdentifier::THING_THREE_3)
 		InitThingThree3();
 }
 
 void MidState::InitThingThree3()
 {
 	m_mechanism->SetPIDLeaderPosInch();
-	m_mechanism->UpdateTargetLeaderPosInch ( units::length::inch_t ( 10 ) );
-	m_mechanism->SetPIDFollowerPosInch();
-	m_mechanism->UpdateTargetFollowerPosInch ( units::length::inch_t ( 10 ) );
+	m_mechanism->UpdateTargetLeaderPosInch(units::length::inch_t(3));
 }
 
 void MidState::Run()
@@ -75,8 +72,8 @@ bool MidState::AtTarget()
 	return atTarget;
 }
 
-bool MidState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool MidState::IsTransitionCondition(bool considerGamepadTransitions)
 {
-	
+
 	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L3_SCORING_POSITION));
 }

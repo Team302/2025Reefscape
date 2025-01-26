@@ -313,14 +313,14 @@
         <name>uintParameter</name>
         <__units__ />
         <type>UInt32</type>
-        <value>0</value>
+        <value>2</value>
       </followID>
       <enableFollowID>
         <unitsFamily>none</unitsFamily>
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </enableFollowID>
       <remoteSensor>
         <CanID>
