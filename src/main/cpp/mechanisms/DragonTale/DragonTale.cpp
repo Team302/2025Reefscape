@@ -354,8 +354,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	HardwareLimitSwitchConfigs hwswitch{};
 	hwswitch.ForwardLimitEnable = true;
 	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	hwswitch.ForwardLimitAutosetPositionEnable = true;
+	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t((m_maxHeight / (units::length::inch_t(0.75) * units::constants::pi)).value() * 3);
 
 	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
@@ -432,15 +432,15 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	HardwareLimitSwitchConfigs hwswitch{};
 	hwswitch.ForwardLimitEnable = true;
 	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	hwswitch.ForwardLimitAutosetPositionEnable = true;
+	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t((m_maxHeight / (units::length::inch_t(0.75) * units::constants::pi)).value() * 3);
 
 	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
 	hwswitch.ReverseLimitEnable = true;
 	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
+	hwswitch.ReverseLimitAutosetPositionEnable = true;
 	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
 	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;

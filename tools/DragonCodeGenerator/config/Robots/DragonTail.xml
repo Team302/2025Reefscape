@@ -428,7 +428,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </forwardResetPosition>
         <forwardPosition>
           <unitsFamily>angle</unitsFamily>
@@ -992,7 +992,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </forwardResetPosition>
         <forwardPosition>
           <unitsFamily>angle</unitsFamily>
@@ -1022,7 +1022,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </reverseResetPosition>
         <reversePosition>
           <unitsFamily>angle</unitsFamily>
