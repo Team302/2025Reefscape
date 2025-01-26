@@ -124,7 +124,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::RED));
     }
-    if (alliancecolor)
+    if (coralInSensor)
     {
         m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -132,7 +132,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (coralInSensor)
+    if (coralOutSensor)
     {
         m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -140,7 +140,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (coralOutSensor)
+    if (algaeSensor)
     {
         m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -148,21 +148,13 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (algaeSensor)
+    if (intakesensor)
     {
         m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
     else
     {
         m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (intakesensor)
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
     m_LEDstring->commitLedData();
 }
