@@ -43,6 +43,7 @@
 #include "configs/MechanismConfigMgr.h"
 
 #include "state/IRobotStateChangeSubscriber.h"
+#include "units/constants.h"
 
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
@@ -83,20 +84,15 @@ public:
 	virtual void Update();
 
 	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position * 1; m_ArmActiveTarget = &m_ArmPositionDegree;}
-	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t ( ( position/ ( units::length::meter_t ( 1 ) ) ).value() * 1 / std::numbers::pi ); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
+	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t ( ( position/ ( units::length::inch_t ( 0.75 ) * units::constants::pi ) ).value() * 3); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
 	void UpdateTargetCoralPercentOutput ( double percentOut )  {m_CoralActiveTarget = percentOut;}
 	void UpdateTargetAlgaePercentOutput ( double percentOut )  {m_AlgaeActiveTarget = percentOut;}
 
 	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
 
-
-
-
 	virtual bool IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
 	virtual bool IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-
-
 
 	void CreateAndRegisterStates();
 	void Cyclic();
