@@ -28,7 +28,9 @@ DragonPoseEstimator *DragonPoseEstimator::GetInstance()
 }
 
 DragonPoseEstimator::DragonPoseEstimator() : m_vision(DragonVision::GetDragonVision()),
-                                             m_chassis()
+                                             m_chassis(),
+                                             m_quest(DragonQuest::GetDragonQuest())
+
 {
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
@@ -36,20 +38,54 @@ DragonPoseEstimator::DragonPoseEstimator() : m_vision(DragonVision::GetDragonVis
 
 frc::Pose3d DragonPoseEstimator::GetEstimatedPosition()
 {
-    return frc::Pose3d();
+    GetVisonPose();
+    GetChassisPose();
+    GetQuestPose();
+    if (m_vision != nullptr && m_chassis != nullptr && m_quest != nullptr)
+    {
+
+        double avgX = (m_visionPose.X().to<double>() * m_visionWeight) + (m_chassisPose.X().to<double>() * m_chassisWeight) + (m_QuestPose.X().to<double>() * m_questWeight);
+        avgX /= 3;
+        double avgY = (m_visionPose.Y().to<double>() * m_visionWeight) + (m_chassisPose.Y().to<double>() * m_chassisWeight) + (m_QuestPose.Y().to<double>() * m_questWeight);
+        avgY /= 3;
+        double avgZ = (m_visionPose.Z().to<double>() * m_visionWeight) + (m_QuestPose.Z().to<double>() * m_questWeight);
+        avgZ /= 2;
+
+        double avgRoll = (m_visionPose.Rotation().X().to<double>() * m_visionWeight) + (m_QuestPose.Rotation().X().to<double>() * m_questWeight);
+        avgRoll /= 2;
+        double avgPitch = (m_visionPose.Rotation().Y().to<double>() * m_visionWeight) + (m_QuestPose.Rotation().Y().to<double>() * m_questWeight);
+        avgPitch /= 2;
+        double avgYaw = (m_visionPose.Rotation().Z().to<double>() * m_visionWeight) + (m_chassisPose.Rotation().Z().to<double>() * m_chassisWeight) + (m_QuestPose.Rotation().Z().to<double>() * m_questWeight);
+        avgYaw /= 3;
+
+        return frc::Pose3d{units::length::meter_t(avgX), units::length::meter_t(avgY), units::length::meter_t(avgZ), frc::Rotation3d{units::angle::degree_t(avgRoll), units::angle::degree_t(avgPitch), units::angle::degree_t(avgYaw)}};
+    }
 }
 
 frc::Pose3d DragonPoseEstimator::GetVisonPose()
 {
-    return frc::Pose3d();
+    if (m_vision != nullptr)
+    {
+        auto megatag1 = m_vision->GetRobotPosition();
+        if (megatag1.has_value())
+        {
+            m_visionPose = megatag1.value().estimatedPose;
+        }
+    }
 }
 
 frc::Pose2d DragonPoseEstimator::GetChassisPose()
 {
-    return m_chassis->GetPose();
+    if (m_chassis != nullptr)
+    {
+        return m_chassis->GetPose();
+    }
 }
 
 frc::Pose3d DragonPoseEstimator::GetQuestPose()
 {
-    return frc::Pose3d();
+    if (m_quest != nullptr)
+    {
+        return m_quest->GetEstimatedPose();
+    }
 }

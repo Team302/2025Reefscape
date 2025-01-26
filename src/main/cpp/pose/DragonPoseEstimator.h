@@ -26,6 +26,7 @@
 #include "vision/DragonVision.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "vision/DragonQuest.h"
 
 class DragonPoseEstimator
 {
@@ -44,9 +45,14 @@ private:
     static DragonPoseEstimator *m_instance;
     DragonVision *m_vision;
     SwerveChassis *m_chassis;
+    DragonQuest *m_quest;
 
     frc::Pose3d m_chassisPose;
     frc::Pose3d m_visionPose;
     frc::Pose3d m_QuestPose;
     frc::Pose3d m_estimatedPose;
+
+    double m_visionWeight = .4;
+    double m_chassisWeight = .1;
+    double m_questWeight = .5;
 };
