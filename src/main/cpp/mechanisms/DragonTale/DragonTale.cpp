@@ -597,7 +597,7 @@ void DragonTale::UpdateTarget()
 {
 	// TODO: If elevator is going up, dont raise elevator until a certain distance from reef
 	units::angle::degree_t actualTargetAngle;
-	units::length::inch_t actualTargetHeight;
+	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 
 	units::length::inch_t elevatorError = m_elevatorTarget - GetElevatorHeight();
 
@@ -613,6 +613,8 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetAngle = m_armTarget;
 	}
+
+	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }
