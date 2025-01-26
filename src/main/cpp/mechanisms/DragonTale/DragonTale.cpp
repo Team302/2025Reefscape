@@ -378,8 +378,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 7.068583471;
-	fxConfig.Feedback.RotorToSensorRatio = 5.969026042;
+	fxConfig.Feedback.SensorToMechanismRatio = 5.969026042;
+	fxConfig.Feedback.RotorToSensorRatio = 1.0;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
 

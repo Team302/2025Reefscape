@@ -345,14 +345,14 @@
           <name>doubleParameter</name>
           <__units__ />
           <type>Double</type>
-          <value>7.068583471</value>
+          <value>5.96902604</value>
         </sensorToMechanismRatio>
         <rotorToSensorRatio>
           <unitsFamily>none</unitsFamily>
           <name>doubleParameter</name>
           <__units__ />
           <type>Double</type>
-          <value>5.969026042</value>
+          <value>1</value>
         </rotorToSensorRatio>
         <fusedSyncChoice>FUSED</fusedSyncChoice>
       </fusedSyncCANcoder>
