@@ -26,11 +26,14 @@
 #include "utils/logging/Logger.h"
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
+#include "vision/definitions/CameraConfig.h"
+#include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
 #include "vision/DragonQuest.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
+#include "utils/DragonPower.h"
 
 using std::string;
 
@@ -322,6 +325,12 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
+    m_dragonPower = DragonPower::GetInstance();
+
+    //initialize cameras
+    CameraConfigMgr::GetInstance()->InitCameras(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
+    auto cameraConfig = CameraConfigMgr::GetInstance()->GetCurrentConfig();
+    auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
