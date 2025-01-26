@@ -59,7 +59,7 @@ private:
 	static DragonLeds *m_instance;
 	frc::AddressableLED *m_addressibleLeds;
 	int m_rainbowFirstPixelHue = 0;
-	int m_numberofDiagnosticLEDs = 8;
+	int m_numberofDiagnosticLEDs = 5;
 
 	DragonLeds();
 };

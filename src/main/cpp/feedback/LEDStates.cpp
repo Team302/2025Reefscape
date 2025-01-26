@@ -114,7 +114,7 @@ void LEDStates::RainbowPattern()
     m_LEDstring->commitLedData();
 }
 
-void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool bintake, bool fintake, bool feeder, bool launcher, bool placerin, bool placermid, bool placerout)
+void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor)
 {
     if (alliancecolor == frc::DriverStation::Alliance::kBlue)
     {
@@ -124,7 +124,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::RED));
     }
-    if (fintake)
+    if (alliancecolor)
     {
         m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -132,7 +132,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (bintake)
+    if (coralInSensor)
     {
         m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -140,7 +140,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (feeder)
+    if (coralOutSensor)
     {
         m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -148,7 +148,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (launcher)
+    if (algaeSensor)
     {
         m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -156,7 +156,7 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (placerin)
+    if (intakesensor)
     {
         m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::YELLOW));
     }
@@ -164,23 +164,12 @@ void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bo
     {
         m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::BLACK));
     }
-    if (placermid)
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (placerout)
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
     m_LEDstring->commitLedData();
+}
+
+void LEDStates::DisabledPattern()
+{
+    ChaserPattern(DragonLeds::AZUL);
 }
 
 void LEDStates::ResetVariables()

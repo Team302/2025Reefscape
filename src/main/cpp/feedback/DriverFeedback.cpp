@@ -26,6 +26,8 @@
 
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using frc::DriverStation;
@@ -62,6 +64,10 @@ void DriverFeedback::UpdateRumble()
 void DriverFeedback::UpdateLEDStates()
 {
     oldState = currentState;
+    if (frc::DriverStation::IsDisabled())
+    {
+        m_LEDStates->DisabledPattern();
+    }
     if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
     {
         currentState = DragonLeds::RED;
@@ -92,21 +98,19 @@ void DriverFeedback::UpdateLEDStates()
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-    /**
-    StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-    auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManagerGen *>(noteStateManager) : nullptr;
-    if (noteMgr != nullptr)
+
+    StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+    auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
+    StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
+    auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
+    if (taleMgr != nullptr)
     {
-        bool backintake = noteMgr->getbackIntakeSensor()->Get();
-        bool frontintake = noteMgr->getfrontIntakeSensor()->Get();
-        bool feeder = noteMgr->getfeederSensor()->Get();
-        bool launcher = noteMgr->getlauncherSensor()->Get();
-        bool placerin = noteMgr->getplacerInSensor()->Get();
-        bool placermid = noteMgr->getplacerMidSensor()->Get();
-        bool placerout = noteMgr->getplacerOutSensor()->Get();
-        m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), backintake, frontintake, feeder, launcher, placerin, placermid, placerout);
+        bool coralInSensor = taleMgr->GetCoralInSensorState();
+        bool coralOutSensor = taleMgr->GetCoralOutSensorState();
+        bool algaeSensor = taleMgr->GetAlgaeSensorState();
+        bool intsakeSensor = intakeMgr->GetIntakeSensorState();
+        m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor);
     }
-    **/
 }
 
 void DriverFeedback::ResetRequests(void)
