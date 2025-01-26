@@ -35,7 +35,7 @@ public:
     frc::Pose3d GetEstimatedPosition();
 
 private:
-    DragonPoseEstimator() = default;
+    DragonPoseEstimator();
     ~DragonPoseEstimator() = default;
 
     frc::Pose3d GetVisonPose();

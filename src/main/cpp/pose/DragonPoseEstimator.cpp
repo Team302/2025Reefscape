@@ -120,7 +120,9 @@ frc::Pose3d DragonPoseEstimator::GetVisonPose()
         }
     }
     else
+    {
         return frc::Pose3d();
+    }
 }
 
 frc::Pose2d DragonPoseEstimator::GetChassisPose()
