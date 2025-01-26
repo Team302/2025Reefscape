@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,60 +15,20 @@
 
 #pragma once
 
-#include <frc/TimedRobot.h>
+#include "vision/definitions/CameraConfig.h"
+#include "configs/MechanismConfigMgr.h"
 
-class CyclePrimitives;
-class HolonomicDrive;
-class SwerveChassis;
-class TeleopControl;
-class FMSData;
-class DragonField;
-class DragonPower;
-class AutonPreviewer;
-class RobotState;
-class SomeMech;
-class DragonDataLoggerMgr;
-
-class Robot : public frc::TimedRobot
+class CameraConfigMgr
 {
 public:
-    Robot() = default;
-    ~Robot() = default;
-
-    void RobotInit() override;
-    void RobotPeriodic() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
-    void DisabledInit() override;
-    void DisabledPeriodic() override;
-    void TestInit() override;
-    void TestPeriodic() override;
-    void SimulationInit() override;
-    void SimulationPeriodic() override;
+    static CameraConfigMgr *GetInstance();
+    CameraConfig *GetCurrentConfig() const { return m_config; }
+    void InitCameras(MechanismConfigMgr::RobotIdentifier id);
 
 private:
-    void InitializeRobot();
-    void InitializeAutonOptions();
-    void InitializeDriveteamFeedback();
-    void InitializeDataTracing();
-    void UpdateDriveTeamFeedback();
-    void LogDiagnosticData();
-    void LogSensorData();
-    void LogMotorData();
+    CameraConfigMgr();
+    ~CameraConfigMgr() = default;
 
-    TeleopControl *m_controller;
-    SwerveChassis *m_chassis;
-    CyclePrimitives *m_cyclePrims;
-    HolonomicDrive *m_holonomic;
-    DragonPower *m_dragonPower;
-
-    FMSData *m_fmsData;
-    DragonField *m_field;
-    AutonPreviewer *m_previewer;
-    RobotState *m_robotState;
-    SomeMech *m_someMech;
-    DragonDataLoggerMgr *m_datalogger;
-    bool isFMSAttached = false;
+    static CameraConfigMgr *m_instance;
+    CameraConfig *m_config;
 };

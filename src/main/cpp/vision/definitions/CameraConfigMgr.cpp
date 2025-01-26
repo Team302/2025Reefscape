@@ -12,47 +12,48 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#pragma once
 
-// C++ Includes
-#include <memory>
+#include <string>
 
-// Team302 Includes
-#include "auton/PrimitiveParams.h"
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/SwerveChassis.h"
-#include "chassis/ChassisOptionEnums.h"
-#include "vision/DragonVision.h"
+#include "utils/logging/Logger.h"
+#include "vision/definitions/CameraConfigMgr.h"
+#include "vision/definitions/CameraConfig.h"
+#include "vision/definitions/CameraConfig_9997.h"
 
-// FRC,WPI Includes
-#include "frc/controller/HolonomicDriveController.h"
-#include "frc/controller/RamseteController.h"
-#include "frc/Filesystem.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/trajectory/TrajectoryConfig.h"
-#include "frc/trajectory/TrajectoryUtil.h"
-#include "wpi/SmallString.h"
-#include "frc/Timer.h"
-#include "units/time.h"
+using namespace std;
 
-class VisionDrivePrimitive : public IPrimitive
+CameraConfigMgr *CameraConfigMgr::m_instance = nullptr;
+CameraConfigMgr *CameraConfigMgr::GetInstance()
 {
-public:
-    VisionDrivePrimitive();
+    if (CameraConfigMgr::m_instance == nullptr)
+    {
+        CameraConfigMgr::m_instance = new CameraConfigMgr();
+    }
+    return CameraConfigMgr::m_instance;
+}
 
-    virtual ~VisionDrivePrimitive() = default;
+CameraConfigMgr::CameraConfigMgr() : m_config(nullptr)
+{
+}
 
-    void Init(PrimitiveParams *params) override;
-    void Run() override;
-    bool IsDone() override;
+void CameraConfigMgr::InitCameras(MechanismConfigMgr::RobotIdentifier id)
+{
+    switch (id)
+    {
 
-private:
-    SwerveChassis *m_chassis;
-    ChassisOptionEnums::HeadingOption m_headingOption;
-    std::string m_ntName;
 
-    frc::Timer *m_timer;
-    units::time::second_t m_timeout;
+    case MechanismConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
+        m_config = new CameraConfig_9997();
+        break;
 
-    DragonVision *m_vision;
-};
+    default:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping camera initialization because of unknown robot id "), string(""), id);
+        break;
+    }
+
+    if (m_config != nullptr)
+    {
+        m_config->BuildCameraConfig();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot cameras "), string(""), id);
+    }
+}
