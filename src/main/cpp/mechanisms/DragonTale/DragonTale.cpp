@@ -203,7 +203,6 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_L4SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L4SCORING_POSITION},
 	{"STATE_SCORE_CORAL", DragonTale::STATE_NAMES::STATE_SCORE_CORAL},
 };
-
 void DragonTale::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "DragonTale";
@@ -379,7 +378,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 3.534291735;
+	fxConfig.Feedback.SensorToMechanismRatio = 7.068583471;
 	fxConfig.Feedback.RotorToSensorRatio = 5.969026042;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
@@ -456,13 +455,6 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	m_ElevatorFollower->GetConfigurator().Apply(motorconfig);
 	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{8});
 }
-
-// CoralInSensor : Digital inputs do not have initialization needs
-// CoralOutSensor : Digital inputs do not have initialization needs
-// AlgaeSensor : Digital inputs do not have initialization needs
-
-// ArmAngle : CANcoder inputs do not have initialization needs
-// ElevatorHeight : CANcoder inputs do not have initialization needs
 
 void DragonTale::SetPIDArmPositionDegree()
 {

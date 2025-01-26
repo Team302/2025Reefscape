@@ -259,14 +259,14 @@
           <name>doubleParameter</name>
           <__units__ />
           <type>Double</type>
-          <value>1</value>
+          <value>3</value>
         </gearRatio>
         <diameter>
           <unitsFamily>length</unitsFamily>
           <name>doubleParameter</name>
-          <__units__>m</__units__>
+          <__units__>in</__units__>
           <type>Double</type>
-          <value>1</value>
+          <value>0.75</value>
         </diameter>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
@@ -335,7 +335,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enable>
         <fusedCANcoder>
           <name>ElevatorHeightSensor</name>
