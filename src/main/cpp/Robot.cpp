@@ -30,6 +30,7 @@
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/DataTrace.h"
+#include "vision/DragonQuest.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "utils/DragonPower.h"
@@ -90,6 +91,7 @@ void Robot::RobotPeriodic()
 
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
+    DragonQuest::GetDragonQuest()->DataLog();
 }
 
 /**
@@ -137,7 +139,6 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
     }
-    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::TeleopInit()
@@ -182,7 +183,6 @@ void Robot::TeleopPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
     }
-    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::DisabledInit()
