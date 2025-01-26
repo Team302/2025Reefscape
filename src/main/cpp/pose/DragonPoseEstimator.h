@@ -49,7 +49,7 @@ private:
 
     frc::Pose3d m_chassisPose;
     frc::Pose3d m_visionPose;
-    frc::Pose3d m_QuestPose;
+    frc::Pose3d m_questPose;
     frc::Pose3d m_estimatedPose;
 
     double m_visionWeight = .4;

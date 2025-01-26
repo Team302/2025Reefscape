@@ -43,22 +43,69 @@ frc::Pose3d DragonPoseEstimator::GetEstimatedPosition()
     GetQuestPose();
     if (m_vision != nullptr && m_chassis != nullptr && m_quest != nullptr)
     {
+        double chassisWeight = 0.1;
+        double visionWeight = 0.4;
+        double questWeight = 0.5;
 
-        double avgX = (m_visionPose.X().to<double>() * m_visionWeight) + (m_chassisPose.X().to<double>() * m_chassisWeight) + (m_QuestPose.X().to<double>() * m_questWeight);
+        double avgX = (m_visionPose.X().to<double>() * visionWeight) + (m_chassisPose.X().to<double>() * chassisWeight) + (m_questPose.X().to<double>() * questWeight);
         avgX /= 3;
-        double avgY = (m_visionPose.Y().to<double>() * m_visionWeight) + (m_chassisPose.Y().to<double>() * m_chassisWeight) + (m_QuestPose.Y().to<double>() * m_questWeight);
+        double avgY = (m_visionPose.Y().to<double>() * visionWeight) + (m_chassisPose.Y().to<double>() * chassisWeight) + (m_questPose.Y().to<double>() * questWeight);
         avgY /= 3;
-        double avgZ = (m_visionPose.Z().to<double>() * m_visionWeight) + (m_QuestPose.Z().to<double>() * m_questWeight);
+        double avgZ = (m_visionPose.Z().to<double>() * visionWeight) + (m_questPose.Z().to<double>() * questWeight);
         avgZ /= 2;
 
-        double avgRoll = (m_visionPose.Rotation().X().to<double>() * m_visionWeight) + (m_QuestPose.Rotation().X().to<double>() * m_questWeight);
+        double avgRoll = (m_visionPose.Rotation().X().to<double>() * visionWeight) + (m_questPose.Rotation().X().to<double>() * questWeight);
         avgRoll /= 2;
-        double avgPitch = (m_visionPose.Rotation().Y().to<double>() * m_visionWeight) + (m_QuestPose.Rotation().Y().to<double>() * m_questWeight);
+        double avgPitch = (m_visionPose.Rotation().Y().to<double>() * visionWeight) + (m_questPose.Rotation().Y().to<double>() * questWeight);
         avgPitch /= 2;
-        double avgYaw = (m_visionPose.Rotation().Z().to<double>() * m_visionWeight) + (m_chassisPose.Rotation().Z().to<double>() * m_chassisWeight) + (m_QuestPose.Rotation().Z().to<double>() * m_questWeight);
+        double avgYaw = (m_visionPose.Rotation().Z().to<double>() * visionWeight) + (m_chassisPose.Rotation().Z().to<double>() * chassisWeight) + (m_questPose.Rotation().Z().to<double>() * questWeight);
         avgYaw /= 3;
 
         return frc::Pose3d{units::length::meter_t(avgX), units::length::meter_t(avgY), units::length::meter_t(avgZ), frc::Rotation3d{units::angle::degree_t(avgRoll), units::angle::degree_t(avgPitch), units::angle::degree_t(avgYaw)}};
+    }
+    else if (m_chassis != nullptr && m_quest != nullptr)
+    {
+        double chassisWeight = 0.2;
+        double questWeight = 0.8;
+
+        double avgX = (m_chassisPose.X().to<double>() * chassisWeight) + (m_questPose.X().to<double>() * questWeight);
+        avgX /= 2;
+        double avgY = (m_chassisPose.Y().to<double>() * chassisWeight) + (m_questPose.Y().to<double>() * questWeight);
+        avgY /= 2;
+        double avgZ = (m_questPose.Z().to<double>() * questWeight);
+
+        double avgRoll = (m_questPose.Rotation().X().to<double>() * questWeight);
+        double avgPitch = (m_questPose.Rotation().Y().to<double>() * questWeight);
+        double avgYaw = (m_chassisPose.Rotation().Z().to<double>() * chassisWeight) + (m_questPose.Rotation().Z().to<double>() * questWeight);
+        avgYaw /= 2;
+
+        return frc::Pose3d{units::length::meter_t(avgX), units::length::meter_t(avgY), units::length::meter_t(avgZ), frc::Rotation3d{units::angle::degree_t(avgRoll), units::angle::degree_t(avgPitch), units::angle::degree_t(avgYaw)}};
+    }
+    else if (m_vision != nullptr && m_chassis != nullptr)
+    {
+        double visionWeight = 0.8;
+        double chassisWeight = 0.2;
+
+        double avgX = (m_visionPose.X().to<double>() * visionWeight) + (m_chassisPose.X().to<double>() * chassisWeight);
+        avgX /= 2;
+        double avgY = (m_visionPose.Y().to<double>() * visionWeight) + (m_chassisPose.Y().to<double>() * chassisWeight);
+        avgY /= 2;
+        double avgZ = (m_visionPose.Z().to<double>() * visionWeight);
+
+        double avgRoll = (m_visionPose.Rotation().X().to<double>() * visionWeight);
+        double avgPitch = (m_visionPose.Rotation().Y().to<double>() * visionWeight);
+        double avgYaw = (m_visionPose.Rotation().Z().to<double>() * visionWeight) + (m_chassisPose.Rotation().Z().to<double>() * chassisWeight);
+        avgYaw /= 2;
+
+        return frc::Pose3d{units::length::meter_t(avgX), units::length::meter_t(avgY), units::length::meter_t(avgZ), frc::Rotation3d{units::angle::degree_t(avgRoll), units::angle::degree_t(avgPitch), units::angle::degree_t(avgYaw)}};
+    }
+    else if (m_chassis != nullptr)
+    {
+        return frc::Pose3d(m_chassis->GetPose());
+    }
+    else
+    {
+        return frc::Pose3d();
     }
 }
 
@@ -66,12 +113,14 @@ frc::Pose3d DragonPoseEstimator::GetVisonPose()
 {
     if (m_vision != nullptr)
     {
-        auto megatag1 = m_vision->GetRobotPosition();
-        if (megatag1.has_value())
+        auto megatag = m_vision->GetRobotPosition();
+        if (megatag.has_value())
         {
-            m_visionPose = megatag1.value().estimatedPose;
+            m_visionPose = megatag.value().estimatedPose;
         }
     }
+    else
+        return frc::Pose3d();
 }
 
 frc::Pose2d DragonPoseEstimator::GetChassisPose()
@@ -80,6 +129,10 @@ frc::Pose2d DragonPoseEstimator::GetChassisPose()
     {
         return m_chassis->GetPose();
     }
+    else
+    {
+        return frc::Pose2d();
+    }
 }
 
 frc::Pose3d DragonPoseEstimator::GetQuestPose()
@@ -87,5 +140,9 @@ frc::Pose3d DragonPoseEstimator::GetQuestPose()
     if (m_quest != nullptr)
     {
         return m_quest->GetEstimatedPose();
+    }
+    else
+    {
+        return frc::Pose3d();
     }
 }
