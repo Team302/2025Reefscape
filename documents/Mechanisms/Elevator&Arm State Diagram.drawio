@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.4 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.4">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.7">
   <diagram name="Page-1" id="7JSrTSUAfBA1Y6AAACkT">
-    <mxGraphModel dx="-30" dy="2737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2127" dy="3436" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -20,14 +20,14 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="a0uy3nfza03bscJFagVY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="a0uy3nfza03bscJFagVY-3" edge="1">
+        <mxCell id="a0uy3nfza03bscJFagVY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.008;exitY=0.713;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="a0uy3nfza03bscJFagVY-3" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2320" y="-1070" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="a0uy3nfza03bscJFagVY-2" value="Coral&amp;nbsp;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;Mode&lt;/span&gt;&lt;div&gt;&lt;div&gt;&amp;nbsp;AND&lt;/div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral SensorOut = False&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="a0uy3nfza03bscJFagVY-1" vertex="1" connectable="0">
+        <mxCell id="a0uy3nfza03bscJFagVY-2" value="Coral&amp;nbsp;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;Mode&lt;/span&gt;&lt;div&gt;&lt;div&gt;&amp;nbsp;AND&lt;/div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral SensorOut = False&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = False&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="a0uy3nfza03bscJFagVY-1" vertex="1" connectable="0">
           <mxGeometry x="0.409" y="1" relative="1" as="geometry">
-            <mxPoint x="-1" y="54" as="offset" />
+            <mxPoint x="-13" y="52" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="a0uy3nfza03bscJFagVY-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="a0uy3nfza03bscJFagVY-7" edge="1">
@@ -35,9 +35,19 @@
             <mxPoint x="3070" y="-1020" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="a0uy3nfza03bscJFagVY-6" value="Algae Mode&lt;div&gt;AND&lt;br&gt;Human Player Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="a0uy3nfza03bscJFagVY-4" vertex="1" connectable="0">
+        <mxCell id="a0uy3nfza03bscJFagVY-6" value="Algae Mode&lt;div&gt;AND&lt;br&gt;Human Player Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = False&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="a0uy3nfza03bscJFagVY-4" vertex="1" connectable="0">
           <mxGeometry x="0.4361" y="-1" relative="1" as="geometry">
             <mxPoint x="48" y="52" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1KXd44YCcF1W4OWPBTa_-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1830" y="-1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-3" value="&lt;br&gt;&lt;div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;ManualModeLatch = True&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-1">
+          <mxGeometry x="0.8176" y="1" relative="1" as="geometry">
+            <mxPoint y="9" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="1KXd44YCcF1W4OWPBTa_-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Ready&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Run:&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: 90 Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator: 0 In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
@@ -345,7 +355,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="7ySeKPFAHMRMonbyGIxH-54" value="Algae Mode&lt;div&gt;AND&lt;br&gt;CoPilot Intake Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="7ySeKPFAHMRMonbyGIxH-52" vertex="1" connectable="0">
+        <mxCell id="7ySeKPFAHMRMonbyGIxH-54" value="Algae Mode&lt;div&gt;AND&lt;br&gt;CoPilot Intake Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = False&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="7ySeKPFAHMRMonbyGIxH-52" vertex="1" connectable="0">
           <mxGeometry x="0.8448" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -478,6 +488,17 @@
             <mxGeometry x="3155" y="-1760" width="560" height="260" as="geometry" />
           </mxCell>
         </UserObject>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Human Player Load&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Run:&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: HP Load Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;HP Load Target&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: Co Pilot Trigger Controlled&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;: Co Pilot Trigger Controlled&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="-1100" width="260" height="146" as="geometry" />
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-2" target="a0uy3nfza03bscJFagVY-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-5" value="Hold State Button is Pressed" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-4">
+          <mxGeometry x="-0.8435" y="6" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
