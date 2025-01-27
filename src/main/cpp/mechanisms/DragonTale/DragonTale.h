@@ -181,6 +181,6 @@ private:
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
 
 	double m_loopRate = 0.02;
-	double m_armChangeRate = 1;
-	double m_elevatorChangeRate= 1;
+	double m_armChangeRate = 1 * m_loopRate;
+	double m_elevatorChangeRate= 1*m_loopRate;
 };

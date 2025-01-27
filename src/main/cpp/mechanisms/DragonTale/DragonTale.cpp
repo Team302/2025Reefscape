@@ -502,8 +502,8 @@ void DragonTale::SetCurrentState ( int state, bool run )
 }
 
 void DragonTale::ManualControl(){
-	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR)*m_loopRate*m_elevatorChangeRate);
-	units::inch_t ArmChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM)*m_loopRate*m_armChangeRate);
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR)*m_elevatorChangeRate);
+	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM)*m_armChangeRate);
 	
 	m_elevatorTarget+=ElevatorChange;
 	m_armTarget+=ArmChange;
