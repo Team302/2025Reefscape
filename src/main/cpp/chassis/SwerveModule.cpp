@@ -167,7 +167,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
 /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
 /// @param [in] const SwerveModuleState& targetState:   state to set the module to
 /// @returns void
-void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius)
+void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius)
 {
     // Update targets so the angle turned is less than 90 degrees
     // If the desired angle is less than 90 degrees from the target angle (e.g., -90 to 90 is the amount of turn), just use the angle and speed values
@@ -179,19 +179,20 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
 
     units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
-    m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
-    // m_optimizedState.Optimize(currAngle);
-    //  m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
+    targetState.Optimize(currAngle);
+    // m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
+    //  m_optimizedState.Optimize(currAngle);
+    //   m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx speed"), m_optimizedState.speed.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx angle"), m_optimizedState.angle.Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx speed"), targetState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx angle"), targetState.angle.Degrees().value());
 
     // m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
     //   Set Steer Target
-    SetSteerAngle(m_optimizedState.angle.Degrees());
+    SetSteerAngle(targetState.angle.Degrees());
 
     // Set Drive Target
-    SetDriveSpeed(m_optimizedState.speed);
+    SetDriveSpeed(targetState.speed);
 }
 
 bool SwerveModule::IsSlipping() { return m_tractionController->isSlipping(); }
@@ -399,15 +400,11 @@ void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
         fxconfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         fxconfigs.Slot0 = m_steerGains;
-        // fxconfigs.Slot0.kP = m_steerKp;
-        // fxconfigs.Slot0.kI = m_steerKi;
-        // fxconfigs.Slot0.kD = m_steerKd;
 
         fxconfigs.ClosedLoopGeneral.ContinuousWrap = true;
 
         fxconfigs.Feedback.FeedbackRemoteSensorID = m_steerCancoder->GetDeviceID();
-        // fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::SyncCANcoder;
-        fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
+        fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
         fxconfigs.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
         fxconfigs.Feedback.RotorToSensorRatio = rotorToSensorRatio;
         m_steerTalon->GetConfigurator().Apply(fxconfigs);
