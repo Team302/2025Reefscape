@@ -43,7 +43,6 @@
 #include "configs/MechanismConfigMgr.h"
 
 #include "state/IRobotStateChangeSubscriber.h"
-#include "units/constants.h"
 
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
@@ -83,8 +82,8 @@ public:
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position * 1; m_ArmActiveTarget = &m_ArmPositionDegree;}
-	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t ( ( position/ ( units::length::inch_t ( 0.75 ) * units::constants::pi ) ).value() * 3); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
+	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position; m_ArmActiveTarget = &m_ArmPositionDegree;}
+	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t ( ( position/ ( units::length::inch_t ( 0.75 ) ) ).value() * 3/std::numbers::pi); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
 	void UpdateTargetCoralPercentOutput ( double percentOut )  {m_CoralActiveTarget = percentOut;}
 	void UpdateTargetAlgaePercentOutput ( double percentOut )  {m_AlgaeActiveTarget = percentOut;}
 
