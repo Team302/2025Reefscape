@@ -191,6 +191,18 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
 
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
 
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LF SwerveModuleState speed"), m_targetStates[LEFT_FRONT].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LF SwerveModuleState angle"), m_targetStates[LEFT_FRONT].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LB SwerveModuleState speed"), m_targetStates[LEFT_BACK].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LB SwerveModuleState angle"), m_targetStates[LEFT_BACK].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RF SwerveModuleState speed"), m_targetStates[RIGHT_FRONT].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RF SwerveModuleState angle"), m_targetStates[RIGHT_FRONT].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RB SwerveModuleState speed"), m_targetStates[RIGHT_BACK].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RB SwerveModuleState angle"), m_targetStates[RIGHT_BACK].angle.Degrees().value());
+
         m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);

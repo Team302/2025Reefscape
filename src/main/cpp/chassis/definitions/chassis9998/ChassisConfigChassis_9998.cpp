@@ -59,7 +59,9 @@ void ChassisConfigChassis_9998::DefineChassis()
                                          TunerConstants9998::kFrontLeftEncoderInverted,
                                          TunerConstants9998::kFrontLeftEncoderOffset,
 
-                                         moduleconfig,
+                                         TunerConstants9998::steerGains,
+
+                                         // moduleconfig,
                                          networkTableName);
 
     m_leftBackModule = new SwerveModule(canbusName,
@@ -81,7 +83,9 @@ void ChassisConfigChassis_9998::DefineChassis()
                                         TunerConstants9998::kBackLeftEncoderInverted,
                                         TunerConstants9998::kBackLeftEncoderOffset,
 
-                                        moduleconfig,
+                                        TunerConstants9998::steerGains,
+
+                                        // moduleconfig,
                                         networkTableName);
 
     m_rightFrontModule = new SwerveModule(canbusName,
@@ -103,7 +107,9 @@ void ChassisConfigChassis_9998::DefineChassis()
                                           TunerConstants9998::kFrontRightEncoderInverted,
                                           TunerConstants9998::kFrontRightEncoderOffset,
 
-                                          moduleconfig,
+                                          TunerConstants9998::steerGains,
+
+                                          // moduleconfig,
                                           networkTableName);
 
     m_rightBackModule = new SwerveModule(canbusName,
@@ -125,7 +131,9 @@ void ChassisConfigChassis_9998::DefineChassis()
                                          TunerConstants9998::kBackRightEncoderInverted,
                                          TunerConstants9998::kBackRightEncoderOffset,
 
-                                         moduleconfig,
+                                         TunerConstants9998::steerGains,
+
+                                         // moduleconfig,
                                          networkTableName);
 
     units::length::inch_t wheelbase = TunerConstants9998::kFrontLeftXPos -

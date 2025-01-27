@@ -40,7 +40,6 @@
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/CANcoder.hpp"
-// #include "grpl/LaserCan.h"
 #include "pathplanner/lib/config/ModuleConfig.h"
 
 class SwerveModule : public LoggableItem
@@ -64,7 +63,8 @@ public:
                  int canCoderID,
                  bool canCoderInverted,
                  const units::angle::turn_t angleOffset,
-                 std::string configfilename,
+                 ctre::phoenix6::configs::Slot0Configs turnGains,
+                 // std::string configfilename,
                  std::string networkTableName);
 
     /// @brief Turn all of the wheel to zero degrees yaw according to the pigeon
@@ -166,11 +166,10 @@ private:
     units::velocity::feet_per_second_t m_maxSpeed = units::velocity::feet_per_second_t(17.3);
     double m_coeffOfFriction = 0.9;
 
+    ctre::phoenix6::configs::Slot0Configs m_turnGains;
+
     bool m_velocityControlled = false;
     bool m_useFOC = false;
     std::string m_networkTableName;
     pathplanner::ModuleConfig m_moduleConfig;
-
-    // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
-    // grpl::LaserCan *m_laserCan;
 };
