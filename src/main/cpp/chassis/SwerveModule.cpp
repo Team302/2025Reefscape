@@ -84,12 +84,12 @@ SwerveModule::SwerveModule(std::string canbusname,
                            std::string networkTableName) : LoggableItem(),
                                                            m_moduleID(id),
                                                            m_driveTalon(new TalonFX(driveMotorID, canbusname)),
-                                                           m_turnTalon(new TalonFX(turnMotorID, canbusname)),
-                                                           m_turnCancoder(new CANcoder(canCoderID, canbusname)),
+                                                           m_steerTalon(new TalonFX(turnMotorID, canbusname)),
+                                                           m_steerCancoder(new CANcoder(canCoderID, canbusname)),
                                                            m_activeState(),
                                                            m_wheelDiameter(wheelDiameter),
                                                            m_maxSpeed(maxSpeed),
-                                                           m_turnGains(turnGains),
+                                                           m_steerGains(turnGains),
                                                            m_networkTableName(networkTableName)
 
 {
@@ -104,7 +104,7 @@ SwerveModule::SwerveModule(std::string canbusname,
 
     // ReadConstants(configfilename);
     InitDriveMotor(driveInverted);
-    InitTurnMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
+    InitSteerMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
     m_tractionController = std::make_unique<TractionControlController>(1.2, 1.0, 0.4, 145.0, m_maxSpeed);
 
     m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
@@ -127,7 +127,7 @@ double SwerveModule::GetEncoderValues()
 /// @returns void
 void SwerveModule::ZeroAlignModule()
 {
-    SetTurnAngle(units::degree_t(0));
+    SetSteerAngle(units::degree_t(0));
 }
 
 //==================================================================================
@@ -141,7 +141,7 @@ SwerveModuleState SwerveModule::GetState() const
     mps = units::velocity::meters_per_second_t(mpr.to<double>() * m_driveTalon->GetVelocity().GetValueAsDouble());
 
     // Get the Module Current Rotation Angle
-    units::angle::degree_t ang = m_turnCancoder->GetAbsolutePosition().GetValue();
+    units::angle::degree_t ang = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d angle = Rotation2d(ang);
 
     // Create the state and return it
@@ -156,7 +156,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
 {
     double rotations = 0.0;
     rotations = m_driveTalon->GetPosition().GetValueAsDouble();
-    units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
+    units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
 
     return {rotations * m_wheelDiameter * numbers::pi, // distance travled by drive motor
@@ -177,7 +177,7 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx speed"), targetState.speed.value());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx angle"), targetState.angle.Degrees().value());
 
-    units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
+    units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
     m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
     // m_optimizedState.Optimize(currAngle);
@@ -187,8 +187,8 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx angle"), m_optimizedState.angle.Degrees().value());
 
     // m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
-    //   Set Turn Target
-    SetTurnAngle(m_optimizedState.angle.Degrees());
+    //   Set Steer Target
+    SetSteerAngle(m_optimizedState.angle.Degrees());
 
     // Set Drive Target
     SetDriveSpeed(m_optimizedState.speed);
@@ -244,16 +244,16 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
 /// @brief Turn the swerve module to a specified angle
 /// @param [in] units::angle::degree_t the target angle to turn the wheel to
 /// @returns void
-void SwerveModule::SetTurnAngle(units::angle::degree_t targetAngle)
+void SwerveModule::SetSteerAngle(units::angle::degree_t targetAngle)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetTurnAngle xxx angle"), targetAngle.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetTurnAngle xxx use FOC"), m_useFOC ? string("true") : string("false"));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx angle"), targetAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx use FOC"), m_useFOC ? string("true") : string("false"));
 
     m_activeState.angle = targetAngle;
     if (m_useFOC)
-        m_turnTalon->SetControl(m_positionVoltage.WithPosition(targetAngle));
+        m_steerTalon->SetControl(m_positionVoltage.WithPosition(targetAngle));
     else
-        m_turnTalon->SetControl(m_positionTorque.WithPosition(targetAngle));
+        m_steerTalon->SetControl(m_positionTorque.WithPosition(targetAngle));
 }
 //==================================================================================
 
@@ -287,35 +287,35 @@ void SwerveModule::LogInformation()
     if (m_moduleID == SwerveModuleConstants::ModuleID::LEFT_BACK)
     {
         ntAngleName += string("Left Back Angle");
-        ntMotorPositionName += string("Left Back Turn");
+        ntMotorPositionName += string("Left Back Steer");
         ntRotorPositionName += string("Left Back Drive");
         ntName = string("Left Back Swerve Encoders");
     }
     else if (m_moduleID == SwerveModuleConstants::ModuleID::LEFT_FRONT)
     {
         ntAngleName += string("Left Front Angle");
-        ntMotorPositionName += string("Left Front Turn");
+        ntMotorPositionName += string("Left Front Steer");
         ntRotorPositionName += string("Left Front Drive");
         ntName = string("Left Front Swerve Encoders");
     }
     else if (m_moduleID == SwerveModuleConstants::ModuleID::RIGHT_BACK)
     {
         ntAngleName += string("Right Back Angle");
-        ntMotorPositionName += string("Right Back Turn");
+        ntMotorPositionName += string("Right Back Steer");
         ntRotorPositionName += string("Right Back Drive");
         ntName = string("Right Back Swerve Encoders");
     }
     else
     {
         ntAngleName += string("Right Front Angle");
-        ntMotorPositionName += string("Right Front Turn");
+        ntMotorPositionName += string("Right Front Steer");
         ntRotorPositionName += string("Right Front Drive");
         ntName = string("Right Front Swerve Encoders");
     }
-    auto turns = m_turnTalon->GetPosition().GetValueAsDouble();
+    auto turns = m_steerTalon->GetPosition().GetValueAsDouble();
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ntName, ntMotorPositionName, turns);
 
-    auto rotor = m_turnTalon->GetRotorPosition().GetValueAsDouble();
+    auto rotor = m_steerTalon->GetRotorPosition().GetValueAsDouble();
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ntName, ntRotorPositionName, rotor);
 }
 
@@ -369,18 +369,18 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
 }
 
 //==================================================================================
-void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
-                                        bool canCoderInverted,
-                                        const units::angle::turn_t angleOffset,
-                                        double sensorToMechanismRatio,
-                                        units::dimensionless::scalar_t rotorToSensorRatio)
+void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
+                                         bool canCoderInverted,
+                                         const units::angle::turn_t angleOffset,
+                                         double sensorToMechanismRatio,
+                                         units::dimensionless::scalar_t rotorToSensorRatio)
 {
-    if (m_turnTalon != nullptr && m_turnCancoder != nullptr)
+    if (m_steerTalon != nullptr && m_steerCancoder != nullptr)
     {
-        m_turnTalon->GetConfigurator().Apply(TalonFXConfiguration{}); // Apply Factory Defaults
+        m_steerTalon->GetConfigurator().Apply(TalonFXConfiguration{}); // Apply Factory Defaults
 
         TalonFXConfiguration fxconfigs{};
-        m_turnTalon->GetConfigurator().Refresh(fxconfigs);
+        m_steerTalon->GetConfigurator().Refresh(fxconfigs);
 
         fxconfigs.MotorOutput.Inverted = turnInverted ? InvertedValue::Clockwise_Positive : InvertedValue::Clockwise_Positive;
         fxconfigs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
@@ -397,31 +397,29 @@ void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
 
         fxconfigs.CurrentLimits.SupplyCurrentLimit = units::ampere_t(60.0);
         fxconfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        // fxconfigs.CurrentLimits.SupplyCurrentThreshold = units::ampere_t(80.0); // TODO check this
-        // fxconfigs.CurrentLimits.SupplyTimeThreshold = units::second_t(0.15);  // TODO check this
 
-        fxconfigs.Slot0 = m_turnGains;
-        // fxconfigs.Slot0.kP = m_turnKp;
-        // fxconfigs.Slot0.kI = m_turnKi;
-        // fxconfigs.Slot0.kD = m_turnKd;
+        fxconfigs.Slot0 = m_steerGains;
+        // fxconfigs.Slot0.kP = m_steerKp;
+        // fxconfigs.Slot0.kI = m_steerKi;
+        // fxconfigs.Slot0.kD = m_steerKd;
 
         fxconfigs.ClosedLoopGeneral.ContinuousWrap = true;
 
-        fxconfigs.Feedback.FeedbackRemoteSensorID = m_turnCancoder->GetDeviceID();
+        fxconfigs.Feedback.FeedbackRemoteSensorID = m_steerCancoder->GetDeviceID();
         // fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::SyncCANcoder;
         fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
         fxconfigs.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
         fxconfigs.Feedback.RotorToSensorRatio = rotorToSensorRatio;
-        m_turnTalon->GetConfigurator().Apply(fxconfigs);
+        m_steerTalon->GetConfigurator().Apply(fxconfigs);
 
         CANcoderConfiguration ccConfigs{};
-        m_turnCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
+        m_steerCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
 
         ccConfigs.MagnetSensor.MagnetOffset = units::angle::degree_t(angleOffset);
         ccConfigs.MagnetSensor.SensorDirection = canCoderInverted ? SensorDirectionValue::Clockwise_Positive : SensorDirectionValue::CounterClockwise_Positive;
         ccConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = units::degree_t(180.0);
 
-        m_turnCancoder->GetConfigurator().Apply(ccConfigs);
+        m_steerCancoder->GetConfigurator().Apply(ccConfigs);
     }
 }
 
@@ -459,15 +457,15 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
                     //{
                     //     if (strcmp(attr.name(), "turn_FOC_proportional") == 0)
                     //     {
-                    //         m_turnKp = attr.as_double();
+                    //         m_steerKp = attr.as_double();
                     //     }
                     //     else if (strcmp(attr.name(), "turn_FOC_integral") == 0)
                     //     {
-                    //         m_turnKi = attr.as_double();
+                    //         m_steerKi = attr.as_double();
                     //     }
                     //     else if (strcmp(attr.name(), "turn_FOC_derivative") == 0)
                     //     {
-                    //         m_turnKd = attr.as_double();
+                    //         m_steerKd = attr.as_double();
                     //     }
                     //     else if (strcmp(attr.name(), "drive_FOC_proportional") == 0)
                     //     {
@@ -491,15 +489,15 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
                     //{
                     // if (strcmp(attr.name(), "turn_proportional") == 0)
                     // {
-                    //     m_turnKp = attr.as_double();
+                    //     m_steerKp = attr.as_double();
                     // }
                     // else if (strcmp(attr.name(), "turn_integral") == 0)
                     // {
-                    //     m_turnKi = attr.as_double();
+                    //     m_steerKi = attr.as_double();
                     // }
                     // else if (strcmp(attr.name(), "turn_derivative") == 0)
                     // {
-                    //     m_turnKd = attr.as_double();
+                    //     m_steerKd = attr.as_double();
                     // }
                     // else if (strcmp(attr.name(), "drive_proportional") == 0)
                     // {
