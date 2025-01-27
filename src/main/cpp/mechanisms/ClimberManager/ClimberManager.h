@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
@@ -37,6 +37,8 @@
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
+#include "RobotIdentifier.h"
+
 class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
@@ -47,7 +49,7 @@ public:
 		STATE_AUTO_CLIMB
 	};
 
-	ClimberManager ( MechanismConfigMgr::RobotIdentifier activeRobotId );
+	ClimberManager ( RobotIdentifier activeRobotId );
 	ClimberManager() = delete;
 	~ClimberManager() = default;
 
@@ -83,7 +85,7 @@ public:
 	bool IsClimbMode() const { if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn){return true;}};
 	void UpdateClimbMode(RobotStateChanges::StateChange stchange, int ival);
 
-	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX* GetClimber() const {return m_Climber;}
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
@@ -91,7 +93,7 @@ public:
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-	MechanismConfigMgr::RobotIdentifier m_activeRobotId;
+	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
 	std::string m_tuningIsEnabledStr;
 	bool m_tuning = false;

@@ -15,15 +15,16 @@
 
 #pragma once
 
-#include "vision/definitions/CameraConfig.h"
 #include "configs/MechanismConfigMgr.h"
+#include "RobotIdentifier.h"
+#include "vision/definitions/CameraConfig.h"
 
 class CameraConfigMgr
 {
 public:
     static CameraConfigMgr *GetInstance();
     CameraConfig *GetCurrentConfig() const { return m_config; }
-    void InitCameras(MechanismConfigMgr::RobotIdentifier id);
+    void InitCameras(RobotIdentifier id);
 
 private:
     CameraConfigMgr();
