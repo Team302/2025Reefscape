@@ -37,7 +37,7 @@ using namespace DragonTaleStates;
 L3ScoringPositionState::L3ScoringPositionState ( std::string stateName,
         int stateId,
         DragonTale *mech,
-        MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void L3ScoringPositionState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "L3ScoringPositionState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 

@@ -15,12 +15,12 @@
 
 #include <string>
 
-#include "utils/logging/Logger.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/chassis9997/ChassisConfigChassis_9997.h"
+#include "chassis/definitions/chassis9998/ChassisConfigChassis_9998.h"
 #include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigCompBot_302.h"
-#include "chassis/definitions/ChassisConfigChassis_9998.h"
-#include "chassis/definitions/ChassisConfigChassis_9997.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "RobotIdentifier.h"
+#include "utils/logging/Logger.h"
 
 using namespace std;
 
@@ -38,30 +38,35 @@ ChassisConfigMgr::ChassisConfigMgr() : m_config(nullptr)
 {
 }
 
-void ChassisConfigMgr::InitChassis(MechanismConfigMgr::RobotIdentifier id)
+void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 {
 	switch (id)
 	{
-	case MechanismConfigMgr::RobotIdentifier::COMP_BOT_302:
+	/**
+	case RobotIdentifier::COMP_BOT_302:
 		m_config = new ChassisConfigCompBot_302();
 		break;
 
-	case MechanismConfigMgr::RobotIdentifier::CHASSISBOT_9998:
+	case RobotIdentifier::PRACTICE_BOT_9999:
+		m_config = new ChassisConfigChassis_9999();
+		break;
+	**/
+	case RobotIdentifier::CHASSIS_BOT_9998:
 		m_config = new ChassisConfigChassis_9998();
 		break;
 
-	case MechanismConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
+	case RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
 		break;
 
 	default:
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping chassis initialization because of unknown robot id "), string(""), id);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping chassis initialization because of unknown robot id "), string(""), static_cast<int>(id));
 		break;
 	}
 
 	if (m_config != nullptr)
 	{
 		m_config->BuildChassis();
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot "), string(""), id);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot "), string(""), static_cast<int>(id));
 	}
 }

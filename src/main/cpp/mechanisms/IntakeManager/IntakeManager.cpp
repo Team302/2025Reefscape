@@ -93,7 +93,7 @@ void IntakeManager::CreateAndRegisterStates()
 	ExpelStateInst->RegisterTransitionState ( OffStateInst );
 }
 
-IntakeManager::IntakeManager ( MechanismConfigMgr::RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string ( "IntakeManager" ) ),
+IntakeManager::IntakeManager ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string ( "IntakeManager" ) ),
 	m_activeRobotId ( activeRobotId ),
 	m_stateMap()
 {
