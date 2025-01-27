@@ -332,8 +332,8 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 240;
-	fxConfig.Feedback.RotorToSensorRatio = 1;
+	fxConfig.Feedback.SensorToMechanismRatio = 1;
+	fxConfig.Feedback.RotorToSensorRatio = 240;
 	m_Arm->GetConfigurator().Apply(fxConfig);
 }
 
@@ -377,9 +377,9 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	m_ElevatorLeader->GetConfigurator().Apply(motorconfig);
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 5.969026042;
-	fxConfig.Feedback.RotorToSensorRatio = 1.0;
+	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder; // might need to switch to fully remote sensor, fused assumed perfect linerarity
+	fxConfig.Feedback.SensorToMechanismRatio = 0.167531519;
+	fxConfig.Feedback.RotorToSensorRatio = 7.6;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
 
