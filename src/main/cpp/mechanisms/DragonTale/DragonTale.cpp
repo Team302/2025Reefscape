@@ -595,7 +595,6 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 }
 void DragonTale::UpdateTarget()
 {
-	// TODO: If elevator is going up, dont raise elevator until a certain distance from reef
 	units::angle::degree_t actualTargetAngle;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 
