@@ -580,7 +580,7 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 	return std::nullopt;
 }
 
-bool DragonVision::SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position)
+/*bool DragonVision::SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position)
 {
 	m_dragonCameraMap[position]->SetPipeline(mode);
 	m_dragonCameraMap[position]->UpdatePipeline();
@@ -590,7 +590,7 @@ bool DragonVision::SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::C
 DragonCamera::PIPELINE DragonVision::GetPipeline(RobotElementNames::CAMERA_USAGE position)
 {
 	return m_dragonCameraMap[position]->GetPipeline();
-}
+}*/
 
 /*****************
  * testAndLogVisionData:  Test and log the vision data

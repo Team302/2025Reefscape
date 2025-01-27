@@ -125,6 +125,9 @@ public:
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
 	units::length::inch_t GetAlgaeHeight();
+	
+	void SetArmTarget(units::angle::degree_t target) {m_armTarget = target;}
+	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = target;}
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -158,6 +161,10 @@ private:
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(0.0); //change these later
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
+	
+	units::angle::degree_t m_armTarget = units::angle::degree_t(90);
+	units::length::inch_t m_elevatorTarget = units::length::inch_t(0);
+
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
