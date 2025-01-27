@@ -37,7 +37,7 @@ using namespace DragonTaleStates;
 HumanPlayerLoadState::HumanPlayerLoadState ( std::string stateName,
         int stateId,
         DragonTale *mech,
-        MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void HumanPlayerLoadState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "HumanPlayerLoadState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -76,6 +76,7 @@ bool HumanPlayerLoadState::AtTarget()
 bool HumanPlayerLoadState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+	return ((((m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_REEF) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR)) && m_mechanism->IsCoralMode()) ||
+			 (m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetCoralOutSensorState()));
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }
