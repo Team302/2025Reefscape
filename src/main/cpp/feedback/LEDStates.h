@@ -34,7 +34,7 @@ public:
     void ClosingInChaserPattern(DragonLeds::Colors c);
     void RainbowPattern();
     void DisabledPattern();
-    void DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor);
+    void DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
     DragonLeds *m_LEDstring = DragonLeds::GetInstance();
     static LEDStates *GetInstance();
 
