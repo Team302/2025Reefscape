@@ -50,7 +50,6 @@ private:
     SwerveChassis *m_chassis;
     ChassisOptionEnums::HeadingOption m_headingOption;
     std::string m_ntName;
-    DragonCamera::PIPELINE m_pipelineMode;
 
     frc::Timer *m_timer;
     units::time::second_t m_timeout;
