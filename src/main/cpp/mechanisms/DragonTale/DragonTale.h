@@ -84,21 +84,16 @@ public:
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position * 1; m_ArmActiveTarget = &m_ArmPositionDegree;}
-	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t ( ( position/ ( units::length::meter_t ( 1 ) ) ).value() * 1 / std::numbers::pi ); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
+	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position; m_ArmActiveTarget = &m_ArmPositionDegree;}
+	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value()); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
 	void UpdateTargetCoralPercentOutput ( double percentOut )  {m_CoralActiveTarget = percentOut;}
 	void UpdateTargetAlgaePercentOutput ( double percentOut )  {m_AlgaeActiveTarget = percentOut;}
 
 	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
 
-
-
-
 	virtual bool IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
 	virtual bool IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-
-
 
 	void CreateAndRegisterStates();
 	void Cyclic();
@@ -114,19 +109,24 @@ public:
 	bool GetCoralInSensorState() const {return m_CoralInSensor->Get();}
 	bool GetCoralOutSensorState() const {return m_CoralOutSensor->Get();}
 	bool GetAlgaeSensorState() const {return m_AlgaeSensor->Get();}
-	ctre::phoenix6::hardware::CANcoder* GetArmAngle() const {return m_ArmAngle;}
-	ctre::phoenix6::hardware::CANcoder* GetElevatorHeight() const {return m_ElevatorHeight;}
+	ctre::phoenix6::hardware::CANcoder* GetArmAngleSensor() const {return m_ArmAngleSensor;}
+	ctre::phoenix6::hardware::CANcoder* GetElevatorHeightSensor() const {return m_ElevatorHeightSensor;}
 	ControlData* GetPositionInch() const {return m_PositionInch;}
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
+
+	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble() * 0.95 * 2 *std::numbers::pi);}
+	units::angle::degree_t GetArmAngle() {return m_ArmAngleSensor->GetAbsolutePosition().GetValue();}
 
 	bool IsCoralMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Coral;}
 	bool IsAlgaeMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Algae;}
 
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
-	void SetArmTarget(units::angle::degree_t target) {m_armTarget = target;}
-	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = target;}
+	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
+	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
+
+	void UpdateTarget();
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -151,15 +151,24 @@ private:
 	frc::DigitalInput* m_CoralInSensor;
 	frc::DigitalInput* m_CoralOutSensor;
 	frc::DigitalInput* m_AlgaeSensor;
-	ctre::phoenix6::hardware::CANcoder* m_ArmAngle;
-	ctre::phoenix6::hardware::CANcoder* m_ElevatorHeight;
+	ctre::phoenix6::hardware::CANcoder* m_ArmAngleSensor;
+	ctre::phoenix6::hardware::CANcoder* m_ElevatorHeightSensor;
 	ControlData* m_PositionInch;
 	ControlData* m_PositionDegree;
 	ControlData* m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 
-	units::angle::degree_t m_armTarget = units::angle::degree_t(90);
-	units::length::inch_t m_elevatorTarget = units::length::inch_t(0);
+	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
+	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
+
+	const units::angle::degree_t m_minAngle{-90.0};
+	const units::angle::degree_t m_maxAngle{90.0};
+
+	const units::length::inch_t m_minHeight{0.0};
+	const units::length::inch_t m_maxHeight{100.0};
+
+	const units::length::inch_t m_elevatorErrorThreshold{5.0};
+
 
 
 	void CheckForTuningEnabled();

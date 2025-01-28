@@ -20,6 +20,8 @@
 #include <map>
 
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
+
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveModuleState.h"
 
@@ -80,7 +82,9 @@ public:
 
     enum PoseSingals
     {
-        CURRENT_CHASSIS_POSE
+        CURRENT_CHASSIS_POSE2D,
+        CURRENT_CHASSIS_LIMELIGHT_POSE3D,
+        CURRENT_CHASSIS_QUEST_POSE3D
     };
 
     enum ChassisSpeedSignals
@@ -189,8 +193,12 @@ private:
     // wpi::log::StringLogEntry m_noteMgrState;
     // std::string m_currNoteMgrState{""};
 
-    wpi::log::StructLogEntry<frc::Pose2d> m_pose;
-    frc::Pose2d m_currPose{};
+    wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
+
+    frc::Pose2d m_currPose2D{};
+    frc::Pose3d m_currPose3D{};
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
     frc::SwerveModuleState m_currFrontLeftTarget{};
