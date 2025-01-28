@@ -17,6 +17,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include "frc/geometry/Pose2d.h"
 
 class CyclePrimitives;
 class HolonomicDrive;
