@@ -116,32 +116,32 @@ void LEDStates::RainbowPattern()
 
 void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
-    auto color = alliancecolor ? DragonLeds::BLUE : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(color));
+    auto alliancecolorcolor = alliancecolor ? DragonLeds::BLUE : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(alliancecolorcolor));
 
-    auto color = coralInSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(color));
+    auto coralInSensorcolor = coralInSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(coralInSensorcolor));
 
-    auto color = coralOutSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(color));
+    auto coralOutSensorcolor = coralOutSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(coralOutSensorcolor));
 
-    auto color = algaeSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(color));
+    auto algaeSensorcolor = algaeSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(algaeSensorcolor));
 
-    auto color = intakesensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(color));
+    auto intakesensorcolor = intakesensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(intakesensorcolor));
 
-    auto color = questStatus ? DragonLeds::GREEN : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(color));
+    auto questStatuscolor = questStatus ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(questStatuscolor));
 
-    auto color = ll1Status ? DragonLeds::GREEN : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(color));
+    auto ll1Statuscolor = ll1Status ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(ll1Statuscolor));
 
-    auto color = ll2Status ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(color));
+    auto ll2Statuscolor = ll2Status ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(ll2Statuscolor));
 
-    auto color = pigeonfaults ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(color));
+    auto pigeonfaultscolor = pigeonfaults ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(pigeonfaultscolor));
 
     m_LEDstring->commitLedData();
 }
