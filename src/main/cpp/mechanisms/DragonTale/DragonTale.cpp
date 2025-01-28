@@ -176,9 +176,11 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
 }
 
-DragonTale::DragonTale(MechanismConfigMgr::RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
-																			m_activeRobotId(activeRobotId),
-																			m_stateMap()
+
+DragonTale::DragonTale ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string ( "DragonTale" ) ),
+	m_activeRobotId ( activeRobotId ),
+	m_stateMap()
+
 {
 	m_scoringMode = RobotStateChanges::ScoringMode::Coral;
 	RobotState *m_robotState = RobotState::GetInstance();

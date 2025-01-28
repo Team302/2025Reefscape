@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
@@ -44,6 +44,8 @@
 
 #include "state/IRobotStateChangeSubscriber.h"
 
+#include "RobotIdentifier.h"
+
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
@@ -65,7 +67,7 @@ public:
 		STATE_SCORE_CORAL
 	};
 
-	DragonTale ( MechanismConfigMgr::RobotIdentifier activeRobotId );
+	DragonTale ( RobotIdentifier activeRobotId );
 	DragonTale() = delete;
 	~DragonTale() = default;
 
@@ -97,7 +99,7 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 
-	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX* GetArm() const {return m_Arm;}
 	ctre::phoenix6::hardware::TalonFX* GetElevatorLeader() const {return m_ElevatorLeader;}
@@ -129,7 +131,7 @@ public:
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-	MechanismConfigMgr::RobotIdentifier m_activeRobotId;
+	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
 	std::string m_tuningIsEnabledStr;
 	bool m_tuning = false;

@@ -15,8 +15,8 @@
 
 #include <string>
 
-#include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Rotation2d.h"
 
 // Team302 Includes
 #include "chassis/states/FieldDrive.h"
@@ -37,11 +37,19 @@ std::array<frc::SwerveModuleState, 4> FieldDrive::UpdateSwerveModuleStates(Chass
 {
     if (m_chassis != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("input vx"), chassisMovement.chassisSpeeds.vx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("input vy"), chassisMovement.chassisSpeeds.vy.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("input omega"), chassisMovement.chassisSpeeds.omega.value());
+
         auto rot2d = Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
                                                                                chassisMovement.chassisSpeeds.vy,
                                                                                chassisMovement.chassisSpeeds.omega,
                                                                                rot2d);
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("output vx"), chassisMovement.chassisSpeeds.vx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("output vy"), chassisMovement.chassisSpeeds.vy.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("FieldDrive"), string("output omega"), chassisMovement.chassisSpeeds.omega.value());
 
         // chassisMovement.chassisSpeeds = frc::ChassisSpeeds::Discretize(fieldRelativeSpeeds, units::time::millisecond_t(20.0));
     }
