@@ -78,6 +78,7 @@ bool ReadyState::AtTarget()
 bool ReadyState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY) 
+	|| (!m_mechanism->GetAlgaeSensorState() && !m_mechanism->GetCoralInSensorState() && !m_mechanism->GetCoralOutSensorState() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION)));
 }

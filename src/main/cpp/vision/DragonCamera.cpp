@@ -24,27 +24,20 @@
 #include <frc/geometry/Pose3d.h>
 
 DragonCamera::DragonCamera(std::string cameraName, /// <I> camera name/type
+                           CAMERA_TYPE cameraType,    /// <I> camera type
+                           CAMERA_USAGE cameraUsage,
                            units::length::inch_t mountingXDistance,
                            units::length::inch_t mountingYDistance,
                            units::length::inch_t mountingZDistance,
                            units::angle::degree_t pitch, /// <I> - Pitch of limelight
                            units::angle::degree_t yaw,   /// <I> - Yaw of limelight
-                           units::angle::degree_t roll) : m_cameraPose(mountingXDistance,
+                           units::angle::degree_t roll): m_cameraPose(mountingXDistance,
                                                                        mountingYDistance,
                                                                        mountingZDistance,
                                                                        frc::Rotation3d(roll, pitch, yaw)),
                                                           m_robotCenterToCam(frc::Pose3d{}, m_cameraPose), // transform from center of robot to camera
-                                                          m_cameraName(cameraName)
+                                                          m_cameraName(cameraName),
+                                                          m_cameraType(cameraType),
+                                                          m_cameraUsage(cameraUsage)
 {
-}
-
-void DragonCamera::SetCameraPosition(units::length::inch_t mountingXOffset,
-                                     units::length::inch_t mountingYOffset,
-                                     units::length::inch_t mountingZOffset,
-                                     units::angle::degree_t pitch,
-                                     units::angle::degree_t yaw,
-                                     units::angle::degree_t roll)
-{
-    m_cameraPose = frc::Pose3d{mountingXOffset, mountingYOffset, mountingZOffset, frc::Rotation3d(roll, pitch, yaw)};
-    m_robotCenterToCam = frc::Transform3d(frc::Pose3d{}, m_cameraPose);
 }
