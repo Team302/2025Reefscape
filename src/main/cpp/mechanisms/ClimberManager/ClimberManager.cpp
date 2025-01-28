@@ -134,6 +134,7 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t ( 11.0 );
 	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t ( -11.0 );
 	m_Climber->GetConfigurator().Apply ( voltageConfigs );
+	
 	ClosedLoopRampsConfigs rampConfigs{};
 	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t ( 0.25 );
 	m_Climber->GetConfigurator().Apply ( rampConfigs );

@@ -58,6 +58,7 @@ using ctre::phoenix6::configs::MotorOutputConfigs;
 using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
+using ctre::phoenix6::configs::VoltageConfigs;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -303,6 +304,11 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.25);
 	m_Arm->GetConfigurator().Apply(currconfigs);
 
+	VoltageConfigs voltageConfigs{};
+	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	m_Arm->GetConfigurator().Apply(voltageConfigs);
+
 	ClosedLoopRampsConfigs rampConfigs{};
 	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.5);
 	m_Arm->GetConfigurator().Apply(rampConfigs);
@@ -349,6 +355,11 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
 	m_ElevatorLeader->GetConfigurator().Apply(currconfigs);
 
+	VoltageConfigs voltageConfigs{};
+	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	m_ElevatorLeader->GetConfigurator().Apply(voltageConfigs);
+
 	ClosedLoopRampsConfigs rampConfigs{};
 	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 	m_ElevatorLeader->GetConfigurator().Apply(rampConfigs);
@@ -379,7 +390,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder; // might need to switch to fully remote sensor, fused assumed perfect linerarity
-	fxConfig.Feedback.SensorToMechanismRatio = 0.167531519;
+	fxConfig.Feedback.SensorToMechanismRatio = 5.969;
 	fxConfig.Feedback.RotorToSensorRatio = 7.6;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
@@ -426,6 +437,11 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(40);
 	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
 	m_ElevatorFollower->GetConfigurator().Apply(currconfigs);
+
+	VoltageConfigs voltageConfigs{};
+	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	m_ElevatorFollower->GetConfigurator().Apply(voltageConfigs);
 
 	ClosedLoopRampsConfigs rampConfigs{};
 	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
