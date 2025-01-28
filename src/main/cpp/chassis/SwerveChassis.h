@@ -31,6 +31,7 @@
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
 #include "wpi/DataLog.h"
+
 // #include "grpl/LaserCan.h"
 
 #include "chassis/ChassisOptionEnums.h"
@@ -57,8 +58,11 @@ public:
                   SwerveModule *backLeft,
                   SwerveModule *backRight,
                   ctre::phoenix6::hardware::Pigeon2 *pigeon,
-                  std::string configfilename,
-                  std::string networkTableName);
+                  std::string networkTableName,
+                  units::length::inch_t wheelBase,
+                  units::length::inch_t wheelTrack,
+                  units::length::inch_t wheelDiameter,
+                  units::velocity::feet_per_second_t maxSpeed);
 
     ~SwerveChassis() noexcept override = default;
 
@@ -141,12 +145,10 @@ public:
     frc::Translation2d GetBackRightOffset() const { return m_backRightLocation; }
 
     pathplanner::RobotConfig GetRobotConfig() { return m_robotConfig; }
-    // std::optional<uint16_t> GetLaserValue();
 
 private:
     ISwerveDriveOrientation *GetHeadingState(const ChassisMovement &moveInfo);
     ISwerveDriveState *GetDriveState(ChassisMovement &moveInfo);
-    void ReadConstants(std::string configfilename);
 
     SwerveModule *m_frontLeft;
     SwerveModule *m_frontRight;
@@ -210,6 +212,4 @@ private:
     };
 
     Velocity2D m_currVelocity{0_mps, 0_mps}; // Store x and y components separately
-    // grpl::LaserCan *m_laserCan = nullptr;
-    // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
 };

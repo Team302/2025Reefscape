@@ -16,9 +16,9 @@
 #include <string>
 
 #include "utils/logging/Logger.h"
-#include "vision/definitions/CameraConfigMgr.h"
-#include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfig_9997.h"
+#include "vision/definitions/CameraConfig.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 using namespace std;
 
@@ -36,24 +36,23 @@ CameraConfigMgr::CameraConfigMgr() : m_config(nullptr)
 {
 }
 
-void CameraConfigMgr::InitCameras(MechanismConfigMgr::RobotIdentifier id)
+void CameraConfigMgr::InitCameras(RobotIdentifier id)
 {
     switch (id)
     {
 
-
-    case MechanismConfigMgr::RobotIdentifier::CHASSIS_BOT_9997:
+    case RobotIdentifier::CHASSIS_BOT_9997:
         m_config = new CameraConfig_9997();
         break;
 
     default:
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping camera initialization because of unknown robot id "), string(""), id);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping camera initialization because of unknown robot id "), string(""), static_cast<int>(id));
         break;
     }
 
     if (m_config != nullptr)
     {
         m_config->BuildCameraConfig();
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot cameras "), string(""), id);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot cameras "), string(""), static_cast<int>(id));
     }
 }

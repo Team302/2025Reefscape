@@ -13,17 +13,19 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <string>
+#pragma once
+#include "chassis/definitions/chassis9998/TunerConstants9998.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "ctre/phoenix6/Pigeon2.hpp"
+#include "units/length.h"
 
-#include "chassis/definitions/ChassisConfigChassis_1.h"
-#include "utils/logging/Logger.h"
-
-using std::string;
-
-void ChassisConfigChassis_1::DefinePigeon()
+class ChassisConfigChassis_9998 : public ChassisConfig
 {
-}
+public:
+	ChassisConfigChassis_9998() = default;
+	~ChassisConfigChassis_9998() = default;
 
-void ChassisConfigChassis_1::DefineChassis()
-{
-}
+protected:
+	void DefinePigeon() override;
+	void DefineChassis() override;
+};
