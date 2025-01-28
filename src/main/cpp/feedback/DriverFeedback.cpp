@@ -110,7 +110,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         {
             if (DragonVision::GetDragonVision() != nullptr)
             {
-                auto vision = DragonVision::GetDragonVision();
+                // auto vision = DragonVision::GetDragonVision();
                 bool questStatus = false;
                 bool ll1Status = false;
                 bool ll2Status = false;
@@ -119,7 +119,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
                 bool coralOutSensor = taleMgr->GetCoralOutSensorState();
                 bool algaeSensor = taleMgr->GetAlgaeSensorState();
                 bool intsakeSensor = intakeMgr->GetIntakeSensorState();
-                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor, questStatus, ll1Status, ll2Status);
+                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
             }
         }
     }
