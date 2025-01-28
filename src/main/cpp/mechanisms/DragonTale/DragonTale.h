@@ -43,6 +43,7 @@
 #include "configs/MechanismConfigMgr.h"
 
 #include "state/IRobotStateChangeSubscriber.h"
+#include "frc/geometry/Pose2d.h"
 
 #include "RobotIdentifier.h"
 
@@ -125,6 +126,8 @@ public:
 
 	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
 
+	units::length::inch_t GetAlgaeHeight();
+
 	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
 	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
 
@@ -160,6 +163,9 @@ private:
 	ControlData* m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(10.7); //change these later
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(3.7);
+	
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
@@ -170,8 +176,6 @@ private:
 	const units::length::inch_t m_maxHeight{100.0};
 
 	const units::length::inch_t m_elevatorErrorThreshold{5.0};
-
-
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();

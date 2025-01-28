@@ -53,6 +53,8 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 
 #include "state/RobotState.h"
+#include "utils/AngleUtils.h"
+#include "utils/FMSData.h"
 
 using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
 using ctre::phoenix6::configs::CurrentLimitsConfigs;
@@ -606,6 +608,33 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 {
 	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+}
+
+units::length::inch_t DragonTale::GetAlgaeHeight()
+{
+	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	frc::Pose2d chassisPose{}; //TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); //TODO: get reef pose values from visdrive *thumbs up*
+	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
+	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
+
+	// Adjust angleToReefCenter to be between -180 and 180 degrees
+	angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
+
+	// Calculate the angle relative to the closest 60-degree increment
+	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
+
+	// Adjust the angle to the nearest 60-degree increment
+	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
+	
+	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
+
+	int multipleNumber = closestMultiple.value() / 60.0;
+
+	if(multipleNumber % 2 == 0)
+		return m_grabAlgaeHigh;
+	else
+		return m_grabAlgaeLow;
 }
 void DragonTale::UpdateTarget()
 {
