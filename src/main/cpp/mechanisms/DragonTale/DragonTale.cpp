@@ -48,6 +48,8 @@
 #include "mechanisms/DragonTale/L3ScoringPositionState.h"
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
+#include "teleopcontrol/TeleopControlFunctions.h"
+#include "teleopcontrol/TeleopControl.h"
 
 #include "state/RobotState.h"
 
@@ -176,10 +178,9 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
 }
 
-
-DragonTale::DragonTale ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string ( "DragonTale" ) ),
-	m_activeRobotId ( activeRobotId ),
-	m_stateMap()
+DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
+														m_activeRobotId(activeRobotId),
+														m_stateMap()
 
 {
 	m_scoringMode = RobotStateChanges::ScoringMode::Coral;
@@ -618,4 +619,15 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+}
+void DragonTale::SetManualMode()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_MODE_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_MODE_OFF))
+	{
+		m_manualMode = false;
+	}
 }

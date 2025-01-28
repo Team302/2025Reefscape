@@ -130,6 +130,9 @@ public:
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
+	bool inline GetManualMode(){return m_manualMode;}
+	void SetManualMode();
+
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
@@ -188,4 +191,6 @@ private:
 
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
+
+	bool m_manualMode = false;
 };
