@@ -69,7 +69,7 @@ void ClimberManager::CreateAndRegisterStates()
 	AutoClimbStateInst->RegisterTransitionState ( OffStateInst );
 }
 
-ClimberManager::ClimberManager ( MechanismConfigMgr::RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string ( "ClimberManager" ) ),
+ClimberManager::ClimberManager ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string ( "ClimberManager" ) ),
 	m_activeRobotId ( activeRobotId ),
 	m_stateMap(),
 	m_climbMode(RobotStateChanges::ClimbMode::ClimbModeOff)

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
@@ -37,6 +37,8 @@
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
+#include "RobotIdentifier.h"
+
 class IntakeManager : public BaseMech, public StateMgr
 {
 public:
@@ -51,7 +53,7 @@ public:
 		STATE_EXPEL
 	};
 
-	IntakeManager ( MechanismConfigMgr::RobotIdentifier activeRobotId );
+	IntakeManager ( RobotIdentifier activeRobotId );
 	IntakeManager() = delete;
 	~IntakeManager() = default;
 
@@ -88,7 +90,7 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 
-	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX* GetIntake() const {return m_Intake;}
 	ctre::phoenix6::hardware::TalonFX* GetExtender() const {return m_Extender;}
@@ -99,7 +101,7 @@ public:
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-	MechanismConfigMgr::RobotIdentifier m_activeRobotId;
+	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
 	std::string m_tuningIsEnabledStr;
 	bool m_tuning = false;

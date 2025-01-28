@@ -65,24 +65,32 @@ using ctre::phoenix6::signals::SensorDirectionValue;
 
 using namespace ctre::phoenix6;
 //==================================================================================
-SwerveModule::SwerveModule(string canbusname,
+SwerveModule::SwerveModule(std::string canbusname,
                            SwerveModuleConstants::ModuleID id,
-                           SwerveModuleConstants::ModuleType type,
+                           units::length::inch_t wheelDiameter,
+                           units::dimensionless::scalar_t driveGearRatio,
+                           double sensorToMechanismRatio,
+                           units::dimensionless::scalar_t rotorToSensorRatio,
+                           units::velocity::feet_per_second_t maxSpeed,
                            int driveMotorID,
                            bool driveInverted,
                            int turnMotorID,
                            bool turnInverted,
                            int canCoderID,
                            bool canCoderInverted,
-                           double angleOffset,
-                           string configfilename,
-                           string networkTableName) : LoggableItem(),
-                                                      m_moduleID(id),
-                                                      m_driveTalon(new TalonFX(driveMotorID, canbusname)),
-                                                      m_turnTalon(new TalonFX(turnMotorID, canbusname)),
-                                                      m_turnCancoder(new CANcoder(canCoderID, canbusname)),
-                                                      m_activeState(),
-                                                      m_networkTableName(networkTableName)
+                           const units::angle::turn_t angleOffset,
+                           ctre::phoenix6::configs::Slot0Configs turnGains,
+                           // std::string configfilename,
+                           std::string networkTableName) : LoggableItem(),
+                                                           m_moduleID(id),
+                                                           m_driveTalon(new TalonFX(driveMotorID, canbusname)),
+                                                           m_steerTalon(new TalonFX(turnMotorID, canbusname)),
+                                                           m_steerCancoder(new CANcoder(canCoderID, canbusname)),
+                                                           m_activeState(),
+                                                           m_wheelDiameter(wheelDiameter),
+                                                           m_maxSpeed(maxSpeed),
+                                                           m_steerGains(turnGains),
+                                                           m_networkTableName(networkTableName)
 
 {
 
@@ -90,14 +98,13 @@ SwerveModule::SwerveModule(string canbusname,
     m_activeState.angle = ang;
     m_activeState.speed = 0_mps;
 
-    auto attrs = SwerveModuleConstants::GetSwerveModuleAttrs(type);
-    m_wheelDiameter = attrs.wheelDiameter;
-    m_maxSpeed = attrs.maxSpeed;
-    m_gearRatio = attrs.driveGearRatio;
+    m_wheelDiameter = wheelDiameter;
+    m_maxSpeed = maxSpeed;
+    m_gearRatio = driveGearRatio;
 
-    ReadConstants(configfilename);
+    // ReadConstants(configfilename);
     InitDriveMotor(driveInverted);
-    InitTurnMotorEncoder(turnInverted, canCoderInverted, angleOffset, attrs);
+    InitSteerMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
     m_tractionController = std::make_unique<TractionControlController>(1.2, 1.0, 0.4, 145.0, m_maxSpeed);
 
     m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
@@ -120,7 +127,7 @@ double SwerveModule::GetEncoderValues()
 /// @returns void
 void SwerveModule::ZeroAlignModule()
 {
-    SetTurnAngle(units::degree_t(0));
+    SetSteerAngle(units::degree_t(0));
 }
 
 //==================================================================================
@@ -134,7 +141,7 @@ SwerveModuleState SwerveModule::GetState() const
     mps = units::velocity::meters_per_second_t(mpr.to<double>() * m_driveTalon->GetVelocity().GetValueAsDouble());
 
     // Get the Module Current Rotation Angle
-    units::angle::degree_t ang = m_turnCancoder->GetAbsolutePosition().GetValue();
+    units::angle::degree_t ang = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d angle = Rotation2d(ang);
 
     // Create the state and return it
@@ -149,7 +156,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
 {
     double rotations = 0.0;
     rotations = m_driveTalon->GetPosition().GetValueAsDouble();
-    units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
+    units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
 
     return {rotations * m_wheelDiameter * numbers::pi, // distance travled by drive motor
@@ -166,15 +173,22 @@ void SwerveModule::SetDesiredState(const SwerveModuleState &targetState, units::
     // If the desired angle is less than 90 degrees from the target angle (e.g., -90 to 90 is the amount of turn), just use the angle and speed values
     // if it is more than 90 degrees (90 to 270), the can turn the opposite direction -- increase the angle by 180 degrees -- and negate the wheel speed
     // finally, get the value between -90 and 90
-    units::angle::degree_t angle = m_turnCancoder->GetAbsolutePosition().GetValue();
-    Rotation2d currAngle = Rotation2d(angle);
-    // m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
-    m_optimizedState.Optimize(currAngle);
-    // m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
 
-    m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
-    //  Set Turn Target
-    SetTurnAngle(m_optimizedState.angle.Degrees());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx speed"), targetState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx angle"), targetState.angle.Degrees().value());
+
+    units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
+    Rotation2d currAngle = Rotation2d(angle);
+    m_optimizedState = SwerveModuleState::Optimize(targetState, currAngle);
+    // m_optimizedState.Optimize(currAngle);
+    //  m_optimizedState.speed *= (m_optimizedState.angle - currAngle).Cos(); // Cosine Compensation
+
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx speed"), m_optimizedState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx angle"), m_optimizedState.angle.Degrees().value());
+
+    // m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
+    //   Set Steer Target
+    SetSteerAngle(m_optimizedState.angle.Degrees());
 
     // Set Drive Target
     SetDriveSpeed(m_optimizedState.speed);
@@ -196,8 +210,14 @@ void SwerveModule::RunCurrentState()
 /// @returns void
 void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
 {
-    m_activeState.speed = (abs(speed.to<double>() / m_maxSpeed.to<double>()) < 0.05) ? 0_mps : speed;
-    m_activeState.speed = units::velocity::meters_per_second_t(std::clamp(m_activeState.speed.value(), -m_maxSpeed.value(), m_maxSpeed.value()));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetDriveSpeed input speed"), speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("m_activeState.speed"), m_activeState.speed.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("m_maxSpeed"), m_maxSpeed.value());
+
+    // m_activeState.speed = (abs(speed.to<double>() / m_maxSpeed.to<double>()) < 0.05) ? 0_mps : speed;
+    // m_activeState.speed = units::velocity::meters_per_second_t(std::clamp(m_activeState.speed.value(), -m_maxSpeed.value(), m_maxSpeed.value()));
+    // if (m_activeState.speed != 0_mps)
+    m_activeState.speed = speed;
     if (m_activeState.speed != 0_mps)
     {
 
@@ -224,13 +244,16 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
 /// @brief Turn the swerve module to a specified angle
 /// @param [in] units::angle::degree_t the target angle to turn the wheel to
 /// @returns void
-void SwerveModule::SetTurnAngle(units::angle::degree_t targetAngle)
+void SwerveModule::SetSteerAngle(units::angle::degree_t targetAngle)
 {
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx angle"), targetAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx use FOC"), m_useFOC ? string("true") : string("false"));
+
     m_activeState.angle = targetAngle;
     if (m_useFOC)
-        m_turnTalon->SetControl(m_positionVoltage.WithPosition(targetAngle));
+        m_steerTalon->SetControl(m_positionVoltage.WithPosition(targetAngle));
     else
-        m_turnTalon->SetControl(m_positionTorque.WithPosition(targetAngle));
+        m_steerTalon->SetControl(m_positionTorque.WithPosition(targetAngle));
 }
 //==================================================================================
 
@@ -264,35 +287,35 @@ void SwerveModule::LogInformation()
     if (m_moduleID == SwerveModuleConstants::ModuleID::LEFT_BACK)
     {
         ntAngleName += string("Left Back Angle");
-        ntMotorPositionName += string("Left Back Turn");
+        ntMotorPositionName += string("Left Back Steer");
         ntRotorPositionName += string("Left Back Drive");
         ntName = string("Left Back Swerve Encoders");
     }
     else if (m_moduleID == SwerveModuleConstants::ModuleID::LEFT_FRONT)
     {
         ntAngleName += string("Left Front Angle");
-        ntMotorPositionName += string("Left Front Turn");
+        ntMotorPositionName += string("Left Front Steer");
         ntRotorPositionName += string("Left Front Drive");
         ntName = string("Left Front Swerve Encoders");
     }
     else if (m_moduleID == SwerveModuleConstants::ModuleID::RIGHT_BACK)
     {
         ntAngleName += string("Right Back Angle");
-        ntMotorPositionName += string("Right Back Turn");
+        ntMotorPositionName += string("Right Back Steer");
         ntRotorPositionName += string("Right Back Drive");
         ntName = string("Right Back Swerve Encoders");
     }
     else
     {
         ntAngleName += string("Right Front Angle");
-        ntMotorPositionName += string("Right Front Turn");
+        ntMotorPositionName += string("Right Front Steer");
         ntRotorPositionName += string("Right Front Drive");
         ntName = string("Right Front Swerve Encoders");
     }
-    auto turns = m_turnTalon->GetPosition().GetValueAsDouble();
+    auto turns = m_steerTalon->GetPosition().GetValueAsDouble();
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ntName, ntMotorPositionName, turns);
 
-    auto rotor = m_turnTalon->GetRotorPosition().GetValueAsDouble();
+    auto rotor = m_steerTalon->GetRotorPosition().GetValueAsDouble();
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ntName, ntRotorPositionName, rotor);
 }
 
@@ -346,17 +369,18 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
 }
 
 //==================================================================================
-void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
-                                        bool canCoderInverted,
-                                        double angleOffset,
-                                        const SwerveModuleAttributes &attrs)
+void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
+                                         bool canCoderInverted,
+                                         const units::angle::turn_t angleOffset,
+                                         double sensorToMechanismRatio,
+                                         units::dimensionless::scalar_t rotorToSensorRatio)
 {
-    if (m_turnTalon != nullptr && m_turnCancoder != nullptr)
+    if (m_steerTalon != nullptr && m_steerCancoder != nullptr)
     {
-        m_turnTalon->GetConfigurator().Apply(TalonFXConfiguration{}); // Apply Factory Defaults
+        m_steerTalon->GetConfigurator().Apply(TalonFXConfiguration{}); // Apply Factory Defaults
 
         TalonFXConfiguration fxconfigs{};
-        m_turnTalon->GetConfigurator().Refresh(fxconfigs);
+        m_steerTalon->GetConfigurator().Refresh(fxconfigs);
 
         fxconfigs.MotorOutput.Inverted = turnInverted ? InvertedValue::Clockwise_Positive : InvertedValue::Clockwise_Positive;
         fxconfigs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
@@ -373,36 +397,36 @@ void SwerveModule::InitTurnMotorEncoder(bool turnInverted,
 
         fxconfigs.CurrentLimits.SupplyCurrentLimit = units::ampere_t(60.0);
         fxconfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        // fxconfigs.CurrentLimits.SupplyCurrentThreshold = units::ampere_t(80.0); // TODO check this
-        // fxconfigs.CurrentLimits.SupplyTimeThreshold = units::second_t(0.15);  // TODO check this
 
-        fxconfigs.Slot0.kP = m_turnKp;
-        fxconfigs.Slot0.kI = m_turnKi;
-        fxconfigs.Slot0.kD = m_turnKd;
+        fxconfigs.Slot0 = m_steerGains;
+        // fxconfigs.Slot0.kP = m_steerKp;
+        // fxconfigs.Slot0.kI = m_steerKi;
+        // fxconfigs.Slot0.kD = m_steerKd;
 
         fxconfigs.ClosedLoopGeneral.ContinuousWrap = true;
 
-        fxconfigs.Feedback.FeedbackRemoteSensorID = m_turnCancoder->GetDeviceID();
+        fxconfigs.Feedback.FeedbackRemoteSensorID = m_steerCancoder->GetDeviceID();
         // fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::SyncCANcoder;
         fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-        fxconfigs.Feedback.SensorToMechanismRatio = attrs.sensorToMechanismRatio;
-        fxconfigs.Feedback.RotorToSensorRatio = attrs.rotorToSensorRatio;
-        m_turnTalon->GetConfigurator().Apply(fxconfigs);
+        fxconfigs.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
+        fxconfigs.Feedback.RotorToSensorRatio = rotorToSensorRatio;
+        m_steerTalon->GetConfigurator().Apply(fxconfigs);
 
         CANcoderConfiguration ccConfigs{};
-        m_turnCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
+        m_steerCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
 
         ccConfigs.MagnetSensor.MagnetOffset = units::angle::degree_t(angleOffset);
         ccConfigs.MagnetSensor.SensorDirection = canCoderInverted ? SensorDirectionValue::Clockwise_Positive : SensorDirectionValue::CounterClockwise_Positive;
         ccConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = units::degree_t(180.0);
 
-        m_turnCancoder->GetConfigurator().Apply(ccConfigs);
+        m_steerCancoder->GetConfigurator().Apply(ccConfigs);
     }
 }
 
 //==================================================================================
 void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update the Code generator to add the both Velocity and Position Degree PID values
 {
+    return;
     auto deployDir = frc::filesystem::GetDeployDirectory();
     auto filename = deployDir + string("/chassis/") + configfilename;
     pugi::xml_document doc;
@@ -417,85 +441,85 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
             {
                 for (pugi::xml_attribute attr = control.first_attribute(); attr; attr = attr.next_attribute())
                 {
-                    if (strcmp(attr.name(), "useFOC") == 0)
-                    {
-                        m_useFOC = attr.as_bool();
-                    }
-                    if (strcmp(attr.name(), "useVelocityControl") == 0)
-                    {
-                        m_velocityControlled = attr.as_bool();
-                    }
-                    if (strcmp(attr.name(), "max_speed") == 0)
-                    {
-                        m_maxSpeed = units::velocity::meters_per_second_t(attr.as_double());
-                    }
-                    if (m_useFOC)
-                    {
-                        if (strcmp(attr.name(), "turn_FOC_proportional") == 0)
-                        {
-                            m_turnKp = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "turn_FOC_integral") == 0)
-                        {
-                            m_turnKi = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "turn_FOC_derivative") == 0)
-                        {
-                            m_turnKd = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "drive_FOC_proportional") == 0)
-                        {
-                            m_driveKp = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_FOC_integral") == 0)
-                        {
-                            m_driveKi = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_FOC_derivative") == 0)
-                        {
-                            m_driveKd = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_FOC_staticFeedForward") == 0)
-                        {
-                            m_driveKs = (attr.as_double());
-                        }
-                        m_driveKf = 0; // Torque-based velocity does not require a feed forward, as torque will accelerate the rotor up to the desired velocity by itself
-                    }
-                    else
-                    {
-                        if (strcmp(attr.name(), "turn_proportional") == 0)
-                        {
-                            m_turnKp = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "turn_integral") == 0)
-                        {
-                            m_turnKi = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "turn_derivative") == 0)
-                        {
-                            m_turnKd = attr.as_double();
-                        }
-                        else if (strcmp(attr.name(), "drive_proportional") == 0)
-                        {
-                            m_driveKp = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_integral") == 0)
-                        {
-                            m_driveKi = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_derivative") == 0)
-                        {
-                            m_driveKd = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_staticFF") == 0)
-                        {
-                            m_driveKs = (attr.as_double());
-                        }
-                        else if (strcmp(attr.name(), "drive_feedforward") == 0)
-                        {
-                            m_driveKf = (attr.as_double());
-                        }
-                    }
+                    // if (strcmp(attr.name(), "useFOC") == 0)
+                    //{
+                    //     m_useFOC = attr.as_bool();
+                    // }
+                    // if (strcmp(attr.name(), "useVelocityControl") == 0)
+                    //{
+                    //     m_velocityControlled = attr.as_bool();
+                    // }
+                    //  if (strcmp(attr.name(), "max_speed") == 0)
+                    //{
+                    //      m_maxSpeed = units::velocity::meters_per_second_t(attr.as_double());
+                    //  }
+                    // if (m_useFOC)
+                    //{
+                    //     if (strcmp(attr.name(), "turn_FOC_proportional") == 0)
+                    //     {
+                    //         m_steerKp = attr.as_double();
+                    //     }
+                    //     else if (strcmp(attr.name(), "turn_FOC_integral") == 0)
+                    //     {
+                    //         m_steerKi = attr.as_double();
+                    //     }
+                    //     else if (strcmp(attr.name(), "turn_FOC_derivative") == 0)
+                    //     {
+                    //         m_steerKd = attr.as_double();
+                    //     }
+                    //     else if (strcmp(attr.name(), "drive_FOC_proportional") == 0)
+                    //     {
+                    //         m_driveKp = (attr.as_double());
+                    //     }
+                    //     else if (strcmp(attr.name(), "drive_FOC_integral") == 0)
+                    //     {
+                    //         m_driveKi = (attr.as_double());
+                    //     }
+                    //     else if (strcmp(attr.name(), "drive_FOC_derivative") == 0)
+                    //     {
+                    //         m_driveKd = (attr.as_double());
+                    //     }
+                    //     else if (strcmp(attr.name(), "drive_FOC_staticFeedForward") == 0)
+                    //     {
+                    //         m_driveKs = (attr.as_double());
+                    //     }
+                    //     m_driveKf = 0; // Torque-based velocity does not require a feed forward, as torque will accelerate the rotor up to the desired velocity by itself
+                    //}
+                    // else
+                    //{
+                    // if (strcmp(attr.name(), "turn_proportional") == 0)
+                    // {
+                    //     m_steerKp = attr.as_double();
+                    // }
+                    // else if (strcmp(attr.name(), "turn_integral") == 0)
+                    // {
+                    //     m_steerKi = attr.as_double();
+                    // }
+                    // else if (strcmp(attr.name(), "turn_derivative") == 0)
+                    // {
+                    //     m_steerKd = attr.as_double();
+                    // }
+                    // else if (strcmp(attr.name(), "drive_proportional") == 0)
+                    // {
+                    //     m_driveKp = (attr.as_double());
+                    // }
+                    // else if (strcmp(attr.name(), "drive_integral") == 0)
+                    // {
+                    //     m_driveKi = (attr.as_double());
+                    // }
+                    // else if (strcmp(attr.name(), "drive_derivative") == 0)
+                    // {
+                    //     m_driveKd = (attr.as_double());
+                    // }
+                    // else if (strcmp(attr.name(), "drive_staticFF") == 0)
+                    // {
+                    //     m_driveKs = (attr.as_double());
+                    // }
+                    // else if (strcmp(attr.name(), "drive_feedforward") == 0)
+                    // {
+                    //     m_driveKf = (attr.as_double());
+                    // }
+                    //}
                 }
             }
         }
@@ -505,26 +529,3 @@ void SwerveModule::ReadConstants(string configfilename) /// TO DO need to update
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, m_networkTableName, string("Config File not found"), configfilename);
     }
 }
-
-/**
-void SwerveModule::DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget)
-{
-    m_laserCan = new grpl::LaserCan(m_driveTalon->GetDeviceID());
-    m_laserCan->set_ranging_mode(rangingMode);
-    m_laserCan->set_roi(roi);
-    m_laserCan->set_timing_budget(timingBudget);
-}
-
-std::optional<uint16_t> SwerveModule::GetLaserValue()
-{
-    if (m_laserCan == nullptr)
-    {
-        return std::nullopt;
-    }
-    std::optional<grpl::LaserCanMeasurement> distance = m_laserCan->get_measurement();
-    if (distance.has_value() && distance.value().status == grpl::LASERCAN_STATUS_VALID_MEASUREMENT)
-    {
-        return distance.value().distance_mm;
-    }
-}
-**/
