@@ -802,7 +802,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.167531519</value>
+                <value>5.969</value>
               </sensorToMechanismRatio>
               <rotorToSensorRatio>
                 <unitsFamily>none</unitsFamily>
