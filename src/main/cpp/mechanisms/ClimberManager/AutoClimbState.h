@@ -19,8 +19,8 @@
 #pragma once
 #include <string>
 
-#include "state/State.h"
 #include "mechanisms/ClimberManager/ClimberManager.h"
+#include "state/State.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ public:
 	AutoClimbState ( std::string stateName,
 	                 int stateId,
 	                 ClimberManager *mech,
-	                 MechanismConfigMgr::RobotIdentifier activeRobotId );
+	                 RobotIdentifier activeRobotId );
 	~AutoClimbState() = default;
 	void Init() override;
 	void Run() override;
@@ -44,7 +44,7 @@ public:
 private:
 	ClimberManager *m_mechanism;
 	void InitPRACTICE_BOT9999();
-	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	RobotIdentifier m_RobotId;
 	const units::angle::turn_t m_ClimberTarget = units::angle::turn_t ( 0 );
 };
 }

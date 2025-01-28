@@ -4,8 +4,8 @@ $$_GEN_NOTICE_$$
 #pragma once
 #include <string>
 
-#include "state/State.h"
 #include "mechanisms/$$_MECHANISM_INSTANCE_NAME_$$/$$_MECHANISM_INSTANCE_NAME_$$.h"
+#include "state/State.h"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
         $$_STATE_NAME_$$State(std::string stateName,
                               int stateId,
                               $$_MECHANISM_INSTANCE_NAME_$$ *mech,
-                              MechanismConfigMgr::RobotIdentifier activeRobotId);
+                              RobotIdentifier activeRobotId);
         ~$$_STATE_NAME_$$State() = default;
         void Init() override;
         void Run() override;
@@ -29,7 +29,7 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
     private:
         $$_MECHANISM_INSTANCE_NAME_$$ *m_mechanism;
         $$_STATE_INIT_FUNCTION_DECLS_$$
-        MechanismConfigMgr::RobotIdentifier m_RobotId;
+        RobotIdentifier m_RobotId;
         $$_TARGET_VALUE_CONSTANT_$$
     };
 }

@@ -24,6 +24,8 @@
 #include "state/RobotStateChangeBroker.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "state/StateMgr.h"
 
 using frc::DriverStation;
 
@@ -181,6 +183,17 @@ void RobotState::PublishScoringMode(TeleopControl *controller)
         {
             m_scoringMode = (m_scoringMode == RobotStateChanges::Coral) ? RobotStateChanges::Algae : RobotStateChanges::Coral;
             PublishStateChange(RobotStateChanges::DesiredScoringMode_Int, m_scoringMode);
+        }
+    }
+    else if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
+    {
+
+        if (MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
+        {
+            if (MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE)->GetCurrentState() == DragonTale::STATE_NAMES::STATE_GRAB_ALGAE_REEF)
+            {
+                m_scoringMode = RobotStateChanges::Algae;
+            }
         }
     }
     m_scoringModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::SCORING_MODE);

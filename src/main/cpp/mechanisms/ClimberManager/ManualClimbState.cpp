@@ -37,7 +37,7 @@ using namespace ClimberManagerStates;
 ManualClimbState::ManualClimbState ( std::string stateName,
                                      int stateId,
                                      ClimberManager *mech,
-                                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+                                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualClimbState" ), string ( "Init" ) );
 	m_manualTarget=m_ClimberTarget;
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 

@@ -19,8 +19,8 @@
 #pragma once
 #include <string>
 
-#include "state/State.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
+#include "state/State.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ public:
 	ExpelState ( std::string stateName,
 	             int stateId,
 	             IntakeManager *mech,
-	             MechanismConfigMgr::RobotIdentifier activeRobotId );
+	             RobotIdentifier activeRobotId );
 	~ExpelState() = default;
 	void Init() override;
 	void Run() override;
@@ -44,7 +44,7 @@ public:
 private:
 	IntakeManager *m_mechanism;
 	void InitPRACTICE_BOT9999();
-	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	RobotIdentifier m_RobotId;
 	const double m_IntakeTarget = double ( -1 );
 	const double m_ExtenderTarget = double ( 0 );
 };

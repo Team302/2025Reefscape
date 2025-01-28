@@ -36,8 +36,8 @@ using namespace ClimberManagerStates;
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
 OffState::OffState ( std::string stateName,
                      int stateId,
-                     ClimberManager *mech,
-                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId ) 
+                     ClimberManager *mech, 
+                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void OffState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "OffState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
