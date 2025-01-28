@@ -161,11 +161,11 @@ private:
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
-	const units::angle::degree_t m_minAngle{-90.0};
+	const units::angle::degree_t m_minAngle{-30.0};
 	const units::angle::degree_t m_maxAngle{90.0};
 
 	const units::length::inch_t m_minHeight{0.0};
-	const units::length::inch_t m_maxHeight{100.0};
+	const units::length::inch_t m_maxHeight{30.0};
 
 	const units::length::inch_t m_elevatorErrorThreshold{5.0};
 
