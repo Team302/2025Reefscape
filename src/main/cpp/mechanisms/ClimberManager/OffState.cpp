@@ -76,9 +76,7 @@ bool OffState::AtTarget()
 bool OffState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	if (m_mechanism->IsClimbMode() != true) {
-		return true;
-	}
+		return !m_mechanism->IsClimbMode();
 	
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }
