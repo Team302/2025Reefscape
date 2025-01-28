@@ -37,7 +37,7 @@ using namespace DragonTaleStates;
 HoldState::HoldState ( std::string stateName,
                        int stateId,
                        DragonTale *mech,
-                       MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+                       RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void HoldState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "HoldState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -53,6 +53,8 @@ void HoldState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->UpdateTargetCoralPercentOutput ( 0 );
 	m_mechanism->UpdateTargetAlgaePercentOutput ( 0 );
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void HoldState::Run()
@@ -76,6 +78,11 @@ bool HoldState::AtTarget()
 bool HoldState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+	return ((m_mechanism->GetCoralOutSensorState() && !m_mechanism->GetCoralInSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) ||
+			(m_mechanism->GetAlgaeSensorState() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_REEF))) ||
+			(m_mechanism->IsCoralMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_PROCESS) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_NET))) ||
+			(m_mechanism->IsAlgaeMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_L1SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L2SCORING_POSITION) || (m_mechanism->GetCurrentState() ==m_mechanism->STATE_L3SCORING_POSITION) || (m_mechanism->GetCurrentState() ==m_mechanism->STATE_L4SCORING_POSITION))) ||
+			(m_mechanism->GetAlgaeSensorState() && !m_mechanism->GetCoralInSensorState() && !m_mechanism->GetCoralOutSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_SCORE_CORAL) ||
+			(!m_mechanism->GetAlgaeSensorState() && !m_mechanism->GetCoralInSensorState() && m_mechanism->GetCoralOutSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_SCORE_ALGAE));
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

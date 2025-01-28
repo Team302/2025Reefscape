@@ -3,8 +3,8 @@ $$_GEN_NOTICE_$$
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
@@ -26,7 +26,7 @@ public:
         $$_STATE_NAMES_$$
     };
 
-    $$_MECHANISM_INSTANCE_NAME_$$(MechanismConfigMgr::RobotIdentifier activeRobotId);
+    $$_MECHANISM_INSTANCE_NAME_$$(RobotIdentifier activeRobotId);
     $$_MECHANISM_INSTANCE_NAME_$$() = delete;
     ~$$_MECHANISM_INSTANCE_NAME_$$() = default;
 
@@ -66,14 +66,14 @@ public:
     void Cyclic();
     void RunCommonTasks() override;
 
-    MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+    RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
     $$_MECHANISM_ELEMENTS_GETTERS_$$
 
     static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-    MechanismConfigMgr::RobotIdentifier m_activeRobotId;
+    RobotIdentifier m_activeRobotId;
     std::string m_ntName;
     std::string m_tuningIsEnabledStr;
     bool m_tuning = false;
