@@ -35,7 +35,7 @@ void CameraConfig_9997::DefineCameras()
                                                   DragonLimelight::LL_PIPELINE::MACHINE_LEARNING_PL, /// <I> enum for starting pipeline
                                                   DragonLimelight::LED_MODE::LED_OFF,                // LED_MODE ledMode,
                                                   DragonLimelight::CAM_MODE::CAM_VISION,             // CAM_MODE camMode,
-                                                  DragonLimelight::STREAM_MODE::STREAM_DEFAULT,      // STREAM_MODE streamMode,
+                                                  DragonLimelight::STREAM_MODE::STREAM_STANDARD,      // STREAM_MODE streamMode,
                                                   DragonLimelight::SNAPSHOT_MODE::SNAP_OFF           // SNAPSHOT_MODE snapMode
     );                                                                                               // additional parameter
     DragonVision::GetDragonVision()->AddCamera(placer, RobotElementNames::CAMERA_USAGE::PLACER);
