@@ -27,12 +27,12 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>9</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -476,7 +476,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -509,7 +509,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>17</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -754,7 +754,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>8</value>
+              <value>4</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -966,7 +966,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -999,7 +999,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>18</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -1124,7 +1124,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -1157,7 +1157,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>19</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -1282,7 +1282,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -1315,7 +1315,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>13</value>
+              <value>16</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -1600,7 +1600,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>17</value>
             </canID>
             <offset>
               <unitsFamily>none</unitsFamily>
@@ -1624,7 +1624,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>4</value>
             </canID>
             <offset>
               <unitsFamily>none</unitsFamily>
@@ -1652,7 +1652,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.2</value>
+                <value>0</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
@@ -1894,6 +1894,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -1910,7 +1911,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -1964,7 +1965,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2012,6 +2013,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2028,7 +2030,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2082,7 +2084,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2130,6 +2132,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2146,7 +2149,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2166,6 +2169,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.25</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -2200,7 +2204,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2271,7 +2275,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2309,6 +2313,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2325,7 +2330,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2422,6 +2427,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2438,8 +2444,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>6</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2492,7 +2499,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2556,7 +2563,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2594,6 +2601,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2610,7 +2618,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2681,7 +2689,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2735,7 +2743,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2806,7 +2814,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2860,7 +2868,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2917,7 +2925,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2955,6 +2963,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>-1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2971,7 +2980,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3040,6 +3049,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>20</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3056,8 +3066,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>6.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3110,7 +3121,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3179,6 +3190,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>50</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3195,8 +3207,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>9.2</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3249,7 +3262,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3318,6 +3331,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>50</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3334,8 +3348,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>17.2</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3388,7 +3403,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3457,6 +3472,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>50</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3473,8 +3489,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>29.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3527,7 +3544,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3591,7 +3608,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -3611,6 +3628,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>-1</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -3645,7 +3663,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3683,7 +3701,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
@@ -3928,7 +3946,7 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
