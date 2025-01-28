@@ -2259,6 +2259,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2427,7 +2428,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>90</value>
+                  <value>70</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2547,6 +2548,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2565,6 +2567,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2673,6 +2676,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2691,6 +2695,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2798,6 +2803,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>60</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2816,6 +2822,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>28.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3190,7 +3197,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>50</value>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3331,7 +3338,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>50</value>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3472,7 +3479,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>50</value>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>

@@ -51,8 +51,8 @@ void L1ScoringPositionState::Init()
 
 void L1ScoringPositionState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralPercentOutput ( 0 );
-	m_mechanism->UpdateTargetAlgaePercentOutput ( 0 );
+	m_mechanism->UpdateTargetCoralPercentOutput (m_CoralTarget);
+	m_mechanism->UpdateTargetAlgaePercentOutput (m_AlgaeTarget);
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 }

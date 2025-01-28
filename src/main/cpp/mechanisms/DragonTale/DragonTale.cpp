@@ -176,10 +176,9 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
 }
 
-
-DragonTale::DragonTale ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string ( "DragonTale" ) ),
-	m_activeRobotId ( activeRobotId ),
-	m_stateMap()
+DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
+														m_activeRobotId(activeRobotId),
+														m_stateMap()
 
 {
 	m_scoringMode = RobotStateChanges::ScoringMode::Coral;
@@ -602,13 +601,13 @@ void DragonTale::UpdateTarget()
 
 	units::length::inch_t elevatorError = m_elevatorTarget - GetElevatorHeight();
 
-	double circumference = 0.75 * std::numbers::pi;
-
-	m_ElevatorLeader->SetPosition(units::angle::turn_t(GetElevatorHeight().value() / circumference * 3));
-
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = units::angle::degree_t(90);
+		actualTargetAngle = units::angle::degree_t(70);
+	}
+	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
+	{
+		actualTargetAngle = m_armProtectionAngle;
 	}
 	else
 	{

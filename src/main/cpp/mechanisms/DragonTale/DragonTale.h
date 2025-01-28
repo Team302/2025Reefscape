@@ -168,6 +168,8 @@ private:
 	const units::length::inch_t m_maxHeight{30.0};
 
 	const units::length::inch_t m_elevatorErrorThreshold{5.0};
+	const units::length::inch_t m_elevatorProtectionHeight{5.0};
+	const units::angle::degree_t m_armProtectionAngle{70.0};
 
 
 
