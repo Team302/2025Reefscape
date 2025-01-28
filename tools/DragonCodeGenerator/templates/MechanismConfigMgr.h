@@ -4,7 +4,7 @@ $$_GEN_NOTICE_$$
 #pragma once
 
 #include "configs/MechanismConfig.h"
-
+#include "RobotIdentifier.h"
 class MechanismConfigMgr
 {
 public:
