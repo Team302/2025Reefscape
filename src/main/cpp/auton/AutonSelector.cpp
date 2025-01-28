@@ -56,10 +56,7 @@ AutonSelector *AutonSelector::GetInstance()
 	{
 		m_instance = new AutonSelector();
 	}
-	else
-	{
-		return m_instance;
-	}
+	return m_instance;
 }
 
 string AutonSelector::GetSelectedAutoFile()

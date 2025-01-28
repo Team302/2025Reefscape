@@ -327,7 +327,7 @@ void Robot::InitializeRobot()
     }
     m_dragonPower = DragonPower::GetInstance();
 
-    //initialize cameras
+    // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
     auto cameraConfig = CameraConfigMgr::GetInstance()->GetCurrentConfig();
     auto vision = DragonVision::GetDragonVision();
