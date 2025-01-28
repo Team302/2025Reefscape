@@ -205,14 +205,15 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_L4SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L4SCORING_POSITION},
 	{"STATE_SCORE_CORAL", DragonTale::STATE_NAMES::STATE_SCORE_CORAL},
 };
+
 void DragonTale::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "DragonTale";
-	m_Arm = new ctre::phoenix6::hardware::TalonFX(0, "rio");
-	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(8, "rio");
-	m_Coral = new ctre::phoenix::motorcontrol::can::TalonSRX(0);
-	m_Algae = new ctre::phoenix::motorcontrol::can::TalonSRX(0);
-	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(13, "rio");
+	m_Arm = new ctre::phoenix6::hardware::TalonFX(17, "rio");
+	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(4, "rio");
+	m_Coral = new ctre::phoenix::motorcontrol::can::TalonSRX(18);
+	m_Algae = new ctre::phoenix::motorcontrol::can::TalonSRX(19);
+	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "rio");
 
 	m_CoralInSensor = new frc::DigitalInput(0);
 	m_CoralOutSensor = new frc::DigitalInput(0);
@@ -221,19 +222,19 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
-	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(0, "rio");
+	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "rio");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
 	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
-	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(0, "rio");
+	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "rio");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
 
 	m_PositionInch = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		0.2,											  // double proportional
+		0,												  // double proportional
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
