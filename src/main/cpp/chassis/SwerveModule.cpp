@@ -79,8 +79,7 @@ SwerveModule::SwerveModule(std::string canbusname,
                            int canCoderID,
                            bool canCoderInverted,
                            const units::angle::turn_t angleOffset,
-                           ctre::phoenix6::configs::Slot0Configs turnGains,
-                           // std::string configfilename,
+                           ctre::phoenix6::configs::Slot0Configs steerGains,
                            std::string networkTableName) : LoggableItem(),
                                                            m_moduleID(id),
                                                            m_driveTalon(new TalonFX(driveMotorID, canbusname)),
@@ -89,7 +88,7 @@ SwerveModule::SwerveModule(std::string canbusname,
                                                            m_activeState(),
                                                            m_wheelDiameter(wheelDiameter),
                                                            m_maxSpeed(maxSpeed),
-                                                           m_steerGains(turnGains),
+                                                           m_steerGains(steerGains),
                                                            m_networkTableName(networkTableName)
 
 {
@@ -246,6 +245,13 @@ void SwerveModule::SetSteerAngle(units::angle::degree_t targetAngle)
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx angle"), targetAngle.value());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx use FOC"), m_useFOC ? string("true") : string("false"));
+
+    TalonFXConfiguration fxconfigs{};
+    m_steerTalon->GetConfigurator().Refresh(fxconfigs);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle kp"), fxconfigs.Slot0.kP.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle ki"), fxconfigs.Slot0.kI.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle kd"), fxconfigs.Slot0.kD.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle targetangle"), targetAngle.value());
 
     m_activeState.angle = targetAngle;
     if (m_useFOC)

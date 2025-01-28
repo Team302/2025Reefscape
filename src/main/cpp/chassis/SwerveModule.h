@@ -126,7 +126,6 @@ private:
         units::dimensionless::scalar_t rotorToSensorRatio);
     void SetDriveSpeed(units::velocity::meters_per_second_t speed);
     void SetSteerAngle(units::angle::degree_t angle);
-    void ReadConstants(std::string configfilename);
     frc::DCMotor m_driveMotorDef = frc::DCMotor::KrakenX60FOC();
     frc::DCMotor m_steerMotorDef = frc::DCMotor::KrakenX60FOC();
 
@@ -144,13 +143,6 @@ private:
     ctre::phoenix6::controls::PositionVoltage m_positionVoltage = ctre::phoenix6::controls::PositionVoltage{0_tr}.WithSlot(0);
     ctre::phoenix6::controls::VelocityTorqueCurrentFOC m_velocityTorque = ctre::phoenix6::controls::VelocityTorqueCurrentFOC{0_tps}.WithSlot(0);
     ctre::phoenix6::controls::VelocityVoltage m_velocityVoltage = ctre::phoenix6::controls::VelocityVoltage{0_tps}.WithSlot(0);
-
-    //  Steer Motor Gains
-    double m_steerKp = 0.0;
-    double m_steerKi = 0.0;
-    double m_steerKd = 0.0;
-    double m_steerKs = 0.0;
-    double m_steerKf = 0.0;
 
     // Drive Motor Gains
     double m_driveKp = 0.0;
