@@ -116,78 +116,33 @@ void LEDStates::RainbowPattern()
 
 void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
-    if (alliancecolor == frc::DriverStation::Alliance::kBlue)
-    {
-        m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::BLUE));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
-    if (coralInSensor)
-    {
-        m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (coralOutSensor)
-    {
-        m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (algaeSensor)
-    {
-        m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (intakesensor)
-    {
-        m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (questStatus)
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::GREEN));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
-    if (ll1Status)
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::GREEN));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
-    if (ll2Status)
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::GREEN));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
-    if (pigeonfaults)
-    {
-        m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(DragonLeds::GREEN));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
+    auto color = alliancecolor ? DragonLeds::BLUE : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(color));
+
+    auto color = coralInSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(color));
+
+    auto color = coralOutSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(color));
+
+    auto color = algaeSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(color));
+
+    auto color = intakesensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(color));
+
+    auto color = questStatus ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(color));
+
+    auto color = ll1Status ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(color));
+
+    auto color = ll2Status ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(color));
+
+    auto color = pigeonfaults ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(color));
+
     m_LEDstring->commitLedData();
 }
 
