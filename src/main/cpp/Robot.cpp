@@ -36,6 +36,11 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
+#include "utils/logging/DataTrace.h"
+#include "vision/DragonQuest.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
+#include "utils/DragonPower.h"
 
 using std::string;
 
@@ -93,6 +98,7 @@ void Robot::RobotPeriodic()
 
     UpdateDriveTeamFeedback();
     LogDiagnosticData();
+    DragonQuest::GetDragonQuest()->DataLog();
 }
 
 /**
@@ -126,6 +132,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
+    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
@@ -140,7 +147,6 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
     }
-    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::TeleopInit()
@@ -170,6 +176,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
+    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
@@ -185,7 +192,6 @@ void Robot::TeleopPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
     }
-    SensorDataMgr::GetInstance()->CacheData();
 }
 
 void Robot::DisabledInit()
