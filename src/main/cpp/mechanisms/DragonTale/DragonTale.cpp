@@ -49,6 +49,9 @@
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
 
+#include "teleopcontrol/TeleopControl.h"
+#include "teleopcontrol/TeleopControlFunctions.h"
+
 #include "state/RobotState.h"
 
 using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
@@ -176,10 +179,9 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
 }
 
-
-DragonTale::DragonTale ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string ( "DragonTale" ) ),
-	m_activeRobotId ( activeRobotId ),
-	m_stateMap()
+DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
+														m_activeRobotId(activeRobotId),
+														m_stateMap()
 
 {
 	m_scoringMode = RobotStateChanges::ScoringMode::Coral;
@@ -481,10 +483,20 @@ void DragonTale::SetCurrentState(int state, bool run)
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
+void DragonTale::ManualControl()
+{
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
+	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
+
+	m_elevatorTarget += ElevatorChange;
+	m_armTarget += ArmChange;
+}
+
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+	ManualControl();
 	UpdateTarget();
 }
 
