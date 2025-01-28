@@ -47,6 +47,7 @@ using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
 using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
+using ctre::phoenix6::configs::VoltageConfigs;
 
 using std::string;
 using namespace ClimberManagerStates;
@@ -89,12 +90,6 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 	m_ntName = "ClimberManager";
 	m_Climber = new ctre::phoenix6::hardware::TalonFX ( 0, "rio" );
 
-
-
-
-
-
-
 	m_PositionDegree = new ControlData (
 	    ControlModes::CONTROL_TYPE::POSITION_DEGREES, // ControlModes::CONTROL_TYPE mode
 	    ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
@@ -123,6 +118,7 @@ void ClimberManager::InitializePRACTICE_BOT9999()
 {
 	InitializeTalonFXClimberPRACTICE_BOT9999();
 }
+
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 {
 	CurrentLimitsConfigs currconfigs{};
@@ -134,6 +130,10 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	currconfigs.SupplyCurrentLowerTime = units::time::second_t ( 0.25 );
 	m_Climber->GetConfigurator().Apply ( currconfigs );
 
+	VoltageConfigs voltageConfigs{};
+	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t ( 11.0 );
+	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t ( -11.0 );
+	m_Climber->GetConfigurator().Apply ( voltageConfigs );
 	ClosedLoopRampsConfigs rampConfigs{};
 	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t ( 0.25 );
 	m_Climber->GetConfigurator().Apply ( rampConfigs );
@@ -161,6 +161,11 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
 	m_Climber->GetConfigurator().Apply ( motorconfig );
+
+	TalonFXConfiguration fxConfig{};
+	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	fxConfig.Feedback.SensorToMechanismRatio = 9;
+	m_Climber->GetConfigurator().Apply ( fxConfig );
 }
 
 void ClimberManager::SetPIDClimberPositionDegree()

@@ -66,7 +66,7 @@ public:
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetClimberPositionDegree ( units::angle::turn_t position ) { m_ClimberPositionDegree.Position = position * 1; m_ClimberActiveTarget = &m_ClimberPositionDegree;}
+	void UpdateTargetClimberPositionDegree ( units::angle::turn_t position ) { m_ClimberPositionDegree.Position = position; m_ClimberActiveTarget = &m_ClimberPositionDegree;}
 
 	void SetPIDClimberPositionDegree();
 
