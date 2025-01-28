@@ -19,20 +19,11 @@
 #pragma once
 
 #include "configs/MechanismConfig.h"
+#include "RobotIdentifier.h"
 
 class MechanismConfigMgr
 {
 public:
-	enum RobotIdentifier
-	{
-		CHASSISBOT_9998 = 9998,
-		PRACTICE_BOT_9999 = 9999,
-		COMP_BOT_302 = 302,
-		CHASSIS_BOT_9997 = 9997,
-
-		MAX_ROBOT_IDENTIFIERS
-	};
-
 	static MechanismConfigMgr *GetInstance();
 	MechanismConfig *GetCurrentConfig() const { return m_config; }
 	void InitRobot ( RobotIdentifier );
