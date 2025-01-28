@@ -24,6 +24,7 @@ class SwerveChassis;
 class TeleopControl;
 class FMSData;
 class DragonField;
+class DragonPower;
 class AutonPreviewer;
 class RobotState;
 class SomeMech;
@@ -62,6 +63,7 @@ private:
     SwerveChassis *m_chassis;
     CyclePrimitives *m_cyclePrims;
     HolonomicDrive *m_holonomic;
+    DragonPower *m_dragonPower;
 
     FMSData *m_fmsData;
     DragonField *m_field;

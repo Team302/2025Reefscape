@@ -24,7 +24,6 @@
 #include <frc/geometry/Pose3d.h>
 
 DragonCamera::DragonCamera(std::string cameraName, /// <I> camera name/type
-                           PIPELINE pipeline,      /// <I> enum for pipeline
                            units::length::inch_t mountingXDistance,
                            units::length::inch_t mountingYDistance,
                            units::length::inch_t mountingZDistance,

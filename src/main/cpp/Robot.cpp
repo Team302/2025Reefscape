@@ -2,10 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include <frc/RobotController.h>
-#include <Robot.h>
+#include "Robot.h"
 
 #include <string>
+
+#include <Robot.h>
+
+#include <frc/RobotController.h>
 
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
@@ -16,20 +19,23 @@
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
 #include "feedback/DriverFeedback.h"
-#include "utils/PeriodicLooper.h"
-#include "Robot.h"
+#include "RobotIdentifier.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
+#include "utils/DragonPower.h"
+#include "utils/logging/DataTrace.h"
 #include "utils/logging/DragonDataLoggerMgr.h"
 #include "utils/logging/LoggableItemMgr.h"
 #include "utils/logging/Logger.h"
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
-#include "vision/DragonVision.h"
-#include "utils/logging/DataTrace.h"
+#include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
+#include "vision/definitions/CameraConfig.h"
+#include "vision/definitions/CameraConfigMgr.h"
+#include "vision/DragonVision.h"
 
 using std::string;
 
@@ -313,8 +319,8 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    MechanismConfigMgr::GetInstance()->InitRobot((MechanismConfigMgr::RobotIdentifier)teamNumber);
-    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<MechanismConfigMgr::RobotIdentifier>(teamNumber));
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
+    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     m_holonomic = nullptr;
@@ -322,6 +328,12 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
+    m_dragonPower = DragonPower::GetInstance();
+
+    // initialize cameras
+    CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
+    auto cameraConfig = CameraConfigMgr::GetInstance()->GetCurrentConfig();
+    auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();

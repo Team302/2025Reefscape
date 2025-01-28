@@ -19,8 +19,8 @@
 #pragma once
 #include <string>
 
-#include "state/State.h"
 #include "mechanisms/DragonTale/DragonTale.h"
+#include "state/State.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ public:
 	L2ScoringPositionState ( std::string stateName,
 	                         int stateId,
 	                         DragonTale *mech,
-	                         MechanismConfigMgr::RobotIdentifier activeRobotId );
+	                         RobotIdentifier activeRobotId );
 	~L2ScoringPositionState() = default;
 	void Init() override;
 	void Run() override;
@@ -44,7 +44,7 @@ public:
 private:
 	DragonTale *m_mechanism;
 	void InitPRACTICE_BOT9999();
-	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	RobotIdentifier m_RobotId;
 	const units::angle::turn_t m_ArmTarget = units::angle::turn_t ( 0 );
 	const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t ( 0 );
 	const double m_CoralTarget = double ( 0 );

@@ -18,19 +18,18 @@
 
 #include <string>
 
-#include "utils/PeriodicLooper.h"
-#include "utils/logging/Logger.h"
 #include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfigPRACTICE_BOT_9999.h"
 #include "configs/RobotElementNames.h"
-
+#include "utils/logging/Logger.h"
+#include "utils/PeriodicLooper.h"
 
 using std::string;
 
 void MechanismConfigPRACTICE_BOT_9999::DefineMechanisms()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initializing mechanism" ), string ( "ClimberManager" ), "" );
-	m_theClimberManager = new ClimberManager ( MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 );
+	m_theClimberManager = new ClimberManager ( RobotIdentifier::PRACTICE_BOT_9999 );
 	m_theClimberManager->CreatePRACTICE_BOT9999();
 	m_theClimberManager->CreateAndRegisterStates();
 	m_theClimberManager->InitializePRACTICE_BOT9999();
@@ -38,7 +37,7 @@ void MechanismConfigPRACTICE_BOT_9999::DefineMechanisms()
 	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER] = m_theClimberManager;
 
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initializing mechanism" ), string ( "DragonTale" ), "" );
-	m_theDragonTale = new DragonTale ( MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 );
+	m_theDragonTale = new DragonTale ( RobotIdentifier::PRACTICE_BOT_9999 );
 	m_theDragonTale->CreatePRACTICE_BOT9999();
 	m_theDragonTale->CreateAndRegisterStates();
 	m_theDragonTale->InitializePRACTICE_BOT9999();
@@ -46,7 +45,7 @@ void MechanismConfigPRACTICE_BOT_9999::DefineMechanisms()
 	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::DRAGON_TALE] = m_theDragonTale;
 
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initializing mechanism" ), string ( "IntakeManager" ), "" );
-	m_theIntakeManager = new IntakeManager ( MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 );
+	m_theIntakeManager = new IntakeManager ( RobotIdentifier::PRACTICE_BOT_9999 );
 	m_theIntakeManager->CreatePRACTICE_BOT9999();
 	m_theIntakeManager->CreateAndRegisterStates();
 	m_theIntakeManager->InitializePRACTICE_BOT9999();

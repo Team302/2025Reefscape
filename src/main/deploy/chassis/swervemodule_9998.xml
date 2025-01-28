@@ -16,5 +16,5 @@
     drive_FOC_integral="0.0"
     drive_FOC_derivative="0.0"
     drive_FOC_staticFeedForward="2.5"
-    useFOC="true" />
+    useFOC="false" />
 </swervemodule>
