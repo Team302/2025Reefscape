@@ -61,7 +61,8 @@ public:
         SCORING_MODE,
         HUMAN_PLAYER_STATION,
         ALGAE_INTAKE,
-        EXPEL
+        EXPEL,
+        FAILED_INTAKE_SENSOR
 
     };
 };

@@ -96,6 +96,8 @@ public:
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 
+	bool GetFailedSensor() const {return m_failedSensorLatch;}
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
@@ -131,4 +133,7 @@ private:
 	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
+	
+	bool m_failedSensorLatch = false;
+	bool m_manualModeButtonReleased = true;
 };
