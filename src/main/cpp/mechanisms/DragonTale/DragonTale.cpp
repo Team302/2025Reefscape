@@ -516,6 +516,14 @@ void DragonTale::RunCommonTasks()
 	Cyclic();
 	ManualControl();
 	UpdateTarget();
+
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Pos", GetArmAngleSensor()->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height", GetElevatorHeight().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState()); // Ask how to get state enum map
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -641,7 +649,7 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
 
 	// Adjust the angle to the nearest 60-degree increment
-	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::ALLIANCE_COLOR::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
+	units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
 
 	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
 
