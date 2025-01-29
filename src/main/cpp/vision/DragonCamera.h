@@ -27,9 +27,26 @@
 class DragonCamera
 {
 public:
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        LIMELIGHT4_W_HAILO8,
+        LIMELIGHT3G,
+        LIMELIGHT3,
+        LIMELIGHT3_W_CORAL,
+        QUEST_3S
+    };
+
+    enum CAMERA_USAGE
+    {
+        POSE_ESTIMATION,
+        GAME_ELEMENT_DETECTION
+    };
 
     DragonCamera(
         std::string cameraName,                /// <I> camera name/type
+        CAMERA_TYPE cameraType,                /// <I> camera type
+        CAMERA_USAGE cameraUsage,
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot is positive)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot is positive)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot is positive)
@@ -38,6 +55,8 @@ public:
         units::angle::degree_t roll            /// <I> - Roll of camera
     );
     DragonCamera() = delete;
+
+
 
     virtual bool HasTarget() = 0;
     virtual bool HealthCheck() = 0;
@@ -103,18 +122,12 @@ public:
         return m_robotCenterToCam;
     }
 
-    void SetCameraPosition(
-        units::length::inch_t mountingXOffset,
-        units::length::inch_t mountingYOffset,
-        units::length::inch_t mountingZOffset,
-        units::angle::degree_t pitch,
-        units::angle::degree_t yaw,
-        units::angle::degree_t roll);
-
 protected:
     frc::Pose3d m_cameraPose;
     frc::Transform3d m_robotCenterToCam;
     std::string m_cameraName;
+    CAMERA_TYPE m_cameraType;
+    CAMERA_USAGE m_cameraUsage;
 
     const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0); // This represents the note being at the same level as center of robot
 };
