@@ -84,12 +84,14 @@ void DragonLimelight::PeriodicCacheData()
         m_tv = LimelightHelpers::getTV(m_cameraName);
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
+        m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
     }
     else
     {
         m_tv = false;
         m_tx = units::angle::degree_t(0.0);
         m_ty = units::angle::degree_t(0.0);
+        m_tagid = -1;
     }
 }
 
@@ -124,19 +126,7 @@ bool DragonLimelight::HealthCheck()
 /// @return -1 if the network table cannot be found
 std::optional<int> DragonLimelight::GetAprilTagID()
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        double value = LimelightHelpers::getFiducialID(m_cameraName);
-        int aprilTagInt = static_cast<int>(value + (value > 0 ? 0.5 : -0.5));
-        if (aprilTagInt < 0) // unclear when this would ever be -1
-        {
-            return std::nullopt;
-        }
-        return aprilTagInt;
-    }
-
-    return std::nullopt;
+    return m_tagid;
 }
 
 std::optional<VisionPose> DragonLimelight::GetFieldPosition()
@@ -405,19 +395,19 @@ void DragonLimelight::SetLEDMode(DragonLimelight::LED_MODE mode)
 {
     switch (mode)
     {
-        case LED_MODE::LED_PIPELINE_CONTROL:
-            LimelightHelpers::setLEDMode_PipelineControl(m_cameraName);
-            break;
-        case LED_MODE::LED_BLINK:
-            LimelightHelpers::setLEDMode_ForceBlink(m_cameraName);
-            break;
-        case LED_MODE::LED_ON:
-            LimelightHelpers::setLEDMode_ForceOn(m_cameraName);
-            break;
-        case LED_MODE::LED_OFF: //default to off
-        default:
-            LimelightHelpers::setLEDMode_ForceOff(m_cameraName);
-            break;
+    case LED_MODE::LED_PIPELINE_CONTROL:
+        LimelightHelpers::setLEDMode_PipelineControl(m_cameraName);
+        break;
+    case LED_MODE::LED_BLINK:
+        LimelightHelpers::setLEDMode_ForceBlink(m_cameraName);
+        break;
+    case LED_MODE::LED_ON:
+        LimelightHelpers::setLEDMode_ForceOn(m_cameraName);
+        break;
+    case LED_MODE::LED_OFF: // default to off
+    default:
+        LimelightHelpers::setLEDMode_ForceOff(m_cameraName);
+        break;
     }
 }
 
@@ -441,18 +431,19 @@ void DragonLimelight::SetPipeline(LL_PIPELINE pipeline)
 
 void DragonLimelight::SetStreamMode(DragonLimelight::STREAM_MODE mode)
 {
-    switch (mode){
-        case STREAM_MODE::STREAM_PIP_MAIN:
-            LimelightHelpers::setStreamMode_PiPMain(m_cameraName);
-            break;
-        case STREAM_MODE::STREAM_PIP_SECONDARY:
-            LimelightHelpers::setStreamMode_PiPSecondary(m_cameraName);
-            break;
-        case STREAM_MODE::STREAM_STANDARD: //default to standard
-        default:
-            LimelightHelpers::setStreamMode_Standard(m_cameraName);
-            break;
-        }
+    switch (mode)
+    {
+    case STREAM_MODE::STREAM_PIP_MAIN:
+        LimelightHelpers::setStreamMode_PiPMain(m_cameraName);
+        break;
+    case STREAM_MODE::STREAM_PIP_SECONDARY:
+        LimelightHelpers::setStreamMode_PiPSecondary(m_cameraName);
+        break;
+    case STREAM_MODE::STREAM_STANDARD: // default to standard
+    default:
+        LimelightHelpers::setStreamMode_Standard(m_cameraName);
+        break;
+    }
 }
 
 void DragonLimelight::SetCrosshairPos(double crosshairPosX, double crosshairPosY)
@@ -494,7 +485,6 @@ void DragonLimelight::SetCameraPose_RobotSpace(double forward, double left, doub
 {
     LimelightHelpers::setCameraPose_RobotSpace(m_cameraName, forward, left, up, roll, pitch, yaw);
 }
-
 
 void DragonLimelight::PrintValues()
 { /*

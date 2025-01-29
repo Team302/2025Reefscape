@@ -60,12 +60,12 @@ public:
     /// @param mode the pipeline to set the camera to
     /// @param position the physical position of the camera
     /// @return if successful or not (not currently implemented)
-    //bool SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position);
+    // bool SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position);
 
     /// @brief gets the pipeline of the camera at the chosen position
     /// @param position the physical position of the camera
     /// @return DragonCamera::PIPELINE - the currently selected pipeline
-    //DragonCamera::PIPELINE GetPipeline(RobotElementNames::CAMERA_USAGE position);
+    // DragonCamera::PIPELINE GetPipeline(RobotElementNames::CAMERA_USAGE position);
 
     /// @brief gets the field position of the robot (right blue driverstation origin)
     /// @return std::optional<VisionPose> - the estimated position, timestamp of estimation, and confidence as array of std devs
@@ -89,6 +89,19 @@ public:
     /// @param camera pointer to the camera object that should be added
     /// @param position the physical position of the camera
     void AddCamera(DragonCamera *camera, RobotElementNames::CAMERA_USAGE position);
+
+    // raw data methods
+
+    std::optional<units::angle::degree_t> GetTargetYaw(RobotElementNames::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetPitch(RobotElementNames::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetSkew(RobotElementNames::CAMERA_USAGE position);
+
+    std::optional<int> GetAprilTagID(RobotElementNames::CAMERA_USAGE position);
+    bool HasTarget(RobotElementNames::CAMERA_USAGE position);
+    std::optional<double> GetTargetArea(RobotElementNames::CAMERA_USAGE position);
+
+    units::angle::degree_t GetTx(RobotElementNames::CAMERA_USAGE position);
+    units::angle::degree_t GetTy(RobotElementNames::CAMERA_USAGE position);
 
     DragonCamera *GetCamera(RobotElementNames::CAMERA_USAGE position) { return m_dragonCameraMap[position]; }
 

@@ -615,3 +615,52 @@ void DragonVision::testAndLogVisionData()
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("testAndLogVisionData"), std::string("exception"), e.what());
 	}
 }
+
+// Limelight raw data functions
+
+std::optional<double> DragonVision::GetTargetArea(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTargetArea();
+}
+units::angle::degree_t DragonVision::GetTy(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTx();
+}
+
+units::angle::degree_t DragonVision::GetTx(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTy();
+}
+
+std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTargetYaw();
+}
+
+std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTargetSkew();
+}
+
+std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetTargetPitch();
+}
+
+std::optional<int> DragonVision::GetAprilTagID(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->GetAprilTagID();
+}
+
+bool DragonVision::HasTarget(RobotElementNames::CAMERA_USAGE position)
+{
+	auto camera = m_dragonCameraMap[position];
+	return camera->HasTarget();
+}
