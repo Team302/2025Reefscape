@@ -116,7 +116,7 @@ public:
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
 
-	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble() * 0.95 * 2 *std::numbers::pi);}
+	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());}
 	units::angle::degree_t GetArmAngle() {return m_ArmAngleSensor->GetAbsolutePosition().GetValue();}
 
 	bool IsCoralMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Coral;}

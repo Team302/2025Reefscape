@@ -394,10 +394,9 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	motorconfig.DutyCycleNeutralDeadband = 0;
 	m_ElevatorLeader->GetConfigurator().Apply(motorconfig);
 	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder; // might need to switch to fully remote sensor, fused assumed perfect linerarity
+	fxConfig.Feedback.FeedbackRemoteSensorID = 4;
+	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder; // might need to switch to fully remote sensor, fused assumed perfect linerarity
 	fxConfig.Feedback.SensorToMechanismRatio = 5.969;
-	fxConfig.Feedback.RotorToSensorRatio = 7.6;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
 
@@ -630,8 +629,8 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{}; //TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); //TODO: get reef pose values from visdrive *thumbs up*
+	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
 	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
 	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
@@ -643,12 +642,12 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 
 	// Adjust the angle to the nearest 60-degree increment
 	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
-	
+
 	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
 
 	int multipleNumber = closestMultiple.value() / 60.0;
 
-	if(multipleNumber % 2 == 0)
+	if (multipleNumber % 2 == 0)
 		return m_grabAlgaeHigh;
 	else
 		return m_grabAlgaeLow;
