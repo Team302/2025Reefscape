@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.7">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0" version="26.0.6">
   <diagram name="Page-1" id="7JSrTSUAfBA1Y6AAACkT">
-    <mxGraphModel dx="1635" dy="3253" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="681" dy="3043" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -40,12 +40,12 @@
             <mxPoint x="48" y="52" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1KXd44YCcF1W4OWPBTa_-2">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1830" y="-1100" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-3" value="Coral Mode&lt;div&gt;AND&lt;br&gt;&lt;div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;ManualModeLatch = True&lt;/div&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-1">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-3" value="Coral Mode&lt;div&gt;AND&lt;br&gt;&lt;div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;ManualModeLatch = True&lt;/div&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-1" vertex="1" connectable="0">
           <mxGeometry x="0.8176" y="1" relative="1" as="geometry">
             <mxPoint y="9" as="offset" />
           </mxGeometry>
@@ -278,9 +278,17 @@
             <mxPoint x="2080" y="40" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="7ySeKPFAHMRMonbyGIxH-65" value="&lt;div&gt;((Algae Sensor = False&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral Sensor In = False&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral Sensor Out = False)&lt;/div&gt;&lt;div&gt;OR&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;div&gt;(ManualModeLatch = True))&lt;/div&gt;&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="7ySeKPFAHMRMonbyGIxH-64" vertex="1" connectable="0">
+        <mxCell id="7ySeKPFAHMRMonbyGIxH-65" value="&lt;div&gt;((Algae Sensor = False&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral Sensor In = False&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Coral Sensor Out = False)&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;ManualModeLatch = False&lt;/div&gt;&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="7ySeKPFAHMRMonbyGIxH-64" vertex="1" connectable="0">
           <mxGeometry x="0.0806" y="-1" relative="1" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7ySeKPFAHMRMonbyGIxH-32" target="8Njbf60ZxBfn7OjRAs3b-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-8" value="ManualModeLatch = True&lt;div&gt;AND&lt;/div&gt;&lt;div&gt;Human Player Button Pressed&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="8Njbf60ZxBfn7OjRAs3b-7">
+          <mxGeometry x="0.4124" y="3" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="7ySeKPFAHMRMonbyGIxH-32" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Score Coral&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: No New Target&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator: No New Target&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral = -100%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae = 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
@@ -495,28 +503,25 @@
             <mxGeometry x="3155" y="-1760" width="560" height="260" as="geometry" />
           </mxCell>
         </UserObject>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-2">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="njVQN5wklbQr6h5Ff82a-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2050" y="-1110" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-28" value="Algae Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-19">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-28" value="Algae Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-19" vertex="1" connectable="0">
           <mxGeometry x="0.4966" y="-1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&amp;nbsp;ManualCoralLoad&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Run:&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: HP Load Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;HP Load Target&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: Co Pilot Trigger Controlled&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;:0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1700" y="-1100" width="260" height="146" as="geometry" />
-        </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-2" target="a0uy3nfza03bscJFagVY-19">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-5" value="Hold State Button is Pressed" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-4">
-          <mxGeometry x="-0.8435" y="6" relative="1" as="geometry">
-            <mxPoint as="offset" />
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-2" target="8Njbf60ZxBfn7OjRAs3b-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1829.7142857142858" y="-910" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-6" target="njVQN5wklbQr6h5Ff82a-23">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-2" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&amp;nbsp;ManualCoralLoad&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Run:&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: HP Load Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;HP Load Target&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: Co Pilot Trigger Controlled&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;:0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
+          <mxGeometry x="1700" y="-1100" width="260" height="146" as="geometry" />
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="njVQN5wklbQr6h5Ff82a-6" target="njVQN5wklbQr6h5Ff82a-23" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="4015" y="-1080" />
@@ -524,10 +529,15 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-6" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Grab Algae Reef&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: Current State = Score Coral, set scoring mode to Algae&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: Grab Algae Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;Grab Algae Target&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae: 100%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4120" y="-830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-6" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;Manual Grab Algae Reef&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: Current State = Score Coral, set scoring mode to Algae&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: Grab Algae Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;Grab Algae Target&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae: 100%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
           <mxGeometry x="3820" y="-1070" width="260" height="156" as="geometry" />
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-7" target="njVQN5wklbQr6h5Ff82a-23">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="njVQN5wklbQr6h5Ff82a-7" target="njVQN5wklbQr6h5Ff82a-23" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="4225" y="-1080" />
@@ -535,27 +545,36 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-26" value="Coral Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-25">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-26" value="Coral Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-25" vertex="1" connectable="0">
           <mxGeometry x="0.7101" y="-2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-7" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;text-align: left;&quot;&gt;GrabAlgaeFloor&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: Grab Algae Floor Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;Grab Algae Floor Target&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae: 100%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-7" target="8Njbf60ZxBfn7OjRAs3b-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4120" y="-830" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="4290" y="-870" />
+              <mxPoint x="4121" y="-870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="njVQN5wklbQr6h5Ff82a-7" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;text-align: left;&quot;&gt;ManualGrabAlgaeFloor&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Init: N/A&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;Run:&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Arm: Grab Algae Floor Target Deg&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Elevator:&amp;nbsp;&lt;/span&gt;Grab Algae Floor Target&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;In&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Coral: 0%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 8px; text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Algae: 100%&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;text-align:left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Exit: N/A&lt;/span&gt;&lt;/p&gt;" style="shape=mxgraph.sysml.simpleState;html=1;overflow=fill;whiteSpace=wrap;align=center;" parent="1" vertex="1">
           <mxGeometry x="4160" y="-1066" width="260" height="146" as="geometry" />
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="njVQN5wklbQr6h5Ff82a-6">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="njVQN5wklbQr6h5Ff82a-6" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="3950" y="-1240" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-14" value="Algae Mode&lt;div&gt;AND&lt;br&gt;Human Player Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = True&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-8">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-14" value="Algae Mode&lt;div&gt;AND&lt;br&gt;Human Player Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = True&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-8" vertex="1" connectable="0">
           <mxGeometry x="0.8389" y="-2" relative="1" as="geometry">
             <mxPoint x="2" y="26" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.008;exitY=0.4;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="njVQN5wklbQr6h5Ff82a-7">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.008;exitY=0.4;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="1KXd44YCcF1W4OWPBTa_-2" target="njVQN5wklbQr6h5Ff82a-7" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2820" y="-1230" as="sourcePoint" />
             <mxPoint x="3960" y="-1066" as="targetPoint" />
@@ -564,68 +583,58 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-15" value="Algae Mode&lt;div&gt;AND&lt;br&gt;CoPilot Intake Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = True&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-9">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-15" value="Algae Mode&lt;div&gt;AND&lt;br&gt;CoPilot Intake Button Pressed&lt;/div&gt;&lt;div&gt;AND&lt;br&gt;ManualModeLatch = True&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-9" vertex="1" connectable="0">
           <mxGeometry x="0.8977" y="1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-6" target="njVQN5wklbQr6h5Ff82a-7">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="njVQN5wklbQr6h5Ff82a-6" target="njVQN5wklbQr6h5Ff82a-7" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="4090" y="-980" as="sourcePoint" />
             <mxPoint x="4172" y="-980" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-11" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;CoPilot Intake&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 8px;&quot;&gt;Button Pressed&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-10">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-11" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;CoPilot Intake&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 8px;&quot;&gt;Button Pressed&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-10" vertex="1" connectable="0">
           <mxGeometry x="0.1424" y="-2" relative="1" as="geometry">
             <mxPoint x="-8" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-7">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="njVQN5wklbQr6h5Ff82a-7" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="4170" y="-899" as="sourcePoint" />
             <mxPoint x="4080" y="-956" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-13" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;CoPilot HP&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 8px;&quot;&gt;Button Pressed&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-12">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-13" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;CoPilot HP&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 8px;&quot;&gt;Button Pressed&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-12" vertex="1" connectable="0">
           <mxGeometry x="0.0532" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-6" target="a0uy3nfza03bscJFagVY-19">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="3950" y="-825" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-7" target="a0uy3nfza03bscJFagVY-19">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="4290" y="-825" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-18" value="Hold State Button is Pressed" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-17">
-          <mxGeometry x="-0.089" y="3" relative="1" as="geometry">
-            <mxPoint x="73" y="-3" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-20" value="ManualGrabAlgeReef" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-20" value="ManualGrabAlgeReef" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1990" y="-1190" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-21" value="ManualCoralLoad" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-21" value="ManualCoralLoad" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="3700" y="-1200" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="njVQN5wklbQr6h5Ff82a-21" target="njVQN5wklbQr6h5Ff82a-6">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="njVQN5wklbQr6h5Ff82a-21" target="njVQN5wklbQr6h5Ff82a-6" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-27" value="Algae Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="njVQN5wklbQr6h5Ff82a-22">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-27" value="Algae Mode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="njVQN5wklbQr6h5Ff82a-22" vertex="1" connectable="0">
           <mxGeometry x="-0.4922" y="3" relative="1" as="geometry">
             <mxPoint x="-1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="njVQN5wklbQr6h5Ff82a-23" value="ManualCoralLoad" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="njVQN5wklbQr6h5Ff82a-23" value="ManualCoralLoad" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="4050" y="-1200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-2" value="L1-L4 Scoring Positions" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1770.0042857142857" y="-920" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-5" value="Net and Process" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4060" y="-830" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8Njbf60ZxBfn7OjRAs3b-6" value="GO TO Manual Grab Algae Reef" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2290" y="40" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
