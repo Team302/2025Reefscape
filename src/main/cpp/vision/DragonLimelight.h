@@ -56,9 +56,9 @@ public:
     enum STREAM_MODE
     {
         STREAM_UNKNOWN = -1,
-        STREAM_STANDARD,         // side by side if two cams
-        STREAM_PIP_MAIN, // Second Cam bottom right of Main Cam
-        STREAM_PIP_SECONDARY  // Main Cam bottom right of Second Cam
+        STREAM_STANDARD,     // side by side if two cams
+        STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
+        STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
     };
 
     enum SNAPSHOT_MODE
@@ -154,13 +154,12 @@ public:
 
     void PeriodicCacheData() override;
 
-    
+    units::angle::degree_t GetTx() const override;
+    units::angle::degree_t GetTy() const override;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
 protected:
-    units::angle::degree_t GetTx() const;
-    units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
@@ -168,6 +167,7 @@ protected:
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
+    int m_tagid;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
