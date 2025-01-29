@@ -39,6 +39,7 @@ HoldState::HoldState ( std::string stateName,
                        IntakeManager *mech,
                        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
+	m_mechanism = mech; 
 }
 
 void HoldState::Init()
@@ -77,6 +78,8 @@ bool HoldState::AtTarget()
 bool HoldState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+		return (m_mechanism->GetIntakeSensorState() && !m_mechanism->GetFailedSensor());
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+	
 }
