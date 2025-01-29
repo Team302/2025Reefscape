@@ -641,7 +641,7 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
 
 	// Adjust the angle to the nearest 60-degree increment
-	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
+	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::ALLIANCE_COLOR::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
 
 	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
 
