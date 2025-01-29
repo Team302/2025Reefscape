@@ -3716,7 +3716,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorLeader</name>
@@ -3752,7 +3752,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
@@ -3770,7 +3770,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorFollower</name>
@@ -3841,7 +3841,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorLeader</name>
@@ -3877,7 +3877,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
@@ -3895,7 +3895,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorFollower</name>
@@ -3966,7 +3966,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorLeader</name>
@@ -4002,7 +4002,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
@@ -4020,7 +4020,7 @@
                   <type>Boolean</type>
                   <value>false</value>
                 </Enabled>
-                <controlDataName>PositionInch</controlDataName>
+                <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>ElevatorFollower</name>
