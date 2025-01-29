@@ -68,7 +68,7 @@ public:
         MANUAL_OFF,
         HOLD_STATE,
         MANUAL_IN,
-        MANUAL_OUT
+        MANUAL_OUT,
         FAILED_INTAKE_SENSOR
 
     };
