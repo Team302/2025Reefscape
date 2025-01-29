@@ -55,6 +55,8 @@ void ManualCoralLoadState::InitPRACTICE_BOT9999()
 
 void ManualCoralLoadState::Run()
 {
+	m_mechanism->UpdateTargetCoralPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
+	m_mechanism->UpdateTargetCoralPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualCoralLoadState"), string("Run"));
 }
 

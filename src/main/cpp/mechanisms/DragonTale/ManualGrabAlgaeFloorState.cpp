@@ -55,6 +55,8 @@ void ManualGrabAlgaeFloorState::InitPRACTICE_BOT9999()
 
 void ManualGrabAlgaeFloorState::Run()
 {
+	m_mechanism->UpdateTargetAlgaePercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
+	m_mechanism->UpdateTargetAlgaePercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualGrabAlgaeFloorState"), string("Run"));
 }
 
