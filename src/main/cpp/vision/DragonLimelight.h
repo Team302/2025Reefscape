@@ -167,6 +167,7 @@ protected:
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
+    int m_tagid;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
