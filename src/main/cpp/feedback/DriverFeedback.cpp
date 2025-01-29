@@ -111,6 +111,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             if (DragonVision::GetDragonVision() != nullptr)
             {
                 // auto vision = DragonVision::GetDragonVision();
+                // vision->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE);
                 bool questStatus = false;
                 bool ll1Status = false;
                 bool ll2Status = false;
