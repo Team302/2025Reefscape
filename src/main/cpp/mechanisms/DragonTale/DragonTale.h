@@ -116,6 +116,8 @@ public:
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
 
+	bool AllSensorsFalse() {return !GetCoralInSensorState() && !GetCoralOutSensorState() && !GetAlgaeSensorState();}
+
 	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble() * 0.95 * 2 *std::numbers::pi);}
 	units::angle::degree_t GetArmAngle() {return m_ArmAngleSensor->GetAbsolutePosition().GetValue();}
 
