@@ -83,7 +83,6 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currElectricalPower = value;
             }
             break;
-            
 
         default:
             break;
@@ -111,6 +110,14 @@ void DragonDataLogger::LogStringData(DragonDataLoggerSignals::StringSignals sign
             {
                 signals->m_headingState.Append(value);
                 signals->m_currHeadingState = value;
+            }
+            break;
+
+        case DragonDataLoggerSignals::StringSignals::DRAGONTALE_STATE:
+            if (signals->m_currDragonTaleState != value)
+            {
+                signals->m_dragonTaleState.Append(value);
+                signals->m_currDragonTaleState = value;
             }
             break;
 

@@ -42,13 +42,6 @@ public:
     enum BoolSignals
     {
         // NOTE_MANAGER_HAS_VISION, // TODO: should this be more generic; should this be part of a vision logging?
-        // NOTE_MANAGER_FRONT_SENSOR,
-        // NOTE_MANAGER_BACK_SENSOR,
-        // NOTE_MANAGER_FEEDER_SENSOR,
-        // NOTE_MANAGER_LAUNCHER_SENSOR,
-        // NOTE_MANAGER_PLACER_IN_SENSOR,
-        // NOTE_MANAGER_PLACER_MID_SENSOR,
-        // NOTE_MANAGER_PLACER_OUT_SENSOR,
         FRONT_LEFT_SWERVE_MODULE_SPLIPING,
         FRONT_RIGHT_SWERVE_MODULE_SPLIPING,
         BACK_LEFT_SWERVE_MODULE_SPLIPING,
@@ -63,12 +56,6 @@ public:
         ELECTRICAL_CURRENT,
         ELECTRICAL_ENERGY,
         ELECTRICAL_POWER
-        // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
-        // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
-        // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_TARGET_BOTTOM_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_BOTTOM_WHEEL_SPEED_RPM,
         // NOTE_MANAGER_DISTANCE_FROM_SPEAKER_METERS // TODO: should this be more generic - the whole robot is a certain distance; do we need angle too?
     };
 
@@ -76,7 +63,8 @@ public:
     {
         CHASSIS_HEADING_STATE,
         CHASSIS_DRIVE_STATE,
-        AUTON_PATH_NAME
+        AUTON_PATH_NAME,
+        DRAGONTALE_STATE
         // NOTE_MANAGER_STATE
     };
 
@@ -151,27 +139,6 @@ private:
     wpi::log::DoubleLogEntry m_chassisYaw;
     double m_currChassisYaw{0.0};
 
-    wpi::log::DoubleLogEntry m_nmTargetAngle;
-    double m_currNmTargetAngle{0.0};
-
-    wpi::log::DoubleLogEntry m_nmActualAngle;
-    double m_currNmActualAngle{0.0};
-
-    wpi::log::DoubleLogEntry m_nmTopTarget;
-    double m_currNmTopTarget{0.0};
-
-    wpi::log::DoubleLogEntry m_nmBottomTarget;
-    double m_currNmBottomTarget{0.0};
-
-    wpi::log::DoubleLogEntry m_nmTopActual;
-    double m_currNmTopActual{0.0};
-
-    wpi::log::DoubleLogEntry m_nmBottomActual;
-    double m_currNmBottomActual{0.0};
-
-    wpi::log::DoubleLogEntry m_distFromSpeaker;
-    double m_currDistFromSpeaker{0.0};
-
     wpi::log::DoubleLogEntry m_electricalVoltage;
     double m_currElectricalVoltage{0.0};
 
@@ -190,8 +157,8 @@ private:
     wpi::log::StringLogEntry m_driveState;
     std::string m_currDriveState{""};
 
-    // wpi::log::StringLogEntry m_noteMgrState;
-    // std::string m_currNoteMgrState{""};
+    wpi::log::StringLogEntry m_dragonTaleState;
+    std::string m_currDragonTaleState{""};
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;

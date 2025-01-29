@@ -47,7 +47,7 @@
 
 #include "RobotIdentifier.h"
 
-class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
+class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber, public DragonDataLogger
 {
 public:
 	enum STATE_NAMES
@@ -144,6 +144,8 @@ protected:
 
 	void SetCurrentState ( int state, bool run ) override;
 	ControlData *GetControlData ( std::string name ) override;
+	void DataLog() override;
+
 
 private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;

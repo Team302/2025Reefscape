@@ -21,6 +21,7 @@
 
 // Team 302 includes
 #include "utils/logging/LoggableItem.h"
+#include "utils/logging/DragonDataLogger.h"
 #include "mechanisms/MechanismTypes.h"
 #include "mechanisms/controllers/ControlData.h"
 
@@ -29,7 +30,7 @@ class StateMgr;
 
 ///	 @class Mech
 ///  @brief	base mechanism class
-class BaseMech : public LoggableItem
+class BaseMech : public LoggableItem, public DragonDataLogger
 {
 public:
     /// @brief create the general mechanism
@@ -59,7 +60,7 @@ public:
     void SetNetworkFileName(std::string ntName) { m_ntName = ntName; }
 
 protected:
-    virtual ControlData* GetControlData(std::string name);
+    virtual ControlData *GetControlData(std::string name);
 
 private:
     BaseMech() = delete;
