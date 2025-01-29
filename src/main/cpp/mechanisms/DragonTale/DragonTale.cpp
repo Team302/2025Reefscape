@@ -48,6 +48,9 @@
 #include "mechanisms/DragonTale/L3ScoringPositionState.h"
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
+#include "mechanisms/DragonTale/ManualCoralLoadState.h"
+#include "mechanisms/DragonTale/ManualGrabAlgaeReefState.h"
+#include "mechanisms/DragonTale/ManualGrabAlgaeFloorState.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
@@ -118,6 +121,15 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralState *ScoreCoralStateInst = new ScoreCoralState(string("ScoreCoral"), 13, this, m_activeRobotId);
 	AddToStateVector(ScoreCoralStateInst);
 
+	ManualCoralLoadState *ManualCoralLoadStateInst = new ManualCoralLoadState(string("ManualCoralLoad"), 14, this, m_activeRobotId);
+	AddToStateVector(ManualCoralLoadStateInst);
+
+	ManualGrabAlgaeReefState *ManualGrabAlgaeReefStateInst = new ManualGrabAlgaeReefState(string("ManualGrabAlgaeReef"), 15, this, m_activeRobotId);
+	AddToStateVector(ManualGrabAlgaeReefStateInst);
+
+	ManualGrabAlgaeFloorState *ManualGrabAlgaeFloorStateInst = new ManualGrabAlgaeFloorState(string("ManualGrabAlgaeFloor"), 16, this, m_activeRobotId);
+	AddToStateVector(ManualGrabAlgaeFloorStateInst);
+
 	InitializeStateInst->RegisterTransitionState(ReadyStateInst);
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
@@ -179,6 +191,19 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ProcessStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(NetStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualGrabAlgaeFloorStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ProcessStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
 }
 
 DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
@@ -208,7 +233,11 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_L3SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L3SCORING_POSITION},
 	{"STATE_L4SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L4SCORING_POSITION},
 	{"STATE_SCORE_CORAL", DragonTale::STATE_NAMES::STATE_SCORE_CORAL},
+	{"STATE_MANUAL_CORAL_LOAD", DragonTale::STATE_NAMES::STATE_MANUAL_CORAL_LOAD},
+	{"STATE_MANUAL_GRAB_ALGAE_REEF", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_REEF},
+	{"STATE_MANUAL_GRAB_ALGAE_FLOOR", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_FLOOR},
 };
+
 void DragonTale::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "DragonTale";

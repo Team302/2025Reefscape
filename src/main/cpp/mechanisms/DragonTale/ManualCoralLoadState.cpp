@@ -45,7 +45,7 @@ void ManualCoralLoadState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualCoralLoadState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -74,6 +74,5 @@ bool ManualCoralLoadState::AtTarget()
 bool ManualCoralLoadState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+	return (m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && m_mechanism->GetManualMode());
 }

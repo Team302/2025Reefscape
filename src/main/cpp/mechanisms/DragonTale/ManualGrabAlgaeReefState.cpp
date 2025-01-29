@@ -45,7 +45,7 @@ void ManualGrabAlgaeReefState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualGrabAlgaeReefState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -73,7 +73,7 @@ bool ManualGrabAlgaeReefState::AtTarget()
 
 bool ManualGrabAlgaeReefState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
-	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+	return ((considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION)) && m_mechanism->IsAlgaeMode() && m_mechanism->GetManualMode()) 
+	|| ((m_mechanism->GetCurrentState() == m_mechanism->STATE_MANUAL_CORAL_LOAD) && m_mechanism->IsAlgaeMode())
+	|| ((m_mechanism->GetCurrentState() == m_mechanism->STATE_SCORE_CORAL) && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && m_mechanism->GetManualMode()));
 }

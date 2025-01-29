@@ -45,7 +45,7 @@ void ManualGrabAlgaeFloorState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualGrabAlgaeFloorState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -74,6 +74,6 @@ bool ManualGrabAlgaeFloorState::AtTarget()
 bool ManualGrabAlgaeFloorState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+	return (considerGamepadTransitions && m_mechanism->IsAlgaeMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_INTAKE) && m_mechanism->GetManualMode());
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }
