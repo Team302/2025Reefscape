@@ -173,17 +173,10 @@ void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::veloci
     // if it is more than 90 degrees (90 to 270), the can turn the opposite direction -- increase the angle by 180 degrees -- and negate the wheel speed
     // finally, get the value between -90 and 90
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx speed"), targetState.speed.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("input xxx angle"), targetState.angle.Degrees().value());
-
     units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
     targetState.Optimize(currAngle);
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx speed"), targetState.speed.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("optimized xxx angle"), targetState.angle.Degrees().value());
-
-    // m_optimizedState.speed = m_tractionController->calculate(m_optimizedState.speed, CalculateRealSpeed(inertialVelocity, rotateRate, radius), GetState().speed);
     //   Set Steer Target
     SetSteerAngle(targetState.angle.Degrees());
 
@@ -207,10 +200,7 @@ void SwerveModule::RunCurrentState()
 /// @returns void
 void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetDriveSpeed input speed"), speed.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("m_activeState.speed"), m_activeState.speed.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("m_maxSpeed"), m_maxSpeed.value());
-
+    // TODO come back to the activate speed option
     // m_activeState.speed = (abs(speed.to<double>() / m_maxSpeed.to<double>()) < 0.05) ? 0_mps : speed;
     // m_activeState.speed = units::velocity::meters_per_second_t(std::clamp(m_activeState.speed.value(), -m_maxSpeed.value(), m_maxSpeed.value()));
     // if (m_activeState.speed != 0_mps)
@@ -243,21 +233,14 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
 /// @returns void
 void SwerveModule::SetSteerAngle(units::angle::degree_t targetAngle)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx angle"), targetAngle.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle xxx use FOC"), m_useFOC ? string("true") : string("false"));
-
-    TalonFXConfiguration fxconfigs{};
-    m_steerTalon->GetConfigurator().Refresh(fxconfigs);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle kp"), fxconfigs.Slot0.kP.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle ki"), fxconfigs.Slot0.kI.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle kd"), fxconfigs.Slot0.kD.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("SetSteerAngle targetangle"), targetAngle.value());
-
     m_activeState.angle = targetAngle;
-    if (m_useFOC)
-        m_steerTalon->SetControl(m_positionVoltage.WithPosition(targetAngle));
-    else
-        m_steerTalon->SetControl(m_positionTorque.WithPosition(targetAngle));
+    units::angle::turn_t targetAngleTurns = targetAngle;
+
+    // TODO come back to non-foc implementation
+    // if (m_useFOC)
+    m_steerTalon->SetControl(m_positionVoltage.WithPosition(targetAngleTurns));
+    // else
+    //     m_steerTalon->SetControl(m_positionTorque.WithPosition(targetAngleTurns));
 }
 //==================================================================================
 
@@ -355,8 +338,6 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
         configs.CurrentLimits.SupplyCurrentLowerTime = units::second_t(0.15);  // TODO Double check
         configs.Feedback.SensorToMechanismRatio = m_gearRatio;
 
-        m_driveTalon->GetConfigurator().Apply(configs);
-
         /* Retry config apply up to 5 times, report if failure */
         ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i)
@@ -410,7 +391,18 @@ void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
         fxconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
         fxconfigs.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
         fxconfigs.Feedback.RotorToSensorRatio = rotorToSensorRatio;
-        m_steerTalon->GetConfigurator().Apply(fxconfigs);
+
+        ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+        for (int i = 0; i < 5; ++i)
+        {
+            status = m_steerTalon->GetConfigurator().Apply(fxconfigs);
+            if (status.IsOK())
+                break;
+        }
+        if (!status.IsOK())
+        {
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "SwerveModule::InitSteerMotorEncoder", string("Could not apply configs, error code"), status.GetName());
+        }
 
         CANcoderConfiguration ccConfigs{};
         m_steerCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults
