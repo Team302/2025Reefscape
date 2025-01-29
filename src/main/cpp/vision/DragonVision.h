@@ -42,18 +42,13 @@ public:
 
     enum VISION_ELEMENT
     {
-        LAUNCHER_NOTE,
-        PLACER_NOTE,
-        NOTE,
-        SPEAKER,
-        AMP,
-        STAGE,
         LEFT_STAGE,
         RIGHT_STAGE,
         CENTER_STAGE,
-        SOURCE,
+        CAGE,
         REEF,
-        NEAREST_APRILTAG
+        HUMAN_PLAYER,
+        HUMAN_PROCESSOR
     };
 
     /// @brief sets the pipeline of the camera at the chosen position

@@ -68,37 +68,56 @@ private:
 
     enum AprilTagIDs
     {
-        BLUE_SOURCE_ONE = 1,
-        BLUE_SOURCE_TWO = 2,
-        RED_SOURCE_ONE = 10,
-        RED_SOURCE_TWO = 9,
-        BLUE_AMP = 6,
-        BLUE_STAGE_LEFT = 15,
-        BLUE_STAGE_CENTER = 14,
-        BLUE_STAGE_RIGHT = 16,
-        RED_AMP = 5,
-        RED_STAGE_LEFT = 11,
-        RED_STAGE_CENTER = 13,
-        RED_STAGE_RIGHT = 12,
-        BLUE_SUBWOOFER = 8,
-        BLUE_SPEAKER = 7,
-        RED_SUBWOOFER = 3,
-        RED_SPEAKER = 4,
+        BLUE_REEF_J = 20,
+        BLUE_REEF_I = 20,
+        BLUE_REEF_H = 21,
+        BLUE_REEF_G = 21,
+        BLUE_REEF_F = 22,
+        BLUE_REEF_E = 22,
+        BLUE_REEF_D = 17,
+        BLUE_REEF_C = 17,
+        BLUE_REEF_B = 18,
+        BLUE_REEF_A = 18,
+        BLUE_REEF_L = 19,
+        BLUE_REEF_K = 19,
+        RED_REEF_D = 8,
+        RED_REEF_C = 8,
+        RED_REEF_B = 7,
+        RED_REEF_A = 7,
+        RED_REEF_L = 6,
+        RED_REEF_K = 6,
+        RED_REEF_J = 11,
+        RED_REEF_I = 11,
+        RED_REEF_H = 10,
+        RED_REEF_G = 10,
+        RED_REEF_F = 9,
+        RED_REEF_E = 9,
+        BLUE_LEFT_CAGE = 15 5,
+        BLUE_MIDDLE_CAGE = 15 5,
+        BLUE_RIGHT_CAGE = 15 5,
+        RED_LEFT_CAGE = 14 4,
+        RED_MIDDLE_CAGE = 14 4,
+        RED_RIGHT_CAGE = 14 4,
+        BLUE_FAR_LEFT_HUMAN_PLAYER_ = 13,
+        BLUE_FAR_RIGHT_HUMAN_PLAYER = 12,
+        RED_FAR_RIGHT_HUMAN_PLAYER = 2,
+        RED_FAR_LEFT_HUMAN_PLAYER = 1,
+        BLUE_HUMAN_PROCESSOR = 16,
+        RED_HUMAN_PROCESSOR = 13
+
     };
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> blueMap = {
-        {DragonVision::VISION_ELEMENT::SPEAKER, AprilTagIDs::BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::AMP, AprilTagIDs::BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::CENTER_STAGE, AprilTagIDs::BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::LEFT_STAGE, AprilTagIDs::BLUE_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::RIGHT_STAGE, AprilTagIDs::BLUE_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::BLUE_REEF_},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_CAGE_},
+        {DragonVision::VISION_ELEMENT::HUMAN_PLAYER, AprilTagIDs::BLUE_HUMAN_PLAYER_},
+        {DragonVision::VISION_ELEMENT::HUMAN_PROCESSOR, AprilTagIDs::BLUE_HUMAN_PROCESSOR_}};
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> redMap = {
-        {DragonVision::VISION_ELEMENT::SPEAKER, AprilTagIDs::RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::AMP, AprilTagIDs::RED_AMP},
-        {DragonVision::VISION_ELEMENT::CENTER_STAGE, AprilTagIDs::RED_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::LEFT_STAGE, AprilTagIDs::RED_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::RIGHT_STAGE, AprilTagIDs::RED_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::RED_REEF_},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_CAGE_},
+        {DragonVision::VISION_ELEMENT::HUMAN_PLAYER, AprilTagIDs::RED_HUMAN_PLAYER_},
+        {DragonVision::VISION_ELEMENT::HUMAN_PROCESSOR, AprilTagIDs::RED_HUMAN_PROCESSOR_}};
 
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };
