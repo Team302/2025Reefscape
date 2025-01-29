@@ -485,19 +485,11 @@ void DragonTale::SetCurrentState(int state, bool run)
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
-void DragonTale::ManualControl()
-{
-	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
-	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
-
-	m_elevatorTarget += ElevatorChange;
-	m_armTarget += ArmChange;
-}
-
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
 }
@@ -613,8 +605,8 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{}; //TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); //TODO: get reef pose values from visdrive *thumbs up*
+	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
 	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
 	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
@@ -626,16 +618,17 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 
 	// Adjust the angle to the nearest 60-degree increment
 	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
-	
+
 	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
 
 	int multipleNumber = closestMultiple.value() / 60.0;
 
-	if(multipleNumber % 2 == 0)
+	if (multipleNumber % 2 == 0)
 		return m_grabAlgaeHigh;
 	else
 		return m_grabAlgaeLow;
 }
+
 void DragonTale::UpdateTarget()
 {
 	units::angle::degree_t actualTargetAngle;
@@ -659,4 +652,25 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+}
+
+void DragonTale::ManualControl()
+{
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
+	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
+
+	m_elevatorTarget += ElevatorChange;
+	m_armTarget += ArmChange;
+}
+
+void DragonTale::SetSensorFailSafe()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
+	{
+		m_manualMode = false;
+	}
 }

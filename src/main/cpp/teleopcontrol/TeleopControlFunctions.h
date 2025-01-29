@@ -61,7 +61,12 @@ public:
         SCORING_MODE,
         HUMAN_PLAYER_STATION,
         ALGAE_INTAKE,
-        EXPEL
+        EXPEL,
+        MANUAL_ON,
+        MANUAL_OFF,
+        HOLD_STATE,
+        MANUAL_IN,
+        MANUAL_OUT
 
     };
 };

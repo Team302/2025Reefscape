@@ -131,6 +131,9 @@ public:
 	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
 	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
 
+	bool GetManualMode() {return m_manualMode;}
+	void SetSensorFailSafe();
+
 	void UpdateTarget();
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
@@ -198,4 +201,6 @@ private:
 	double m_loopRate = 0.02;
 	double m_armChangeRate = 1 * m_loopRate;
 	double m_elevatorChangeRate= 1*m_loopRate;
+
+	bool m_manualMode = false;
 };
