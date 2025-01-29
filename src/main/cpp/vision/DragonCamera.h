@@ -44,8 +44,8 @@ public:
     };
 
     DragonCamera(
-        std::string cameraName,                /// <I> camera name/type
-        CAMERA_TYPE cameraType,                /// <I> camera type
+        std::string cameraName, /// <I> camera name/type
+        CAMERA_TYPE cameraType, /// <I> camera type
         CAMERA_USAGE cameraUsage,
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot is positive)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot is positive)
@@ -55,8 +55,6 @@ public:
         units::angle::degree_t roll            /// <I> - Roll of camera
     );
     DragonCamera() = delete;
-
-
 
     virtual bool HasTarget() = 0;
     virtual bool HealthCheck() = 0;
@@ -90,11 +88,14 @@ public:
     /// @brief returns the position of the robot
     /// @return std::optional<VisionPose>
     virtual std::optional<VisionPose> GetFieldPosition() = 0;
+    virtual units::angle::degree_t GetTx() const = 0;
+    virtual units::angle::degree_t GetTy() const = 0;
 
     /// @brief gets the robot position relative to the feild depending on wich alliance is specified
     /// @param frc::DriverStation::Alliance
     /// @return std::optional<visionData
-    virtual std::optional<VisionPose> GetFieldPosition(frc::DriverStation::Alliance alliance) = 0;
+    virtual std::optional<VisionPose>
+    GetFieldPosition(frc::DriverStation::Alliance alliance) = 0;
 
     //  Estimating distance
     virtual std::optional<units::length::inch_t> EstimateTargetXDistance() = 0;

@@ -160,6 +160,8 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
     {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
+    {TeleopControlFunctions::AUTO_CLIMB, driverDPad180},
+
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
     {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
@@ -181,6 +183,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::MANUAL_ON, copilotDPad0},
     {TeleopControlFunctions::MANUAL_OFF, copilotDPad180},
     {TeleopControlFunctions::HOLD_STATE, copilotDPad90}
+    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };
 
@@ -230,6 +233,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlA
     {TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD, driverLJoystickY},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE, driverLJoystickX},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE, driverRJoystickX},
+    {TeleopControlFunctions::MANUAL_CLIMB, driverRJoystickY},
     {TeleopControlFunctions::ELAVATOR, copilotLJoystickY},
     {TeleopControlFunctions::ARM, copilotRJoystickY},
     {TeleopControlFunctions::MANUAL_IN, copilotLTrigger},
