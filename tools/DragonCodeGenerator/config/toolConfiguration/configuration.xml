@@ -138,6 +138,11 @@
   </physicalUnits>
   <codeTemplateFiles>
     <codeTemplateFile>
+      <name>RobotIdentifier_h</name>
+      <templateFilePathName>..\..\templates\RobotIdentifier.h</templateFilePathName>
+      <outputFilePathName>RobotIdentifier.h</outputFilePathName>
+    </codeTemplateFile>
+    <codeTemplateFile>
       <name>MechanismInstance_h</name>
       <templateFilePathName>..\..\templates\MechanismInstance.h</templateFilePathName>
       <outputFilePathName>mechanisms\MECHANISM_INSTANCE_NAME.h</outputFilePathName>
