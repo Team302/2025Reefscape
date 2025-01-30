@@ -239,12 +239,20 @@ void Logger::PutLoggingSelectionsOnDashboard()
     frc::SmartDashboard::PutData("Logging Options", &m_optionChooser);
 
     // set up level menu
-    m_levelChooser.SetDefaultOption("ERROR_ONCE", LOGGER_LEVEL::ERROR_ONCE);
+    // m_levelChooser.SetDefaultOption("ERROR_ONCE", LOGGER_LEVEL::ERROR_ONCE);
+    // m_levelChooser.AddOption("ERROR", LOGGER_LEVEL::ERROR);
+    // m_levelChooser.AddOption("WARNING_ONCE", LOGGER_LEVEL::WARNING_ONCE);
+    // m_levelChooser.AddOption("WARNING", LOGGER_LEVEL::WARNING);
+    // m_levelChooser.AddOption("PRINT_ONCE", LOGGER_LEVEL::PRINT_ONCE);
+    // m_levelChooser.AddOption("PRINT", LOGGER_LEVEL::PRINT);
+    // frc::SmartDashboard::PutData("Logging Levels", &m_levelChooser);
+
+    m_levelChooser.SetDefaultOption("PRINT", LOGGER_LEVEL::PRINT);
+    m_levelChooser.AddOption("ERROR_ONCE", LOGGER_LEVEL::ERROR_ONCE);
     m_levelChooser.AddOption("ERROR", LOGGER_LEVEL::ERROR);
     m_levelChooser.AddOption("WARNING_ONCE", LOGGER_LEVEL::WARNING_ONCE);
     m_levelChooser.AddOption("WARNING", LOGGER_LEVEL::WARNING);
     m_levelChooser.AddOption("PRINT_ONCE", LOGGER_LEVEL::PRINT_ONCE);
-    m_levelChooser.AddOption("PRINT", LOGGER_LEVEL::PRINT);
     frc::SmartDashboard::PutData("Logging Levels", &m_levelChooser);
 
     auto table = nt::NetworkTableInstance::GetDefault().GetTable("ArrivedAt");
