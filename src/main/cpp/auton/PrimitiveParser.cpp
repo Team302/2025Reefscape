@@ -202,7 +202,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        else if (strcmp(attr.name(), "delayOption"))
+                        else if (strcmp(attr.name(), "delayOption") == 0)
                         {
                             auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
                             if (delayOptionItr != pathDelayOptionsMap.end())
@@ -211,7 +211,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             }
                             else
                             {
-                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
                                 hasError = true;
                             }
                         }

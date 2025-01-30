@@ -76,6 +76,9 @@ void DriveStopDelay::Init(PrimitiveParams *params)
 /// @return void
 void DriveStopDelay::Run()
 {
+
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Shuffleboard Time"), static_cast<double>(GetDelayTime()));
+
     if (m_chassis != nullptr)
     {
         ChassisMovement moveInfo;
