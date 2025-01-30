@@ -22,7 +22,6 @@
 // Team 302 includes
 
 #include "vision/DragonVision.h"
-#include "vision/DragonLimelight.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "utils/logging/Logger.h"
@@ -41,7 +40,7 @@ DragonVision *DragonVision::GetDragonVision()
 	return DragonVision::m_dragonVision;
 }
 
-bool DragonVision::HealthCheck(RobotElementNames::CAMERA_USAGE position)
+bool DragonVision::HealthCheck(DragonLimelight::CAMERA_USAGE position)
 {
 
 	auto camera = m_dragonCameraMap[position];
@@ -67,11 +66,11 @@ DragonVision::DragonVision()
 {
 }
 
-void DragonVision::AddCamera(DragonCamera *camera, RobotElementNames::CAMERA_USAGE position)
+void DragonVision::AddCamera(DragonCamera *camera, DragonLimelight::CAMERA_USAGE position)
 {
 	m_dragonCameraMap[position] = camera;
 
-	// if ((position == RobotElementNames::CAMERA_USAGE::LAUNCHE) || (position == RobotElementNames::CAMERA_USAGE::PLACER))
+	// if ((position == DragonLimelight::CAMERA_USAGE::LAUNCHE) || (position == DragonLimelight::CAMERA_USAGE::PLACER))
 	{
 		// may switch above pose fallback to reference or last pose, may be able to use odometry as a fallback and get closest
 		// to odometry's slightly inaccurate pose
@@ -112,9 +111,9 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 	std::optional<VisionData> placerData = std::nullopt;
 
 	/*
-	if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PLACER] != nullptr)
+	if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PLACER] != nullptr)
 	{
-		placerData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PLACER]->GetDataToNearestAprilTag();
+		placerData = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PLACER]->GetDataToNearestAprilTag();
 	} */
 
 	// get alliance color from FMSData
@@ -191,8 +190,8 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 {
 	std::optional<VisionData> selectedData = std::nullopt;
 	/*
-	std::optional<VisionData> launcherData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->GetDataToNearestAprilTag();
-	std::optional<VisionData> placerData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PLACER]->GetDataToNearestAprilTag();
+	std::optional<VisionData> launcherData = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->GetDataToNearestAprilTag();
+	std::optional<VisionData> placerData = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PLACER]->GetDataToNearestAprilTag();
 
 
 	if ((!launcherData) && (!placerData)) // if we see no april tags
@@ -229,7 +228,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 	return std::nullopt;
 }
 
-std::optional<VisionData> DragonVision::GetDataToNearestAprilTag(RobotElementNames::CAMERA_USAGE position)
+std::optional<VisionData> DragonVision::GetDataToNearestAprilTag(DragonLimelight::CAMERA_USAGE position)
 {
 	std::optional<VisionData> dataToAprilTag = m_dragonCameraMap[position]->GetDataToNearestAprilTag();
 	if ((m_dragonCameraMap[position] != nullptr) && dataToAprilTag.has_value())
@@ -247,10 +246,10 @@ std::optional<VisionData> DragonVision::GetVisionDataFromNote(VISION_ELEMENT ele
 	switch (element)
 	{
 	case VISION_ELEMENT::PLACER_NOTE:
-		selectedCam = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE];
+		selectedCam = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE];
 		break;
 	case VISION_ELEMENT::LAUNCHER_NOTE:
-		selectedCam = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE];
+		selectedCam = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE];
 		break;
 	case VISION_ELEMENT::NOTE:
 	{
@@ -258,13 +257,13 @@ std::optional<VisionData> DragonVision::GetVisionDataFromNote(VISION_ELEMENT ele
 		bool lintakeHasDetection = false;
 		bool pintakeHasDetection = false;
 		// make sure cameras are set
-		if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE] != nullptr)
+		if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE] != nullptr)
 		{
-			lintakeHasDetection = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE]->HasTarget();
+			lintakeHasDetection = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE]->HasTarget();
 		}
-		if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE] != nullptr)
+		if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE] != nullptr)
 		{
-			pintakeHasDetection = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE]->HasTarget();
+			pintakeHasDetection = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE]->HasTarget();
 		}
 
 		if (!lintakeHasDetection && !pintakeHasDetection)
@@ -274,22 +273,22 @@ std::optional<VisionData> DragonVision::GetVisionDataFromNote(VISION_ELEMENT ele
 		else if (lintakeHasDetection && pintakeHasDetection)
 		{
 			// check which note is closest to robot.. and handle std optional
-			units::length::meter_t lintakeXDistance = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE]->EstimateTargetXDistance_RelToRobotCoords().value();
-			units::length::meter_t lintakeYDistance = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE]->EstimateTargetYDistance_RelToRobotCoords().value();
+			units::length::meter_t lintakeXDistance = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE]->EstimateTargetXDistance_RelToRobotCoords().value();
+			units::length::meter_t lintakeYDistance = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE]->EstimateTargetYDistance_RelToRobotCoords().value();
 			frc::Translation2d translationLauncher = frc::Translation2d(lintakeXDistance, lintakeYDistance);
 
-			units::length::meter_t pintakeXDistance = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE]->EstimateTargetXDistance_RelToRobotCoords().value();
-			units::length::meter_t pintakeYDistance = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE]->EstimateTargetYDistance_RelToRobotCoords().value();
+			units::length::meter_t pintakeXDistance = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE]->EstimateTargetXDistance_RelToRobotCoords().value();
+			units::length::meter_t pintakeYDistance = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE]->EstimateTargetYDistance_RelToRobotCoords().value();
 			frc::Translation2d translationPlacer = frc::Translation2d(pintakeXDistance, pintakeYDistance);
 
-			selectedCam = units::math::abs(translationLauncher.Norm()) < units::math::abs(translationPlacer.Norm()) ? m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE] : m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE];
+			selectedCam = units::math::abs(translationLauncher.Norm()) < units::math::abs(translationPlacer.Norm()) ? m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE] : m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE];
 		}
 		else
 		{
 			if (lintakeHasDetection)
-				selectedCam = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LINTAKE];
+				selectedCam = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LINTAKE];
 			else if (pintakeHasDetection)
-				selectedCam = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PINTAKE];
+				selectedCam = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PINTAKE];
 		}
 	}
 	break;
@@ -367,14 +366,14 @@ std::optional<VisionData> DragonVision::MultiTagToElement(frc::Pose3d elementPos
 {
 	std::optional<VisionPose> launcherMultiTag = std::nullopt;
 	/**
-	DragonPhotonCam *launcherPhotonCam = dynamic_cast<DragonPhotonCam *>(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHER]);
+	DragonPhotonCam *launcherPhotonCam = dynamic_cast<DragonPhotonCam *>(m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHER]);
 	if (launcherPhotonCam != nullptr)
 	{
 		launcherMultiTag = launcherPhotonCam->GetMultiTagEstimate();
 	}
 
 	std::optional<VisionPose> placerMultiTag = std::nullopt;
-	DragonPhotonCam *placerPhotonCam = dynamic_cast<DragonPhotonCam *>(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PLACER]);
+	DragonPhotonCam *placerPhotonCam = dynamic_cast<DragonPhotonCam *>(m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::PLACER]);
 	if (placerPhotonCam != nullptr)
 	{
 		placerMultiTag = placerPhotonCam->GetMultiTagEstimate();
@@ -430,15 +429,15 @@ std::optional<VisionData> DragonVision::SingleTagToElement(frc::Pose3d elementPo
 	std::optional<VisionData> launcherAprilTagData = std::nullopt;
 	// std::optional<VisionData> selectedData = std::nullopt;
 	/*
-	if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE] != nullptr)
+	if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE] != nullptr)
 	{
-		if (!m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->HealthCheck())
+		if (!m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->HealthCheck())
 		{
 			return std::nullopt;
 		}
 
 		// get the optional of the translation and rotation to the apriltag
-		launcherAprilTagData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->GetDataToSpecifiedTag(idToSearch);
+		launcherAprilTagData = m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->GetDataToSpecifiedTag(idToSearch);
 	}
 	*/
 	if (launcherAprilTagData)
@@ -486,15 +485,15 @@ std::optional<VisionPose> DragonVision::GetRobotPosition()
 
 	// this is for single camera limelight odometry
 	/*
-	if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE] != nullptr)
+	if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE] != nullptr)
 	{
-		if (!m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->HealthCheck())
+		if (!m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->HealthCheck())
 		{
 			return std::nullopt;
 		}
 
 		// get the pose from limelight
-		DragonLimelight *launcheLimelightCam = dynamic_cast<DragonLimelight *>(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]);
+		DragonLimelight *launcheLimelightCam = dynamic_cast<DragonLimelight *>(m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]);
 		std::optional<VisionPose> estimatedPose = launcheLimelightCam->EstimatePoseOdometryLimelight(false); // false since megatag1
 		return estimatedPose;
 	} */
@@ -560,19 +559,19 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 {
 	// this is for single camera limelight odometry
 	/*
-	if (m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE] != nullptr)
+	if (m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE] != nullptr)
 	{
-		if (!m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->HealthCheck())
+		if (!m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->HealthCheck())
 		{
 			return std::nullopt;
 		}
 
 		// get the pose from limelight
-		LimelightHelpers::SetRobotOrientation(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->GetCameraName(),
+		LimelightHelpers::SetRobotOrientation(m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]->GetCameraName(),
 											  yaw.value(),
 											  0, 0, 0, 0, 0);
 
-		DragonLimelight *launcheLimelightCam = dynamic_cast<DragonLimelight *>(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]);
+		DragonLimelight *launcheLimelightCam = dynamic_cast<DragonLimelight *>(m_dragonCameraMap[DragonLimelight::CAMERA_USAGE::LAUNCHE]);
 		std::optional<VisionPose> estimatedPose = launcheLimelightCam->EstimatePoseOdometryLimelight(true); // true since megatag2
 		return estimatedPose;
 	}
@@ -580,14 +579,14 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 	return std::nullopt;
 }
 
-/*bool DragonVision::SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position)
+/*bool DragonVision::SetPipeline(DragonCamera::PIPELINE mode, DragonLimelight::CAMERA_USAGE position)
 {
 	m_dragonCameraMap[position]->SetPipeline(mode);
 	m_dragonCameraMap[position]->UpdatePipeline();
 	return false;
 }
 
-DragonCamera::PIPELINE DragonVision::GetPipeline(RobotElementNames::CAMERA_USAGE position)
+DragonCamera::PIPELINE DragonVision::GetPipeline(DragonLimelight::CAMERA_USAGE position)
 {
 	return m_dragonCameraMap[position]->GetPipeline();
 }*/
@@ -618,48 +617,48 @@ void DragonVision::testAndLogVisionData()
 
 // Limelight raw data functions
 
-std::optional<double> DragonVision::GetTargetArea(RobotElementNames::CAMERA_USAGE position)
+std::optional<double> DragonVision::GetTargetArea(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTargetArea();
 }
-units::angle::degree_t DragonVision::GetTy(RobotElementNames::CAMERA_USAGE position)
+units::angle::degree_t DragonVision::GetTy(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTx();
 }
 
-units::angle::degree_t DragonVision::GetTx(RobotElementNames::CAMERA_USAGE position)
+units::angle::degree_t DragonVision::GetTx(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTy();
 }
 
-std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(RobotElementNames::CAMERA_USAGE position)
+std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTargetYaw();
 }
 
-std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(RobotElementNames::CAMERA_USAGE position)
+std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTargetSkew();
 }
 
-std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(RobotElementNames::CAMERA_USAGE position)
+std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetTargetPitch();
 }
 
-std::optional<int> DragonVision::GetAprilTagID(RobotElementNames::CAMERA_USAGE position)
+std::optional<int> DragonVision::GetAprilTagID(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->GetAprilTagID();
 }
 
-bool DragonVision::HasTarget(RobotElementNames::CAMERA_USAGE position)
+bool DragonVision::HasTarget(DragonLimelight::CAMERA_USAGE position)
 {
 	auto camera = m_dragonCameraMap[position];
 	return camera->HasTarget();

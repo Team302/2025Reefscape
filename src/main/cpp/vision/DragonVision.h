@@ -27,8 +27,8 @@
 // Team 302 Includes
 #include "vision/DragonVisionStructs.h"
 #include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
 
-#include "configs/RobotElementNames.h"
 #include "utils/FieldConstants.h"
 
 #include "units/angular_velocity.h"
@@ -60,12 +60,12 @@ public:
     /// @param mode the pipeline to set the camera to
     /// @param position the physical position of the camera
     /// @return if successful or not (not currently implemented)
-    // bool SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position);
+    // bool SetPipeline(DragonCamera::PIPELINE mode, DragonLimelight::CAMERA_USAGE position);
 
     /// @brief gets the pipeline of the camera at the chosen position
     /// @param position the physical position of the camera
     /// @return DragonCamera::PIPELINE - the currently selected pipeline
-    // DragonCamera::PIPELINE GetPipeline(RobotElementNames::CAMERA_USAGE position);
+    // DragonCamera::PIPELINE GetPipeline(DragonLimelight::CAMERA_USAGE position);
 
     /// @brief gets the field position of the robot (right blue driverstation origin)
     /// @return std::optional<VisionPose> - the estimated position, timestamp of estimation, and confidence as array of std devs
@@ -83,33 +83,33 @@ public:
     /// @brief detects and returns transformation to the closest AprilTag using a specified camera
     /// @param position the physical position of the camera
     /// @return /// @return std::optional<VisionData> - a transform containg x, y, z distances and yaw, pitch, roll to target, and AprilTag Id
-    std::optional<VisionData> GetDataToNearestAprilTag(RobotElementNames::CAMERA_USAGE position);
+    std::optional<VisionData> GetDataToNearestAprilTag(DragonLimelight::CAMERA_USAGE position);
 
     /// @brief adds a camera at the specified position to DragonVision
     /// @param camera pointer to the camera object that should be added
     /// @param position the physical position of the camera
-    void AddCamera(DragonCamera *camera, RobotElementNames::CAMERA_USAGE position);
+    void AddCamera(DragonCamera *camera, DragonLimelight::CAMERA_USAGE position);
 
     // raw data methods
 
-    std::optional<units::angle::degree_t> GetTargetYaw(RobotElementNames::CAMERA_USAGE position);
-    std::optional<units::angle::degree_t> GetTargetPitch(RobotElementNames::CAMERA_USAGE position);
-    std::optional<units::angle::degree_t> GetTargetSkew(RobotElementNames::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetYaw(DragonLimelight::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetPitch(DragonLimelight::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetSkew(DragonLimelight::CAMERA_USAGE position);
 
-    std::optional<int> GetAprilTagID(RobotElementNames::CAMERA_USAGE position);
-    bool HasTarget(RobotElementNames::CAMERA_USAGE position);
-    std::optional<double> GetTargetArea(RobotElementNames::CAMERA_USAGE position);
+    std::optional<int> GetAprilTagID(DragonLimelight::CAMERA_USAGE position);
+    bool HasTarget(DragonLimelight::CAMERA_USAGE position);
+    std::optional<double> GetTargetArea(DragonLimelight::CAMERA_USAGE position);
 
-    units::angle::degree_t GetTx(RobotElementNames::CAMERA_USAGE position);
-    units::angle::degree_t GetTy(RobotElementNames::CAMERA_USAGE position);
+    units::angle::degree_t GetTx(DragonLimelight::CAMERA_USAGE position);
+    units::angle::degree_t GetTy(DragonLimelight::CAMERA_USAGE position);
 
-    DragonCamera *GetCamera(RobotElementNames::CAMERA_USAGE position) { return m_dragonCameraMap[position]; }
+    DragonCamera *GetCamera(DragonLimelight::CAMERA_USAGE position) { return m_dragonCameraMap[position]; }
 
     static frc::AprilTagFieldLayout m_aprilTagLayout;
 
     void testAndLogVisionData();
 
-    bool HealthCheck(RobotElementNames::CAMERA_USAGE position);
+    bool HealthCheck(DragonLimelight::CAMERA_USAGE position);
 
 private:
     DragonVision();
@@ -125,5 +125,5 @@ private:
 
     static DragonVision *m_dragonVision;
 
-    std::map<RobotElementNames::CAMERA_USAGE, DragonCamera *> m_dragonCameraMap;
+    std::map<DragonLimelight::CAMERA_USAGE, DragonCamera *> m_dragonCameraMap;
 };

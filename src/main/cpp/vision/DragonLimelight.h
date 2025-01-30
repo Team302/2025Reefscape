@@ -37,6 +37,21 @@
 class DragonLimelight : public DragonCamera, public SensorData
 {
 public:
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        LIMELIGHT4_W_HAILO8,
+        LIMELIGHT3G,
+        LIMELIGHT3,
+        LIMELIGHT3_W_CORAL
+    };
+
+    enum CAMERA_USAGE
+    {
+        UNKNOWN_CAMERA = -1,
+        PLACER = 0
+    };
+
     enum LED_MODE
     {
         LED_UNKNOWN = -1,

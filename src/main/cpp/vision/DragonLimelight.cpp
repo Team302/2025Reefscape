@@ -77,7 +77,7 @@ DragonLimelight::DragonLimelight(
     std::string limelightdns = networkTableName + ".local";
     for (int port = 5800; port <= 5809; port++)
     {
-        wpi::PortForwarder::GetInstance().Add(port, std::string(limelightdns), port);
+        wpi::PortForwarder::GetInstance().Add(port + cameraUsage * 10, limelightdns, port);
     }
 }
 
