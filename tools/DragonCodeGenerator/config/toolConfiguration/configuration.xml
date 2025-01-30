@@ -137,10 +137,10 @@
     </physicalUnit>
   </physicalUnits>
   <codeTemplateFiles>
-  <codeTemplateFile>
+    <codeTemplateFile>
       <name>RobotIdentifier_h</name>
       <templateFilePathName>..\..\templates\RobotIdentifier.h</templateFilePathName>
-      <outputFilePathName>configs\RobotIdentifier.h</outputFilePathName>
+      <outputFilePathName>RobotIdentifier.h</outputFilePathName>
     </codeTemplateFile>
     <codeTemplateFile>
       <name>MechanismInstance_h</name>
