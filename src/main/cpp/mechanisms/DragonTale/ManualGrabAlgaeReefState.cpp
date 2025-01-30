@@ -51,6 +51,8 @@ void ManualGrabAlgaeReefState::Init()
 
 void ManualGrabAlgaeReefState::InitPRACTICE_BOT9999()
 {
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);	
 }
 
 void ManualGrabAlgaeReefState::Run()

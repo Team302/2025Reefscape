@@ -50,7 +50,9 @@ void ManualGrabAlgaeFloorState::Init()
 }
 
 void ManualGrabAlgaeFloorState::InitPRACTICE_BOT9999()
-{
+{	
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);	
 }
 
 void ManualGrabAlgaeFloorState::Run()

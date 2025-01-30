@@ -3813,10 +3813,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3824,7 +3825,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -3842,16 +3843,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -3860,16 +3861,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -3878,7 +3879,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3896,7 +3897,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -3938,10 +3939,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3949,7 +3951,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -3958,7 +3960,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -3967,16 +3969,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -3985,16 +3987,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -4003,7 +4005,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -4021,7 +4023,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -4063,10 +4065,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4074,7 +4077,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -4083,8 +4086,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4092,16 +4096,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -4110,16 +4114,16 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -4128,7 +4132,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -4146,7 +4150,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>

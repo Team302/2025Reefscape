@@ -51,6 +51,8 @@ void ManualCoralLoadState::Init()
 
 void ManualCoralLoadState::InitPRACTICE_BOT9999()
 {
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);	
 }
 
 void ManualCoralLoadState::Run()
