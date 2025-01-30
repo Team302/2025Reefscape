@@ -5242,9 +5242,9 @@
               <motorTarget>
                 <name>Extender</name>
                 <target>
-                  <unitsFamily>none</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__ />
+                  <__units__>deg</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>Extender</motorName>
@@ -5255,7 +5255,7 @@
                   <type>Boolean</type>
                   <value>true</value>
                 </Enabled>
-                <controlDataName>PercentOutput</controlDataName>
+                <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
             </motorTargets>
           </state>
