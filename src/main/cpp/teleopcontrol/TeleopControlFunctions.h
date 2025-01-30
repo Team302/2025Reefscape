@@ -66,7 +66,6 @@ public:
         EXPEL,
         MANUAL_ON,
         MANUAL_OFF,
-        HOLD_STATE,
         MANUAL_IN,
         MANUAL_OUT,
         FAILED_INTAKE_SENSOR

@@ -182,7 +182,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
     {TeleopControlFunctions::MANUAL_ON, copilotDPad0},
     {TeleopControlFunctions::MANUAL_OFF, copilotDPad180},
-    {TeleopControlFunctions::HOLD_STATE, copilotDPad90},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };
