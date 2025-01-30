@@ -37,15 +37,15 @@ using namespace ClimberManagerStates;
 ManualClimbState::ManualClimbState ( std::string stateName,
                                      int stateId,
                                      ClimberManager *mech,
-                                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+                                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
 void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualClimbState" ), string ( "Init" ) );
-
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	m_manualTarget=m_ClimberTarget;
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -58,6 +58,11 @@ void ManualClimbState::InitPRACTICE_BOT9999()
 void ManualClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
+	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB)*m_manualClimbRate);
+	m_manualTarget += TargetChange;
+	
+	m_mechanism->UpdateTargetClimberPositionDegree ( std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+	
 }
 
 void ManualClimbState::Exit()
@@ -76,6 +81,8 @@ bool ManualClimbState::AtTarget()
 bool ManualClimbState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
+
+		return m_mechanism->IsClimbMode();
+
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

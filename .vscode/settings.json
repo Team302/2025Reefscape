@@ -94,8 +94,14 @@
     "xtr1common": "cpp",
     "xtree": "cpp",
     "xutility": "cpp",
-    "*.mac": "cpp"
-  }
+    "*.mac": "cpp",
+    "any": "cpp",
+    "forward_list": "cpp",
+    "expected": "cpp",
+    "source_location": "cpp",
+    "ranges": "cpp",
+    "valarray": "cpp"
+  },
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "wpilib.autoSaveOnDeploy": true,
@@ -121,7 +127,7 @@
   "C_Cpp.vcFormat.newLine.beforeWhileInDoWhile": false,
   "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": false,
   "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": false,
-  "C_Cpp.vcFormat.newLine.scopeBracesOnSeparateLines": false,
+  "C_Cpp.vcFormat.newLine.scopeBracesOnSeparateLines": true,
   "C_Cpp.vcFormat.space.afterCastCloseParenthesis": false,
   "C_Cpp.vcFormat.space.afterComma": true,
   "C_Cpp.vcFormat.space.afterKeywordsInControlFlowStatements": true,

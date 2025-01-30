@@ -37,7 +37,7 @@ using namespace DragonTaleStates;
 GrabAlgaeReefState::GrabAlgaeReefState ( std::string stateName,
         int stateId,
         DragonTale *mech,
-        MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void GrabAlgaeReefState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "GrabAlgaeReefState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -53,10 +53,13 @@ void GrabAlgaeReefState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->UpdateTargetCoralPercentOutput ( 0 );
 	m_mechanism->UpdateTargetAlgaePercentOutput ( 0 );
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void GrabAlgaeReefState::Run()
 {
+	m_mechanism->UpdateTargetElevatorLeaderPositionInch(m_mechanism->GetAlgaeHeight());
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("GrabAlgaeReefState"), string("Run"));
 }
 
@@ -76,6 +79,8 @@ bool GrabAlgaeReefState::AtTarget()
 bool GrabAlgaeReefState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+	return ((considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION)) && m_mechanism->IsAlgaeMode()) 
+	|| ((m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) && m_mechanism->IsAlgaeMode())
+	|| ((m_mechanism->GetCurrentState() == m_mechanism->STATE_SCORE_CORAL) && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetCoralInSensorState() && !m_mechanism->GetCoralOutSensorState() && !m_mechanism->GetAlgaeSensorState()));
 }

@@ -40,7 +40,6 @@
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/CANcoder.hpp"
-// #include "grpl/LaserCan.h"
 #include "pathplanner/lib/config/ModuleConfig.h"
 
 class SwerveModule : public LoggableItem
@@ -52,15 +51,20 @@ public:
     /// @brief Constructs a Swerve Module.  This is assuming 2 TalonFX (Falcons) with a CanCoder for the turn angle
     SwerveModule(std::string canbusname,
                  SwerveModuleConstants::ModuleID id,
-                 SwerveModuleConstants::ModuleType type,
+                 units::length::inch_t wheelDiameter,
+                 units::dimensionless::scalar_t driveGearRatio,
+                 double sensorToMechanismRatio,
+                 units::dimensionless::scalar_t rotorToSensorRatio,
+                 units::velocity::feet_per_second_t maxSpeed,
                  int driveMotorID,
                  bool driveInverted,
                  int turnMotorID,
                  bool turnInverted,
                  int canCoderID,
                  bool canCoderInverted,
-                 double angleOffset,
-                 std::string configfilename,
+                 const units::angle::turn_t angleOffset,
+                 ctre::phoenix6::configs::Slot0Configs turnGains,
+                 // std::string configfilename,
                  std::string networkTableName);
 
     /// @brief Turn all of the wheel to zero degrees yaw according to the pigeon
@@ -78,9 +82,9 @@ public:
     frc::SwerveModulePosition GetPosition() const;
 
     /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
-    /// @param [in] const SwerveModuleState& referenceState:   state to set the module to
+    /// @param [in] SwerveModuleState& referenceState:   state to set the module to
     /// @returns void
-    void SetDesiredState(const frc::SwerveModuleState &state, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius);
+    void SetDesiredState(frc::SwerveModuleState &state, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius);
 
     void RunCurrentState();
 
@@ -98,12 +102,12 @@ public:
     SwerveModuleConstants::ModuleID GetModuleID() { return m_moduleID; }
 
     frc::DCMotor GetDriveMotorDef() const { return m_driveMotorDef; }
-    frc::DCMotor GetTurnMotorDef() const { return m_turnMotorDef; }
+    frc::DCMotor GetSteerMotorDef() const { return m_steerMotorDef; }
     units::length::inch_t GetWheelDiameter() const { return m_wheelDiameter; }
     units::velocity::feet_per_second_t GetMaxSpeed() const { return m_maxSpeed; }
     double GetCoefficientOfFriction() const { return m_coeffOfFriction; }
     units::current::ampere_t GetDriveCurrentLimit() const { return m_driveTalon->GetStatorCurrent().GetValue(); }
-    units::current::ampere_t GetTurnCurrentLimit() const { return m_turnTalon->GetStatorCurrent().GetValue(); }
+    units::current::ampere_t GetSteerCurrentLimit() const { return m_steerTalon->GetStatorCurrent().GetValue(); }
 
     void StopMotors();
     void LogInformation() override;
@@ -114,21 +118,21 @@ public:
 
 private:
     void InitDriveMotor(bool inverted);
-    void InitTurnMotorEncoder(
+    void InitSteerMotorEncoder(
         bool turnInverted,
         bool canCoderInverted,
-        double angleOffset,
-        const SwerveModuleAttributes &attrs);
+        const units::angle::turn_t angleOffset,
+        double sensorToMechanismRatio,
+        units::dimensionless::scalar_t rotorToSensorRatio);
     void SetDriveSpeed(units::velocity::meters_per_second_t speed);
-    void SetTurnAngle(units::angle::degree_t angle);
-    void ReadConstants(std::string configfilename);
+    void SetSteerAngle(units::angle::degree_t angle);
     frc::DCMotor m_driveMotorDef = frc::DCMotor::KrakenX60FOC();
-    frc::DCMotor m_turnMotorDef = frc::DCMotor::KrakenX60FOC();
+    frc::DCMotor m_steerMotorDef = frc::DCMotor::KrakenX60FOC();
 
     SwerveModuleConstants::ModuleID m_moduleID;
     ctre::phoenix6::hardware::TalonFX *m_driveTalon;
-    ctre::phoenix6::hardware::TalonFX *m_turnTalon;
-    ctre::phoenix6::hardware::CANcoder *m_turnCancoder;
+    ctre::phoenix6::hardware::TalonFX *m_steerTalon;
+    ctre::phoenix6::hardware::CANcoder *m_steerCancoder;
 
     frc::SwerveModuleState m_activeState;
     frc::SwerveModuleState m_optimizedState;
@@ -140,13 +144,6 @@ private:
     ctre::phoenix6::controls::VelocityTorqueCurrentFOC m_velocityTorque = ctre::phoenix6::controls::VelocityTorqueCurrentFOC{0_tps}.WithSlot(0);
     ctre::phoenix6::controls::VelocityVoltage m_velocityVoltage = ctre::phoenix6::controls::VelocityVoltage{0_tps}.WithSlot(0);
 
-    //  Turn Motor Gains
-    double m_turnKp = 0.0;
-    double m_turnKi = 0.0;
-    double m_turnKd = 0.0;
-    double m_turnKs = 0.0;
-    double m_turnKf = 0.0;
-
     // Drive Motor Gains
     double m_driveKp = 0.0;
     double m_driveKi = 0.0;
@@ -155,17 +152,16 @@ private:
     double m_driveKf = 0.0;
 
     double m_gearRatio = 0.0;
-    double m_turnCruiseVel = 0.0;
-    double m_turnMaxAcc = 0.0;
+    double m_steerCruiseVel = 0.0;
+    double m_steerMaxAcc = 0.0;
     units::length::inch_t m_wheelDiameter = units::length::inch_t(4.0);
     units::velocity::feet_per_second_t m_maxSpeed = units::velocity::feet_per_second_t(17.3);
     double m_coeffOfFriction = 0.9;
+
+    ctre::phoenix6::configs::Slot0Configs m_steerGains;
 
     bool m_velocityControlled = false;
     bool m_useFOC = false;
     std::string m_networkTableName;
     pathplanner::ModuleConfig m_moduleConfig;
-
-    // void DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget);
-    // grpl::LaserCan *m_laserCan;
 };

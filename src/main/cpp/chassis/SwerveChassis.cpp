@@ -14,8 +14,8 @@
 //====================================================================================================================================================
 
 // C++ Includes
-#include <numbers>
 #include <cmath>
+#include <numbers>
 
 // FRC includes
 #include "frc/DriverStation.h"
@@ -63,35 +63,41 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                              SwerveModule *backLeft,
                              SwerveModule *backRight,
                              Pigeon2 *pigeon,
-                             string configfilename,
-                             string networkTableName) : IChassis(),
-                                                        LoggableItem(),
-                                                        m_frontLeft(frontLeft),
-                                                        m_frontRight(frontRight),
-                                                        m_backLeft(backLeft),
-                                                        m_backRight(backRight),
-                                                        m_pigeon(pigeon),
-                                                        m_robotDrive(nullptr),
-                                                        m_frontLeftLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                        m_frontRightLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
-                                                        m_backLeftLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                        m_backRightLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
-                                                        m_kinematics(m_frontLeftLocation,
-                                                                     m_frontRightLocation,
-                                                                     m_backLeftLocation,
-                                                                     m_backRightLocation),
-                                                        m_poseEstimator(m_kinematics,
-                                                                        frc::Rotation2d{},
-                                                                        {SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition()},
-                                                                        frc::Pose2d(),
-                                                                        {0.1, 0.1, 0.1},
-                                                                        {0.1, 0.1, 0.1}),
-                                                        m_storedYaw(units::angle::degree_t(0.0)),
-                                                        m_targetHeading(units::angle::degree_t(0.0)),
-                                                        m_networkTableName(networkTableName),
-                                                        m_vision(DragonVision::GetDragonVision())
+                             string networkTableName,
+                             units::length::inch_t wheelBase,
+                             units::length::inch_t wheelTrack,
+                             units::length::inch_t wheelDiameter,
+                             units::velocity::feet_per_second_t maxSpeed) : IChassis(),
+                                                                            LoggableItem(),
+                                                                            m_frontLeft(frontLeft),
+                                                                            m_frontRight(frontRight),
+                                                                            m_backLeft(backLeft),
+                                                                            m_backRight(backRight),
+                                                                            m_pigeon(pigeon),
+                                                                            m_robotDrive(nullptr),
+                                                                            m_wheelBase(wheelBase),
+                                                                            m_track(wheelTrack),
+                                                                            m_maxSpeed(maxSpeed),
+                                                                            m_wheelDiameter(wheelDiameter),
+                                                                            m_frontLeftLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
+                                                                            m_frontRightLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
+                                                                            m_backLeftLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
+                                                                            m_backRightLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
+                                                                            m_kinematics(m_frontLeftLocation,
+                                                                                         m_frontRightLocation,
+                                                                                         m_backLeftLocation,
+                                                                                         m_backRightLocation),
+                                                                            m_poseEstimator(m_kinematics,
+                                                                                            frc::Rotation2d{},
+                                                                                            {SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition()},
+                                                                                            frc::Pose2d(),
+                                                                                            {0.1, 0.1, 0.1},
+                                                                                            {0.1, 0.1, 0.1}),
+                                                                            m_storedYaw(units::angle::degree_t(0.0)),
+                                                                            m_targetHeading(units::angle::degree_t(0.0)),
+                                                                            m_networkTableName(networkTableName),
+                                                                            m_vision(DragonVision::GetDragonVision())
 {
-    ReadConstants(configfilename);
     InitStates();
     ZeroAlignSwerveModules();
     ResetYaw();
@@ -151,6 +157,8 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
 
+    LogInformation();
+
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
@@ -168,19 +176,43 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), m_currentOrientationState->GetHeadingOption());
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
+    }
+    else
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), -1);
     }
 
     m_currentDriveState = GetDriveState(moveInfo);
     if (m_currentDriveState != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), m_currentDriveState->GetDriveStateName());
+
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LF SwerveModuleState speed"), m_targetStates[LEFT_FRONT].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LF SwerveModuleState angle"), m_targetStates[LEFT_FRONT].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LB SwerveModuleState speed"), m_targetStates[LEFT_BACK].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("LB SwerveModuleState angle"), m_targetStates[LEFT_BACK].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RF SwerveModuleState speed"), m_targetStates[RIGHT_FRONT].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RF SwerveModuleState angle"), m_targetStates[RIGHT_FRONT].angle.Degrees().value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RB SwerveModuleState speed"), m_targetStates[RIGHT_BACK].speed.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("RB SwerveModuleState angle"), m_targetStates[RIGHT_BACK].angle.Degrees().value());
 
         m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
         m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
     }
+    else
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), string("NONE"));
+    }
+
     m_rotate = moveInfo.chassisSpeeds.omega;
     UpdateOdometry();
 }
@@ -336,7 +368,6 @@ void SwerveChassis::UpdateOdometry()
         }
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Update With Vision"), std::string("Update With Vision:"), updateWithVision);
-    LogInformation();
 }
 
 //==================================================================================
@@ -486,7 +517,7 @@ void SwerveChassis::LogInformation()
 void SwerveChassis::DataLog()
 {
 
-    LogPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE, GetPose());
+    Log2DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
     LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
     LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
@@ -528,65 +559,3 @@ void SwerveChassis::DataLog()
         LogStringData(DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
     }
 }
-
-//==================================================================================
-void SwerveChassis::ReadConstants(string configfilename)
-{
-    auto deployDir = frc::filesystem::GetDeployDirectory();
-    auto filename = deployDir + string("/chassis/") + configfilename;
-    pugi::xml_document doc;
-    pugi::xml_parse_result result = doc.load_file(filename.c_str());
-
-    if (result)
-    {
-        pugi::xml_node parent = doc.root();
-        for (pugi::xml_node swervemod = parent.first_child(); swervemod; swervemod = swervemod.next_sibling())
-        {
-            for (pugi::xml_node control = swervemod.first_child(); swervemod; swervemod = swervemod.next_sibling())
-            {
-                for (pugi::xml_attribute attr = control.first_attribute(); attr; attr = attr.next_attribute())
-                {
-                    if (strcmp(attr.name(), "wheelbase") == 0)
-                    {
-                        m_wheelBase = units::length::inch_t(attr.as_double());
-                    }
-                    else if (strcmp(attr.name(), "track") == 0)
-                    {
-                        m_track = units::length::inch_t(attr.as_double());
-                    }
-                    else if (strcmp(attr.name(), "wheeldiameter") == 0)
-                    {
-                        m_wheelDiameter = units::length::inch_t(attr.as_double());
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, m_networkTableName, string("Config File not found"), configfilename);
-    }
-}
-
-/**
-void SwerveChassis::DefineLaserCan(grpl::LaserCanRangingMode rangingMode, grpl::LaserCanROI roi, grpl::LaserCanTimingBudget timingBudget)
-{
-    m_laserCan = new grpl::LaserCan(m_pigeon->GetDeviceID());
-    m_laserCan->set_ranging_mode(rangingMode);
-    m_laserCan->set_roi(roi);
-    m_laserCan->set_timing_budget(timingBudget);
-}
-
-std::optional<uint16_t> SwerveChassis::GetLaserValue()
-{
-    if (m_laserCan == nullptr)
-    {
-        return std::nullopt;
-    }
-    std::optional<grpl::LaserCanMeasurement> distance = m_laserCan->get_measurement();
-    if (distance.has_value() && distance.value().status == grpl::LASERCAN_STATUS_VALID_MEASUREMENT)
-    {
-        return distance.value().distance_mm;
-    }
-}
-**/

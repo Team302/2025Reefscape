@@ -59,13 +59,13 @@ void MechanismConfigMgr::InitRobot ( RobotIdentifier id )
 		break;
 
 	default:
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Skipping robot initialization because of unknown robot id " ), string ( "" ), id );
+		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Skipping robot initialization because of unknown robot id " ), string ( "" ), static_cast<int>(id) );
 		break;
 	}
 
 	if ( m_config != nullptr )
 	{
 		m_config->BuildRobot();
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initialization completed for robot " ), string ( "" ), id );
+		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initialization completed for robot " ), string ( "" ),  static_cast<int>(id)  );
 	}
 }

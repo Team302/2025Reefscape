@@ -40,7 +40,7 @@ public:
     enum LED_MODE
     {
         LED_UNKNOWN = -1,
-        LED_DEFAULT,
+        LED_PIPELINE_CONTROL,
         LED_OFF,
         LED_BLINK,
         LED_ON
@@ -56,9 +56,9 @@ public:
     enum STREAM_MODE
     {
         STREAM_UNKNOWN = -1,
-        STREAM_DEFAULT,         // side by side if two cams
-        STREAM_MAIN_AND_SECOND, // Second Cam bottom right of Main Cam
-        STREAM_SECOND_AND_MAIN  // Main Cam bottom right of Second Cam
+        STREAM_STANDARD,     // side by side if two cams
+        STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
+        STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
     };
 
     enum SNAPSHOT_MODE
@@ -68,16 +68,7 @@ public:
         SNAP_ON
     };
 
-    enum LIMELIGHT_MODE
-    {
-
-        APRIL_DETECTION,
-        POSE_ESTIMATION,
-        MACHINE_LEARNING
-
-    };
-
-    enum LIMELIGHT_PIPELINE
+    enum LL_PIPELINE
     {
         UNKNOWN = -1,
         OFF,
@@ -93,14 +84,15 @@ public:
     DragonLimelight() = delete;
     DragonLimelight(
         std::string name, /// <I> - network table name'
-        LIMELIGHT_MODE usage,
-        LIMELIGHT_PIPELINE initialPipeline,    /// <I> enum for starting pipeline
+        DragonCamera::CAMERA_TYPE cameraType,
+        DragonCamera::CAMERA_USAGE cameraUsage,
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
         units::angle::degree_t pitch,          /// <I> - Pitch of camera
         units::angle::degree_t yaw,            /// <I> - Yaw of camera
         units::angle::degree_t roll,           /// <I> - Roll of camera
+        LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
         LED_MODE ledMode,
         CAM_MODE camMode,
         STREAM_MODE streamMode,
@@ -149,23 +141,25 @@ public:
     units::length::inch_t CalcXTargetToRobot(units::angle::degree_t camPitch, units::length::inch_t mountHeight, units::length::inch_t camXOffset, units::angle::degree_t tY);
     units::length::inch_t CalcYTargetToRobot(units::angle::degree_t camYaw, units::length::inch_t xTargetDistance, units::length::inch_t camYOffset, units::length::inch_t camXOffset, units::angle::degree_t tX);
 
-    // Setters
+    // limelight specific helper functions
     void SetLEDMode(DragonLimelight::LED_MODE mode);
     void SetCamMode(DragonLimelight::CAM_MODE mode);
+    void SetPipeline(DragonLimelight::LL_PIPELINE pipeline);
     void SetStreamMode(DragonLimelight::STREAM_MODE mode);
     void ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle);
     void SetCrosshairPos(double crosshairPosX, double crosshairPosY);
     void SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY);
+    void SetPriorityTagID(int id);
+    void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
     void PeriodicCacheData() override;
 
-    bool UpdatePipeline();
+    units::angle::degree_t GetTx() const override;
+    units::angle::degree_t GetTy() const override;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
 protected:
-    units::angle::degree_t GetTx() const;
-    units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
@@ -173,11 +167,11 @@ protected:
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
+    int m_tagid;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
-    LIMELIGHT_MODE m_usage;
-    LIMELIGHT_PIPELINE m_pipeline;
+    LL_PIPELINE m_pipeline;
 };

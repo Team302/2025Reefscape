@@ -37,7 +37,7 @@ using namespace IntakeManagerStates;
 OffState::OffState ( std::string stateName,
                      int stateId,
                      IntakeManager *mech,
-                     MechanismConfigMgr::RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
 {
 }
 
@@ -45,7 +45,7 @@ void OffState::Init()
 {
 	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "OffState" ), string ( "Init" ) );
 
-	if ( m_RobotId == MechanismConfigMgr::RobotIdentifier::PRACTICE_BOT_9999 )
+	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
 		InitPRACTICE_BOT9999();
 }
 
@@ -77,6 +77,8 @@ bool OffState::AtTarget()
 bool OffState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+	return (considerGamepadTransitions && (!TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::INTAKE) && m_mechanism->GetCurrentState() == m_mechanism->STATE_INTAKE) 
+	|| (m_mechanism->STATE_EXPEL && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXPEL)) 
+	|| (!m_mechanism->GetIntakeSensorState() && (m_mechanism->GetCurrentState()==m_mechanism->STATE_PROCESS || m_mechanism->GetCurrentState()==m_mechanism->STATE_HOLD)));
 }
