@@ -50,8 +50,8 @@ public:
 
     enum CAMERA_USAGE
     {
-        POSE_ESTIMATION,
-        GAME_ELEMENT_DETECTION
+        BACK_CAMERA,
+        FRONT_CAMERA,
     };
 
     enum LED_MODE
@@ -189,7 +189,7 @@ protected:
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
 
-    //cached elements
+    // cached elements
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
@@ -201,7 +201,7 @@ protected:
     frc::Timer *m_healthTimer;
     LL_PIPELINE m_pipeline;
 
-    //from old dragon camera
+    // from old dragon camera
     std::string m_cameraName;
     frc::Pose3d m_cameraPose;
     const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);

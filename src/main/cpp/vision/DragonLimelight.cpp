@@ -72,6 +72,10 @@ DragonLimelight::DragonLimelight(
     ToggleSnapshot(snapMode);
     SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
     m_healthTimer = new frc::Timer();
+    for (int port = 5800; port <= 5809; port++)
+    {
+        wpi::PortForwarder::GetInstance().Add(port + cameraUsage, "limelight.local", port);
+    }
 }
 
 void DragonLimelight::PeriodicCacheData()
