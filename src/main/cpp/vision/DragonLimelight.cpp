@@ -50,26 +50,28 @@
 ///-----------------------------------------------------------------------------------
 DragonLimelight::DragonLimelight(
     std::string networkTableName, /// <I> networkTableName
-    LIMELIGHT_MODE usage,
-    LIMELIGHT_PIPELINE initialPipeline, /// <I> enum for pipeline
-    units::length::inch_t mountingXOffset,  /// <I> x offset of cam from robot center (forward relative to robot)
-    units::length::inch_t mountingYOffset,  /// <I> y offset of cam from robot center (left relative to robot)
-    units::length::inch_t mountingZOffset,  /// <I> z offset of cam from robot center (up relative to robot)
-    units::angle::degree_t pitch,           /// <I> - Pitch of camera
-    units::angle::degree_t yaw,             /// <I> - Yaw of camera
-    units::angle::degree_t roll,            /// <I> - Roll of camera
+    DragonCamera::CAMERA_TYPE cameraType,
+    DragonCamera::CAMERA_USAGE cameraUsage,
+    units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
+    units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
+    units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
+    units::angle::degree_t pitch,          /// <I> - Pitch of camera
+    units::angle::degree_t yaw,            /// <I> - Yaw of camera
+    units::angle::degree_t roll,           /// <I> - Roll of camera
+    LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
     CAM_MODE camMode,
     STREAM_MODE streamMode,
-    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
+    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, cameraType, cameraUsage, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
                               SensorData(),
-                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
-                              m_usage(usage)
+                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
+    SetPipeline(initialPipeline);
     SetStreamMode(streamMode);
     ToggleSnapshot(snapMode);
+    SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
     m_healthTimer = new frc::Timer();
 }
 
@@ -79,15 +81,17 @@ void DragonLimelight::PeriodicCacheData()
     if (nt != nullptr)
     {
 
-        m_tv = (nt->GetNumber("tv", 0.0) > 0.1);
-        m_tx = units::angle::degree_t(nt->GetNumber("tx", 0.0));
-        m_ty = units::angle::degree_t(nt->GetNumber("ty", 0.0));
+        m_tv = LimelightHelpers::getTV(m_cameraName);
+        m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
+        m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
+        m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
     }
     else
     {
         m_tv = false;
         m_tx = units::angle::degree_t(0.0);
         m_ty = units::angle::degree_t(0.0);
+        m_tagid = -1;
     }
 }
 
@@ -122,19 +126,7 @@ bool DragonLimelight::HealthCheck()
 /// @return -1 if the network table cannot be found
 std::optional<int> DragonLimelight::GetAprilTagID()
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        double value = nt->GetNumber("tid", -1);
-        int aprilTagInt = static_cast<int>(value + (value > 0 ? 0.5 : -0.5));
-        if (aprilTagInt < 0)
-        {
-            return std::nullopt;
-        }
-        return aprilTagInt;
-    }
-
-    return std::nullopt;
+    return m_tagid;
 }
 
 std::optional<VisionPose> DragonLimelight::GetFieldPosition()
@@ -393,7 +385,7 @@ std::optional<units::time::millisecond_t> DragonLimelight::GetPipelineLatency()
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
-        return units::time::second_t(nt->GetNumber("tl", 0.0));
+        return units::time::second_t(LimelightHelpers::getLatency_Pipeline(m_cameraName));
     }
 
     return std::nullopt;
@@ -401,10 +393,21 @@ std::optional<units::time::millisecond_t> DragonLimelight::GetPipelineLatency()
 
 void DragonLimelight::SetLEDMode(DragonLimelight::LED_MODE mode)
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
+    switch (mode)
     {
-        nt->PutNumber("ledMode", mode);
+    case LED_MODE::LED_PIPELINE_CONTROL:
+        LimelightHelpers::setLEDMode_PipelineControl(m_cameraName);
+        break;
+    case LED_MODE::LED_BLINK:
+        LimelightHelpers::setLEDMode_ForceBlink(m_cameraName);
+        break;
+    case LED_MODE::LED_ON:
+        LimelightHelpers::setLEDMode_ForceOn(m_cameraName);
+        break;
+    case LED_MODE::LED_OFF: // default to off
+    default:
+        LimelightHelpers::setLEDMode_ForceOff(m_cameraName);
+        break;
     }
 }
 
@@ -417,23 +420,29 @@ void DragonLimelight::SetCamMode(DragonLimelight::CAM_MODE mode)
     }
 }
 
-
-bool DragonLimelight::UpdatePipeline()
+/**
+ * @brief Update the pipeline index, this assumes that all of your limelights have the same pipeline at each index
+ */
+void DragonLimelight::SetPipeline(LL_PIPELINE pipeline)
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        return nt->PutNumber("pipeline", m_pipeline);
-    }
-    return false;
+    m_pipeline = pipeline;
+    LimelightHelpers::setPipelineIndex(m_cameraName, pipeline);
 }
 
 void DragonLimelight::SetStreamMode(DragonLimelight::STREAM_MODE mode)
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
+    switch (mode)
     {
-        nt->PutNumber("stream", mode);
+    case STREAM_MODE::STREAM_PIP_MAIN:
+        LimelightHelpers::setStreamMode_PiPMain(m_cameraName);
+        break;
+    case STREAM_MODE::STREAM_PIP_SECONDARY:
+        LimelightHelpers::setStreamMode_PiPSecondary(m_cameraName);
+        break;
+    case STREAM_MODE::STREAM_STANDARD: // default to standard
+    default:
+        LimelightHelpers::setStreamMode_Standard(m_cameraName);
+        break;
     }
 }
 
@@ -465,6 +474,16 @@ void DragonLimelight::ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle)
     {
         nt->PutNumber("snapshot", toggle);
     }
+}
+
+void DragonLimelight::SetPriorityTagID(int id)
+{
+    LimelightHelpers::setPriorityTagID(m_cameraName, id);
+}
+
+void DragonLimelight::SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw)
+{
+    LimelightHelpers::setCameraPose_RobotSpace(m_cameraName, forward, left, up, roll, pitch, yaw);
 }
 
 void DragonLimelight::PrintValues()

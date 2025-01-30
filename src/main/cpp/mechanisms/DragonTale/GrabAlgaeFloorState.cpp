@@ -53,6 +53,8 @@ void GrabAlgaeFloorState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->UpdateTargetCoralPercentOutput ( 0 );
 	m_mechanism->UpdateTargetAlgaePercentOutput ( 0 );
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void GrabAlgaeFloorState::Run()
@@ -76,6 +78,6 @@ bool GrabAlgaeFloorState::AtTarget()
 bool GrabAlgaeFloorState::IsTransitionCondition ( bool considerGamepadTransitions )
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return false;
-	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
+
+	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_INTAKE)) && m_mechanism->IsAlgaeMode() && (!m_mechanism->GetAlgaeSensorState()));
 }

@@ -132,6 +132,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
+    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
@@ -175,6 +176,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
+    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));

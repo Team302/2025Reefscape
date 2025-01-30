@@ -550,21 +550,21 @@
                 <value>true</value>
               </enable>
               <fusedCANcoder>
-                <name>ArmAngle</name>
+                <name>ArmAngleSensor</name>
               </fusedCANcoder>
               <sensorToMechanismRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>240</value>
+                <value>1</value>
               </sensorToMechanismRatio>
               <rotorToSensorRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>240</value>
               </rotorToSensorRatio>
               <fusedSyncChoice>FUSED</fusedSyncChoice>
             </fusedSyncCANcoder>
@@ -716,14 +716,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>3</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
-                <value>1</value>
+                <value>0.75</value>
               </diameter>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
@@ -795,21 +795,21 @@
                 <value>true</value>
               </enable>
               <fusedCANcoder>
-                <name>ElevatorHeight</name>
+                <name>ElevatorHeightSensor</name>
               </fusedCANcoder>
               <sensorToMechanismRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>3.534291735</value>
+                <value>0.167531519</value>
               </sensorToMechanismRatio>
               <rotorToSensorRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>5.969026042</value>
+                <value>7.6</value>
               </rotorToSensorRatio>
               <fusedSyncChoice>FUSED</fusedSyncChoice>
             </fusedSyncCANcoder>
@@ -885,7 +885,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </forwardResetPosition>
               <forwardPosition>
                 <unitsFamily>angle</unitsFamily>
@@ -1446,7 +1446,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </forwardResetPosition>
               <forwardPosition>
                 <unitsFamily>angle</unitsFamily>
@@ -1476,7 +1476,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </reverseResetPosition>
               <reversePosition>
                 <unitsFamily>angle</unitsFamily>
@@ -1594,7 +1594,7 @@
         </digitalInput>
         <cancoder>
           <CANcoder>
-            <name>ArmAngle</name>
+            <name>ArmAngleSensor</name>
             <canID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -1618,7 +1618,7 @@
             </reverse>
           </CANcoder>
           <CANcoder>
-            <name>ElevatorHeight</name>
+            <name>ElevatorHeightSensor</name>
             <canID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>

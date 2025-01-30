@@ -23,20 +23,20 @@
 void CameraConfig_9997::DefineCameras()
 {
 
-    DragonLimelight *placer = new DragonLimelight(std::string("limelight-placer"), //networkTableName
-                                                  DragonLimelight::LIMELIGHT_MODE::MACHINE_LEARNING,     // PIPELINE initialPipeline, 
-                                                  DragonLimelight::LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL,             /// <I> enum for starting pipeline
-                                                  units::length::inch_t(0),                     // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
-                                                  units::length::inch_t(0),                     // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
-                                                  units::length::inch_t(0),                     // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-                                                  units::angle::degree_t(0),                    // units::angle::degree_t pitch,          /// <I> - Pitch of camera
-                                                  units::angle::degree_t(0),                    // units::angle::degree_t yaw,            /// <I> - Yaw of camera
-                                                  units::angle::degree_t(0),                    // units::angle::degree_t roll,           /// <I> - Roll of camera
-                                                  DragonLimelight::LED_MODE::LED_OFF,           // LED_MODE ledMode,
-                                                  DragonLimelight::CAM_MODE::CAM_VISION,        // CAM_MODE camMode,
-                                                  DragonLimelight::STREAM_MODE::STREAM_DEFAULT, // STREAM_MODE streamMode,
-                                                  DragonLimelight::SNAPSHOT_MODE::SNAP_OFF     // SNAPSHOT_MODE snapMode
-                                                  );                                         // additional parameter
+    DragonLimelight *placer = new DragonLimelight(std::string("limelight-placer"),                   // networkTableName
+                                                  DragonCamera::CAMERA_TYPE::LIMELIGHT3,             // PIPELINE initialPipeline,
+                                                  DragonCamera::CAMERA_USAGE::GAME_ELEMENT_DETECTION,             // PIPELINE initialPipeline,
+                                                  units::length::inch_t(0),                          // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
+                                                  units::length::inch_t(0),                          // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
+                                                  units::length::inch_t(0),                          // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
+                                                  units::angle::degree_t(0),                         // units::angle::degree_t pitch,          /// <I> - Pitch of camera
+                                                  units::angle::degree_t(0),                         // units::angle::degree_t yaw,            /// <I> - Yaw of camera
+                                                  units::angle::degree_t(0),                         // units::angle::degree_t roll,           /// <I> - Roll of camera
+                                                  DragonLimelight::LL_PIPELINE::MACHINE_LEARNING_PL, /// <I> enum for starting pipeline
+                                                  DragonLimelight::LED_MODE::LED_OFF,                // LED_MODE ledMode,
+                                                  DragonLimelight::CAM_MODE::CAM_VISION,             // CAM_MODE camMode,
+                                                  DragonLimelight::STREAM_MODE::STREAM_STANDARD,      // STREAM_MODE streamMode,
+                                                  DragonLimelight::SNAPSHOT_MODE::SNAP_OFF           // SNAPSHOT_MODE snapMode
+    );                                                                                               // additional parameter
     DragonVision::GetDragonVision()->AddCamera(placer, RobotElementNames::CAMERA_USAGE::PLACER);
-
 }
