@@ -3720,7 +3720,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>-1</value>
+                  <value>1</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
