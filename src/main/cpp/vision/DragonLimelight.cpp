@@ -50,8 +50,8 @@
 ///-----------------------------------------------------------------------------------
 DragonLimelight::DragonLimelight(
     std::string networkTableName, /// <I> networkTableName
-    DragonCamera::CAMERA_TYPE cameraType,
-    DragonCamera::CAMERA_USAGE cameraUsage,
+    DragonLimelight::CAMERA_TYPE cameraType,
+    DragonLimelight::CAMERA_USAGE cameraUsage,
     units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
     units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
     units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
@@ -62,8 +62,7 @@ DragonLimelight::DragonLimelight(
     LED_MODE ledMode,
     CAM_MODE camMode,
     STREAM_MODE streamMode,
-    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, cameraType, cameraUsage, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
-                              SensorData(),
+    SNAPSHOT_MODE snapMode) : SensorData(),
                               m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
