@@ -277,7 +277,7 @@ void IntakeManager::RunCommonTasks()
 	{
 	
         if (m_manualModeButtonReleased)
-            m_failedSensorLatch = (!m_failedSensorLatch) ? m_failedSensorLatch = true : m_failedSensorLatch = false;
+            m_failedSensorLatch = !m_failedSensorLatch;
 
 	}
 	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
