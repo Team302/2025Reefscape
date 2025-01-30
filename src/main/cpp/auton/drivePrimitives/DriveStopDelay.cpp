@@ -78,6 +78,7 @@ void DriveStopDelay::Run()
 {
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Shuffleboard Time"), static_cast<double>(GetDelayTime()));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Delay Option"), m_delayOption);
 
     if (m_chassis != nullptr)
     {
@@ -128,6 +129,5 @@ bool DriveStopDelay::IsDone()
     }
     **/
     auto delayTime = GetDelayTime();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Shuffleboard Time"), static_cast<double>(delayTime));
     return m_timer->AdvanceIfElapsed(delayTime) || m_timer->AdvanceIfElapsed(m_maxTime);
 }
