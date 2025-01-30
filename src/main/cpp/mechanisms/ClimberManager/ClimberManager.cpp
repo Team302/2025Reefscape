@@ -88,7 +88,7 @@ std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE
 void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
-	m_Climber = new ctre::phoenix6::hardware::TalonFX ( 0, "rio" );
+	m_Climber = new ctre::phoenix6::hardware::TalonFX ( 7, "rio" );
 
 	m_PositionDegree = new ControlData (
 	    ControlModes::CONTROL_TYPE::POSITION_DEGREES, // ControlModes::CONTROL_TYPE mode

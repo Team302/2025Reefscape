@@ -22,6 +22,13 @@
           <type>Double</type>
           <value>1</value>
         </diameter>
+        <isDistance>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </isDistance>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
         <openLoopRampTime>
@@ -82,6 +89,13 @@
           <type>UInt32</type>
           <value>0</value>
         </CanID>
+        <sensorToMechanismRatio>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sensorToMechanismRatio>
       </remoteSensor>
       <fusedSyncCANcoder>
         <enable>
@@ -268,6 +282,13 @@
           <type>Double</type>
           <value>0.75</value>
         </diameter>
+        <isDistance>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </isDistance>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
         <openLoopRampTime>
@@ -321,6 +342,7 @@
         <value>false</value>
       </enableFollowID>
       <remoteSensor>
+        <Source>CANCoder</Source>
         <CanID>
           <unitsFamily>none</unitsFamily>
           <name>uintParameter</name>
@@ -328,6 +350,13 @@
           <type>UInt32</type>
           <value>0</value>
         </CanID>
+        <sensorToMechanismRatio>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sensorToMechanismRatio>
       </remoteSensor>
       <fusedSyncCANcoder>
         <enable>
@@ -335,7 +364,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>true</value>
+          <value>false</value>
         </enable>
         <fusedCANcoder>
           <name>ElevatorHeightSensor</name>
@@ -514,6 +543,13 @@
           <type>Double</type>
           <value>1</value>
         </diameter>
+        <isDistance>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </isDistance>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
         <openLoopRampTime>
@@ -574,6 +610,13 @@
           <type>UInt32</type>
           <value>0</value>
         </CanID>
+        <sensorToMechanismRatio>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sensorToMechanismRatio>
       </remoteSensor>
       <fusedSyncCANcoder>
         <enable>
@@ -673,6 +716,13 @@
           <type>Double</type>
           <value>1</value>
         </diameter>
+        <isDistance>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </isDistance>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
         <openLoopRampTime>
@@ -733,6 +783,13 @@
           <type>UInt32</type>
           <value>0</value>
         </CanID>
+        <sensorToMechanismRatio>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sensorToMechanismRatio>
       </remoteSensor>
       <fusedSyncCANcoder>
         <enable>
@@ -832,6 +889,13 @@
           <type>Double</type>
           <value>1</value>
         </diameter>
+        <isDistance>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </isDistance>
       </theDistanceAngleCalcInfo>
       <voltageRamping>
         <openLoopRampTime>
@@ -892,6 +956,13 @@
           <type>UInt32</type>
           <value>0</value>
         </CanID>
+        <sensorToMechanismRatio>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sensorToMechanismRatio>
       </remoteSensor>
       <fusedSyncCANcoder>
         <enable>

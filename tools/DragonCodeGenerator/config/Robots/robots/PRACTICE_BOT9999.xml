@@ -36,6 +36,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -96,6 +103,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -480,6 +494,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -540,6 +561,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -725,6 +753,13 @@
                 <type>Double</type>
                 <value>0.75</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -778,13 +813,21 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
+              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
                 <__units__ />
                 <type>UInt32</type>
-                <value>0</value>
+                <value>4</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>5.969</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -792,7 +835,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>true</value>
+                <value>false</value>
               </enable>
               <fusedCANcoder>
                 <name>ElevatorHeightSensor</name>
@@ -970,6 +1013,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -1030,6 +1080,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -1128,6 +1185,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -1188,6 +1252,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -1286,6 +1357,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -1346,6 +1424,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -3739,7 +3824,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -3757,7 +3842,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -3775,7 +3860,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3793,7 +3878,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3811,7 +3896,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -3864,7 +3949,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -3882,7 +3967,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -3900,7 +3985,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3918,7 +4003,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3936,7 +4021,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -3989,7 +4074,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
@@ -4007,7 +4092,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -4025,7 +4110,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -4043,7 +4128,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -4061,7 +4146,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>false</value>
+                  <value>true</value>
                 </Enabled>
                 <controlDataName>PositionInch</controlDataName>
               </motorTarget>
@@ -4094,6 +4179,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -4154,6 +4246,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -4339,6 +4438,13 @@
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -4399,6 +4505,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -4579,7 +4692,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>3</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>

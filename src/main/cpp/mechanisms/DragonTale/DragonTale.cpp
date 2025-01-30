@@ -248,8 +248,8 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_Algae = new ctre::phoenix::motorcontrol::can::TalonSRX(19);
 	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "rio");
 
-	m_CoralInSensor = new frc::DigitalInput(0);
-	m_CoralOutSensor = new frc::DigitalInput(0);
+	m_CoralInSensor = new frc::DigitalInput(2);
+	m_CoralOutSensor = new frc::DigitalInput(1);
 	m_AlgaeSensor = new frc::DigitalInput(0);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
@@ -371,7 +371,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	motorconfig.DutyCycleNeutralDeadband = 0;
 	m_Arm->GetConfigurator().Apply(motorconfig);
 	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
+	fxConfig.Feedback.FeedbackRemoteSensorID = 17;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	fxConfig.Feedback.SensorToMechanismRatio = 1;
 	fxConfig.Feedback.RotorToSensorRatio = 240;
