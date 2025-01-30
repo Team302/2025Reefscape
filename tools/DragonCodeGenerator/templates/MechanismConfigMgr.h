@@ -4,18 +4,10 @@ $$_GEN_NOTICE_$$
 #pragma once
 
 #include "configs/MechanismConfig.h"
-
+#include "RobotIdentifier.h"
 class MechanismConfigMgr
 {
 public:
-    enum RobotIdentifier
-    {
-        CHASSISBOT_9998 = 9998,
-        $$_ROBOT_CONFIGURATIONS_NAMES_ENUMS_$$
-
-            MAX_ROBOT_IDENTIFIERS
-    };
-
     static MechanismConfigMgr *GetInstance();
     MechanismConfig *GetCurrentConfig() const { return m_config; }
     void InitRobot(RobotIdentifier);
