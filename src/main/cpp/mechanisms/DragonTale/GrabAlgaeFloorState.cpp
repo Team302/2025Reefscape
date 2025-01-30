@@ -79,5 +79,5 @@ bool GrabAlgaeFloorState::IsTransitionCondition ( bool considerGamepadTransition
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_INTAKE)) && m_mechanism->IsAlgaeMode() && (!m_mechanism->GetAlgaeSensorState()));
+	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_INTAKE)) && m_mechanism->IsAlgaeMode() && !m_mechanism->GetAlgaeSensorState() && !m_mechanism->GetManualMode());
 }
