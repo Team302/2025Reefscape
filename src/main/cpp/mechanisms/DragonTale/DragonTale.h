@@ -102,12 +102,6 @@ public:
 		m_AlgaePercentOutput.Output = percentOut;
 		m_AlgaeActiveTarget = &m_AlgaePercentOutput;
 	}
-	void UpdateTargetAlgaePercentOutput(double percentOut, bool enableFOC)
-	{
-		m_AlgaePercentOutput.Output = percentOut;
-		m_AlgaePercentOutput.EnableFOC = enableFOC;
-		m_AlgaeActiveTarget = &m_AlgaePercentOutput;
-	}
 
 	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
