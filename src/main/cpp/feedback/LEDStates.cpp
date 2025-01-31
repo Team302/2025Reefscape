@@ -151,6 +151,18 @@ void LEDStates::DisabledPattern()
     ChaserPattern(DragonLeds::AZUL);
 }
 
+void LEDStates::BreathingPattern(DragonLeds::Colors c)
+{
+    if (m_LEDstring->m_ledBuffer.size() > 0)
+    {
+        // brightness follows sin wave shifted to range [0, 254] with period of m_breathePatternPeriod ticks
+        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;
+        m_LEDstring->setBufferAllLEDsColorBrightness(c, brightness);
+        m_LEDstring->commitLedData();
+        m_timer++;
+    }
+}
+
 void LEDStates::ResetVariables()
 {
     m_loopThroughIndividualLEDs = -1;
