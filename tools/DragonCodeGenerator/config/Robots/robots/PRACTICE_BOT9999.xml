@@ -1167,7 +1167,7 @@
             <feedbackSensorConfig />
             <remoteFeedbackSensorConfig />
           </MotorController>
-          <MotorController xsi:type="TalonSRX">
+          <MotorController xsi:type="TalonFX">
             <name>Algae</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>
@@ -1303,36 +1303,50 @@
                 <value>false</value>
               </LimitSwitchesEnabled>
             </limitSwitches>
-            <currentLimits>
-              <EnableCurrentLimits>
-                <unitsFamily>none</unitsFamily>
-                <name>boolParameter</name>
-                <__units__ />
-                <type>Boolean</type>
-                <value>true</value>
-              </EnableCurrentLimits>
-              <currentLimit>
-                <unitsFamily>current</unitsFamily>
-                <name>intParameter</name>
-                <__units__>A</__units__>
-                <type>Int32</type>
-                <value>10</value>
-              </currentLimit>
-              <triggerThresholdCurrent>
-                <unitsFamily>time</unitsFamily>
-                <name>intParameter</name>
-                <__units__>s</__units__>
-                <type>Int32</type>
-                <value>13</value>
-              </triggerThresholdCurrent>
-              <triggerThresholdTime>
-                <unitsFamily>time</unitsFamily>
-                <name>intParameter</name>
-                <__units__>s</__units__>
-                <type>Int32</type>
-                <value>1</value>
-              </triggerThresholdTime>
-            </currentLimits>
+      <theCurrentLimits>
+        <enableStatorCurrentLimit>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </enableStatorCurrentLimit>
+        <statorCurrentLimit>
+          <unitsFamily>current</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>A</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </statorCurrentLimit>
+        <enableSupplyCurrentLimit>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>true</value>
+        </enableSupplyCurrentLimit>
+        <supplyCurrentLimit>
+          <unitsFamily>current</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>A</__units__>
+          <type>Double</type>
+          <value>70</value>
+        </supplyCurrentLimit>
+        <supplyCurrentThreshold>
+          <unitsFamily>current</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>A</__units__>
+          <type>Double</type>
+          <value>35</value>
+        </supplyCurrentThreshold>
+        <supplyTimeThreshold>
+          <unitsFamily>time</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>s</__units__>
+          <type>Double</type>
+          <value>0.5</value>
+        </supplyTimeThreshold>
+      </theCurrentLimits>
             <theConfigMotorSettings>
               <mode>Brake</mode>
             </theConfigMotorSettings>

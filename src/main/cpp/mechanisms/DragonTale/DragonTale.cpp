@@ -245,7 +245,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_Arm = new ctre::phoenix6::hardware::TalonFX(17, "rio");
 	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(4, "rio");
 	m_Coral = new ctre::phoenix::motorcontrol::can::TalonSRX(18);
-	m_Algae = new ctre::phoenix::motorcontrol::can::TalonSRX(19);
+	m_Algae = new ctre::phoenix6::hardware::TalonFX(19, "rio");
 	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "rio");
 
 	m_CoralInSensor = new frc::DigitalInput(2);
@@ -324,7 +324,7 @@ void DragonTale::InitializePRACTICE_BOT9999()
 	InitializeTalonFXArmPRACTICE_BOT9999();
 	InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
 	InitializeTalonSRXCoralPRACTICE_BOT9999();
-	InitializeTalonSRXAlgaePRACTICE_BOT9999();
+	InitializeTalonFXAlgaePRACTICE_BOT9999();
 	InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 }
 void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
@@ -444,20 +444,53 @@ void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
 	m_Coral->ConfigSupplyCurrentLimit(climit, 0);
 }
 
-void DragonTale::InitializeTalonSRXAlgaePRACTICE_BOT9999()
+void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 {
-	m_Algae->SetInverted(true);
-	m_Algae->EnableVoltageCompensation(true);
-	m_Algae->ConfigVoltageCompSaturation(10.0, 0);
-	m_Algae->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-	m_Algae->ConfigOpenloopRamp(0.25);
+	CurrentLimitsConfigs currconfigs{};
+	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
+	currconfigs.StatorCurrentLimitEnable = false;
+	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
+	currconfigs.SupplyCurrentLimitEnable = true;
+	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
+	m_Algae->GetConfigurator().Apply(currconfigs);
 
-	ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration climit;
-	climit.enable = true;
-	climit.currentLimit = 10;
-	climit.triggerThresholdCurrent = 13;
-	climit.triggerThresholdTime = 1;
-	m_Algae->ConfigSupplyCurrentLimit(climit, 0);
+	VoltageConfigs voltageConfigs{};
+	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	m_Algae->GetConfigurator().Apply(voltageConfigs);
+	OpenLoopRampsConfigs rampConfigs{};
+	rampConfigs.VoltageOpenLoopRampPeriod = units::time::second_t(0);
+	m_Algae->GetConfigurator().Apply(rampConfigs);
+	HardwareLimitSwitchConfigs hwswitch{};
+	hwswitch.ForwardLimitEnable = false;
+	hwswitch.ForwardLimitRemoteSensorID = 0;
+	hwswitch.ForwardLimitAutosetPositionEnable = false;
+	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+
+	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	hwswitch.ReverseLimitEnable = false;
+	hwswitch.ReverseLimitRemoteSensorID = 0;
+	hwswitch.ReverseLimitAutosetPositionEnable = false;
+	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+	m_Algae->GetConfigurator().Apply(hwswitch);
+
+	MotorOutputConfigs motorconfig{};
+	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
+	motorconfig.NeutralMode = NeutralModeValue::Brake;
+	motorconfig.PeakForwardDutyCycle = 1;
+	motorconfig.PeakReverseDutyCycle = -1;
+	motorconfig.DutyCycleNeutralDeadband = 0;
+	m_Algae->GetConfigurator().Apply(motorconfig);
+
+	TalonFXConfiguration fxConfig{};
+	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	fxConfig.Feedback.SensorToMechanismRatio = 1;
+	m_Algae->GetConfigurator().Apply(fxConfig);
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
@@ -560,7 +593,7 @@ void DragonTale::Update()
 	m_Arm->SetControl(*m_ArmActiveTarget);
 	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
 	m_Coral->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_CoralActiveTarget);
-	m_Algae->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_AlgaeActiveTarget);
+	m_Algae->SetControl(*m_AlgaeActiveTarget);
 }
 
 bool DragonTale::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
@@ -608,7 +641,7 @@ void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
 	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0));
-	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 0.2));
+	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 0.0));
 	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
