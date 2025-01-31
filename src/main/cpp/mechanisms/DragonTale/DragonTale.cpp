@@ -570,10 +570,10 @@ void DragonTale::SetCurrentState(int state, bool run)
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
-	Cyclic();
 	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
+	Cyclic();
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
@@ -745,7 +745,7 @@ void DragonTale::UpdateTarget()
 	units::angle::degree_t actualTargetAngle;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 
-	units::length::inch_t elevatorError = m_elevatorTarget - GetElevatorHeight();
+	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{

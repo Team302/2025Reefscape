@@ -93,6 +93,18 @@ public:
 	}
 	void UpdateTargetElevatorLeaderPositionInch(units::length::inch_t position)
 	{
+		if (position < GetElevatorHeight())
+		{
+			m_ElevatorLeaderPositionInch.Velocity = 1_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 5_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Jerk = 25_tr_per_s_cu;
+		}
+		else
+		{
+			m_ElevatorLeaderPositionInch.Velocity = 5_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 25_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Jerk = 100_tr_per_s_cu;
+		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
 	}
@@ -208,7 +220,8 @@ private:
 	void InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ArmPositionDegree{units::angle::turn_t(0.0)};
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ElevatorLeaderPositionInch{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
+
 	double m_CoralActiveTarget;
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 
