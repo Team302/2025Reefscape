@@ -553,6 +553,11 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kP = m_PositionInch->GetP();
 	slot0Configs.kI = m_PositionInch->GetI();
 	slot0Configs.kD = m_PositionInch->GetD();
+	slot0Configs.kG = m_PositionInch->GetF();
+	slot0Configs.kV = 0.0;
+	slot0Configs.kA = 0.0;
+	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
+	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
 }
 
@@ -687,6 +692,18 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }
 
+void DragonTale::SetSensorFailSafe()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
+	{
+		m_manualMode = false;
+	}
+}
+
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
@@ -714,6 +731,15 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		return m_grabAlgaeLow;
 }
 
+void DragonTale::ManualControl()
+{
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
+	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
+
+	m_elevatorTarget += ElevatorChange;
+	m_armTarget += ArmChange;
+}
+
 void DragonTale::UpdateTarget()
 {
 	units::angle::degree_t actualTargetAngle;
@@ -737,25 +763,4 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
-}
-
-void DragonTale::ManualControl()
-{
-	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
-	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
-
-	m_elevatorTarget += ElevatorChange;
-	m_armTarget += ArmChange;
-}
-
-void DragonTale::SetSensorFailSafe()
-{
-	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
-	{
-		m_manualMode = true;
-	}
-	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
-	{
-		m_manualMode = false;
-	}
 }
