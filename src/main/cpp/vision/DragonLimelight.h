@@ -26,17 +26,34 @@
 #include "units/length.h"
 #include "units/time.h"
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/DriverStation.h"
+#include "vision/DragonVisionStructs.h"
 
 // Team 302 includes
-#include "vision/DragonCamera.h"
 #include "utils/sensors/SensorData.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera, public SensorData
+class DragonLimelight : public SensorData
 {
 public:
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        LIMELIGHT4_W_HAILO8,
+        LIMELIGHT3G,
+        LIMELIGHT3,
+        LIMELIGHT3_W_CORAL
+    };
+
+    enum CAMERA_USAGE
+    {
+        BACK_CAMERA,
+        FRONT_CAMERA,
+    };
+
     enum LED_MODE
     {
         LED_UNKNOWN = -1,
@@ -84,8 +101,8 @@ public:
     DragonLimelight() = delete;
     DragonLimelight(
         std::string name, /// <I> - network table name'
-        DragonCamera::CAMERA_TYPE cameraType,
-        DragonCamera::CAMERA_USAGE cameraUsage,
+        DragonLimelight::CAMERA_TYPE cameraType,
+        DragonLimelight::CAMERA_USAGE cameraUsage,
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
@@ -152,10 +169,18 @@ public:
     void SetPriorityTagID(int id);
     void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
-    void PeriodicCacheData() override;
+    units::angle::degree_t GetCameraPitch() const { return m_cameraPose.Rotation().Y(); }
+    units::angle::degree_t GetCameraYaw() const { return m_cameraPose.Rotation().Z(); }
+    units::angle::degree_t GetCameraRoll() const { return m_cameraPose.Rotation().X(); } // rotates around x-axis
+    units::length::inch_t GetMountingXOffset() const { return m_cameraPose.X(); }
+    units::length::inch_t GetMountingYOffset() const { return m_cameraPose.Y(); }
+    units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
+    std::string GetCameraName() const { return m_cameraName; }
 
-    units::angle::degree_t GetTx() const override;
-    units::angle::degree_t GetTy() const override;
+    void PeriodicCacheData();
+
+    units::angle::degree_t GetTx() const;
+    units::angle::degree_t GetTy() const;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
@@ -164,6 +189,7 @@ protected:
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
 
+    // cached elements
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
@@ -174,4 +200,9 @@ protected:
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
     LL_PIPELINE m_pipeline;
+
+    // from old dragon camera
+    std::string m_cameraName;
+    frc::Pose3d m_cameraPose;
+    const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);
 };

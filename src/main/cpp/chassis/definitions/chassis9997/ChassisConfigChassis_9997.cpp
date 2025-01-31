@@ -15,8 +15,6 @@
 
 #include <string>
 
-#include <ctre/phoenix/sensors/PigeonIMU.h>
-
 #include "chassis/definitions/chassis9997/ChassisConfigChassis_9997.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
@@ -28,57 +26,123 @@ using std::string;
 
 void ChassisConfigChassis_9997::DefinePigeon()
 {
-    m_pigeon2 = new Pigeon2(50, m_canbusName);
-    MountPoseConfigs config{};
-    config.MountPoseYaw = 0_deg;
-    m_pigeon2->GetConfigurator().Apply(config);
+    string canbusName;
+    canbusName.assign(TunerConstants9997::kCANBusName);
+    m_pigeon2 = new Pigeon2(TunerConstants9997::kPigeonId, canbusName);
 }
 
 void ChassisConfigChassis_9997::DefineChassis()
 {
-    string moduleconfig{string("swervemodule_9997.xml")};
-    string chassisconfig{string("swervechassis_9997.xml")};
     string networkTableName{string("swerve")};
+    string canbusName;
+    canbusName.assign(TunerConstants9997::kCANBusName);
+    units::length::inch_t wheeldiameter = TunerConstants9997::kWheelRadius * 2.0;
 
-    /**
-    m_leftFrontModule = new SwerveModule(m_canbusName,
+    m_leftFrontModule = new SwerveModule(canbusName,
                                          SwerveModuleConstants::ModuleID::LEFT_FRONT,
-                                         SwerveModuleConstants::ModuleType::SDS_MK4_L2,
-                                         m_leftfrontdriveID, m_leftfrontdriveInvert,
-                                         m_leftfrontturnID, m_leftfrontturnInvert,
-                                         m_leftfrontturnID, m_leftfrontcancoderInvert, m_leftfrontOffset,
-                                         moduleconfig,
+                                         wheeldiameter,
+
+                                         TunerConstants9997::kDriveGearRatio,
+                                         1.0,
+                                         TunerConstants9997::kSteerGearRatio,
+                                         TunerConstants9997::kSpeedAt12Volts,
+
+                                         TunerConstants9997::kFrontLeftDriveMotorId,
+                                         TunerConstants9997::kInvertLeftSide,
+
+                                         TunerConstants9997::kFrontLeftSteerMotorId,
+                                         TunerConstants9997::kFrontLeftSteerMotorInverted,
+
+                                         TunerConstants9997::kFrontLeftEncoderId,
+                                         TunerConstants9997::kFrontLeftEncoderInverted,
+                                         TunerConstants9997::kFrontLeftEncoderOffset,
+
+                                         TunerConstants9997::steerGains,
+
                                          networkTableName);
-    m_leftBackModule = new SwerveModule(m_canbusName,
+
+    m_leftBackModule = new SwerveModule(canbusName,
                                         SwerveModuleConstants::ModuleID::LEFT_BACK,
-                                        SwerveModuleConstants::ModuleType::SDS_MK4_L2,
-                                        m_leftbackdriveID, m_leftbackdriveInvert,
-                                        m_leftbackturnID, m_leftbackturnInvert,
-                                        m_leftbackturnID, m_leftbackcancoderInvert, m_leftbackOffset,
-                                        moduleconfig,
+                                        wheeldiameter,
+
+                                        TunerConstants9997::kDriveGearRatio,
+                                        1.0,
+                                        TunerConstants9997::kSteerGearRatio,
+                                        TunerConstants9997::kSpeedAt12Volts,
+
+                                        TunerConstants9997::kBackLeftDriveMotorId,
+                                        TunerConstants9997::kInvertLeftSide,
+
+                                        TunerConstants9997::kBackLeftSteerMotorId,
+                                        TunerConstants9997::kBackLeftSteerMotorInverted,
+
+                                        TunerConstants9997::kBackLeftEncoderId,
+                                        TunerConstants9997::kBackLeftEncoderInverted,
+                                        TunerConstants9997::kBackLeftEncoderOffset,
+
+                                        TunerConstants9997::steerGains,
+
                                         networkTableName);
-    m_rightFrontModule = new SwerveModule(m_canbusName,
+
+    m_rightFrontModule = new SwerveModule(canbusName,
                                           SwerveModuleConstants::ModuleID::RIGHT_FRONT,
-                                          SwerveModuleConstants::ModuleType::SDS_MK4_L2,
-                                          m_rightfrontdriveID, m_rightfrontdriveInvert,
-                                          m_rightfrontturnID, m_rightfrontturnInvert,
-                                          m_rightfrontturnID, m_rightfrontcancoderInvert, m_rightfrontOffset,
-                                          moduleconfig,
+                                          wheeldiameter,
+
+                                          TunerConstants9997::kDriveGearRatio,
+                                          1.0,
+                                          TunerConstants9997::kSteerGearRatio,
+                                          TunerConstants9997::kSpeedAt12Volts,
+
+                                          TunerConstants9997::kFrontRightDriveMotorId,
+                                          TunerConstants9997::kInvertRightSide,
+
+                                          TunerConstants9997::kFrontRightSteerMotorId,
+                                          TunerConstants9997::kFrontRightSteerMotorInverted,
+
+                                          TunerConstants9997::kFrontRightEncoderId,
+                                          TunerConstants9997::kFrontRightEncoderInverted,
+                                          TunerConstants9997::kFrontRightEncoderOffset,
+
+                                          TunerConstants9997::steerGains,
+
                                           networkTableName);
-    m_rightBackModule = new SwerveModule(m_canbusName,
+
+    m_rightBackModule = new SwerveModule(canbusName,
                                          SwerveModuleConstants::ModuleID::RIGHT_BACK,
-                                         SwerveModuleConstants::ModuleType::SDS_MK4_L2,
-                                         m_rightbackdriveID, m_rightbackdriveInvert,
-                                         m_rightbackturnID, m_rightbackturnInvert,
-                                         m_rightbackturnID, m_rightbackcancoderInvert, m_rightbackOffset,
-                                         moduleconfig,
+                                         wheeldiameter,
+
+                                         TunerConstants9997::kDriveGearRatio,
+                                         1.0,
+                                         TunerConstants9997::kSteerGearRatio,
+                                         TunerConstants9997::kSpeedAt12Volts,
+
+                                         TunerConstants9997::kBackRightDriveMotorId,
+                                         TunerConstants9997::kInvertRightSide,
+
+                                         TunerConstants9997::kBackRightSteerMotorId,
+                                         TunerConstants9997::kBackRightSteerMotorInverted,
+
+                                         TunerConstants9997::kBackRightEncoderId,
+                                         TunerConstants9997::kBackRightEncoderInverted,
+                                         TunerConstants9997::kBackRightEncoderOffset,
+
+                                         TunerConstants9997::steerGains,
+
                                          networkTableName);
+
+    units::length::inch_t wheelbase = TunerConstants9997::kFrontLeftXPos -
+                                      TunerConstants9997::kBackLeftXPos;
+    units::length::inch_t trackwidth = TunerConstants9997::kFrontLeftYPos -
+                                       TunerConstants9997::kFrontRightYPos;
+
     m_chassis = new SwerveChassis(m_leftFrontModule,
                                   m_rightFrontModule,
                                   m_leftBackModule,
                                   m_rightBackModule,
                                   m_pigeon2,
-                                  chassisconfig,
-                                  networkTableName);
-    **/
+                                  networkTableName,
+                                  wheelbase,
+                                  trackwidth,
+                                  wheeldiameter,
+                                  TunerConstants9997::kSpeedAt12Volts);
 }

@@ -64,6 +64,10 @@ public:
         HUMAN_PLAYER_STATION,
         ALGAE_INTAKE,
         EXPEL,
+        MANUAL_ON,
+        MANUAL_OFF,
+        MANUAL_IN,
+        MANUAL_OUT,
         FAILED_INTAKE_SENSOR
 
     };
