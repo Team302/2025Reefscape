@@ -28,7 +28,6 @@
 #include "frc/geometry/Pose2d.h"
 
 // Team 302 includes
-#include "vision/DragonCamera.h"
 #include "vision/DragonLimelight.h"
 
 class DragonLimelight90 : public DragonLimelight
