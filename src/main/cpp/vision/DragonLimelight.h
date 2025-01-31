@@ -30,11 +30,12 @@
 // Team 302 includes
 #include "vision/DragonCamera.h"
 #include "utils/sensors/SensorData.h"
+#include "utils/logging/DragonDataLogger.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera, public SensorData
+class DragonLimelight : public DragonCamera, public SensorData, public DragonDataLogger
 {
 public:
     enum LED_MODE
@@ -153,6 +154,7 @@ public:
     void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
     void PeriodicCacheData() override;
+    void DataLog() override;
 
     units::angle::degree_t GetTx() const override;
     units::angle::degree_t GetTy() const override;

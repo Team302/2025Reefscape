@@ -62,7 +62,11 @@ public:
         ELECTRICAL_VOLTAGE,
         ELECTRICAL_CURRENT,
         ELECTRICAL_ENERGY,
-        ELECTRICAL_POWER
+        ELECTRICAL_POWER,
+        CACHE_DATA_TV,
+        CACHE_DATA_TX,
+        CACHE_DATA_TY,
+        FIDUCIAL_ID
         // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
         // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
         // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
@@ -183,6 +187,18 @@ private:
 
     wpi::log::DoubleLogEntry m_electricalPower;
     double m_currElectricalPower{0.0};
+
+    wpi::log::DoubleLogEntry m_tx;
+    double m_currTx{0.0};
+
+    wpi::log::DoubleLogEntry m_ty;
+    double m_currTy{0.0};
+
+    wpi::log::DoubleLogEntry m_tv;
+    double m_currTv{0.0};
+
+    wpi::log::DoubleLogEntry m_Fiducial;
+    double m_currFiducial{0.0};
 
     wpi::log::StringLogEntry m_headingState;
     std::string m_currHeadingState{""};
