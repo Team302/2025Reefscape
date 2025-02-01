@@ -767,3 +767,20 @@ void DragonTale::UpdateTarget()
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }
+
+void DragonTale::SetSensorFailSafe()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
+	{
+		m_manualMode = false;
+	}
+}
+
+bool DragonTale::AtTarget()
+{
+	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
+}

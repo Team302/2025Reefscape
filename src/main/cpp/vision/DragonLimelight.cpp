@@ -60,8 +60,8 @@ DragonLimelight::DragonLimelight(
     units::angle::degree_t roll,           /// <I> - Roll of camera
     LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
-    CAM_MODE camMode): SensorData(),
-                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+    CAM_MODE camMode) : SensorData(),
+                        m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
@@ -79,7 +79,8 @@ void DragonLimelight::PeriodicCacheData()
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
-
+        m_megatag1PosBool = false;
+        m_megatag2PosBool = false;
         m_tv = LimelightHelpers::getTV(m_cameraName);
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
@@ -87,10 +88,14 @@ void DragonLimelight::PeriodicCacheData()
     }
     else
     {
+        m_megatag1PosBool = false;
+        m_megatag2PosBool = false;
         m_tv = false;
         m_tx = units::angle::degree_t(0.0);
         m_ty = units::angle::degree_t(0.0);
         m_tagid = -1;
+        m_megatag1Pos = {};
+        m_megatag2Pos = {};
     }
 }
 
@@ -221,55 +226,59 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         // Megatag 1
         if (!megatag2)
         {
-            nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-            std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
+            if (!m_megatag1PosBool)
+            {
+                nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
+                std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
 
-            units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-            units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
+                units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
+                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
 
-            frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-            frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
+                frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
+                frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
 
-            double numberOfTagsDetected = position[7];
-            double averageTagTargetArea = position[10];
+                double numberOfTagsDetected = position[7];
+                double averageTagTargetArea = position[10];
 
-            // in case of invalid Limelight targets
-            if (pose3d.ToPose2d().X() == units::meter_t(0.0))
-            {
-                return std::nullopt;
-            }
+                // in case of invalid Limelight targets
+                if (pose3d.ToPose2d().X() == units::meter_t(0.0))
+                {
+                    return std::nullopt;
+                }
 
-            double xyStds;
-            double degStds;
-            // multiple targets detected
-            if (numberOfTagsDetected == 0)
-            {
-                return std::nullopt;
+                double xyStds;
+                double degStds;
+                // multiple targets detected
+                if (numberOfTagsDetected == 0)
+                {
+                    return std::nullopt;
+                }
+                else if (numberOfTagsDetected >= 2)
+                {
+                    xyStds = 0.5;
+                    degStds = 6;
+                }
+                // 1 target with large area and close to estimated pose
+                else if (averageTagTargetArea > 0.8)
+                {
+                    xyStds = 1.0;
+                    degStds = 12;
+                }
+                // 1 target farther away and estimated pose is close
+                else if (averageTagTargetArea > 0.1)
+                {
+                    xyStds = 2.0;
+                    degStds = 30;
+                }
+                // conditions don't match to add a vision measurement
+                else
+                {
+                    return std::nullopt;
+                }
+                m_megatag1PosBool = true;
+                m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
             }
-            else if (numberOfTagsDetected >= 2)
-            {
-                xyStds = 0.5;
-                degStds = 6;
-            }
-            // 1 target with large area and close to estimated pose
-            else if (averageTagTargetArea > 0.8)
-            {
-                xyStds = 1.0;
-                degStds = 12;
-            }
-            // 1 target farther away and estimated pose is close
-            else if (averageTagTargetArea > 0.1)
-            {
-                xyStds = 2.0;
-                degStds = 30;
-            }
-            // conditions don't match to add a vision measurement
-            else
-            {
-                return std::nullopt;
-            }
-            VisionPose LimelightVisionPose = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
-            return LimelightVisionPose;
+            return m_megatag1Pos;
         }
 
         // Megatag 2
@@ -286,11 +295,16 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             // conditions don't match to add a vision measurement
             else
             {
-                xyStds = .7;
-                degStds = 9999999;
+                if (!m_megatag2PosBool)
+                {
+                    xyStds = .7;
+                    degStds = 9999999;
+                    m_megatag2PosBool = true;
+                    m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
+                }
+
+                return m_megatag2Pos;
             }
-            VisionPose pose = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-            return pose;
         }
     }
     return std::nullopt;

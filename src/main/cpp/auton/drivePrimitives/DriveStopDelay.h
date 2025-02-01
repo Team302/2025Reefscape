@@ -15,53 +15,45 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <frc/AddressableLED.h>
-#include <vector>
-#include <array>
 
-class DragonLeds
+// C++ Includes
+#include <memory>
+
+// FRC includes
+#include "units/time.h"
+
+// Team 302 includes
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/AutonSelector.h"
+
+// Third Party Includes
+
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
+
+class DriveStopDelay : public DriveStop
 {
 public:
-	enum Colors
-	{
-		RED,
-		GREEN,
-		BLUE,
-		PURPLE,
-		YELLOW,
-		AZUL,
-		BLACK,
-		WHITE,
-		MAX_STATE
-	};
+    enum DelayOption
+    {
+        START,
+        REEF,
+        CORAL_STATION,
+        MAX_OPTIONS
+    };
+    /// @brief constructor that creates/initializes the object
+    DriveStopDelay();
 
-	std::vector<frc::AddressableLED::LEDData> m_ledBuffer;
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopDelay() = default;
 
-	void Initialize(int PWMport, int numLeds);
-	bool IsInitialized() const;
-
-	void commitLedData();
-
-	void setOn();
-	void setOff();
-
-	void setBufferAllLEDsColor(std::array<int, 3> color);
-	void setBufferAllLEDsAlternatingColor(std::array<int, 3> color1, std::array<int, 3> color2);
-	void setBufferAllLEDsBlack();
-	void setBufferAllLEDsRainbow();
-	void setSpecificLED(int id, std::array<int, 3> color);
-	void setBufferAllLEDsColorBrightness(Colors c, int brightness);
-
-	std::array<int, 3> getColorValues(Colors c);
-
-	static DragonLeds *GetInstance();
+    /// @brief check if the end condition has been met
+    /// @return bool true means the end condition was reached, false means it hasn't
+    bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
 
 private:
-	std::array<int, 3> getColorHSV(Colors c);
-	static DragonLeds *m_instance;
-	frc::AddressableLED *m_addressibleLeds;
-	int m_rainbowFirstPixelHue = 0;
-	int m_numberofDiagnosticLEDs = 8;
-
-	DragonLeds();
+    units::time::second_t m_delayTime;
 };

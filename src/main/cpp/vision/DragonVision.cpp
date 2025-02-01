@@ -65,8 +65,6 @@ frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 
 DragonVision::DragonVision()
 {
-
-	
 }
 
 void DragonVision::AddLimelight(DragonLimelight *camera, DragonLimelight::CAMERA_USAGE position)
@@ -192,7 +190,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 {
 	/*std::optional<VisionData> selectedData = std::nullopt;
-	
+
 	std::optional<VisionData> launcherData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHE]->GetDataToNearestAprilTag();
 	std::optional<VisionData> placerData = m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::PLACER]->GetDataToNearestAprilTag();
 
@@ -368,7 +366,7 @@ std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT 
 std::optional<VisionData> DragonVision::MultiTagToElement(frc::Pose3d elementPose)
 {
 	/**std::optional<VisionPose> launcherMultiTag = std::nullopt;
-	
+
 	DragonPhotonCam *launcherPhotonCam = dynamic_cast<DragonPhotonCam *>(m_dragonCameraMap[RobotElementNames::CAMERA_USAGE::LAUNCHER]);
 	if (launcherPhotonCam != nullptr)
 	{
@@ -541,12 +539,14 @@ std::optional<VisionPose> DragonVision::GetRobotPosition()
 			return estimatedPoses[0];
 		else
 		{
+
 			double firstAmbiguity = estimatedPoses[0].visionMeasurementStdDevs[0];
 			double secondAmbiguity = estimatedPoses[1].visionMeasurementStdDevs[0];
 
 			return firstAmbiguity < secondAmbiguity ? estimatedPoses[0] : estimatedPoses[1];
 		}
 	}
+
 	//}
 
 	// if we aren't able to calculate our pose from vision, return a null optional

@@ -63,6 +63,9 @@ void DriverFeedback::UpdateRumble()
 
 void DriverFeedback::UpdateLEDStates()
 {
+    auto mechanismConfigMgr = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+    StateMgr *taleStateManager = mechanismConfigMgr != nullptr ? mechanismConfigMgr->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
+    auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
     oldState = currentState;
     if (frc::DriverStation::IsDisabled())
     {
@@ -92,6 +95,37 @@ void DriverFeedback::UpdateLEDStates()
         {
             currentState = DragonLeds::AZUL;
             m_LEDStates->SolidColorPattern(currentState);
+        }
+        if (taleMgr != nullptr)
+        {
+            if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
+            {
+                m_LEDStates->BlinkingPattern(currentState);
+            }
+            else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+            {
+                if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
+                {
+                    m_LEDStates->AlternatingColorBlinkingPattern(DragonLeds::WHITE, DragonLeds::AZUL);
+                }
+                else if (taleMgr->GetCoralOutSensorState())
+                {
+                    m_LEDStates->BreathingPattern(currentState);
+                }
+                else if (taleMgr->GetAlgaeSensorState())
+                {
+                    m_LEDStates->BreathingPattern(currentState);
+                }
+            }
+            else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+            {
+                taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
+            }
         }
     }
 }
