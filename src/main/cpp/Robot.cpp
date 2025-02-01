@@ -338,7 +338,6 @@ void Robot::InitializeRobot()
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
-    auto cameraConfig = CameraConfigMgr::GetInstance()->GetCurrentConfig();
     auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();

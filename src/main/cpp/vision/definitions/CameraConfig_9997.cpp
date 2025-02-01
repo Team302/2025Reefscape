@@ -20,9 +20,9 @@
 #include "vision/DragonLimelight.h"
 #include "utils/logging/Logger.h"
 
-void CameraConfig_9997::DefineCameras()
+void CameraConfig_9997::BuildCameraConfig()
 {
-
+    
     DragonLimelight *placer = new DragonLimelight(std::string("limelight-placer"),                   // networkTableName
                                                   DragonLimelight::CAMERA_TYPE::LIMELIGHT3,          // PIPELINE initialPipeline,
                                                   DragonLimelight::CAMERA_USAGE::FRONT_CAMERA,       // PIPELINE initialPipeline,
@@ -34,9 +34,8 @@ void CameraConfig_9997::DefineCameras()
                                                   units::angle::degree_t(0),                         // units::angle::degree_t roll,           /// <I> - Roll of camera
                                                   DragonLimelight::LL_PIPELINE::MACHINE_LEARNING_PL, /// <I> enum for starting pipeline
                                                   DragonLimelight::LED_MODE::LED_OFF,                // LED_MODE ledMode,
-                                                  DragonLimelight::CAM_MODE::CAM_VISION,             // CAM_MODE camMode,
-                                                  DragonLimelight::STREAM_MODE::STREAM_STANDARD,     // STREAM_MODE streamMode,
-                                                  DragonLimelight::SNAPSHOT_MODE::SNAP_OFF           // SNAPSHOT_MODE snapMode
+                                                  DragonLimelight::CAM_MODE::CAM_VISION             // CAM_MODE camMode,
+
     );                                                                                               // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(placer, DragonLimelight::CAMERA_USAGE::FRONT_CAMERA);
 }

@@ -24,8 +24,7 @@ public:
     CameraConfig_9997() = default;
     ~CameraConfig_9997() = default;
 
-protected:
-    void DefineCameras() override;
+    void BuildCameraConfig() override;
 
 private:
 

@@ -60,16 +60,12 @@ DragonLimelight::DragonLimelight(
     units::angle::degree_t roll,           /// <I> - Roll of camera
     LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
-    CAM_MODE camMode,
-    STREAM_MODE streamMode,
-    SNAPSHOT_MODE snapMode) : SensorData(),
+    CAM_MODE camMode): SensorData(),
                               m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
     SetPipeline(initialPipeline);
-    SetStreamMode(streamMode);
-    ToggleSnapshot(snapMode);
     SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
     m_healthTimer = new frc::Timer();
     for (int port = 5800; port <= 5809; port++)
@@ -130,89 +126,6 @@ bool DragonLimelight::HealthCheck()
 std::optional<int> DragonLimelight::GetAprilTagID()
 {
     return m_tagid;
-}
-
-std::optional<VisionPose> DragonLimelight::GetFieldPosition()
-{
-    return GetBlueFieldPosition();
-}
-
-std::optional<VisionPose> DragonLimelight::GetFieldPosition(frc::DriverStation::Alliance alliance)
-{
-    if (alliance == frc::DriverStation::Alliance::kRed)
-        return GetRedFieldPosition();
-    else
-    {
-        return GetBlueFieldPosition();
-    }
-}
-
-std::optional<VisionPose> DragonLimelight::GetRedFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto redTopic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpired");
-
-        std::vector<double> redPosition = redTopic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(redPosition[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(redPosition[3]), units::angle::degree_t(redPosition[4]), units::angle::degree_t(redPosition[5])};
-
-        return VisionPose{frc::Pose3d{units::meter_t(redPosition[0]), units::meter_t(redPosition[1]), units::meter_t(redPosition[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-/**
- * @brief Get the Blue Field Position object
- *
- */
-std::optional<VisionPose> DragonLimelight::GetBlueFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-        std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-
-        // frc::Rotation3d rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::math::atan2(units::meter_t(position[0]), units::meter_t(position[2]))); // roll pitch yaw
-
-        return VisionPose{frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-std::optional<VisionPose> DragonLimelight::GetOriginFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto redTopic = m_networktable.get()->GetDoubleArrayTopic("botpose");
-
-        std::vector<double> position = redTopic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-
-        return VisionPose{frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-std::vector<double> DragonLimelight::Get3DSolve()
-{
-    std::vector<double> output;
-    return output;
 }
 
 bool DragonLimelight::HasTarget()
@@ -430,53 +343,6 @@ void DragonLimelight::SetPipeline(LL_PIPELINE pipeline)
 {
     m_pipeline = pipeline;
     LimelightHelpers::setPipelineIndex(m_cameraName, pipeline);
-}
-
-void DragonLimelight::SetStreamMode(DragonLimelight::STREAM_MODE mode)
-{
-    switch (mode)
-    {
-    case STREAM_MODE::STREAM_PIP_MAIN:
-        LimelightHelpers::setStreamMode_PiPMain(m_cameraName);
-        break;
-    case STREAM_MODE::STREAM_PIP_SECONDARY:
-        LimelightHelpers::setStreamMode_PiPSecondary(m_cameraName);
-        break;
-    case STREAM_MODE::STREAM_STANDARD: // default to standard
-    default:
-        LimelightHelpers::setStreamMode_Standard(m_cameraName);
-        break;
-    }
-}
-
-void DragonLimelight::SetCrosshairPos(double crosshairPosX, double crosshairPosY)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("cx0", crosshairPosX);
-        nt->PutNumber("cy0", crosshairPosY);
-    }
-}
-
-void DragonLimelight::SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("cx1", crosshairPosX);
-        nt->PutNumber("cy1", crosshairPosY);
-    }
-}
-
-// MAX of 32 snapshots can be saved
-void DragonLimelight::ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("snapshot", toggle);
-    }
 }
 
 void DragonLimelight::SetPriorityTagID(int id)
