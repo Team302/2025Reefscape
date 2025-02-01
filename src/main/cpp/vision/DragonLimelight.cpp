@@ -79,7 +79,8 @@ void DragonLimelight::PeriodicCacheData()
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
-
+        m_megatag1PosBool = false;
+        m_megatag2PosBool = false;
         m_tv = LimelightHelpers::getTV(m_cameraName);
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
@@ -276,12 +277,8 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 }
                 m_megatag1PosBool = true;
                 m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
-                return m_megatag1Pos;
             }
-            else
-            {
-                return m_megatag1Pos;
-            }
+            return m_megatag1Pos;
         }
 
         // Megatag 2
@@ -304,12 +301,9 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                     degStds = 9999999;
                     m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-                    return m_megatag2Pos;
                 }
-                else
-                {
-                    return m_megatag2Pos;
-                }
+
+                return m_megatag2Pos;
             }
         }
     }
