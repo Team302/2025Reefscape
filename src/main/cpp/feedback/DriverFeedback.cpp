@@ -120,14 +120,11 @@ void DriverFeedback::UpdateLEDStates()
             else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
                      taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
                      taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
-                     taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION)
-            {
-                taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
-            }
-            else if (taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
                      taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
             {
-                taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState);
+                taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
             }
         }
     }
