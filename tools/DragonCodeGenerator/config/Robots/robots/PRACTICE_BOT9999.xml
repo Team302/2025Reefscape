@@ -5359,9 +5359,20 @@
       <name>uintParameter</name>
       <__units__ />
       <type>UInt32</type>
-      <value>0</value>
+      <value>9</value>
     </PwmId>
-    <Segments />
+    <Segments>
+      <LedSegment>
+        <name>LEDs</name>
+        <Count>
+          <unitsFamily>none</unitsFamily>
+          <name>uintParameter</name>
+          <__units__ />
+          <type>UInt32</type>
+          <value>6</value>
+        </Count>
+      </LedSegment>
+    </Segments>
   </LEDs>
   <robotID>
     <unitsFamily>none</unitsFamily>
