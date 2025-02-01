@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,44 +14,20 @@
 //====================================================================================================================================================
 
 #pragma once
+#include <vector>
 
-// thrid party includes
-
-#include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Pose2d.h"
+#include "units/time.h"
+#include "wpi/array.h"
 
-// 302 includes
-
-#include "vision/DragonVision.h"
-#include "chassis/SwerveChassis.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "vision/DragonQuest.h"
-
-class DragonPoseEstimator
+struct DragonVisionPoseEstimatorStruct
 {
 public:
-    DragonPoseEstimator *GetInstance();
-    frc::Pose3d GetEstimatedPosition();
+    DragonVisionPoseEstimatorStruct() : m_visionPose(), m_timeStamp(units::time::second_t(0)), m_stdDeviation{0, 0, 0} {};
+    ~DragonVisionPoseEstimatorStruct() = default;
 
-private:
-    DragonPoseEstimator();
-    ~DragonPoseEstimator() = default;
-
-    frc::Pose3d GetVisonPose();
-    frc::Pose2d GetChassisPose();
-    frc::Pose3d GetQuestPose();
-
-    static DragonPoseEstimator *m_instance;
-    DragonVision *m_vision;
-    SwerveChassis *m_chassis;
-    DragonQuest *m_quest;
-
-    frc::Pose3d m_chassisPose;
-    frc::Pose3d m_visionPose;
-    frc::Pose3d m_questPose;
-    frc::Pose3d m_estimatedPose;
-
-    double m_visionWeight = .4;
-    double m_chassisWeight = .1;
-    double m_questWeight = .5;
+    bool m_hasVisionEstimate;
+    frc::Pose2d m_visionPose;
+    units::time::second_t m_timeStamp;
+    wpi::array<double, 3> m_stdDeviation;
 };
