@@ -129,7 +129,7 @@ void DriverFeedback::UpdateLEDStates()
                  taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION)
         {
             currentState = DragonLeds::WHITE;
-            taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState);
+            taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
         }
         else if (taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
                  taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
