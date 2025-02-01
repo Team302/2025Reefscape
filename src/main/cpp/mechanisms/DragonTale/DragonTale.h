@@ -97,13 +97,11 @@ public:
 		{
 			m_ElevatorLeaderPositionInch.Velocity = 1_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 5_tr_per_s_sq;
-			m_ElevatorLeaderPositionInch.Jerk = 25_tr_per_s_cu;
 		}
 		else
 		{
 			m_ElevatorLeaderPositionInch.Velocity = 5_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 25_tr_per_s_sq;
-			m_ElevatorLeaderPositionInch.Jerk = 100_tr_per_s_cu;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
