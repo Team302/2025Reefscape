@@ -42,11 +42,30 @@ public:
 
     enum VISION_ELEMENT
     {
+        NEAREST_APRILTAG,
+        // old elements
+        NOTE,
+        LAUNCHER_NOTE,
+        PLACER_NOTE,
+        STAGE,
+        CENTER_STAGE,
+        LEFT_STAGE,
+        RIGHT_STAGE,
+        SPEAKER,
+        RED_SPEAKER,
+        BLUE_SPEAKER,
+        AMP,
+        RED_AMP,
+        BLUE_AMP,
+        SOURCE,
+        RED_SOURCE,
+        BLUE_SOURCE,
+        // new for 2025
         ALGAE,
         CAGE,
         REEF,
-        HUMAN_PLAYER,
-        HUMAN_PROCESSOR
+        CORAL_STATION,
+        ALGAE_PROCESSOR
     };
 
     /// @brief sets the pipeline of the camera at the chosen position
