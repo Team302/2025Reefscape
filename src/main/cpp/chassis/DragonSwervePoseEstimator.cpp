@@ -13,26 +13,40 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/DragonSwervePoseEstimator.h"
 #include "chassis/DragonVisionPoseEstimator.h"
+#include "chassis/SwerveChassis.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
+#include "state/RobotState.h"
+#include "state/RobotStateChanges.h"
 #include "units/time.h"
 #include "wpi/array.h"
 
-DragonSwervePoseEstimator::DragonSwervePoseEstimator(SwerveChassis *chassis,
-                                                     frc::SwerveDriveKinematics<4> kinematics,
+DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
                                                      const frc::Rotation2d &gyroAngle,
                                                      const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                                                     const frc::Pose2d &initialPose) : m_chassis(chassis),
-                                                                                       m_frontLeft(chassis->GetFrontLeft()),
-                                                                                       m_frontRight(chassis->GetFrontRight()),
-                                                                                       m_backLeft(chassis->GetBackLeft()),
-                                                                                       m_backRight(chassis->GetBackRight()),
+                                                     const frc::Pose2d &initialPose) : // m_chassis(chassis),
+                                                                                       m_frontLeft(),
+                                                                                       m_frontRight(),
+                                                                                       m_backLeft(),
+                                                                                       m_backRight(),
                                                                                        m_kinematics(kinematics),
                                                                                        m_poseEstimator(kinematics, gyroAngle, positions, initialPose),
                                                                                        m_visionPoseEstimators()
 {
+    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+
+    if (chassis != nullptr)
+    {
+        m_frontLeft = chassis->GetFrontLeft();
+        m_frontRight = chassis->GetFrontRight();
+        m_backLeft = chassis->GetBackLeft();
+        m_backRight = chassis->GetBackRight();
+    }
 }
 
 void DragonSwervePoseEstimator::RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator)
@@ -43,28 +57,53 @@ void DragonSwervePoseEstimator::RegisterVisionPoseEstimator(DragonVisionPoseEsti
 void DragonSwervePoseEstimator::Update()
 {
 
-    frc::Rotation2d rot2d{m_chassis->GetYaw()};
+    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
-    m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
-                                                                           m_frontRight->GetPosition(),
-                                                                           m_backLeft->GetPosition(),
-                                                                           m_backRight->GetPosition()});
+    if (chassis != nullptr)
+    {
+        frc::Rotation2d rot2d{chassis->GetYaw()};
 
+        m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
+                                                                               m_frontRight->GetPosition(),
+                                                                               m_backLeft->GetPosition(),
+                                                                               m_backRight->GetPosition()});
+    }
+    AddVisionMeasurements();
+
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::ChassisPose_Pose2D, GetPose());
+}
+
+void DragonSwervePoseEstimator::AddVisionMeasurements()
+{
     for (auto estimator : m_visionPoseEstimators)
     {
         auto poseInfo = estimator->GetPoseEstimate();
-        if (poseInfo.m_hasVisionEstimate)
+        if (poseInfo.m_confidenceLevel == DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE)
         {
-            m_poseEstimator.AddVisionMeasurement(poseInfo.m_visionPose, poseInfo.m_timeStamp, poseInfo.m_stdDeviation);
+            continue;
         }
+
+        // currently just using std deviation for vision measurements passed in;
+        // may need to revisit if the different systems provide different std deviation values
+        // for similar data confidence
+        m_poseEstimator.AddVisionMeasurement(poseInfo.m_visionPose,
+                                             poseInfo.m_timeStamp,
+                                             poseInfo.m_stds);
     }
 }
 
 void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 {
-    auto yaw = m_chassis->GetYaw();
+    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
-    m_poseEstimator.ResetPosition(yaw,
-                                  wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()},
-                                  pose);
+    if (chassis != nullptr)
+    {
+        auto yaw = chassis->GetYaw();
+
+        m_poseEstimator.ResetPosition(yaw,
+                                      wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()},
+                                      pose);
+    }
 }

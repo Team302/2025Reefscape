@@ -87,12 +87,7 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                                          m_frontRightLocation,
                                                                                          m_backLeftLocation,
                                                                                          m_backRightLocation),
-                                                                            m_poseEstimator(m_kinematics,
-                                                                                            frc::Rotation2d{},
-                                                                                            {SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition(), SwerveModulePosition()},
-                                                                                            frc::Pose2d(),
-                                                                                            {0.1, 0.1, 0.1},
-                                                                                            {0.1, 0.1, 0.1}),
+                                                                            m_swervePoseEstimator(nullptr),
                                                                             m_storedYaw(units::angle::degree_t(0.0)),
                                                                             m_targetHeading(units::angle::degree_t(0.0)),
                                                                             m_networkTableName(networkTableName),
@@ -284,7 +279,7 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 //==================================================================================
 Pose2d SwerveChassis::GetPose() const
 {
-    return m_poseEstimator.GetEstimatedPosition();
+    return m_swervePoseEstimator->GetPose();
 }
 
 //==================================================================================
@@ -309,7 +304,8 @@ units::angle::degree_t SwerveChassis::GetRoll() const
 /// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
 void SwerveChassis::UpdateOdometry()
 {
-
+    m_swervePoseEstimator->Update();
+    /**
     bool updateWithVision = false;
     Rotation2d rot2d{GetYaw()};
 
@@ -368,6 +364,7 @@ void SwerveChassis::UpdateOdometry()
         }
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Update With Vision"), std::string("Update With Vision:"), updateWithVision);
+    **/
 }
 
 //==================================================================================
@@ -411,12 +408,14 @@ void SwerveChassis::LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES swerveMod
 void SwerveChassis::ResetPose(const Pose2d &pose)
 {
     ZeroAlignSwerveModules();
-    Rotation2d rot2d{pose.Rotation().Degrees()};
+    // Rotation2d rot2d{pose.Rotation().Degrees()};
     SetStoredHeading(pose.Rotation().Degrees());
 
-    m_poseEstimator.ResetPosition(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()}, pose);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassisLogging", string("ResetPosePigeonYaw"), m_pigeon->GetYaw().GetValue().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassisLogging", string("ResetPoseEstimatedYaw"), m_poseEstimator.GetEstimatedPosition().Rotation().Degrees().value());
+    m_swervePoseEstimator->ResetPose(pose);
+
+    // m_poseEstimator.ResetPosition(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()}, pose);
+    // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassisLogging", string("ResetPosePigeonYaw"), m_pigeon->GetYaw().GetValue().value());
+    // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveChassisLogging", string("ResetPoseEstimatedYaw"), m_poseEstimator.GetEstimatedPosition().Rotation().Degrees().value());
 }
 //=================================================================================
 void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
@@ -516,7 +515,6 @@ void SwerveChassis::LogInformation()
 
 void SwerveChassis::DataLog()
 {
-
     Log2DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
     LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());

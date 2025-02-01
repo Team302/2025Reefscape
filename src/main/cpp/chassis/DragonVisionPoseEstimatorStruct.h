@@ -23,11 +23,22 @@
 struct DragonVisionPoseEstimatorStruct
 {
 public:
-    DragonVisionPoseEstimatorStruct() : m_visionPose(), m_timeStamp(units::time::second_t(0)), m_stdDeviation{0, 0, 0} {};
+    DragonVisionPoseEstimatorStruct() : m_confidenceLevel(ConfidenceLevel::NONE),
+                                        m_visionPose(frc::Pose2d{}),
+                                        m_timeStamp(units::time::second_t(0.0)),
+                                        m_stds(wpi::array(0.9, 0.9, 0.9)) {};
     ~DragonVisionPoseEstimatorStruct() = default;
 
-    bool m_hasVisionEstimate;
+    enum ConfidenceLevel
+    {
+        NONE,
+        LOW,
+        MEDIUM,
+        HIGH
+    };
+
+    ConfidenceLevel m_confidenceLevel;
     frc::Pose2d m_visionPose;
     units::time::second_t m_timeStamp;
-    wpi::array<double, 3> m_stdDeviation;
+    wpi::array<double, 3> m_stds;
 };
