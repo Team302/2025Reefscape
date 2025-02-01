@@ -18,8 +18,6 @@
 #include <vector>
 
 #include "chassis/DragonVisionPoseEstimator.h"
-
-// #include "chassis/SwerveChassis.h"
 #include "chassis/SwerveModule.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Pose2d.h"
@@ -37,9 +35,9 @@ public:
     void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
 
     void Update();
-    frc::Pose2d GetPose() const { return m_poseEstimator.GetEstimatedPosition(); };
+    frc::Pose2d GetPose() const;
     void ResetPosition(const frc::Pose2d &pose);
-    void ResetPose(const frc::Pose2d &pose) { m_poseEstimator.ResetPose(pose); }
+    void ResetPose(const frc::Pose2d &pose);
 
 private:
     void AddVisionMeasurements();
@@ -49,7 +47,6 @@ private:
     DragonSwervePoseEstimator(const DragonSwervePoseEstimator &) = delete;
     DragonSwervePoseEstimator &operator=(const DragonSwervePoseEstimator &) = delete;
 
-    // SwerveChassis *m_chassis;
     SwerveModule *m_frontLeft;
     SwerveModule *m_frontRight;
     SwerveModule *m_backLeft;
@@ -58,8 +55,4 @@ private:
     frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
     std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
-
-    // const wpi::array<double, 3> m_highConfidenceStdDeviation{0.1, 0.1, 0.1};
-    // const wpi::array<double, 3> m_mediumConfidenceStdDeviation{0.5, 0.5, 0.5};
-    // const wpi::array<double, 3> m_lowConfidenceStdDeviation{0.9, 0.9, 0.9};
 };

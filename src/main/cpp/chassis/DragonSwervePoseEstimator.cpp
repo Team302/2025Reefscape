@@ -107,3 +107,13 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
                                       pose);
     }
 }
+
+frc::Pose2d DragonSwervePoseEstimator::GetPose() const
+{
+    return m_poseEstimator.GetEstimatedPosition();
+}
+
+void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
+{
+    m_poseEstimator.ResetPose(pose);
+}
