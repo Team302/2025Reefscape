@@ -320,6 +320,7 @@
         <type>UInt32</type>
         <value>0</value>
       </canID>
+      <canBusName>canivore</canBusName>
       <pdpID>
         <unitsFamily>none</unitsFamily>
         <name>uintParameter</name>
@@ -1014,6 +1015,7 @@
         <type>UInt32</type>
         <value>0</value>
       </canID>
+      <canBusName>canivore</canBusName>
       <pdpID>
         <unitsFamily>none</unitsFamily>
         <name>uintParameter</name>
@@ -1237,7 +1239,7 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </reversed>
       <debouncetime>
         <unitsFamily>time</unitsFamily>
@@ -1261,7 +1263,7 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </reversed>
       <debouncetime>
         <unitsFamily>time</unitsFamily>
@@ -1285,7 +1287,7 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </reversed>
       <debouncetime>
         <unitsFamily>time</unitsFamily>
