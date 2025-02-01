@@ -102,6 +102,14 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
 
+    m_swervePoseEstimator = new DragonSwervePoseEstimator(m_kinematics,
+                                                          Rotation2d(),
+                                                          {SwerveModulePosition(),
+                                                           SwerveModulePosition(),
+                                                           SwerveModulePosition(),
+                                                           SwerveModulePosition()},
+                                                          Pose2d());
+
     m_robotConfig.mass = GetMass();
     m_robotConfig.MOI = GetMomenOfInertia();
     m_robotConfig.moduleConfig = frontLeft->GetModuleConfig();
@@ -265,7 +273,11 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 //==================================================================================
 Pose2d SwerveChassis::GetPose() const
 {
-    return m_swervePoseEstimator->GetPose();
+    if (m_swervePoseEstimator != nullptr)
+    {
+        return m_swervePoseEstimator->GetPose();
+    }
+    return Pose2d();
 }
 
 //==================================================================================
@@ -290,7 +302,10 @@ units::angle::degree_t SwerveChassis::GetRoll() const
 /// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
 void SwerveChassis::UpdateOdometry()
 {
-    m_swervePoseEstimator->Update();
+    if (m_swervePoseEstimator != nullptr)
+    {
+        m_swervePoseEstimator->Update();
+    }
 }
 
 //==================================================================================
@@ -337,7 +352,10 @@ void SwerveChassis::ResetPose(const Pose2d &pose)
     // Rotation2d rot2d{pose.Rotation().Degrees()};
     SetStoredHeading(pose.Rotation().Degrees());
 
-    m_swervePoseEstimator->ResetPose(pose);
+    if (m_swervePoseEstimator != nullptr)
+    {
+        m_swervePoseEstimator->ResetPose(pose);
+    }
 }
 //=================================================================================
 void SwerveChassis::SetYaw(units::angle::degree_t newYaw)

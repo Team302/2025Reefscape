@@ -29,10 +29,10 @@ DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<
                                                      const frc::Rotation2d &gyroAngle,
                                                      const wpi::array<frc::SwerveModulePosition, 4> &positions,
                                                      const frc::Pose2d &initialPose) : // m_chassis(chassis),
-                                                                                       m_frontLeft(),
-                                                                                       m_frontRight(),
-                                                                                       m_backLeft(),
-                                                                                       m_backRight(),
+                                                                                       m_frontLeft(nullptr),
+                                                                                       m_frontRight(nullptr),
+                                                                                       m_backLeft(nullptr),
+                                                                                       m_backRight(nullptr),
                                                                                        m_kinematics(kinematics),
                                                                                        m_poseEstimator(kinematics, gyroAngle, positions, initialPose),
                                                                                        m_visionPoseEstimators()
@@ -63,6 +63,14 @@ void DragonSwervePoseEstimator::Update()
     if (chassis != nullptr)
     {
         frc::Rotation2d rot2d{chassis->GetYaw()};
+
+        if (m_frontLeft == nullptr)
+        {
+            m_frontLeft = chassis->GetFrontLeft();
+            m_frontRight = chassis->GetFrontRight();
+            m_backLeft = chassis->GetBackLeft();
+            m_backRight = chassis->GetBackRight();
+        }
 
         m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
                                                                                m_frontRight->GetPosition(),
