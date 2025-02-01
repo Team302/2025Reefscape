@@ -111,8 +111,7 @@ public:
         units::angle::degree_t roll,           /// <I> - Roll of camera
         LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
         LED_MODE ledMode,
-        CAM_MODE camMode
-        );
+        CAM_MODE camMode);
 
     ///-----------------------------------------------------------------------------------
     /// Method:         ~DragonLimelight (destructor)
@@ -180,6 +179,10 @@ protected:
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
     int m_tagid;
+    bool m_megatag2PosBool = false;
+    bool m_megatag1PosBool = false;
+    VisionPose m_megatag2Pos;
+    VisionPose m_megatag1Pos;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
