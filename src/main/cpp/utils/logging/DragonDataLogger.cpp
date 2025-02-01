@@ -83,7 +83,38 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currElectricalPower = value;
             }
             break;
-            
+
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TV_1:
+            if (std::abs(value - signals->m_currTv) > m_doubleTolerance)
+            {
+                signals->m_tv.Append(value);
+                signals->m_currTv = value;
+            }
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX_1:
+            if (std::abs(value - signals->m_currTx) > m_doubleTolerance)
+            {
+                signals->m_tx.Append(value);
+                signals->m_currTx = value;
+            }
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY_1:
+            if (std::abs(value - signals->m_currTy) > m_doubleTolerance)
+            {
+                signals->m_ty.Append(value);
+                signals->m_currTy = value;
+            }
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
+            if (std::abs(value - signals->m_currFiducial) > m_doubleTolerance)
+            {
+                signals->m_Fiducial.Append(value);
+                signals->m_currFiducial = value;
+            }
+            break;
 
         default:
             break;
