@@ -22,13 +22,9 @@ CameraConfig::CameraConfig()
 
 void CameraConfig::BuildCameraConfig()
 {
-    DefineCameras();
 }
 
 CameraConfig::~CameraConfig()
 {
 }
 
-void CameraConfig::DefineCameras()
-{
-}
