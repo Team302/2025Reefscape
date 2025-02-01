@@ -73,10 +73,9 @@ void DragonVisionStructLogger::logRotation3d(const std::string &loggerName, cons
  * Returns: void
  *
  */
-void DragonVisionStructLogger::logDragonCamera(const std::string &loggerName, const DragonCamera &camera)
+void DragonVisionStructLogger::logDragonCamera(const std::string &loggerName, const DragonLimelight &camera)
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("CameraName"), camera.GetCameraName());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("Pipeline"), std::to_string(camera.GetPipeline()));
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("MountingXOffset"), std::to_string(camera.GetMountingXOffset().to<double>()));
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("MountingYOffset"), std::to_string(camera.GetMountingYOffset().to<double>()));
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("MountingZOffset"), std::to_string(camera.GetMountingZOffset().to<double>()));

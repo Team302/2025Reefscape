@@ -2,7 +2,7 @@
 #define LIMELIGHTHELPERS_H
 
 ///
-//https://github.com/LimelightVision/limelightlib-wpicpp
+// https://github.com/LimelightVision/limelightlib-wpicpp
 ///
 
 #include "networktables/NetworkTable.h"
@@ -13,7 +13,7 @@
 #include "wpi/json.h"
 #include <string>
 #include <unistd.h>
-//#include <curl/curl.h>
+// #include <curl/curl.h>
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -28,7 +28,7 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
-    
+
 namespace LimelightHelpers
 {
     inline std::string sanitizeName(const std::string &name)
@@ -40,27 +40,27 @@ namespace LimelightHelpers
         return name;
     }
 
-    inline frc::Pose3d toPose3D(const std::vector<double>& inData)
+    inline frc::Pose3d toPose3D(const std::vector<double> &inData)
     {
-        if(inData.size() < 6)
+        if (inData.size() < 6)
         {
             return frc::Pose3d();
         }
         return frc::Pose3d(
             frc::Translation3d(units::length::meter_t(inData[0]), units::length::meter_t(inData[1]), units::length::meter_t(inData[2])),
-            frc::Rotation3d(units::angle::radian_t(inData[3]*(M_PI/180.0)), units::angle::radian_t(inData[4]*(M_PI/180.0)),
-                   units::angle::radian_t(inData[5]*(M_PI/180.0))));
+            frc::Rotation3d(units::angle::radian_t(inData[3] * (M_PI / 180.0)), units::angle::radian_t(inData[4] * (M_PI / 180.0)),
+                            units::angle::radian_t(inData[5] * (M_PI / 180.0))));
     }
 
-    inline frc::Pose2d toPose2D(const std::vector<double>& inData)
+    inline frc::Pose2d toPose2D(const std::vector<double> &inData)
     {
-        if(inData.size() < 6)
+        if (inData.size() < 6)
         {
             return frc::Pose2d();
         }
         return frc::Pose2d(
-            frc::Translation2d(units::length::meter_t(inData[0]), units::length::meter_t(inData[1])), 
-            frc::Rotation2d(units::angle::radian_t(inData[5]*(M_PI/180.0))));
+            frc::Translation2d(units::length::meter_t(inData[0]), units::length::meter_t(inData[1])),
+            frc::Rotation2d(units::angle::radian_t(inData[5] * (M_PI / 180.0))));
     }
 
     inline std::shared_ptr<nt::NetworkTable> getLimelightNTTable(const std::string &tableName)
@@ -102,7 +102,7 @@ namespace LimelightHelpers
     {
         return getLimelightNTDouble(limelightName, "tx");
     }
-    
+
     inline double getTV(const std::string &limelightName = "")
     {
         return getLimelightNTDouble(limelightName, "tv");
@@ -147,8 +147,6 @@ namespace LimelightHelpers
     {
         return getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
     }
-
-
 
     inline std::vector<double> getBotpose_TargetSpace(const std::string &limelightName = "")
     {
@@ -198,7 +196,8 @@ namespace LimelightHelpers
         setLimelightNTDouble(limelightName, "pipeline", index);
     }
 
-    inline void setPriorityTagID(const std::string &limelightName, int ID) {
+    inline void setPriorityTagID(const std::string &limelightName, int ID)
+    {
         setLimelightNTDouble(limelightName, "priorityid", ID);
     }
 
@@ -251,16 +250,42 @@ namespace LimelightHelpers
     /**
      * Sets the robot orientation for mt2.
      */
-    inline void SetRobotOrientation(const std::string& limelightName, 
-        double yaw, double yawRate, 
-        double pitch, double pitchRate, 
-        double roll, double rollRate) 
+    inline void SetRobotOrientation(const std::string &limelightName,
+                                    double yaw, double yawRate,
+                                    double pitch, double pitchRate,
+                                    double roll, double rollRate)
     {
         std::vector<double> entries = {yaw, yawRate, pitch, pitchRate, roll, rollRate};
         setLimelightNTDoubleArray(limelightName, "robot_orientation_set", entries);
     }
 
-    inline void SetFiducialIDFiltersOverride(const std::string& limelightName, const std::vector<int>& validIDs) 
+    inline void SetFiducialDownscaling(const std::string &limelightName, float downscale)
+    {
+        int d = 0; // pipeline
+        if (downscale == 1.0)
+        {
+            d = 1;
+        }
+        if (downscale == 1.5)
+        {
+            d = 2;
+        }
+        if (downscale == 2)
+        {
+            d = 3;
+        }
+        if (downscale == 3)
+        {
+            d = 4;
+        }
+        if (downscale == 4)
+        {
+            d = 5;
+        }
+        setLimelightNTDouble(limelightName, "fiducial_downscale_set", d);
+    }
+
+    inline void SetFiducialIDFiltersOverride(const std::string &limelightName, const std::vector<int> &validIDs)
     {
         std::vector<double> validIDsDouble(validIDs.begin(), validIDs.end());
         setLimelightNTDoubleArray(limelightName, "fiducial_id_filters_set", validIDsDouble);
@@ -272,8 +297,9 @@ namespace LimelightHelpers
     /**
      * Sets the camera pose in robotspace. The UI camera pose must be set to zeros
      */
-    inline void setCameraPose_RobotSpace(const std::string &limelightName, double forward, double side, double up, double roll, double pitch, double yaw) {
-        double entries[6] ={forward, side, up, roll, pitch, yaw};
+    inline void setCameraPose_RobotSpace(const std::string &limelightName, double forward, double side, double up, double roll, double pitch, double yaw)
+    {
+        double entries[6] = {forward, side, up, roll, pitch, yaw};
         setLimelightNTDoubleArray(limelightName, "camerapose_robotspace_set", entries);
     }
 
@@ -287,22 +313,16 @@ namespace LimelightHelpers
         return getLimelightNTDoubleArray(limelightName, "llpython");
     }
 
-    /////
-    /////
-
-    // Take async snapshot
-
-    /////
-    /////
-
-    inline double extractBotPoseEntry(const std::vector<double>& inData, int position) {
-        if (inData.size() < static_cast<size_t>(position + 1)) {
+    inline double extractArrayEntry(const std::vector<double> &inData, int position)
+    {
+        if (inData.size() < static_cast<size_t>(position + 1))
+        {
             return 0.0;
         }
         return inData[position];
     }
 
-    class RawFiducial 
+    class RawFiducial
     {
     public:
         int id{0};
@@ -316,6 +336,100 @@ namespace LimelightHelpers
         RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot, double ambiguity)
             : id(id), txnc(txnc), tync(tync), ta(ta), distToCamera(distToCamera), distToRobot(distToRobot), ambiguity(ambiguity) {}
     };
+
+    inline std::vector<RawFiducial> getRawFiducials(const std::string &limelightName)
+    {
+        nt::NetworkTableEntry entry = LimelightHelpers::getLimelightNTTableEntry(limelightName, "rawfiducials");
+        std::vector<double> rawFiducialArray = entry.GetDoubleArray({});
+        int valsPerEntry = 7;
+        if (rawFiducialArray.size() % valsPerEntry != 0)
+        {
+            return {};
+        }
+
+        int numFiducials = rawFiducialArray.size() / valsPerEntry;
+        std::vector<RawFiducial> rawFiducials;
+
+        for (int i = 0; i < numFiducials; ++i)
+        {
+            int baseIndex = i * valsPerEntry;
+            int id = static_cast<int>(extractArrayEntry(rawFiducialArray, baseIndex));
+            double txnc = extractArrayEntry(rawFiducialArray, baseIndex + 1);
+            double tync = extractArrayEntry(rawFiducialArray, baseIndex + 2);
+            double ta = extractArrayEntry(rawFiducialArray, baseIndex + 3);
+            double distToCamera = extractArrayEntry(rawFiducialArray, baseIndex + 4);
+            double distToRobot = extractArrayEntry(rawFiducialArray, baseIndex + 5);
+            double ambiguity = extractArrayEntry(rawFiducialArray, baseIndex + 6);
+
+            rawFiducials.emplace_back(id, txnc, tync, ta, distToCamera, distToRobot, ambiguity);
+        }
+
+        return rawFiducials;
+    }
+
+    class RawDetection
+    {
+    public:
+        int classId{-1};
+        double txnc{0.0};
+        double tync{9.0}; // It seems like you intentionally set this to 9.0, so I kept it as is.
+        double ta{0.0};
+        double corner0_X{0.0};
+        double corner0_Y{0.0};
+        double corner1_X{0.0};
+        double corner1_Y{0.0};
+        double corner2_X{0.0};
+        double corner2_Y{0.0};
+        double corner3_X{0.0};
+        double corner3_Y{0.0};
+
+        RawDetection(int classId, double txnc, double tync, double ta,
+                     double corner0_X, double corner0_Y,
+                     double corner1_X, double corner1_Y,
+                     double corner2_X, double corner2_Y,
+                     double corner3_X, double corner3_Y)
+            : classId(classId), txnc(txnc), tync(tync), ta(ta),
+              corner0_X(corner0_X), corner0_Y(corner0_Y),
+              corner1_X(corner1_X), corner1_Y(corner1_Y),
+              corner2_X(corner2_X), corner2_Y(corner2_Y),
+              corner3_X(corner3_X), corner3_Y(corner3_Y) {}
+    };
+
+    inline std::vector<RawDetection> getRawDetections(const std::string &limelightName)
+    {
+        nt::NetworkTableEntry entry = LimelightHelpers::getLimelightNTTableEntry(limelightName, "rawdetections");
+        std::vector<double> rawDetectionArray = entry.GetDoubleArray({});
+        int valsPerEntry = 11;
+
+        if (rawDetectionArray.size() % valsPerEntry != 0)
+        {
+            return {};
+        }
+
+        int numDetections = rawDetectionArray.size() / valsPerEntry;
+        std::vector<RawDetection> rawDetections;
+
+        for (int i = 0; i < numDetections; ++i)
+        {
+            int baseIndex = i * valsPerEntry;
+            int classId = static_cast<int>(extractArrayEntry(rawDetectionArray, baseIndex));
+            double txnc = extractArrayEntry(rawDetectionArray, baseIndex + 1);
+            double tync = extractArrayEntry(rawDetectionArray, baseIndex + 2);
+            double ta = extractArrayEntry(rawDetectionArray, baseIndex + 3);
+            double corner0_X = extractArrayEntry(rawDetectionArray, baseIndex + 4);
+            double corner0_Y = extractArrayEntry(rawDetectionArray, baseIndex + 5);
+            double corner1_X = extractArrayEntry(rawDetectionArray, baseIndex + 6);
+            double corner1_Y = extractArrayEntry(rawDetectionArray, baseIndex + 7);
+            double corner2_X = extractArrayEntry(rawDetectionArray, baseIndex + 8);
+            double corner2_Y = extractArrayEntry(rawDetectionArray, baseIndex + 9);
+            double corner3_X = extractArrayEntry(rawDetectionArray, baseIndex + 10);
+            double corner3_Y = extractArrayEntry(rawDetectionArray, baseIndex + 11);
+
+            rawDetections.emplace_back(classId, txnc, tync, ta, corner0_X, corner0_Y, corner1_X, corner1_Y, corner2_X, corner2_Y, corner3_X, corner3_Y);
+        }
+
+        return rawDetections;
+    }
 
     class PoseEstimate
     {
@@ -331,46 +445,47 @@ namespace LimelightHelpers
 
         PoseEstimate() = default;
 
-         PoseEstimate(const frc::Pose2d& pose, units::time::second_t timestampSeconds, 
-            double latency, int tagCount, double tagSpan, double avgTagDist, double avgTagArea,
-            const std::vector<RawFiducial>& rawFiducials)
-            : pose(pose), timestampSeconds(timestampSeconds), 
-                latency(latency), tagCount(tagCount), tagSpan(tagSpan), 
-                avgTagDist(avgTagDist), avgTagArea(avgTagArea), rawFiducials(rawFiducials)
+        PoseEstimate(const frc::Pose2d &pose, units::time::second_t timestampSeconds,
+                     double latency, int tagCount, double tagSpan, double avgTagDist, double avgTagArea,
+                     const std::vector<RawFiducial> &rawFiducials)
+            : pose(pose), timestampSeconds(timestampSeconds),
+              latency(latency), tagCount(tagCount), tagSpan(tagSpan),
+              avgTagDist(avgTagDist), avgTagArea(avgTagArea), rawFiducials(rawFiducials)
         {
         }
     };
 
-    inline PoseEstimate getBotPoseEstimate(const std::string& limelightName, const std::string& entryName) {
+    inline PoseEstimate getBotPoseEstimate(const std::string &limelightName, const std::string &entryName)
+    {
         nt::NetworkTableEntry poseEntry = getLimelightNTTableEntry(limelightName, entryName);
         std::vector<double> poseArray = poseEntry.GetDoubleArray(std::span<double>{});
         frc::Pose2d pose = toPose2D(poseArray);
 
-        double latency = extractBotPoseEntry(poseArray, 6);
-        int tagCount = static_cast<int>(extractBotPoseEntry(poseArray, 7));
-        double tagSpan = extractBotPoseEntry(poseArray, 8);
-        double tagDist = extractBotPoseEntry(poseArray, 9);
-        double tagArea = extractBotPoseEntry(poseArray, 10);
+        double latency = extractArrayEntry(poseArray, 6);
+        int tagCount = static_cast<int>(extractArrayEntry(poseArray, 7));
+        double tagSpan = extractArrayEntry(poseArray, 8);
+        double tagDist = extractArrayEntry(poseArray, 9);
+        double tagArea = extractArrayEntry(poseArray, 10);
 
         // getLastChange: microseconds; latency: milliseconds
         units::time::second_t timestamp = units::time::second_t((poseEntry.GetLastChange() / 1000000.0) - (latency / 1000.0));
 
         std::vector<RawFiducial> rawFiducials;
         int valsPerFiducial = 7;
-        size_t expectedTotalVals = 11 + valsPerFiducial * tagCount;
-        
-        if (poseArray.size() == expectedTotalVals) 
+        int expectedTotalVals = 11 + valsPerFiducial * tagCount;
+
+        if (poseArray.size() >= static_cast<size_t>(expectedTotalVals))
         {
-            for (int i = 0; i < tagCount; i++) 
+            for (int i = 0; i < tagCount; i++)
             {
                 int baseIndex = 11 + (i * valsPerFiducial);
-                int id = static_cast<int>(extractBotPoseEntry(poseArray, baseIndex));
-                double txnc = extractBotPoseEntry(poseArray, baseIndex + 1);
-                double tync = extractBotPoseEntry(poseArray, baseIndex + 2);
-                double ta = extractBotPoseEntry(poseArray, baseIndex + 3);
-                double distToCamera = extractBotPoseEntry(poseArray, baseIndex + 4);
-                double distToRobot = extractBotPoseEntry(poseArray, baseIndex + 5);
-                double ambiguity = extractBotPoseEntry(poseArray, baseIndex + 6);
+                int id = static_cast<int>(extractArrayEntry(poseArray, baseIndex));
+                double txnc = extractArrayEntry(poseArray, baseIndex + 1);
+                double tync = extractArrayEntry(poseArray, baseIndex + 2);
+                double ta = extractArrayEntry(poseArray, baseIndex + 3);
+                double distToCamera = extractArrayEntry(poseArray, baseIndex + 4);
+                double distToRobot = extractArrayEntry(poseArray, baseIndex + 5);
+                double ambiguity = extractArrayEntry(poseArray, baseIndex + 6);
                 rawFiducials.emplace_back(id, txnc, tync, ta, distToCamera, distToRobot, ambiguity);
             }
         }
@@ -378,28 +493,32 @@ namespace LimelightHelpers
         return PoseEstimate(pose, timestamp, latency, tagCount, tagSpan, tagDist, tagArea, rawFiducials);
     }
 
-    inline PoseEstimate getBotPoseEstimate_wpiBlue(const std::string &limelightName = "") {
+    inline PoseEstimate getBotPoseEstimate_wpiBlue(const std::string &limelightName = "")
+    {
         return getBotPoseEstimate(limelightName, "botpose_wpiblue");
     }
 
-    inline PoseEstimate getBotPoseEstimate_wpiRed(const std::string &limelightName = "") {
+    inline PoseEstimate getBotPoseEstimate_wpiRed(const std::string &limelightName = "")
+    {
         return getBotPoseEstimate(limelightName, "botpose_wpired");
     }
 
-    inline PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(const std::string &limelightName = "") {
+    inline PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(const std::string &limelightName = "")
+    {
         return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue");
     }
 
-    inline PoseEstimate getBotPoseEstimate_wpiRed_MegaTag2(const std::string &limelightName = "") {
+    inline PoseEstimate getBotPoseEstimate_wpiRed_MegaTag2(const std::string &limelightName = "")
+    {
         return getBotPoseEstimate(limelightName, "botpose_orb_wpired");
     }
-     
+
     inline const double INVALID_TARGET = 0.0;
     class SingleTargetingResultClass
     {
     public:
-        SingleTargetingResultClass(){};
-        ~SingleTargetingResultClass(){};
+        SingleTargetingResultClass() {};
+        ~SingleTargetingResultClass() {};
         double m_TargetXPixels{INVALID_TARGET};
         double m_TargetYPixels{INVALID_TARGET};
 
@@ -428,7 +547,6 @@ namespace LimelightHelpers
         std::vector<double> m_ROBOTTransform6DTARGETSPACE;
         std::vector<double> m_ROBOTTransform6DFIELDSPACE;
         std::vector<double> m_CAMERATransform6DROBOTSPACE;
-
     };
 
     class RetroreflectiveResultClass : public SingleTargetingResultClass
@@ -484,9 +602,9 @@ namespace LimelightHelpers
         double m_latencyJSON{0};
         double m_pipelineIndex{-1.0};
         int valid{0};
-        std::vector<double> botPose{6,0.0};
-        std::vector<double> botPose_wpired{6,0.0};
-        std::vector<double> botPose_wpiblue{6,0.0};
+        std::vector<double> botPose{6, 0.0};
+        std::vector<double> botPose_wpired{6, 0.0};
+        std::vector<double> botPose_wpiblue{6, 0.0};
         void Clear()
         {
             RetroResults.clear();
@@ -554,14 +672,16 @@ namespace LimelightHelpers
         inline const std::string _key_colorHSV{"cHSV"};
     }
 
-    inline void PhoneHome() 
+    inline void PhoneHome()
     {
         static int sockfd = -1;
         static struct sockaddr_in servaddr, cliaddr;
 
-        if (sockfd == -1) {
+        if (sockfd == -1)
+        {
             sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-            if (sockfd < 0) {
+            if (sockfd < 0)
+            {
                 std::cerr << "Socket creation failed" << std::endl;
                 return;
             }
@@ -573,7 +693,8 @@ namespace LimelightHelpers
 
             // Set socket for broadcast
             int broadcast = 1;
-            if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) < 0) {
+            if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) < 0)
+            {
                 std::cerr << "Error in setting Broadcast option" << std::endl;
                 close(sockfd);
                 sockfd = -1;
@@ -581,7 +702,8 @@ namespace LimelightHelpers
             }
 
             // Set socket to non-blocking
-            if (fcntl(sockfd, F_SETFL, O_NONBLOCK) < 0) {
+            if (fcntl(sockfd, F_SETFL, O_NONBLOCK) < 0)
+            {
                 std::cerr << "Error setting socket to non-blocking" << std::endl;
                 close(sockfd);
                 sockfd = -1;
@@ -589,27 +711,30 @@ namespace LimelightHelpers
             }
 
             const char *msg = "LLPhoneHome";
-            sendto(sockfd, msg, strlen(msg), 0, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+            sendto(sockfd, msg, strlen(msg), 0, (const struct sockaddr *)&servaddr, sizeof(servaddr));
         }
 
         char receiveData[1024];
         socklen_t len = sizeof(cliaddr);
 
-        ssize_t n = recvfrom(sockfd, (char *)receiveData, 1024, 0, (struct sockaddr *) &cliaddr, &len);
-        if (n > 0) {
+        ssize_t n = recvfrom(sockfd, (char *)receiveData, 1024, 0, (struct sockaddr *)&cliaddr, &len);
+        if (n > 0)
+        {
             receiveData[n] = '\0'; // Null-terminate the received string
             std::string received(receiveData, n);
             std::cout << "Received response: " << received << std::endl;
-        } else if (n < 0 && errno != EWOULDBLOCK && errno != EAGAIN) {
+        }
+        else if (n < 0 && errno != EWOULDBLOCK && errno != EAGAIN)
+        {
             std::cerr << "Error receiving data" << std::endl;
             close(sockfd);
             sockfd = -1;
         }
     }
 
-    inline void SetupPortForwarding(const std::string& limelightName) 
+    inline void SetupPortForwarding(const std::string &limelightName)
     {
-        auto& portForwarder = wpi::PortForwarder::GetInstance();
+        auto &portForwarder = wpi::PortForwarder::GetInstance();
         portForwarder.Add(5800, sanitizeName(limelightName), 5800);
         portForwarder.Add(5801, sanitizeName(limelightName), 5801);
         portForwarder.Add(5802, sanitizeName(limelightName), 5802);
@@ -623,13 +748,13 @@ namespace LimelightHelpers
     }
 
     template <typename T, typename KeyType>
-    T SafeJSONAccess(const wpi::json& jsonData, const KeyType& key, const T& defaultValue)
+    T SafeJSONAccess(const wpi::json &jsonData, const KeyType &key, const T &defaultValue)
     {
         try
         {
-           return jsonData.at(key).template get<T>();
+            return jsonData.at(key).template get<T>();
         }
-        catch (wpi::json::exception& e)
+        catch (wpi::json::exception &e)
         {
             return defaultValue;
         }
@@ -657,7 +782,7 @@ namespace LimelightHelpers
         t.m_TargetCorners = SafeJSONAccess<std::vector<std::vector<double>>>(j, internal::_key_corners, std::vector<std::vector<double>>{});
     }
 
-    inline void from_json(const wpi::json &j,  FiducialResultClass &t)
+    inline void from_json(const wpi::json &j, FiducialResultClass &t)
     {
         std::vector<double> defaultValueVector(6, 0.0);
         t.m_family = SafeJSONAccess<std::string>(j, internal::_key_ffamily, "");
@@ -677,7 +802,7 @@ namespace LimelightHelpers
         t.m_TargetCorners = SafeJSONAccess<std::vector<std::vector<double>>>(j, internal::_key_corners, std::vector<std::vector<double>>{});
     }
 
-    inline void from_json(const wpi::json &j,  DetectionResultClass &t)
+    inline void from_json(const wpi::json &j, DetectionResultClass &t)
     {
         t.m_confidence = SafeJSONAccess<double>(j, internal::_key_confidence, 0.0);
         t.m_classID = SafeJSONAccess<double>(j, internal::_key_classID, 0.0);
@@ -690,7 +815,7 @@ namespace LimelightHelpers
         t.m_TargetCorners = SafeJSONAccess<std::vector<std::vector<double>>>(j, internal::_key_corners, std::vector<std::vector<double>>{});
     }
 
-    inline void from_json(const wpi::json &j,  ClassificationResultClass &t)
+    inline void from_json(const wpi::json &j, ClassificationResultClass &t)
     {
         t.m_confidence = SafeJSONAccess<double>(j, internal::_key_confidence, 0.0);
         t.m_classID = SafeJSONAccess<double>(j, internal::_key_classID, 0.0);
@@ -703,7 +828,7 @@ namespace LimelightHelpers
         t.m_TargetCorners = SafeJSONAccess<std::vector<std::vector<double>>>(j, internal::_key_corners, std::vector<std::vector<double>>{});
     }
 
-    inline void from_json(const wpi::json &j,  VisionResultsClass &t)
+    inline void from_json(const wpi::json &j, VisionResultsClass &t)
     {
         t.m_timeStamp = SafeJSONAccess<double>(j, internal::_key_timestamp, 0.0);
         t.m_latencyPipeline = SafeJSONAccess<double>(j, internal::_key_latency_pipeline, 0.0);
@@ -716,31 +841,31 @@ namespace LimelightHelpers
         t.botPose_wpired = SafeJSONAccess<std::vector<double>>(j, internal::_key_botpose_wpired, defaultVector);
         t.botPose_wpiblue = SafeJSONAccess<std::vector<double>>(j, internal::_key_botpose_wpiblue, defaultVector);
 
-        t.RetroResults = SafeJSONAccess<std::vector< RetroreflectiveResultClass>>(j, "Retro", std::vector< RetroreflectiveResultClass>{});
-        t.FiducialResults = SafeJSONAccess<std::vector< FiducialResultClass>>(j, "Fiducial", std::vector< FiducialResultClass>{});
-        t.DetectionResults = SafeJSONAccess<std::vector< DetectionResultClass>>(j, "Detector", std::vector< DetectionResultClass>{});
-        t.ClassificationResults = SafeJSONAccess<std::vector< ClassificationResultClass>>(j, "Detector", std::vector< ClassificationResultClass>{});
+        t.RetroResults = SafeJSONAccess<std::vector<RetroreflectiveResultClass>>(j, "Retro", std::vector<RetroreflectiveResultClass>{});
+        t.FiducialResults = SafeJSONAccess<std::vector<FiducialResultClass>>(j, "Fiducial", std::vector<FiducialResultClass>{});
+        t.DetectionResults = SafeJSONAccess<std::vector<DetectionResultClass>>(j, "Detector", std::vector<DetectionResultClass>{});
+        t.ClassificationResults = SafeJSONAccess<std::vector<ClassificationResultClass>>(j, "Detector", std::vector<ClassificationResultClass>{});
     }
 
-    inline void from_json(const wpi::json &j,  LimelightResultsClass &t)
+    inline void from_json(const wpi::json &j, LimelightResultsClass &t)
     {
-        t.targetingResults = SafeJSONAccess<LimelightHelpers::VisionResultsClass>(j, "Results",  LimelightHelpers::VisionResultsClass{});
+        t.targetingResults = SafeJSONAccess<LimelightHelpers::VisionResultsClass>(j, "Results", LimelightHelpers::VisionResultsClass{});
     }
 
     inline LimelightResultsClass getLatestResults(const std::string &limelightName = "", bool profile = false)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        std::string jsonString = getJSONDump(limelightName); 
+        std::string jsonString = getJSONDump(limelightName);
         wpi::json data;
         try
         {
             data = wpi::json::parse(jsonString);
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
-           return LimelightResultsClass();
+            return LimelightResultsClass();
         }
-        
+
         auto end = std::chrono::high_resolution_clock::now();
         double nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
         double millis = (nanos * 0.000001);
@@ -754,7 +879,7 @@ namespace LimelightHelpers
             }
             return out;
         }
-        catch(...) 
+        catch (...)
         {
             return LimelightResultsClass();
         }

@@ -19,8 +19,8 @@
 #pragma once
 #include <string>
 
-#include "state/State.h"
 #include "mechanisms/ClimberManager/ClimberManager.h"
+#include "state/State.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ public:
 	ManualClimbState ( std::string stateName,
 	                   int stateId,
 	                   ClimberManager *mech,
-	                   MechanismConfigMgr::RobotIdentifier activeRobotId );
+	                   RobotIdentifier activeRobotId );
 	~ManualClimbState() = default;
 	void Init() override;
 	void Run() override;
@@ -43,8 +43,13 @@ public:
 
 private:
 	ClimberManager *m_mechanism;
+	double m_manualClimbRate = 0.02;
 	void InitPRACTICE_BOT9999();
-	MechanismConfigMgr::RobotIdentifier m_RobotId;
+	RobotIdentifier m_RobotId;
 	const units::angle::turn_t m_ClimberTarget = units::angle::turn_t ( 0 );
+	units::angle::degree_t m_manualTarget;
+	units::angle::degree_t m_minClimberAngle{-10.0};
+	units::angle::degree_t m_maxClimberAngle{95.0};
+
 };
 }

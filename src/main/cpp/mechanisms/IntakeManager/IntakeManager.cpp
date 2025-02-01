@@ -37,6 +37,8 @@
 #include "mechanisms/IntakeManager/TransferOutState.h"
 #include "mechanisms/IntakeManager/ProcessState.h"
 #include "mechanisms/IntakeManager/ExpelState.h"
+#include "teleopcontrol/TeleopControl.h"
+#include "teleopcontrol/TeleopControlFunctions.h"
 
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -93,7 +95,7 @@ void IntakeManager::CreateAndRegisterStates()
 	ExpelStateInst->RegisterTransitionState ( OffStateInst );
 }
 
-IntakeManager::IntakeManager ( MechanismConfigMgr::RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string ( "IntakeManager" ) ),
+IntakeManager::IntakeManager ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string ( "IntakeManager" ) ),
 	m_activeRobotId ( activeRobotId ),
 	m_stateMap()
 {
@@ -248,10 +250,6 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	m_Extender->GetConfigurator().Apply ( motorconfig );
 }
 
-
-
-
-
 // IntakeSensor : Digital inputs do not have initialization needs
 
 void IntakeManager::SetPIDExtenderPositionDegree()
@@ -273,6 +271,17 @@ void IntakeManager::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+
+	auto controller = TeleopControl::GetInstance();
+	if  (controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR)) 
+	{
+	
+        if (m_manualModeButtonReleased)
+            m_failedSensorLatch = !m_failedSensorLatch;
+
+	}
+	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
+
 }
 
 
@@ -313,10 +322,6 @@ bool IntakeManager::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE 
 	// }
 	return false;
 }
-
-
-
-
 
 
 void IntakeManager::Cyclic()

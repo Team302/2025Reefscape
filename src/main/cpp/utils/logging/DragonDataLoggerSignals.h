@@ -20,6 +20,8 @@
 #include <map>
 
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
+
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveModuleState.h"
 
@@ -56,7 +58,11 @@ public:
     enum DoubleSignals
     {
         CHASSIS_STORED_HEADING_DEGREES,
-        CHASSIS_YAW_DEGREES //,
+        CHASSIS_YAW_DEGREES,
+        ELECTRICAL_VOLTAGE,
+        ELECTRICAL_CURRENT,
+        ELECTRICAL_ENERGY,
+        ELECTRICAL_POWER
         // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
         // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
         // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
@@ -76,7 +82,9 @@ public:
 
     enum PoseSingals
     {
-        CURRENT_CHASSIS_POSE
+        CURRENT_CHASSIS_POSE2D,
+        CURRENT_CHASSIS_LIMELIGHT_POSE3D,
+        CURRENT_CHASSIS_QUEST_POSE3D
     };
 
     enum ChassisSpeedSignals
@@ -164,6 +172,18 @@ private:
     wpi::log::DoubleLogEntry m_distFromSpeaker;
     double m_currDistFromSpeaker{0.0};
 
+    wpi::log::DoubleLogEntry m_electricalVoltage;
+    double m_currElectricalVoltage{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalCurrent;
+    double m_currElectricalCurrent{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalEnergy;
+    double m_currElectricalEnergy{0.0};
+
+    wpi::log::DoubleLogEntry m_electricalPower;
+    double m_currElectricalPower{0.0};
+
     wpi::log::StringLogEntry m_headingState;
     std::string m_currHeadingState{""};
 
@@ -173,8 +193,12 @@ private:
     // wpi::log::StringLogEntry m_noteMgrState;
     // std::string m_currNoteMgrState{""};
 
-    wpi::log::StructLogEntry<frc::Pose2d> m_pose;
-    frc::Pose2d m_currPose{};
+    wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
+
+    frc::Pose2d m_currPose2D{};
+    frc::Pose3d m_currPose3D{};
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
     frc::SwerveModuleState m_currFrontLeftTarget{};

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
@@ -37,6 +37,8 @@
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
+#include "RobotIdentifier.h"
+
 class IntakeManager : public BaseMech, public StateMgr
 {
 public:
@@ -51,7 +53,7 @@ public:
 		STATE_EXPEL
 	};
 
-	IntakeManager ( MechanismConfigMgr::RobotIdentifier activeRobotId );
+	IntakeManager ( RobotIdentifier activeRobotId );
 	IntakeManager() = delete;
 	~IntakeManager() = default;
 
@@ -88,7 +90,7 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 
-	MechanismConfigMgr::RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
+	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX* GetIntake() const {return m_Intake;}
 	ctre::phoenix6::hardware::TalonFX* GetExtender() const {return m_Extender;}
@@ -96,10 +98,12 @@ public:
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 
+	bool GetFailedSensor() const {return m_failedSensorLatch;}
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
-	MechanismConfigMgr::RobotIdentifier m_activeRobotId;
+	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
 	std::string m_tuningIsEnabledStr;
 	bool m_tuning = false;
@@ -131,4 +135,7 @@ private:
 	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
+	
+	bool m_failedSensorLatch = false;
+	bool m_manualModeButtonReleased = true;
 };

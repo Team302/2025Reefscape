@@ -55,6 +55,35 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
                 signals->m_currChassisYaw = value;
             }
             break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_VOLTAGE:
+            if (std::abs(value - signals->m_currElectricalVoltage) > m_doubleTolerance)
+            {
+                signals->m_electricalVoltage.Append(value);
+                signals->m_currElectricalVoltage = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_CURRENT:
+            if (std::abs(value - signals->m_currElectricalCurrent) > m_doubleTolerance)
+            {
+                signals->m_electricalCurrent.Append(value);
+                signals->m_currElectricalCurrent = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_ENERGY:
+            if (std::abs(value - signals->m_currElectricalEnergy) > m_doubleTolerance)
+            {
+                signals->m_electricalEnergy.Append(value);
+                signals->m_currElectricalEnergy = value;
+            }
+            break;
+        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_POWER:
+            if (std::abs(value - signals->m_currElectricalPower) > m_doubleTolerance)
+            {
+                signals->m_electricalPower.Append(value);
+                signals->m_currElectricalPower = value;
+            }
+            break;
+            
 
         default:
             break;
@@ -90,15 +119,15 @@ void DragonDataLogger::LogStringData(DragonDataLoggerSignals::StringSignals sign
         }
     }
 }
-void DragonDataLogger::LogPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value)
+void DragonDataLogger::Log2DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE:
-            signals->m_pose.Append(value); // always do this as the Pose2d isn't easy to set
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D:
+            signals->m_pose2d.Append(value); // always do this as the Pose2d isn't easy to set
             break;
 
         default:
@@ -106,6 +135,28 @@ void DragonDataLogger::LogPoseData(DragonDataLoggerSignals::PoseSingals signalID
         }
     }
 }
+
+void DragonDataLogger::Log3DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value)
+{
+    auto signals = DragonDataLoggerSignals::GetInstance();
+    if (signals != nullptr)
+    {
+        switch (signalID)
+        {
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
+            signals->m_pose3dLimelight.Append(value); // always do this as the Pose2d isn't easy to set
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
+            signals->m_pose3dQuest.Append(value); // always do this as the Pose2d isn't easy to set
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
 void DragonDataLogger::LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
