@@ -142,7 +142,6 @@ public:
 	void UpdateTarget();
 
 	bool AtTarget();
-	//TODO: 
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
