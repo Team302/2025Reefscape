@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -25,7 +25,7 @@ class MechanismConfigMgr
 public:
 	static MechanismConfigMgr *GetInstance();
 	MechanismConfig *GetCurrentConfig() const { return m_config; }
-	void InitRobot ( RobotIdentifier );
+	void InitRobot(RobotIdentifier);
 
 private:
 	MechanismConfigMgr();

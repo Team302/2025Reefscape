@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -26,28 +26,28 @@ using namespace std;
 
 namespace DragonTaleStates
 {
-class ManualGrabAlgaeReefState : public State
-{
-public:
-	ManualGrabAlgaeReefState() = delete;
-	ManualGrabAlgaeReefState ( std::string stateName,
-	                           int stateId,
-	                           DragonTale *mech,
-	                           RobotIdentifier activeRobotId );
-	~ManualGrabAlgaeReefState() = default;
-	void Init() override;
-	void Run() override;
-	void Exit() override;
-	bool AtTarget() override;
-	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
+	class ManualGrabAlgaeReefState : public State
+	{
+	public:
+		ManualGrabAlgaeReefState() = delete;
+		ManualGrabAlgaeReefState(std::string stateName,
+								 int stateId,
+								 DragonTale *mech,
+								 RobotIdentifier activeRobotId);
+		~ManualGrabAlgaeReefState() = default;
+		void Init() override;
+		void Run() override;
+		void Exit() override;
+		bool AtTarget() override;
+		bool IsTransitionCondition(bool considerGamepadTransitions) override;
 
-private:
-	DragonTale *m_mechanism;
-	void InitPRACTICE_BOT9999();
-	RobotIdentifier m_RobotId;
-	const units::angle::degree_t m_ArmTarget = units::angle::degree_t ( 40 );
-	const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t ( 0 );
-	const double m_CoralTarget = double ( 0 );
-	const double m_AlgaeTarget = double ( 0 );
-};
+	private:
+		DragonTale *m_mechanism;
+		void InitPRACTICE_BOT9999();
+		RobotIdentifier m_RobotId;
+		const units::angle::degree_t m_ArmTarget = units::angle::degree_t(40);
+		const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t(0);
+		const double m_CoralTarget = double(0);
+		const double m_AlgaeTarget = double(0);
+	};
 }

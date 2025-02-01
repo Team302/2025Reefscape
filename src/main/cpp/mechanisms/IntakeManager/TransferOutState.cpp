@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,26 +34,26 @@ using namespace IntakeManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-TransferOutState::TransferOutState ( std::string stateName,
-                                     int stateId,
-                                     IntakeManager *mech,
-                                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+TransferOutState::TransferOutState(std::string stateName,
+								   int stateId,
+								   IntakeManager *mech,
+								   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void TransferOutState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "TransferOutState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TransferOutState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void TransferOutState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput ( 0, false );
+	m_mechanism->UpdateTargetIntakePercentOutput(0, false);
 	m_mechanism->SetPIDExtenderPositionDegree();
-	m_mechanism->UpdateTargetExtenderPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetExtenderPositionDegree(units::angle::turn_t(0));
 }
 
 void TransferOutState::Run()
@@ -74,7 +74,7 @@ bool TransferOutState::AtTarget()
 	return atTarget;
 }
 
-bool TransferOutState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool TransferOutState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 	return false;

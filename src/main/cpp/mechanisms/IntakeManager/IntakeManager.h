@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -53,38 +53,54 @@ public:
 		STATE_EXPEL
 	};
 
-	IntakeManager ( RobotIdentifier activeRobotId );
+	IntakeManager(RobotIdentifier activeRobotId);
 	IntakeManager() = delete;
 	~IntakeManager() = default;
 
 	void CreatePRACTICE_BOT9999();
 	void InitializePRACTICE_BOT9999();
 
-
 	/// @brief Set the control constants (e.g. PIDF values).
 	/// @param indentifier the motor controller usage to identify the motor
 	/// @param slot position on the motor controller to set
 	/// @param pid control data / constants
-	virtual void SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid );
+	virtual void SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid);
 
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetIntakePercentOutput ( double percentOut ) { m_IntakePercentOutput.Output = percentOut; m_IntakeActiveTarget = &m_IntakePercentOutput;}
-	void UpdateTargetIntakePercentOutput ( double percentOut, bool enableFOC ) { m_IntakePercentOutput.Output = percentOut; m_IntakePercentOutput.EnableFOC = enableFOC; m_IntakeActiveTarget = &m_IntakePercentOutput;}
-	void UpdateTargetExtenderPositionDegree ( units::angle::turn_t position ) { m_ExtenderPositionDegree.Position = position * 1; m_ExtenderActiveTarget = &m_ExtenderPositionDegree;}
-	void UpdateTargetExtenderPercentOutput ( double percentOut ) { m_ExtenderPercentOutput.Output = percentOut; m_ExtenderActiveTarget = &m_ExtenderPercentOutput;}
-	void UpdateTargetExtenderPercentOutput ( double percentOut, bool enableFOC ) { m_ExtenderPercentOutput.Output = percentOut; m_ExtenderPercentOutput.EnableFOC = enableFOC; m_ExtenderActiveTarget = &m_ExtenderPercentOutput;}
+	void UpdateTargetIntakePercentOutput(double percentOut)
+	{
+		m_IntakePercentOutput.Output = percentOut;
+		m_IntakeActiveTarget = &m_IntakePercentOutput;
+	}
+	void UpdateTargetIntakePercentOutput(double percentOut, bool enableFOC)
+	{
+		m_IntakePercentOutput.Output = percentOut;
+		m_IntakePercentOutput.EnableFOC = enableFOC;
+		m_IntakeActiveTarget = &m_IntakePercentOutput;
+	}
+	void UpdateTargetExtenderPositionDegree(units::angle::turn_t position)
+	{
+		m_ExtenderPositionDegree.Position = position * 1;
+		m_ExtenderActiveTarget = &m_ExtenderPositionDegree;
+	}
+	void UpdateTargetExtenderPercentOutput(double percentOut)
+	{
+		m_ExtenderPercentOutput.Output = percentOut;
+		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
+	}
+	void UpdateTargetExtenderPercentOutput(double percentOut, bool enableFOC)
+	{
+		m_ExtenderPercentOutput.Output = percentOut;
+		m_ExtenderPercentOutput.EnableFOC = enableFOC;
+		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
+	}
 
 	void SetPIDExtenderPositionDegree();
 
-
-
-
-	virtual bool IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-	virtual bool IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-
-
+	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
+	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 
 	void CreateAndRegisterStates();
 	void Cyclic();
@@ -92,13 +108,13 @@ public:
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
-	ctre::phoenix6::hardware::TalonFX* GetIntake() const {return m_Intake;}
-	ctre::phoenix6::hardware::TalonFX* GetExtender() const {return m_Extender;}
-	bool GetIntakeSensorState() const {return m_IntakeSensor->Get();}
-	ControlData* GetPercentOutput() const {return m_PercentOutput;}
-	ControlData* GetPositionDegree() const {return m_PositionDegree;}
+	ctre::phoenix6::hardware::TalonFX *GetIntake() const { return m_Intake; }
+	ctre::phoenix6::hardware::TalonFX *GetExtender() const { return m_Extender; }
+	bool GetIntakeSensorState() const { return m_IntakeSensor->Get(); }
+	ControlData *GetPercentOutput() const { return m_PercentOutput; }
+	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 
-	bool GetFailedSensor() const {return m_failedSensorLatch;}
+	bool GetFailedSensor() const { return m_failedSensorLatch; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -109,19 +125,17 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState ( int state, bool run ) override;
-	ControlData *GetControlData ( std::string name ) override;
+	void SetCurrentState(int state, bool run) override;
+	ControlData *GetControlData(std::string name) override;
 
 private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;
 
-	ctre::phoenix6::hardware::TalonFX* m_Intake;
-	ctre::phoenix6::hardware::TalonFX* m_Extender;
-	frc::DigitalInput* m_IntakeSensor;
-	ControlData* m_PercentOutput;
-	ControlData* m_PositionDegree;
-
-
+	ctre::phoenix6::hardware::TalonFX *m_Intake;
+	ctre::phoenix6::hardware::TalonFX *m_Extender;
+	frc::DigitalInput *m_IntakeSensor;
+	ControlData *m_PercentOutput;
+	ControlData *m_PositionDegree;
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
@@ -131,11 +145,11 @@ private:
 	void InitializeTalonFXExtenderPRACTICE_BOT9999();
 
 	ctre::phoenix6::controls::DutyCycleOut m_IntakePercentOutput{0.0};
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ExtenderPositionDegree{units::angle::turn_t ( 0.0 ) };
+	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
-	
+
 	bool m_failedSensorLatch = false;
 	bool m_manualModeButtonReleased = true;
 };

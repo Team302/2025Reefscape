@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,25 +34,25 @@ using namespace ClimberManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-AutoClimbState::AutoClimbState ( std::string stateName,
-                                 int stateId,
-                                 ClimberManager *mech,
-                                 RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+AutoClimbState::AutoClimbState(std::string stateName,
+							   int stateId,
+							   ClimberManager *mech,
+							   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void AutoClimbState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "AutoClimbState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutoClimbState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void AutoClimbState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetClimberPositionDegree(units::angle::turn_t(0));
 }
 
 void AutoClimbState::Run()
@@ -73,9 +73,9 @@ bool AutoClimbState::AtTarget()
 	return atTarget;
 }
 
-bool AutoClimbState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool AutoClimbState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	
-	 return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB));
+
+	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB));
 }

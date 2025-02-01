@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -30,16 +30,16 @@ public:
 	MechanismConfigPRACTICE_BOT_9999() = default;
 	~MechanismConfigPRACTICE_BOT_9999() = default;
 
-	StateMgr *GetMechanism ( MechanismTypes::MECHANISM_TYPE mechType );
+	StateMgr *GetMechanism(MechanismTypes::MECHANISM_TYPE mechType);
 
 protected:
 	void DefineMechanisms() override;
 	void DefineLEDs() override;
 
 private:
-	ClimberManager* m_theClimberManager = nullptr;
-	DragonTale* m_theDragonTale = nullptr;
-	IntakeManager* m_theIntakeManager = nullptr;
+	ClimberManager *m_theClimberManager = nullptr;
+	DragonTale *m_theDragonTale = nullptr;
+	IntakeManager *m_theIntakeManager = nullptr;
 
 	std::unordered_map<MechanismTypes::MECHANISM_TYPE, StateMgr *> m_mechanismMap;
 };

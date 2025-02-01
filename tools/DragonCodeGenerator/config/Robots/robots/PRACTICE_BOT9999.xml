@@ -758,7 +758,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
@@ -1682,6 +1682,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>

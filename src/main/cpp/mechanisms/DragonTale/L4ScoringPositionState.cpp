@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,27 +34,27 @@ using namespace DragonTaleStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-L4ScoringPositionState::L4ScoringPositionState ( std::string stateName,
-        int stateId,
-        DragonTale *mech,
-        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+L4ScoringPositionState::L4ScoringPositionState(std::string stateName,
+											   int stateId,
+											   DragonTale *mech,
+											   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void L4ScoringPositionState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "L4ScoringPositionState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void L4ScoringPositionState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralPercentOutput (m_CoralTarget);
-	m_mechanism->UpdateTargetAlgaePercentOutput (m_AlgaeTarget);
+	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+	m_mechanism->UpdateTargetAlgaePercentOutput(m_AlgaeTarget);
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
-	m_mechanism->SetArmTarget(m_ArmTarget);	
+	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void L4ScoringPositionState::Run()
@@ -75,10 +75,9 @@ bool L4ScoringPositionState::AtTarget()
 	return atTarget;
 }
 
-bool L4ScoringPositionState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool L4ScoringPositionState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-
 
 	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L4_SCORING_POSITION)) && m_mechanism->IsCoralMode());
 }

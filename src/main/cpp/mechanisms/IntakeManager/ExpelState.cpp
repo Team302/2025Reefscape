@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,25 +34,25 @@ using namespace IntakeManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-ExpelState::ExpelState ( std::string stateName,
-                         int stateId,
-                         IntakeManager *mech,
-                         RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+ExpelState::ExpelState(std::string stateName,
+					   int stateId,
+					   IntakeManager *mech,
+					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void ExpelState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ExpelState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ExpelState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void ExpelState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput ( -1, false );
-	m_mechanism->UpdateTargetExtenderPercentOutput ( 0, false );
+	m_mechanism->UpdateTargetIntakePercentOutput(-1, false);
+	m_mechanism->UpdateTargetExtenderPercentOutput(0, false);
 }
 
 void ExpelState::Run()
@@ -73,7 +73,7 @@ bool ExpelState::AtTarget()
 	return atTarget;
 }
 
-bool ExpelState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool ExpelState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 

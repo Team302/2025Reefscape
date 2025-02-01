@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -26,26 +26,26 @@ using namespace std;
 
 namespace IntakeManagerStates
 {
-class IntakeState : public State
-{
-public:
-	IntakeState() = delete;
-	IntakeState ( std::string stateName,
-	              int stateId,
-	              IntakeManager *mech,
-	              RobotIdentifier activeRobotId );
-	~IntakeState() = default;
-	void Init() override;
-	void Run() override;
-	void Exit() override;
-	bool AtTarget() override;
-	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
+	class IntakeState : public State
+	{
+	public:
+		IntakeState() = delete;
+		IntakeState(std::string stateName,
+					int stateId,
+					IntakeManager *mech,
+					RobotIdentifier activeRobotId);
+		~IntakeState() = default;
+		void Init() override;
+		void Run() override;
+		void Exit() override;
+		bool AtTarget() override;
+		bool IsTransitionCondition(bool considerGamepadTransitions) override;
 
-private:
-	IntakeManager *m_mechanism;
-	void InitPRACTICE_BOT9999();
-	RobotIdentifier m_RobotId;
-	const double m_IntakeTarget = double ( 1 );
-	const units::angle::degree_t m_ExtenderTarget = units::angle::degree_t ( 0 );
-};
+	private:
+		IntakeManager *m_mechanism;
+		void InitPRACTICE_BOT9999();
+		RobotIdentifier m_RobotId;
+		const double m_IntakeTarget = double(1);
+		const units::angle::degree_t m_ExtenderTarget = units::angle::degree_t(0);
+	};
 }

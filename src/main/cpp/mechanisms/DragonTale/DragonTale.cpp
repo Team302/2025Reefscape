@@ -530,7 +530,7 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	m_ElevatorFollower->GetConfigurator().Apply(hwswitch);
 
 	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
+	motorconfig.Inverted = InvertedValue::Clockwise_Positive;
 	motorconfig.NeutralMode = NeutralModeValue::Brake;
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;

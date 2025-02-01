@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -40,129 +40,124 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 
-using ctre::phoenix6::signals::ForwardLimitSourceValue;
-using ctre::phoenix6::signals::ForwardLimitTypeValue;
-using ctre::phoenix6::signals::ReverseLimitSourceValue;
-using ctre::phoenix6::signals::ReverseLimitTypeValue;
-using ctre::phoenix6::signals::InvertedValue;
-using ctre::phoenix6::signals::NeutralModeValue;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
+using ctre::phoenix6::configs::CurrentLimitsConfigs;
+using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
+using ctre::phoenix6::configs::MotorOutputConfigs;
 using ctre::phoenix6::configs::OpenLoopRampsConfigs;
+using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
+using ctre::phoenix6::signals::ForwardLimitSourceValue;
+using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::InvertedValue;
+using ctre::phoenix6::signals::NeutralModeValue;
+using ctre::phoenix6::signals::ReverseLimitSourceValue;
+using ctre::phoenix6::signals::ReverseLimitTypeValue;
 
 using std::string;
 using namespace IntakeManagerStates;
 
 void IntakeManager::CreateAndRegisterStates()
 {
-	OffState* OffStateInst = new OffState ( string ( "Off" ), 0, this, m_activeRobotId );
-	AddToStateVector ( OffStateInst );
+	OffState *OffStateInst = new OffState(string("Off"), 0, this, m_activeRobotId);
+	AddToStateVector(OffStateInst);
 
-	IntakeState* IntakeStateInst = new IntakeState ( string ( "Intake" ), 1, this, m_activeRobotId );
-	AddToStateVector ( IntakeStateInst );
+	IntakeState *IntakeStateInst = new IntakeState(string("Intake"), 1, this, m_activeRobotId);
+	AddToStateVector(IntakeStateInst);
 
-	HoldState* HoldStateInst = new HoldState ( string ( "Hold" ), 2, this, m_activeRobotId );
-	AddToStateVector ( HoldStateInst );
+	HoldState *HoldStateInst = new HoldState(string("Hold"), 2, this, m_activeRobotId);
+	AddToStateVector(HoldStateInst);
 
-	TransferInState* TransferInStateInst = new TransferInState ( string ( "TransferIn" ), 3, this, m_activeRobotId );
-	AddToStateVector ( TransferInStateInst );
+	TransferInState *TransferInStateInst = new TransferInState(string("TransferIn"), 3, this, m_activeRobotId);
+	AddToStateVector(TransferInStateInst);
 
-	TransferOutState* TransferOutStateInst = new TransferOutState ( string ( "TransferOut" ), 4, this, m_activeRobotId );
-	AddToStateVector ( TransferOutStateInst );
+	TransferOutState *TransferOutStateInst = new TransferOutState(string("TransferOut"), 4, this, m_activeRobotId);
+	AddToStateVector(TransferOutStateInst);
 
-	ProcessState* ProcessStateInst = new ProcessState ( string ( "Process" ), 5, this, m_activeRobotId );
-	AddToStateVector ( ProcessStateInst );
+	ProcessState *ProcessStateInst = new ProcessState(string("Process"), 5, this, m_activeRobotId);
+	AddToStateVector(ProcessStateInst);
 
-	ExpelState* ExpelStateInst = new ExpelState ( string ( "Expel" ), 6, this, m_activeRobotId );
-	AddToStateVector ( ExpelStateInst );
+	ExpelState *ExpelStateInst = new ExpelState(string("Expel"), 6, this, m_activeRobotId);
+	AddToStateVector(ExpelStateInst);
 
-	OffStateInst->RegisterTransitionState ( IntakeStateInst );
-	OffStateInst->RegisterTransitionState ( ExpelStateInst );
-	IntakeStateInst->RegisterTransitionState ( OffStateInst );
-	IntakeStateInst->RegisterTransitionState ( HoldStateInst );
-	IntakeStateInst->RegisterTransitionState ( ExpelStateInst );
-	HoldStateInst->RegisterTransitionState ( OffStateInst );
-	HoldStateInst->RegisterTransitionState ( ProcessStateInst );
-	HoldStateInst->RegisterTransitionState ( ExpelStateInst );
-	TransferInStateInst->RegisterTransitionState ( HoldStateInst );
-	TransferOutStateInst->RegisterTransitionState ( OffStateInst );
-	ProcessStateInst->RegisterTransitionState ( OffStateInst );
-	ExpelStateInst->RegisterTransitionState ( OffStateInst );
+	OffStateInst->RegisterTransitionState(IntakeStateInst);
+	OffStateInst->RegisterTransitionState(ExpelStateInst);
+	IntakeStateInst->RegisterTransitionState(OffStateInst);
+	IntakeStateInst->RegisterTransitionState(HoldStateInst);
+	IntakeStateInst->RegisterTransitionState(ExpelStateInst);
+	HoldStateInst->RegisterTransitionState(OffStateInst);
+	HoldStateInst->RegisterTransitionState(ProcessStateInst);
+	HoldStateInst->RegisterTransitionState(ExpelStateInst);
+	TransferInStateInst->RegisterTransitionState(HoldStateInst);
+	TransferOutStateInst->RegisterTransitionState(OffStateInst);
+	ProcessStateInst->RegisterTransitionState(OffStateInst);
+	ExpelStateInst->RegisterTransitionState(OffStateInst);
 }
 
-IntakeManager::IntakeManager ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string ( "IntakeManager" ) ),
-	m_activeRobotId ( activeRobotId ),
-	m_stateMap()
+IntakeManager::IntakeManager(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER, std::string("IntakeManager")),
+															  m_activeRobotId(activeRobotId),
+															  m_stateMap()
 {
-	PeriodicLooper::GetInstance()->RegisterAll ( this );
+	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
-std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_NAMESEnumMap
-{
+std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_NAMESEnumMap{
 	{"STATE_OFF", IntakeManager::STATE_NAMES::STATE_OFF},
 	{"STATE_INTAKE", IntakeManager::STATE_NAMES::STATE_INTAKE},
 	{"STATE_HOLD", IntakeManager::STATE_NAMES::STATE_HOLD},
 	{"STATE_TRANSFER_IN", IntakeManager::STATE_NAMES::STATE_TRANSFER_IN},
 	{"STATE_TRANSFER_OUT", IntakeManager::STATE_NAMES::STATE_TRANSFER_OUT},
 	{"STATE_PROCESS", IntakeManager::STATE_NAMES::STATE_PROCESS},
-	{"STATE_EXPEL", IntakeManager::STATE_NAMES::STATE_EXPEL},};
+	{"STATE_EXPEL", IntakeManager::STATE_NAMES::STATE_EXPEL},
+};
 
 void IntakeManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "IntakeManager";
-	m_Intake = new ctre::phoenix6::hardware::TalonFX ( 0, "rio" );
-	m_Extender = new ctre::phoenix6::hardware::TalonFX ( 0, "rio" );
+	m_Intake = new ctre::phoenix6::hardware::TalonFX(0, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFX(0, "rio");
 
+	m_IntakeSensor = new frc::DigitalInput(0);
 
-
-
-
-	m_IntakeSensor = new frc::DigitalInput ( 0 );
-
-
-	m_PercentOutput = new ControlData (
-	    ControlModes::CONTROL_TYPE::PERCENT_OUTPUT, // ControlModes::CONTROL_TYPE mode
-	    ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
-	    "m_PercentOutput", // std::string indentifier
-	    0, // double proportional
-	    0, // double integral
-	    0, // double derivative
-	    0, // double feedforward
-	    ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-	    0, // double integralZone
-	    0, // double maxAcceleration
-	    0, // double cruiseVelocity
-	    0, // double peakValue
-	    0, // double nominalValue
-	    false  // bool enableFOC
+	m_PercentOutput = new ControlData(
+		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PercentOutput",								  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
+		0,												  // double integralZone
+		0,												  // double maxAcceleration
+		0,												  // double cruiseVelocity
+		0,												  // double peakValue
+		0,												  // double nominalValue
+		false											  // bool enableFOC
 	);
-	m_PositionDegree = new ControlData (
-	    ControlModes::CONTROL_TYPE::POSITION_DEGREES, // ControlModes::CONTROL_TYPE mode
-	    ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
-	    "m_PositionDegree", // std::string indentifier
-	    0, // double proportional
-	    0, // double integral
-	    0, // double derivative
-	    0, // double feedforward
-	    ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-	    0, // double integralZone
-	    0, // double maxAcceleration
-	    0, // double cruiseVelocity
-	    0, // double peakValue
-	    0, // double nominalValue
-	    true  // bool enableFOC
+	m_PositionDegree = new ControlData(
+		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PositionDegree",								  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
+		0,												  // double integralZone
+		0,												  // double maxAcceleration
+		0,												  // double cruiseVelocity
+		0,												  // double peakValue
+		0,												  // double nominalValue
+		true											  // bool enableFOC
 	);
 
-	ReadConstants ( "IntakeManager.xml", 9999 );
+	ReadConstants("IntakeManager.xml", 9999);
 
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable ( m_ntName );
+	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
 	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean ( m_tuningIsEnabledStr, m_tuning );
+	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void IntakeManager::InitializePRACTICE_BOT9999()
@@ -173,22 +168,22 @@ void IntakeManager::InitializePRACTICE_BOT9999()
 void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 {
 	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t ( 0 );
+	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
 	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t ( 0 );
+	currconfigs.SupplyCurrentLimit = units::current::ampere_t(0);
 	currconfigs.SupplyCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t ( 0 );
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t ( 0 );
-	m_Intake->GetConfigurator().Apply ( currconfigs );
+	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(0);
+	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0);
+	m_Intake->GetConfigurator().Apply(currconfigs);
 
 	OpenLoopRampsConfigs rampConfigs{};
-	rampConfigs.VoltageOpenLoopRampPeriod = units::time::second_t ( 0 );
-	m_Intake->GetConfigurator().Apply ( rampConfigs );
+	rampConfigs.VoltageOpenLoopRampPeriod = units::time::second_t(0);
+	m_Intake->GetConfigurator().Apply(rampConfigs);
 	HardwareLimitSwitchConfigs hwswitch{};
 	hwswitch.ForwardLimitEnable = false;
 	hwswitch.ForwardLimitRemoteSensorID = 0;
 	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t ( 0 );
+	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
 	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
@@ -196,10 +191,10 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	hwswitch.ReverseLimitEnable = false;
 	hwswitch.ReverseLimitRemoteSensorID = 0;
 	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t ( 0 );
+	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
 	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Intake->GetConfigurator().Apply ( hwswitch );
+	m_Intake->GetConfigurator().Apply(hwswitch);
 
 	MotorOutputConfigs motorconfig{};
 	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
@@ -207,28 +202,28 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Intake->GetConfigurator().Apply ( motorconfig );
+	m_Intake->GetConfigurator().Apply(motorconfig);
 }
 
 void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 {
 	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t ( 0 );
+	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
 	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t ( 0 );
+	currconfigs.SupplyCurrentLimit = units::current::ampere_t(0);
 	currconfigs.SupplyCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t ( 0 );
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t ( 0 );
-	m_Extender->GetConfigurator().Apply ( currconfigs );
+	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(0);
+	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0);
+	m_Extender->GetConfigurator().Apply(currconfigs);
 
 	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t ( 0.25 );
-	m_Extender->GetConfigurator().Apply ( rampConfigs );
+	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
+	m_Extender->GetConfigurator().Apply(rampConfigs);
 	HardwareLimitSwitchConfigs hwswitch{};
 	hwswitch.ForwardLimitEnable = false;
 	hwswitch.ForwardLimitRemoteSensorID = 0;
 	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t ( 0 );
+	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
 	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
@@ -236,10 +231,10 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	hwswitch.ReverseLimitEnable = false;
 	hwswitch.ReverseLimitRemoteSensorID = 0;
 	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t ( 0 );
+	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
 	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Extender->GetConfigurator().Apply ( hwswitch );
+	m_Extender->GetConfigurator().Apply(hwswitch);
 
 	MotorOutputConfigs motorconfig{};
 	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
@@ -247,7 +242,7 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Extender->GetConfigurator().Apply ( motorconfig );
+	m_Extender->GetConfigurator().Apply(motorconfig);
 }
 
 // IntakeSensor : Digital inputs do not have initialization needs
@@ -258,13 +253,13 @@ void IntakeManager::SetPIDExtenderPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
-	m_Extender->GetConfigurator().Apply ( slot0Configs );
+	m_Extender->GetConfigurator().Apply(slot0Configs);
 }
 
-void IntakeManager::SetCurrentState ( int state, bool run )
+void IntakeManager::SetCurrentState(int state, bool run)
 {
-	StateMgr::SetCurrentState ( state, run );
-	PeriodicLooper::GetInstance()->RegisterAll ( this );
+	StateMgr::SetCurrentState(state, run);
+	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void IntakeManager::RunCommonTasks()
@@ -273,21 +268,18 @@ void IntakeManager::RunCommonTasks()
 	Cyclic();
 
 	auto controller = TeleopControl::GetInstance();
-	if  (controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR)) 
+	if (controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR))
 	{
-        if (m_manualModeButtonReleased)
-            m_failedSensorLatch = !m_failedSensorLatch;
-
+		if (m_manualModeButtonReleased)
+			m_failedSensorLatch = !m_failedSensorLatch;
 	}
 	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
-
 }
-
 
 /// @brief  Set the control constants (e.g. PIDF values).
 /// @param [in] ControlData*                                   pid:  the control constants
 /// @return void
-void IntakeManager::SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier, int slot, ControlData pid )
+void IntakeManager::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier, int slot, ControlData pid)
 {
 }
 
@@ -295,14 +287,11 @@ void IntakeManager::SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_US
 /// @return void
 void IntakeManager::Update()
 {
-	m_Intake->SetControl ( *m_IntakeActiveTarget );
-	m_Extender->SetControl ( *m_ExtenderActiveTarget );
+	m_Intake->SetControl(*m_IntakeActiveTarget);
+	m_Extender->SetControl(*m_ExtenderActiveTarget);
 }
 
-
-
-
-bool IntakeManager::IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const
+bool IntakeManager::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
 {
 	// auto motor = GetMotorMech(identifier);
 	// if (motor != nullptr)
@@ -312,7 +301,7 @@ bool IntakeManager::IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE 
 	return false;
 }
 
-bool IntakeManager::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const
+bool IntakeManager::IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
 {
 	// auto motor = GetMotorMech(identifier);
 	// if (motor != nullptr)
@@ -322,13 +311,12 @@ bool IntakeManager::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE 
 	return false;
 }
 
-
 void IntakeManager::Cyclic()
 {
 	Update();
 
 	CheckForTuningEnabled();
-	if ( m_tuning )
+	if (m_tuning)
 	{
 		ReadTuningParamsFromNT();
 	}
@@ -337,8 +325,8 @@ void IntakeManager::Cyclic()
 void IntakeManager::CheckForTuningEnabled()
 {
 	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean ( m_tuningIsEnabledStr, false );
-	if ( pastTuning != m_tuning && m_tuning == true )
+	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
+	if (pastTuning != m_tuning && m_tuning == true)
 	{
 		PushTuningParamsToNT();
 	}
@@ -346,30 +334,28 @@ void IntakeManager::CheckForTuningEnabled()
 
 void IntakeManager::ReadTuningParamsFromNT()
 {
-	m_PositionDegree->SetIZone ( m_table.get()->GetNumber ( "PositionDegree_iZone", 0 ) );
-	m_PositionDegree->SetF ( m_table.get()->GetNumber ( "PositionDegree_fGain", 0 ) );
-	m_PositionDegree->SetP ( m_table.get()->GetNumber ( "PositionDegree_pGain", 0 ) );
-	m_PositionDegree->SetI ( m_table.get()->GetNumber ( "PositionDegree_iGain", 0 ) );
-	m_PositionDegree->SetD ( m_table.get()->GetNumber ( "PositionDegree_dGain", 0 ) );
-
+	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
 }
 
 void IntakeManager::PushTuningParamsToNT()
 {
-	m_table.get()->PutNumber ( "PositionDegree_iZone", m_PositionDegree->GetIZone() );
-	m_table.get()->PutNumber ( "PositionDegree_fGain", m_PositionDegree->GetF() );
-	m_table.get()->PutNumber ( "PositionDegree_pGain", m_PositionDegree->GetP() );
-	m_table.get()->PutNumber ( "PositionDegree_iGain", m_PositionDegree->GetI() );
-	m_table.get()->PutNumber ( "PositionDegree_dGain", m_PositionDegree->GetD() );
+	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
+	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
+	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
+	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
 }
 
-ControlData *IntakeManager::GetControlData ( string name )
+ControlData *IntakeManager::GetControlData(string name)
 {
-	if ( name.compare ( "PercentOutput" ) == 0 )
+	if (name.compare("PercentOutput") == 0)
 		return m_PercentOutput;
-	if ( name.compare ( "PositionDegree" ) == 0 )
+	if (name.compare("PositionDegree") == 0)
 		return m_PositionDegree;
-
 
 	return nullptr;
 }

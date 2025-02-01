@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -30,10 +30,10 @@ void MechanismConfigCOMP_BOT_302::DefineMechanisms()
 {
 }
 
-StateMgr *MechanismConfigCOMP_BOT_302::GetMechanism ( MechanismTypes::MECHANISM_TYPE mechType )
+StateMgr *MechanismConfigCOMP_BOT_302::GetMechanism(MechanismTypes::MECHANISM_TYPE mechType)
 {
-	auto itr = m_mechanismMap.find ( mechType );
-	if ( itr != m_mechanismMap.end() )
+	auto itr = m_mechanismMap.find(mechType);
+	if (itr != m_mechanismMap.end())
 	{
 		return itr->second;
 	}
@@ -42,5 +42,4 @@ StateMgr *MechanismConfigCOMP_BOT_302::GetMechanism ( MechanismTypes::MECHANISM_
 
 void MechanismConfigCOMP_BOT_302::DefineLEDs()
 {
-
 }

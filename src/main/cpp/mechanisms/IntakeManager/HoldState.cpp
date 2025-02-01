@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,27 +34,27 @@ using namespace IntakeManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-HoldState::HoldState ( std::string stateName,
-                       int stateId,
-                       IntakeManager *mech,
-                       RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+HoldState::HoldState(std::string stateName,
+					 int stateId,
+					 IntakeManager *mech,
+					 RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
-	m_mechanism = mech; 
+	m_mechanism = mech;
 }
 
 void HoldState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "HoldState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HoldState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void HoldState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput ( 0, false );
+	m_mechanism->UpdateTargetIntakePercentOutput(0, false);
 	m_mechanism->SetPIDExtenderPositionDegree();
-	m_mechanism->UpdateTargetExtenderPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetExtenderPositionDegree(units::angle::turn_t(0));
 }
 
 void HoldState::Run()
@@ -75,11 +75,9 @@ bool HoldState::AtTarget()
 	return atTarget;
 }
 
-bool HoldState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool HoldState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-		return (m_mechanism->GetIntakeSensorState() && !m_mechanism->GetFailedSensor());
+	return (m_mechanism->GetIntakeSensorState() && !m_mechanism->GetFailedSensor());
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
-
-	
 }

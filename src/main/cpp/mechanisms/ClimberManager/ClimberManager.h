@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -49,46 +49,44 @@ public:
 		STATE_AUTO_CLIMB
 	};
 
-	ClimberManager ( RobotIdentifier activeRobotId );
+	ClimberManager(RobotIdentifier activeRobotId);
 	ClimberManager() = delete;
 	~ClimberManager() = default;
 
 	void CreatePRACTICE_BOT9999();
 	void InitializePRACTICE_BOT9999();
 
-
 	/// @brief Set the control constants (e.g. PIDF values).
 	/// @param indentifier the motor controller usage to identify the motor
 	/// @param slot position on the motor controller to set
 	/// @param pid control data / constants
-	virtual void SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid );
+	virtual void SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid);
 
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetClimberPositionDegree ( units::angle::turn_t position ) { m_ClimberPositionDegree.Position = position; m_ClimberActiveTarget = &m_ClimberPositionDegree;}
+	void UpdateTargetClimberPositionDegree(units::angle::turn_t position)
+	{
+		m_ClimberPositionDegree.Position = position;
+		m_ClimberActiveTarget = &m_ClimberPositionDegree;
+	}
 
 	void SetPIDClimberPositionDegree();
 
-
-
-
-	virtual bool IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-	virtual bool IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-
-
+	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
+	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
 
-	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn;}
+	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	void UpdateClimbMode(RobotStateChanges::StateChange stchange, int ival);
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
-	ctre::phoenix6::hardware::TalonFX* GetClimber() const {return m_Climber;}
-	ControlData* GetPositionDegree() const {return m_PositionDegree;}
+	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
+	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -99,14 +97,14 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState ( int state, bool run ) override;
-	ControlData *GetControlData ( std::string name ) override;
+	void SetCurrentState(int state, bool run) override;
+	ControlData *GetControlData(std::string name) override;
 
 private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;
 
-	ctre::phoenix6::hardware::TalonFX* m_Climber;
-	ControlData* m_PositionDegree;
+	ctre::phoenix6::hardware::TalonFX *m_Climber;
+	ControlData *m_PositionDegree;
 
 	RobotStateChanges::ClimbMode m_climbMode;
 
@@ -116,6 +114,6 @@ private:
 
 	void InitializeTalonFXClimberPRACTICE_BOT9999();
 
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t ( 0.0 ) };
+	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 };

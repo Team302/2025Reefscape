@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,35 +34,34 @@ using namespace ClimberManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-ManualClimbState::ManualClimbState ( std::string stateName,
-                                     int stateId,
-                                     ClimberManager *mech,
-                                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+ManualClimbState::ManualClimbState(std::string stateName,
+								   int stateId,
+								   ClimberManager *mech,
+								   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void ManualClimbState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualClimbState" ), string ( "Init" ) );
-	m_manualTarget=m_ClimberTarget;
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Init"));
+	m_manualTarget = m_ClimberTarget;
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void ManualClimbState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetClimberPositionDegree(units::angle::turn_t(0));
 }
 
 void ManualClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
-	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB)*m_manualClimbRate);
+	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
 	m_manualTarget += TargetChange;
-	
-	m_mechanism->UpdateTargetClimberPositionDegree ( std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
-	
+
+	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
 }
 
 void ManualClimbState::Exit()
@@ -78,11 +77,11 @@ bool ManualClimbState::AtTarget()
 	return atTarget;
 }
 
-bool ManualClimbState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool ManualClimbState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-		return m_mechanism->IsClimbMode();
+	return m_mechanism->IsClimbMode();
 
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

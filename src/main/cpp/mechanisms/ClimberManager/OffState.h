@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -26,25 +26,25 @@ using namespace std;
 
 namespace ClimberManagerStates
 {
-class OffState : public State
-{
-public:
-	OffState() = delete;
-	OffState ( std::string stateName,
-	           int stateId,
-	           ClimberManager *mech,
-	           RobotIdentifier activeRobotId );
-	~OffState() = default;
-	void Init() override;
-	void Run() override;
-	void Exit() override;
-	bool AtTarget() override;
-	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
+	class OffState : public State
+	{
+	public:
+		OffState() = delete;
+		OffState(std::string stateName,
+				 int stateId,
+				 ClimberManager *mech,
+				 RobotIdentifier activeRobotId);
+		~OffState() = default;
+		void Init() override;
+		void Run() override;
+		void Exit() override;
+		bool AtTarget() override;
+		bool IsTransitionCondition(bool considerGamepadTransitions) override;
 
-private:
-	ClimberManager *m_mechanism;
-	void InitPRACTICE_BOT9999();
-	RobotIdentifier m_RobotId;
-	const units::angle::degree_t m_ClimberTarget = units::angle::degree_t ( 0 );
-};
+	private:
+		ClimberManager *m_mechanism;
+		void InitPRACTICE_BOT9999();
+		RobotIdentifier m_RobotId;
+		const units::angle::degree_t m_ClimberTarget = units::angle::degree_t(0);
+	};
 }

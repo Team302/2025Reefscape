@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -27,13 +27,12 @@ public:
 	MechanismConfigCOMP_BOT_302() = default;
 	~MechanismConfigCOMP_BOT_302() = default;
 
-	StateMgr *GetMechanism ( MechanismTypes::MECHANISM_TYPE mechType );
+	StateMgr *GetMechanism(MechanismTypes::MECHANISM_TYPE mechType);
 
 protected:
 	void DefineMechanisms() override;
 	void DefineLEDs() override;
 
 private:
-
 	std::unordered_map<MechanismTypes::MECHANISM_TYPE, StateMgr *> m_mechanismMap;
 };

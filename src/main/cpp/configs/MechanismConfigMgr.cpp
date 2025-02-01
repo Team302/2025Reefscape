@@ -1,4 +1,4 @@
-// clang-format off
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -29,38 +29,38 @@ using namespace std;
 MechanismConfigMgr *MechanismConfigMgr::m_instance = nullptr;
 MechanismConfigMgr *MechanismConfigMgr::GetInstance()
 {
-	if ( MechanismConfigMgr::m_instance == nullptr )
+	if (MechanismConfigMgr::m_instance == nullptr)
 	{
 		MechanismConfigMgr::m_instance = new MechanismConfigMgr();
 	}
 	return MechanismConfigMgr::m_instance;
 }
 
-MechanismConfigMgr::MechanismConfigMgr() : m_config ( nullptr )
+MechanismConfigMgr::MechanismConfigMgr() : m_config(nullptr)
 {
 }
 
-void MechanismConfigMgr::InitRobot ( RobotIdentifier id )
+void MechanismConfigMgr::InitRobot(RobotIdentifier id)
 {
-	switch ( id )
+	switch (id)
 	{
 	case RobotIdentifier::PRACTICE_BOT_9999:
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initializing robot " ), string ( "PRACTICE_BOT_9999" ), string ( "" ) );
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing robot "), string("PRACTICE_BOT_9999"), string(""));
 		m_config = new MechanismConfigPRACTICE_BOT_9999();
 		break;
 	case RobotIdentifier::COMP_BOT_302:
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initializing robot " ), string ( "COMP_BOT_302" ), string ( "" ) );
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing robot "), string("COMP_BOT_302"), string(""));
 		m_config = new MechanismConfigCOMP_BOT_302();
 		break;
 
 	default:
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Skipping robot initialization because of unknown robot id " ), string ( "" ), static_cast<int> ( id ) );
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Skipping robot initialization because of unknown robot id "), string(""), static_cast<int>(id));
 		break;
 	}
 
-	if ( m_config != nullptr )
+	if (m_config != nullptr)
 	{
 		m_config->BuildRobot();
-		Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "Initialization completed for robot " ), string ( "" ), static_cast<int> ( id ) );
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initialization completed for robot "), string(""), static_cast<int>(id));
 	}
 }
