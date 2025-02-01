@@ -5369,7 +5369,7 @@
           <name>uintParameter</name>
           <__units__ />
           <type>UInt32</type>
-          <value>6</value>
+          <value>15</value>
         </Count>
       </LedSegment>
     </Segments>
