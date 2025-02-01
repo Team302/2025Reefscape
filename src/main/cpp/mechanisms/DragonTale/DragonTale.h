@@ -141,6 +141,8 @@ public:
 
 	void UpdateTarget();
 
+	bool AtTarget();
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 protected:
@@ -208,4 +210,7 @@ private:
 	double m_elevatorChangeRate= 1*m_loopRate;
 
 	bool m_manualMode = false;
+
+	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
+	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 };

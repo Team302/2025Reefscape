@@ -703,3 +703,8 @@ void DragonTale::SetSensorFailSafe()
 		m_manualMode = false;
 	}
 }
+
+bool DragonTale::AtTarget()
+{
+	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
+}

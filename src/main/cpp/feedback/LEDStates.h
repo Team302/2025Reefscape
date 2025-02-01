@@ -35,6 +35,7 @@ public:
     void RainbowPattern();
     void DisabledPattern();
     void DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
+    void BreathingPattern(DragonLeds::Colors c);
     DragonLeds *m_LEDstring = DragonLeds::GetInstance();
     static LEDStates *GetInstance();
 
@@ -51,4 +52,5 @@ private:
 
     const int m_blinkPatternPeriod = 10;
     const int m_altColorBlinkPatternPeriod = 10;
+    const int m_breathePatternPeriod = 10;
 };
