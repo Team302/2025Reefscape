@@ -825,15 +825,6 @@
         <type>Boolean</type>
         <value>false</value>
       </sensorIsInverted>
-      <limitSwitches>
-        <LimitSwitchesEnabled>
-          <unitsFamily>none</unitsFamily>
-          <name>boolParameter</name>
-          <__units__ />
-          <type>Boolean</type>
-          <value>false</value>
-        </LimitSwitchesEnabled>
-      </limitSwitches>
       <theCurrentLimits>
         <enableStatorCurrentLimit>
           <unitsFamily>none</unitsFamily>
@@ -878,11 +869,93 @@
           <value>0.5</value>
         </supplyTimeThreshold>
       </theCurrentLimits>
+      <PIDFs />
+      <theConfigHWLimitSW>
+        <enableForward>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </enableForward>
+        <remoteForwardSensorID>
+          <unitsFamily>none</unitsFamily>
+          <name>intParameter</name>
+          <__units__ />
+          <type>Int32</type>
+          <value>0</value>
+        </remoteForwardSensorID>
+        <forwardResetPosition>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </forwardResetPosition>
+        <forwardPosition>
+          <unitsFamily>angle</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>deg</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </forwardPosition>
+        <forwardType>LimitSwitchPin</forwardType>
+        <forwardOpenClose>NormallyOpen</forwardOpenClose>
+        <enableReverse>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </enableReverse>
+        <remoteReverseSensorID>
+          <unitsFamily>none</unitsFamily>
+          <name>intParameter</name>
+          <__units__ />
+          <type>Int32</type>
+          <value>0</value>
+        </remoteReverseSensorID>
+        <reverseResetPosition>
+          <unitsFamily>none</unitsFamily>
+          <name>boolParameter</name>
+          <__units__ />
+          <type>Boolean</type>
+          <value>false</value>
+        </reverseResetPosition>
+        <reversePosition>
+          <unitsFamily>angle</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>deg</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </reversePosition>
+        <revType>LimitSwitchPin</revType>
+        <revOpenClose>NormallyOpen</revOpenClose>
+      </theConfigHWLimitSW>
       <theConfigMotorSettings>
+        <deadbandPercent>
+          <unitsFamily>percent</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>%</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </deadbandPercent>
+        <peakForwardDutyCycle>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>1</value>
+        </peakForwardDutyCycle>
+        <peakReverseDutyCycle>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>-1</value>
+        </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
-      <feedbackSensorConfig />
-      <remoteFeedbackSensorConfig />
     </MotorController>
     <MotorController
       xsi:type="TalonFX">
