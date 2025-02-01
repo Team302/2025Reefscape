@@ -23,34 +23,23 @@
 #include "units/time.h"
 
 // Team 302 includes
-#include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/SwerveChassis.h"
+#include "auton/drivePrimitives/DriveStop.h"
 #include "auton/AutonSelector.h"
 
-// #include "mechanisms/noteManager/decoratormods/noteManager.h"
-
 // Third Party Includes
-
-// forward declares
-class PrimitiveParams;
-
-namespace frc
-{
-    class Timer;
-}
 
 //========================================================================================================
 /// @class  DriveStop
 /// @brief  This is an auton primitive that causes the chassis to not drive
 //========================================================================================================
 
-class DriveStopDelay : public IPrimitive
+class DriveStopDelay : public DriveStop
 {
 public:
     enum DelayOption
     {
         START,
-        PLACED_CORAL,
+        REEF,
         CORAL_STATION,
         MAX_OPTIONS
     };
@@ -60,28 +49,11 @@ public:
     /// @brief destructor, clean  up the memory from this object
     virtual ~DriveStopDelay() = default;
 
-    /// @brief initialize this usage of the primitive
-    /// @param PrimitiveParms* params the drive parameters
-    /// @return void
-    void Init(PrimitiveParams *params) override;
-
-    /// @brief run the primitive (periodic routine)
-    /// @return void
-    void Run() override;
-
     /// @brief check if the end condition has been met
     /// @return bool true means the end condition was reached, false means it hasn't
     bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
 
 private:
-    units::time::second_t GetDelayTime();
-    units::time::second_t m_maxTime; // Target time
-    float m_currentTime;             // Time since init
-    SwerveChassis *m_chassis;
-    std::unique_ptr<frc::Timer> m_timer;
-    double m_heading;
-    AutonSelector *m_autonSelector;
-    DelayOption m_delayOption;
-    // noteManager *m_noteManager;
-    ChassisOptionEnums::HeadingOption m_headingOption;
+    units::time::second_t m_delayTime;
 };

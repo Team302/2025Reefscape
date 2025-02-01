@@ -8,7 +8,7 @@
           id                ( DO_NOTHING | HOLD_POSITION | 
                               DRIVE_PATH_PLANNER | RESET_POSITION_PATH_PLANNER | RESET_POSITION_PATH_PLANNER_NO_VISION | DO_NOTHING_DELAY) "DO_NOTHING"
 		  time				CDATA #IMPLIED
-		  delayOption		(START | PLACED_CORAL | CORAL_STATION) "START"
+		  delayOption		(START | PLACED_CORAL | REEF) "START"
           headingOption     CDATA "MAINTAIN"
           heading           CDATA "0.0"
           pathname          CDATA #IMPLIED

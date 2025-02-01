@@ -53,7 +53,7 @@ CyclePrimitives::CyclePrimitives() : State(string("CyclePrimitives"), 0),
 									 m_currentPrim(nullptr),
 									 m_primFactory(PrimitiveFactory::GetInstance()),
 									 m_driveStop(nullptr),
-									 m_autonSelector(AutonSelector::GetInstance()),
+									 m_autonSelector(new AutonSelector()),
 									 m_timer(make_unique<Timer>()),
 									 m_maxTime(units::time::second_t(0.0)),
 									 m_isDone(false),
@@ -76,6 +76,7 @@ void CyclePrimitives::Init()
 	m_primParams = PrimitiveParser::ParseXML(m_autonSelector->GetSelectedAutoFile());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("nPrims"), double(m_primParams.size()));
 
+	InitDriveStopDelayTimes();
 	if (!m_primParams.empty())
 	{
 		GetNextPrim();
@@ -227,4 +228,24 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 	}
 	}
 	**/
+}
+void CyclePrimitives::InitDriveStopDelayTimes()
+{
+	if (!m_primParams.empty())
+	{
+		auto startDelay = m_autonSelector->GetStartDelay();
+		auto reefDelay = m_autonSelector->GetReefDelay();
+		auto coralStationDelay = m_autonSelector->GetCoralStationDelay();
+
+		for (PrimitiveParams *param : m_primParams)
+		{
+
+			if (param->GetID() == PRIMITIVE_IDENTIFIER::DO_NOTHING_DELAY)
+			{
+				param->SetStartDelay(startDelay);
+				param->SetReefDelay(reefDelay);
+				param->SetCoralStationDelay(coralStationDelay);
+			}
+		}
+	}
 }

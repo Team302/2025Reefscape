@@ -49,16 +49,6 @@ AutonSelector::AutonSelector()
 	PutChoicesOnDashboard();
 }
 
-AutonSelector *AutonSelector::m_instance = nullptr;
-AutonSelector *AutonSelector::GetInstance()
-{
-	if (m_instance == nullptr)
-	{
-		m_instance = new AutonSelector();
-	}
-	return m_instance;
-}
-
 string AutonSelector::GetSelectedAutoFile()
 {
 	std::string autonfile(frc::filesystem::GetDeployDirectory());
@@ -150,9 +140,9 @@ units::time::second_t AutonSelector::GetStartDelay()
 {
 	return units::time::second_t(frc::SmartDashboard::GetNumber(m_startDelay, 0));
 }
-units::time::second_t AutonSelector::GetPlacedCoralDelay()
+units::time::second_t AutonSelector::GetReefDelay()
 {
-	return units::time::second_t(frc::SmartDashboard::GetNumber(m_placedCoralDelay, 0));
+	return units::time::second_t(frc::SmartDashboard::GetNumber(m_reefDelay, 0));
 }
 units::time::second_t AutonSelector::GetCoralStationDelay()
 {
@@ -201,6 +191,6 @@ void AutonSelector::PutChoicesOnDashboard()
 	// delay options within our paths
 
 	frc::SmartDashboard::PutNumber(m_startDelay, 0);
-	frc::SmartDashboard::PutNumber(m_placedCoralDelay, 0);
+	frc::SmartDashboard::PutNumber(m_reefDelay, 0);
 	frc::SmartDashboard::PutNumber(m_coralStationDelay, 0);
 }

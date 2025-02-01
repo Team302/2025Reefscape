@@ -74,7 +74,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
 
     map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
         {"START", DriveStopDelay::DelayOption::START},
-        {"PLACED_CORAL", DriveStopDelay::DelayOption::PLACED_CORAL},
+        {"REEF", DriveStopDelay::DelayOption::REEF},
         {"CORAL_STATION", DriveStopDelay::DelayOption::CORAL_STATION},
     };
 

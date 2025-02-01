@@ -26,11 +26,6 @@
 #include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/PrimitiveParams.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/ChassisMovement.h"
-#include "configs/MechanismConfig.h"
-#include "configs/MechanismConfigMgr.h"
 #include "utils/logging/Logger.h"
 
 // Third Party Includes
@@ -39,95 +34,37 @@ using namespace std;
 using namespace frc;
 
 //========================================================================================================
-/// @class  DriveStop
-/// @brief  This is an auton primitive that causes the chassis to not drive
+/// @class  DriveStopDelay
+/// @brief  This is an auton primitive that causes the chassis to not drive for a certain amount of time
 //========================================================================================================
 
 /// @brief constructor that creates/initializes the object
-DriveStopDelay::DriveStopDelay() : IPrimitive(),
-                                   m_maxTime(units::time::second_t(0.0)),
-                                   m_currentTime(0.0),
-                                   m_chassis(nullptr),
-                                   m_timer(make_unique<Timer>()),
-                                   m_autonSelector(AutonSelector::GetInstance())
+DriveStopDelay::DriveStopDelay() : DriveStop()
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    // get reference to notemanager in drivestop to check for state
-    // StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-    // m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
-}
-
-/// @brief initialize this usage of the primitive
-/// @param PrimitiveParms* params the drive parameters
-/// @return void
-void DriveStopDelay::Init(PrimitiveParams *params)
-{
-    m_maxTime = params->GetTime();
-    m_timer->Reset();
-    m_timer->Start();
-    m_heading = params->GetHeading();
-    m_headingOption = params->GetHeadingOption();
-    m_delayOption = params->GetDelayOption();
-}
-
-/// @brief run the primitive (periodic routine)
-/// @return void
-void DriveStopDelay::Run()
-{
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Shuffleboard Time"), static_cast<double>(GetDelayTime()));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveStopDelay"), string("Delay Option"), m_delayOption);
-
-    if (m_chassis != nullptr)
-    {
-        ChassisMovement moveInfo;
-        moveInfo.driveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
-        moveInfo.headingOption = m_headingOption;
-        moveInfo.yawAngle = units::angle::degree_t(m_heading);
-        moveInfo.chassisSpeeds.vx = 0_mps;
-        moveInfo.chassisSpeeds.vy = 0_mps;
-        moveInfo.chassisSpeeds.omega = units::degrees_per_second_t(0.0);
-        m_chassis->Drive(moveInfo);
-    }
-    else
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("DriveStopDelay"), string("DriveStop::Run"), string("chassis not found"));
-    }
 }
 
 /// @brief check if the end condition has been met
 /// @return bool true means the end condition was reached, false means it hasn't
 
-units::time::second_t DriveStopDelay::GetDelayTime()
+void DriveStopDelay::Init(PrimitiveParams *params)
 {
-    switch (m_delayOption)
+    DriveStop::Init(params);
+
+    switch (params->GetDelayOption())
     {
-    case DelayOption::PLACED_CORAL:
-        return m_autonSelector->GetPlacedCoralDelay();
+    case DelayOption::REEF:
+        m_delayTime = params->GetReefDelay();
+        break;
     case DelayOption::CORAL_STATION:
-        return m_autonSelector->GetCoralStationDelay();
+        m_delayTime = params->GetCoralStationDelay();
+        break;
     default:
-        return m_autonSelector->GetStartDelay();
+        m_delayTime = params->GetStartDelay();
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveStopDelay", "Delay", static_cast<double>(m_delayTime));
 }
 
 bool DriveStopDelay::IsDone()
 {
-
-    // if note manager is in a launch mode,
-    // don't end the drive stop state as we haven't launched yet
-    /**
-    if (m_noteManager != nullptr)
-    {
-        if ((m_noteManager->GetCurrentState() == noteManagerGen::STATE_AUTO_LAUNCH) || (m_noteManager->GetCurrentState() == noteManagerGen::STATE_MANUAL_LAUNCH))
-        {
-            if (m_noteManager->HasNote())
-                return false;
-        }
-    }
-    **/
-    auto delayTime = GetDelayTime();
-    return m_timer->AdvanceIfElapsed(delayTime) || m_timer->AdvanceIfElapsed(m_maxTime);
+    return m_timer->AdvanceIfElapsed(m_delayTime) || m_timer->AdvanceIfElapsed(m_maxTime);
 }

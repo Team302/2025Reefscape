@@ -74,6 +74,13 @@ public:
     ChassisOptionEnums::PathUpdateOption GetPathUpdateOption() const { return m_pathUpdateOption; }
     DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
 
+    void SetStartDelay(units::time::second_t startDelay) { m_startDelay = startDelay; }
+    void SetReefDelay(units::time::second_t reefDelay) { m_reefDelay = reefDelay; }
+    void SetCoralStationDelay(units::time::second_t coralStationDelay) { m_coralStationDelay = coralStationDelay; }
+    units::time::second_t GetStartDelay() const { return m_startDelay; }
+    units::time::second_t GetReefDelay() const { return m_reefDelay; }
+    units::time::second_t GetCoralStationDelay() const { return m_coralStationDelay; }
+
     // bool IsNoteStateChanging() const { return m_changeNoteState; }
     // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
 
@@ -95,6 +102,10 @@ private:
     float m_heading;
 
     DriveStopDelay::DelayOption m_delayOption;
+
+    units::time::second_t m_startDelay;
+    units::time::second_t m_reefDelay;
+    units::time::second_t m_coralStationDelay;
 
     std::string m_pathName;
     std::string m_choreoTrajectoryName;

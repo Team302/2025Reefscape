@@ -50,7 +50,7 @@ public:
 	std::string GetTargetFace();
 
 	units::time::second_t GetStartDelay();
-	units::time::second_t GetPlacedCoralDelay();
+	units::time::second_t GetReefDelay();
 	units::time::second_t GetCoralStationDelay();
 
 	//---------------------------------------------------------------------
@@ -73,14 +73,13 @@ private:
 	bool FileExists(const std::string &name);
 	bool FileValid(const std::string &name);
 
-	static AutonSelector *m_instance;
 	// Attributues
 	frc::SendableChooser<std::string> m_startposchooser;
 	frc::SendableChooser<std::string> m_targetFace;
 	frc::SendableChooser<std::string> m_targetGamePiece;
 	frc::SendableChooser<std::string> m_desiredScoringLevel;
 
-	const std::string m_startDelay = "Start Delay";
-	const std::string m_placedCoralDelay = "Placed Coral Delay";
+	const std::string m_startDelay = "StartDelay";
+	const std::string m_reefDelay = "Reef Delay";
 	const std::string m_coralStationDelay = "Coral Station Delay";
 };
