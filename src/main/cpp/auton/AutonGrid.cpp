@@ -19,6 +19,7 @@
 
 // Team302 Includes
 #include "auton/AutonGrid.h"
+#include "utils/logging/Logger.h"
 
 // Thirdparty includes
 
@@ -51,5 +52,6 @@ bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t r
 {
 
     auto distanceToTheReef = circleZonePose.Translation().Distance(robotPose.Translation());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "circle zones", "in zone", distanceToTheReef <= radius);
     return distanceToTheReef <= radius;
 }

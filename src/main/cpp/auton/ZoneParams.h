@@ -35,18 +35,13 @@ public:
                AutonGrid::YGRID ygrid1,
                AutonGrid::XGRID xgrid2,
                AutonGrid::YGRID ygrid2,
-               // bool isNoteStateChanging,
-               // noteManagerGen::STATE_NAMES noteoption,
-               ChassisOptionEnums::AutonChassisOptions autonchassisoption,
-               ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
-               AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
-    ZoneParams(frc::Pose2d circleZonePose,
+               frc::Pose2d circlePose,
                units::length::inch_t radius,
                // bool isNoteStateChanging,
                // noteManagerGen::STATE_NAMES noteoption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
-               AutonGrid::ZoneMode zoneMode);
+               AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
     ZoneParams() = delete;
     ~ZoneParams() = default; // Destructor
@@ -58,7 +53,7 @@ public:
 
     AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
 
-    frc::Pose2d getCircleZonePose() const { return m_circleZonePose; }
+    frc::Pose2d getCircleZonePose() const { return m_circlePose; }
     units::length::inch_t getRadius() const { return m_radius; }
 
     // bool IsNoteStateChanging() const { return m_isNoteStateChanging; }
@@ -78,7 +73,7 @@ private:
 
     AutonGrid::ZoneMode m_zoneMode;
 
-    frc::Pose2d m_circleZonePose;
+    frc::Pose2d m_circlePose;
     units::length::inch_t m_radius;
 };
 

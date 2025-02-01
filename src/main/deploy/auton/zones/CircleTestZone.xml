@@ -6,5 +6,5 @@
         circlex = "4.4821"
         circley = "4.008"
         radius = "65.25" 
-        noteOption="STATE_PREPARE_PLACE_AMP"/>
+     />
 </auton>

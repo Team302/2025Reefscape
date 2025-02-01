@@ -144,7 +144,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         for (xml_node zonenode = auton.first_child(); zonenode; zonenode = zonenode.next_sibling())
         {
 
-            double radius = -1;
+            double radius = 0;
             double circleX = 0;
             double circleY = 0;
 
@@ -214,18 +214,18 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
-                else if (strcmp(attr.name(), "centerx") == 0)
+                else if (strcmp(attr.name(), "circlex") == 0)
                 {
                     zoneMode = AutonGrid::CIRCLE;
-                    circleX = attr.as_double();
+                    circleX = attr.as_float();
                 }
-                else if (strcmp(attr.name(), "centery") == 0)
+                else if (strcmp(attr.name(), "circley") == 0)
                 {
-                    circleY = attr.as_double();
+                    circleY = attr.as_float();
                 }
                 else if (strcmp(attr.name(), "radius") == 0)
                 {
-                    radius = attr.as_double();
+                    radius = attr.as_float();
                 }
                 /**
                 else if (strcmp(attr.name(), "noteOption") == 0)
@@ -267,21 +267,16 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     }
                 }
             }
-            if (radius != -1)
+
+            if (!hasError) // if no error returns the zone parameters
             {
                 auto circlePose2d = frc::Pose2d(units::length::meter_t(circleX), units::length::meter_t(circleY), units::degree_t(0));
-                return new ZoneParams(circlePose2d,
-                                      units::inch_t(radius),
-                                      chassisChosenOption,
-                                      avoidChosenOption,
-                                      zoneMode);
-            }
-            else if (!hasError) // if no error returns the zone parameters
-            {
                 return (new ZoneParams(xgrid1,
                                        ygrid1,
                                        xgrid2,
                                        ygrid2,
+                                       circlePose2d,
+                                       units::inch_t(radius),
                                        // isNoteStateChanging,
                                        // noteChosenOption,
                                        chassisChosenOption,
