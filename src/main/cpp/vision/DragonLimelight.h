@@ -111,9 +111,8 @@ public:
         units::angle::degree_t roll,           /// <I> - Roll of camera
         LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
         LED_MODE ledMode,
-        CAM_MODE camMode,
-        STREAM_MODE streamMode,
-        SNAPSHOT_MODE snapMode);
+        CAM_MODE camMode
+        );
 
     ///-----------------------------------------------------------------------------------
     /// Method:         ~DragonLimelight (destructor)
@@ -133,16 +132,7 @@ public:
     std::optional<units::time::millisecond_t> GetPipelineLatency();
     std::optional<int> GetAprilTagID();
 
-    std::vector<double> Get3DSolve();
-
-    std::optional<VisionPose> GetFieldPosition();
-    std::optional<VisionPose> GetFieldPosition(frc::DriverStation::Alliance alliance);
-
     std::optional<VisionPose> EstimatePoseOdometryLimelight(bool megatag2);
-
-    std::optional<VisionPose> GetRedFieldPosition();
-    std::optional<VisionPose> GetBlueFieldPosition();
-    std::optional<VisionPose> GetOriginFieldPosition();
 
     std::optional<VisionData> GetDataToNearestAprilTag();
     std::optional<VisionData> GetDataToSpecifiedTag(int id);
@@ -162,10 +152,6 @@ public:
     void SetLEDMode(DragonLimelight::LED_MODE mode);
     void SetCamMode(DragonLimelight::CAM_MODE mode);
     void SetPipeline(DragonLimelight::LL_PIPELINE pipeline);
-    void SetStreamMode(DragonLimelight::STREAM_MODE mode);
-    void ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle);
-    void SetCrosshairPos(double crosshairPosX, double crosshairPosY);
-    void SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY);
     void SetPriorityTagID(int id);
     void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 

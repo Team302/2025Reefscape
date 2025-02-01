@@ -65,6 +65,8 @@ frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 
 DragonVision::DragonVision()
 {
+
+	
 }
 
 void DragonVision::AddLimelight(DragonLimelight *camera, DragonLimelight::CAMERA_USAGE position)

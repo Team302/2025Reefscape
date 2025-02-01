@@ -430,7 +430,7 @@ namespace LimelightHelpers
 
         return rawDetections;
     }
-
+    //test
     class PoseEstimate
     {
     public:
@@ -474,7 +474,7 @@ namespace LimelightHelpers
         int valsPerFiducial = 7;
         int expectedTotalVals = 11 + valsPerFiducial * tagCount;
 
-        if (poseArray.size() == expectedTotalVals)
+        if (poseArray.size() >= static_cast<size_t>(expectedTotalVals))
         {
             for (int i = 0; i < tagCount; i++)
             {
