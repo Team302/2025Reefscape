@@ -99,10 +99,10 @@ void DragonLimelight::DataLog()
 {
     double m_tx = m_tx;
     double m_ty = m_ty;
-    LogDoubleData(DragonDataLoggerSignals::CACHE_DATA_TV, m_tv);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TX, m_tx);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TY, m_ty);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::FIDUCIAL_ID, m_tagid);
+    LogDoubleData(DragonDataLoggerSignals::LIMELIGHT_TV, m_tv);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX, m_tx);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY, m_ty);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID, m_tagid);
 }
 
 bool DragonLimelight::HealthCheck()
