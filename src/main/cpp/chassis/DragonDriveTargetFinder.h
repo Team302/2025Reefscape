@@ -66,6 +66,7 @@ private:
     frc::Pose2d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
 
+    // TODO:: Move these to field constants
     enum AprilTagIDs
     {
         BLUE_SOURCE_ONE = 1,
@@ -87,18 +88,18 @@ private:
     };
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> blueMap = {
-        {DragonVision::VISION_ELEMENT::SPEAKER, AprilTagIDs::BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::AMP, AprilTagIDs::BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::CENTER_STAGE, AprilTagIDs::BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::LEFT_STAGE, AprilTagIDs::BLUE_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::RIGHT_STAGE, AprilTagIDs::BLUE_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::BLUE_SPEAKER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::BLUE_AMP},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_CENTER},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_LEFT},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_RIGHT}};
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> redMap = {
-        {DragonVision::VISION_ELEMENT::SPEAKER, AprilTagIDs::RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::AMP, AprilTagIDs::RED_AMP},
-        {DragonVision::VISION_ELEMENT::CENTER_STAGE, AprilTagIDs::RED_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::LEFT_STAGE, AprilTagIDs::RED_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::RIGHT_STAGE, AprilTagIDs::RED_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::RED_AMP},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_CENTER},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_LEFT},
+        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_RIGHT}};
 
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };
