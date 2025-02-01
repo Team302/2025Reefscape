@@ -54,7 +54,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> targetInfo;
 
-    if (chassisConfig != nullptr)
+    /* if (chassisConfig != nullptr)
     {
         auto chassis = chassisConfig->GetSwerveChassis();
         auto currentPose{Pose3d(chassis->GetPose())};
@@ -64,7 +64,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
         {
             auto data = vision->GetVisionData(item);
 
-            if (data && item == DragonVision::VISION_ELEMENT::NOTE)
+            if (data && item == DragonVision::VISION_ELEMENT::ALGAE)
             {
                 auto trans3d = data.value().transformToTarget;
                 auto targetPose = currentPose + trans3d;
@@ -84,7 +84,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
 
         int aprilTag = -1;
         auto fieldConstants = FieldConstants::GetInstance();
-        units::length::meter_t centerYLine = fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_CENTER_STAGE).Y();
+        units::length::meter_t centerYLine = fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::REEF).Y();
 
         if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::kBlue)
         {
@@ -92,8 +92,8 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
             if (itr != blueMap.end())
             {
                 aprilTag = itr->second;
-            }
-            else if (item == DragonVision::VISION_ELEMENT::STAGE)
+             }
+            else if (item == DragonVision::VISION_ELEMENT::CAGE)
             {
                 if (chassis->GetPose().Y() > centerYLine)
                     targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_LEFT_STAGE).ToPose2d());
@@ -109,7 +109,23 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
             {
                 aprilTag = itr->second;
             }
-            else if (item == DragonVision::VISION_ELEMENT::STAGE)
+            else if (item == DragonVision::VISION_ELEMENT::HUMAN_PLAYER)
+            {
+                if (chassis->GetPose().Y() > centerYLine)
+                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_RIGHT_STAGE).ToPose2d());
+                else
+                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_LEFT_STAGE).ToPose2d());
+                return targetInfo;
+            }
+        }
+        else
+        {
+            auto itr = redMap.find(item);
+            if (itr != redMap.end())
+            {
+                aprilTag = itr->second;
+            }
+            else if (item == DragonVision::VISION_ELEMENT::HUMAN_PLAYER)
             {
                 if (chassis->GetPose().Y() > centerYLine)
                     targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_RIGHT_STAGE).ToPose2d());
@@ -136,7 +152,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
                 return targetInfo;
             }
         }
-    }
+    } */
     auto pose2d = Pose2d();
     targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::NOT_FOUND, pose2d);
     return targetInfo;

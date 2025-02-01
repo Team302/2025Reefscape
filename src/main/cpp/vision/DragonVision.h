@@ -42,30 +42,23 @@ public:
 
     enum VISION_ELEMENT
     {
-        LAUNCHER_NOTE,
-        PLACER_NOTE,
-        NOTE,
-        SPEAKER,
-        AMP,
-        STAGE,
-        LEFT_STAGE,
-        RIGHT_STAGE,
-        CENTER_STAGE,
-        SOURCE,
+        ALGAE,
+        CAGE,
         REEF,
-        NEAREST_APRILTAG
+        HUMAN_PLAYER,
+        HUMAN_PROCESSOR
     };
 
     /// @brief sets the pipeline of the camera at the chosen position
     /// @param mode the pipeline to set the camera to
     /// @param position the physical position of the camera
     /// @return if successful or not (not currently implemented)
-    //bool SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position);
+    // bool SetPipeline(DragonCamera::PIPELINE mode, RobotElementNames::CAMERA_USAGE position);
 
     /// @brief gets the pipeline of the camera at the chosen position
     /// @param position the physical position of the camera
     /// @return DragonCamera::PIPELINE - the currently selected pipeline
-    //DragonCamera::PIPELINE GetPipeline(RobotElementNames::CAMERA_USAGE position);
+    // DragonCamera::PIPELINE GetPipeline(RobotElementNames::CAMERA_USAGE position);
 
     /// @brief gets the field position of the robot (right blue driverstation origin)
     /// @return std::optional<VisionPose> - the estimated position, timestamp of estimation, and confidence as array of std devs

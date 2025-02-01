@@ -23,18 +23,43 @@ public:
     static FieldConstants *GetInstance();
     enum FIELD_ELEMENT
     {
-        BLUE_SOURCE,
-        BLUE_AMP,
-        BLUE_SPEAKER,
-        BLUE_CENTER_STAGE,
-        BLUE_RIGHT_STAGE,
-        BLUE_LEFT_STAGE,
-        RED_SOURCE,
-        RED_AMP,
-        RED_SPEAKER,
-        RED_CENTER_STAGE,
-        RED_RIGHT_STAGE,
-        RED_LEFT_STAGE
+        BLUE_REEF_J,
+        BLUE_REEF_I,
+        BLUE_REEF_H,
+        BLUE_REEF_G,
+        BLUE_REEF_F,
+        BLUE_REEF_E,
+        BLUE_REEF_D,
+        BLUE_REEF_C,
+        BLUE_REEF_B,
+        BLUE_REEF_A,
+        BLUE_REEF_L,
+        BLUE_REEF_K,
+        RED_REEF_D,
+        RED_REEF_C,
+        RED_REEF_B,
+        RED_REEF_A,
+        RED_REEF_L,
+        RED_REEF_K,
+        RED_REEF_J,
+        RED_REEF_I,
+        RED_REEF_H,
+        RED_REEF_G,
+        RED_REEF_F,
+        RED_REEF_E,
+        BLUE_LEFT_CAGE,
+        BLUE_MIDDLE_CAGE,
+        BLUE_RIGHT_CAGE,
+        RED_LEFT_CAGE,
+        RED_MIDDLE_CAGE,
+        RED_RIGHT_CAGE,
+        BLUE_FAR_LEFT_HUMAN_PLAYER_,
+        BLUE_FAR_RIGHT_HUMAN_PLAYER,
+        RED_FAR_RIGHT_HUMAN_PLAYER,
+        RED_FAR_LEFT_HUMAN_PLAYER,
+        BLUE_HUMAN_PROCESSOR,
+        RED_HUMAN_PROCESSOR,
+        ALGAE
     };
     frc::Pose3d GetFieldElement(FIELD_ELEMENT element);
 
@@ -51,66 +76,46 @@ private:
     // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/2025LayoutMarkingDiagram.pdf
 
     // blue
-    const frc::Pose3d m_BlueSource = frc::Pose3d(
+    const frc::Pose3d m_BlueReef = frc::Pose3d(
         units::length::meter_t(15.63),
         units::length::meter_t(0.565),
         units::length::meter_t(1.36),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120)));
-    const frc::Pose3d m_BlueAmp = frc::Pose3d(
+    const frc::Pose3d m_RedReef = frc::Pose3d(
         units::length::meter_t(1.84),
         units::length::meter_t(8.2),
         units::length::meter_t(1.36),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-90.0)));
-    const frc::Pose3d m_BlueSpeaker = frc::Pose3d(
+    const frc::Pose3d m_BlueCage = frc::Pose3d(
         units::length::meter_t(-.04),
         units::length::meter_t(5.55),
         units::length::meter_t(1.45),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    const frc::Pose3d m_BlueCenterStage = frc::Pose3d(
+    const frc::Pose3d m_RedCage = frc::Pose3d(
         units::length::meter_t(5.32),
         units::length::meter_t(4.11),
         units::length::meter_t(1.32),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    const frc::Pose3d m_BlueRightStage = frc::Pose3d(
+    const frc::Pose3d m_BlueHumanPlayer = frc::Pose3d(
         units::length::meter_t(4.64),
         units::length::meter_t(3.71),
         units::length::meter_t(1.32),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-120.0)));
-    const frc::Pose3d m_BlueLeftStage = frc::Pose3d(
+    const frc::Pose3d m_RedHumanPlayer = frc::Pose3d(
         units::length::meter_t(4.64),
         units::length::meter_t(4.5),
         units::length::meter_t(1.32),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120.0)));
-    // red
-    const frc::Pose3d m_RedSource = frc::Pose3d(
-        units::length::meter_t(.91),
-        units::length::meter_t(.565),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(60.0)));
-    const frc::Pose3d m_RedAmp = frc::Pose3d(
-        units::length::meter_t(14.7),
-        units::length::meter_t(8.2),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-90.0)));
-    const frc::Pose3d m_RedSpeaker = frc::Pose3d(
-        units::length::meter_t(16.58),
-        units::length::meter_t(5.55),
-        units::length::meter_t(1.45),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(180.0)));
-    const frc::Pose3d m_RedCenterStage = frc::Pose3d(
-        units::length::meter_t(11.22),
-        units::length::meter_t(4.11),
-        units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(180.0)));
-    const frc::Pose3d m_RedRightStage = frc::Pose3d(
-        units::length::meter_t(11.9),
+    const frc::Pose3d m_BlueHumamProcessor = frc::Pose3d(
+        units::length::meter_t(4.64),
         units::length::meter_t(3.71),
         units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(60.0)));
-    const frc::Pose3d m_RedLeftStage = frc::Pose3d(
-        units::length::meter_t(11.9),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-120.0)));
+    const frc::Pose3d m_RedHumanProcessor = frc::Pose3d(
+        units::length::meter_t(4.64),
         units::length::meter_t(4.5),
         units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-60.0)));
-    std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120.0)));
+    std::map<FIELD_ELEMENT, frc::Pose3d>
+        fieldConstantsPoseMap;
 };

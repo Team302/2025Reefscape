@@ -26,19 +26,44 @@ FieldConstants *FieldConstants::GetInstance()
 
 FieldConstants::FieldConstants()
 {
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CENTER_STAGE] = m_BlueCenterStage;
-    fieldConstantsPoseMap[BLUE_AMP] = m_BlueAmp;
-    fieldConstantsPoseMap[BLUE_RIGHT_STAGE] = m_BlueRightStage;
-    fieldConstantsPoseMap[BLUE_LEFT_STAGE] = m_BlueLeftStage;
-    fieldConstantsPoseMap[BLUE_SOURCE] = m_BlueSource;
-    fieldConstantsPoseMap[BLUE_SPEAKER] = m_BlueSpeaker;
-    fieldConstantsPoseMap[RED_AMP] = m_RedAmp;
-    fieldConstantsPoseMap[RED_CENTER_STAGE] = m_RedCenterStage;
-    fieldConstantsPoseMap[RED_LEFT_STAGE] = m_RedLeftStage;
-    fieldConstantsPoseMap[RED_RIGHT_STAGE] = m_RedRightStage;
-    fieldConstantsPoseMap[RED_SPEAKER] = m_RedSpeaker;
-    fieldConstantsPoseMap[RED_SOURCE] = m_RedSource;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_J];
+    fieldConstantsPoseMap[BLUE_REEF_I] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_H] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_G] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_F] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_E] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_D] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_C] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_B] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_A] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_L] = m_BlueReef;
+    fieldConstantsPoseMap[BLUE_REEF_K] = m_BlueReef;
+    fieldConstantsPoseMap[RED_REEF_D] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_C] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_B] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_A] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_L] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_K] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_J] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_I] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_H] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_G] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_F] = m_RedReef;
+    fieldConstantsPoseMap[RED_REEF_E] = m_RedReef;
+    fieldConstantsPoseMap[BLUE_LEFT_CAGE] = m_BlueCage;
+    fieldConstantsPoseMap[BLUE_MIDDLE_CAGE] = m_BlueCage;
+    fieldConstantsPoseMap[BLUE_RIGHT_CAGE] = m_BlueCage;
+    fieldConstantsPoseMap[RED_LEFT_CAGE] = m_RedCage;
+    fieldConstantsPoseMap[RED_MIDDLE_CAGE] = m_RedCage;
+    fieldConstantsPoseMap[RED_RIGHT_CAGE] = m_RedCage;
+    fieldConstantsPoseMap[BLUE_FAR_LEFT_HUMAN_PLAYER_] = m_BlueHumanPlayer;
+    fieldConstantsPoseMap[BLUE_FAR_RIGHT_HUMAN_PLAYER] = m_BlueHumanPlayer;
+    fieldConstantsPoseMap[RED_FAR_LEFT_HUMAN_PLAYER] = m_RedHumanPlayer;
+    fieldConstantsPoseMap[RED_FAR_RIGHT_HUMAN_PLAYER] = m_RedHumanPlayer;
+    fieldConstantsPoseMap[RED_HUMAN_PROCESSOR] = m_RedHumanProcessor;
+    fieldConstantsPoseMap[RED_HUMAN_PROCESSOR] = m_RedHumanProcessor;
 }
+
 frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
 {
     frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
