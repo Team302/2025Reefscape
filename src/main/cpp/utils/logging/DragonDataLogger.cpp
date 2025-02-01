@@ -84,7 +84,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
             }
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TV:
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TV_1:
             if (std::abs(value - signals->m_currTv) > m_doubleTolerance)
             {
                 signals->m_tv.Append(value);
@@ -92,7 +92,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
             }
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX:
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX_1:
             if (std::abs(value - signals->m_currTx) > m_doubleTolerance)
             {
                 signals->m_tx.Append(value);
@@ -100,7 +100,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
             }
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY:
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY_1:
             if (std::abs(value - signals->m_currTy) > m_doubleTolerance)
             {
                 signals->m_ty.Append(value);
@@ -108,7 +108,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
             }
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID:
+        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
             if (std::abs(value - signals->m_currFiducial) > m_doubleTolerance)
             {
                 signals->m_Fiducial.Append(value);
