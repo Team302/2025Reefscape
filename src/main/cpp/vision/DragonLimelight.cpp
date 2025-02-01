@@ -99,16 +99,6 @@ void DragonLimelight::PeriodicCacheData()
     }
 }
 
-void DragonLimelight::DataLog()
-{
-    double m_tx = m_tx;
-    double m_ty = m_ty;
-    LogDoubleData(DragonDataLoggerSignals::LIMELIGHT_TV_1, m_tv);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX_1, m_tx);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY_1, m_ty);
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1, m_tagid);
-}
-
 bool DragonLimelight::HealthCheck()
 {
     auto nt = m_networktable.get();
