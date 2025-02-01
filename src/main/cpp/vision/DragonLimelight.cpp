@@ -97,10 +97,12 @@ void DragonLimelight::PeriodicCacheData()
 
 void DragonLimelight::DataLog()
 {
-    DragonDataLoggerSignals::DoubleSignals(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TV, m_tv);
-    DragonDataLoggerSignals::DoubleSignals(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TX, m_tx);
-    DragonDataLoggerSignals::DoubleSignals(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TY, m_ty);
-    DragonDataLoggerSignals::DoubleSignals(DragonDataLoggerSignals::DoubleSignals::FIDUCIAL_ID, m_tagid);
+    double m_tx = m_tx;
+    double m_ty = m_ty;
+    LogDoubleData(DragonDataLoggerSignals::CACHE_DATA_TV, m_tv);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TX, m_tx);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CACHE_DATA_TY, m_ty);
+    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::FIDUCIAL_ID, m_tagid);
 }
 
 bool DragonLimelight::HealthCheck()
