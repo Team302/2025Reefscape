@@ -48,7 +48,9 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
 
     if (chassis != nullptr)
     {
-        auto path = AutonUtils::GetPathFromPathFile(param->GetPathName());
+
+        auto path = param->GetTrajectoryName().empty() ? AutonUtils::GetPathFromPathFile(param->GetPathName()) : AutonUtils::GetPathFromTrajectory(param->GetTrajectoryName());
+
         if (AutonUtils::IsValidPath(path))
         {
             auto initialPose = path.get()->getStartingHolonomicPose();

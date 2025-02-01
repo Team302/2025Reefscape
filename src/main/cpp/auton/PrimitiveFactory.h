@@ -47,4 +47,5 @@ private:
     IPrimitive *m_visionAlign;
     IPrimitive *m_drivePathPlanner;
     IPrimitive *m_driveToNote;
+    IPrimitive *m_DriveStopDelay;
 };

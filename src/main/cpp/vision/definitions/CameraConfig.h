@@ -20,21 +20,10 @@
 class CameraConfig
 {
 public:
-    enum CAMERA_TYPE
-    {
-        LIMELIGHT4,
-        QUEST
-    };
 
     CameraConfig();
     ~CameraConfig();
 
-    void BuildCameraConfig();
+    virtual void BuildCameraConfig();
 
-    DragonVision *GetDragonVision() const { return m_vision; }
-
-protected:
-    virtual void DefineCameras();
-
-    DragonVision *m_vision;
 };

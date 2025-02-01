@@ -14,17 +14,46 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "vision/definitions/CameraConfig.h"
+#pragma once
 
-CameraConfig::CameraConfig()
+// C++ Includes
+#include <memory>
+
+// FRC includes
+#include "units/time.h"
+
+// Team 302 includes
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/AutonSelector.h"
+
+// Third Party Includes
+
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
+
+class DriveStopDelay : public DriveStop
 {
-}
+public:
+    enum DelayOption
+    {
+        START,
+        REEF,
+        CORAL_STATION,
+        MAX_OPTIONS
+    };
+    /// @brief constructor that creates/initializes the object
+    DriveStopDelay();
 
-void CameraConfig::BuildCameraConfig()
-{
-}
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopDelay() = default;
 
-CameraConfig::~CameraConfig()
-{
-}
+    /// @brief check if the end condition has been met
+    /// @return bool true means the end condition was reached, false means it hasn't
+    bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
 
+private:
+    units::time::second_t m_delayTime;
+};

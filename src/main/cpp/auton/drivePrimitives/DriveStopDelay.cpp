@@ -14,64 +14,57 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
 // C++ Includes
 #include <memory>
+#include <string>
 
 // FRC includes
-#include "units/time.h"
+#include "frc/kinematics/ChassisSpeeds.h"
+#include "frc/Timer.h"
 
 // Team 302 includes
+#include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "chassis/SwerveChassis.h"
-// #include "mechanisms/noteManager/decoratormods/noteManager.h"
+#include "auton/PrimitiveParams.h"
+#include "utils/logging/Logger.h"
 
 // Third Party Includes
 
-// forward declares
-class PrimitiveParams;
+using namespace std;
+using namespace frc;
 
-namespace frc
+//========================================================================================================
+/// @class  DriveStopDelay
+/// @brief  This is an auton primitive that causes the chassis to not drive for a certain amount of time
+//========================================================================================================
+
+/// @brief constructor that creates/initializes the object
+DriveStopDelay::DriveStopDelay() : DriveStop()
 {
-	class Timer;
 }
 
-//========================================================================================================
-/// @class  DriveStop
-/// @brief  This is an auton primitive that causes the chassis to not drive
-//========================================================================================================
+/// @brief check if the end condition has been met
+/// @return bool true means the end condition was reached, false means it hasn't
 
-class DriveStop : public IPrimitive
+void DriveStopDelay::Init(PrimitiveParams *params)
 {
-public:
-	/// @brief constructor that creates/initializes the object
-	DriveStop();
+    DriveStop::Init(params);
 
-	/// @brief destructor, clean  up the memory from this object
-	virtual ~DriveStop() = default;
+    switch (params->GetDelayOption())
+    {
+    case DelayOption::REEF:
+        m_delayTime = params->GetReefDelay();
+        break;
+    case DelayOption::CORAL_STATION:
+        m_delayTime = params->GetCoralStationDelay();
+        break;
+    default:
+        m_delayTime = params->GetStartDelay();
+    }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveStopDelay", "Delay", static_cast<double>(m_delayTime));
+}
 
-	/// @brief initialize this usage of the primitive
-	/// @param PrimitiveParms* params the drive parameters
-	/// @return void
-	void Init(PrimitiveParams *params) override;
-
-	/// @brief run the primitive (periodic routine)
-	/// @return void
-	void Run() override;
-
-	/// @brief check if the end condition has been met
-	/// @return bool true means the end condition was reached, false means it hasn't
-	bool IsDone() override;
-
-protected:
-	units::time::second_t m_maxTime; // Target time
-	std::unique_ptr<frc::Timer> m_timer;
-
-private:
-	float m_currentTime; // Time since init
-	SwerveChassis *m_chassis;
-	double m_heading;
-	// noteManager *m_noteManager;
-	ChassisOptionEnums::HeadingOption m_headingOption;
-};
+bool DriveStopDelay::IsDone()
+{
+    return m_timer->AdvanceIfElapsed(m_delayTime) || m_timer->AdvanceIfElapsed(m_maxTime);
+}
