@@ -55,6 +55,8 @@ protected:
 	void RunDriveStop();
 
 private:
+	void InitDriveStopDelayTimes();
+
 	std::vector<PrimitiveParams *> m_primParams;
 	int m_currentPrimSlot;
 	IPrimitive *m_currentPrim;

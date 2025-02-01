@@ -48,6 +48,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER_NO_VISION"] = RESET_POSITION_PATH_PLANNER_NO_VISION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
+    primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
 
     map<string, ChassisOptionEnums::HeadingOption> headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
@@ -69,6 +70,12 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
         {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
         {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
+    };
+
+    map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
+        {"START", DriveStopDelay::DelayOption::START},
+        {"REEF", DriveStopDelay::DelayOption::REEF},
+        {"CORAL_STATION", DriveStopDelay::DelayOption::CORAL_STATION},
     };
 
     xml_document doc;
@@ -142,6 +149,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
                     ZoneParamsVector zones;
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
+                    DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());
@@ -191,6 +199,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             else
                             {
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
+                                hasError = true;
+                            }
+                        }
+                        else if (strcmp(attr.name(), "delayOption") == 0)
+                        {
+                            auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
+                            if (delayOptionItr != pathDelayOptionsMap.end())
+                            {
+                                pathDelayOption = delayOptionItr->second;
+                            }
+                            else
+                            {
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
                                 hasError = true;
                             }
                         }
@@ -292,7 +313,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      // noteStates,
                                                                      // changeClimberState,
                                                                      // climberState,
-                                                                     updateHeadingOption));
+                                                                     updateHeadingOption,
+                                                                     pathDelayOption));
                     }
                     else
                     {

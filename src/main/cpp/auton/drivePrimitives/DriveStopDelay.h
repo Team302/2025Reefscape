@@ -17,35 +17,43 @@
 #pragma once
 
 // C++ Includes
+#include <memory>
 
 // FRC includes
+#include "units/time.h"
 
 // Team 302 includes
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/AutonSelector.h"
 
 // Third Party Includes
 
-#include <auton/PrimitiveEnums.h>
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
 
-class IPrimitive;
-class PrimitiveParams;
-
-class PrimitiveFactory
+class DriveStopDelay : public DriveStop
 {
 public:
-    static PrimitiveFactory *GetInstance();
-    IPrimitive *GetIPrimitive(PrimitiveParams *primitivePasser);
+    enum DelayOption
+    {
+        START,
+        REEF,
+        CORAL_STATION,
+        MAX_OPTIONS
+    };
+    /// @brief constructor that creates/initializes the object
+    DriveStopDelay();
+
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopDelay() = default;
+
+    /// @brief check if the end condition has been met
+    /// @return bool true means the end condition was reached, false means it hasn't
+    bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
 
 private:
-    PrimitiveFactory();
-    virtual ~PrimitiveFactory();
-
-    static PrimitiveFactory *m_instance;
-    IPrimitive *m_DriveStop;
-    IPrimitive *m_DriveHoldPosition;
-    IPrimitive *m_resetPositionPathPlanner;
-    IPrimitive *m_resetPositionPathPlannerNoVision;
-    IPrimitive *m_visionAlign;
-    IPrimitive *m_drivePathPlanner;
-    IPrimitive *m_driveToNote;
-    IPrimitive *m_DriveStopDelay;
+    units::time::second_t m_delayTime;
 };
