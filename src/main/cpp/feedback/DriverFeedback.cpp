@@ -98,11 +98,7 @@ void DriverFeedback::UpdateLEDStates()
         }
         if (taleMgr != nullptr)
         {
-            if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR))
-            {
-                m_LEDStates->BlinkingPattern(currentState);
-            }
-            else if (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD)
+            if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
             {
                 m_LEDStates->BlinkingPattern(currentState);
             }
