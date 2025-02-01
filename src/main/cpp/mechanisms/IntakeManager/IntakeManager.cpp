@@ -115,10 +115,10 @@ std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_N
 void IntakeManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "IntakeManager";
-	m_Intake = new ctre::phoenix6::hardware::TalonFX(0, "rio");
-	m_Extender = new ctre::phoenix6::hardware::TalonFX(0, "rio");
+	m_Intake = new ctre::phoenix6::hardware::TalonFX(50, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFX(51, "rio");
 
-	m_IntakeSensor = new frc::DigitalInput(0);
+	m_IntakeSensor = new frc::DigitalInput(3);
 
 	m_PercentOutput = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode

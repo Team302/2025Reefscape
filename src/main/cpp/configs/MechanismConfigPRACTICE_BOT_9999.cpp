@@ -45,13 +45,14 @@ void MechanismConfigPRACTICE_BOT_9999::DefineMechanisms()
 	m_theDragonTale->Init(/*m_theDragonTale*/);
 	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::DRAGON_TALE] = m_theDragonTale;
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("IntakeManager"), "");
+	/*Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("IntakeManager"), "");
 	m_theIntakeManager = new IntakeManager(RobotIdentifier::PRACTICE_BOT_9999);
 	m_theIntakeManager->CreatePRACTICE_BOT9999();
 	m_theIntakeManager->CreateAndRegisterStates();
 	m_theIntakeManager->InitializePRACTICE_BOT9999();
-	m_theIntakeManager->Init(/*m_theIntakeManager*/);
+	m_theIntakeManager->Init(m_theIntakeManager);
 	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER] = m_theIntakeManager;
+	*/
 }
 
 StateMgr *MechanismConfigPRACTICE_BOT_9999::GetMechanism(MechanismTypes::MECHANISM_TYPE mechType)
