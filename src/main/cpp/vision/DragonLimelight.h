@@ -32,6 +32,7 @@
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
+#include "utils/logging/DragonDataLogger.h"
 
 // Third Party Includes
 
@@ -162,7 +163,7 @@ public:
     units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
     std::string GetCameraName() const { return m_cameraName; }
 
-    void PeriodicCacheData();
+    void PeriodicCacheData() override;
 
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
