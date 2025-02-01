@@ -130,16 +130,16 @@ public:
 	ctre::phoenix::motorcontrol::can::TalonSRX *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFX *GetAlgae() const { return m_Algae; }
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
-	bool GetCoralInSensorState() const { return m_CoralInSensor->Get(); }
-	bool GetCoralOutSensorState() const { return m_CoralOutSensor->Get(); }
-	bool GetAlgaeSensorState() const { return m_AlgaeSensor->Get(); }
+	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
+	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
+	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
 	ControlData *GetPositionInch() const { return m_PositionInch; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOutput() const { return m_PercentOutput; }
 
-	units::length::inch_t GetElevatorHeight() { return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble()); }
+	units::length::inch_t GetElevatorHeight() { return units::length::inch_t(m_ElevatorLeader->GetPosition().GetValueAsDouble()); }
 	bool AllSensorsFalse() { return !GetCoralInSensorState() && !GetCoralOutSensorState() && !GetAlgaeSensorState(); }
 
 	units::angle::degree_t GetArmAngle() { return m_ArmAngleSensor->GetAbsolutePosition().GetValue(); }
@@ -237,4 +237,12 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
+
+	frc::DigitalInput *test3;
+	frc::DigitalInput *test4;
+	frc::DigitalInput *test5;
+	frc::DigitalInput *test6;
+	frc::DigitalInput *test7;
+	frc::DigitalInput *test8;
+	frc::DigitalInput *test9;
 };

@@ -791,6 +791,7 @@
               <type>UInt32</type>
               <value>4</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -826,7 +827,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>7.853981634</value>
+                <value>0.1273239545</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
@@ -1482,6 +1483,7 @@
               <type>UInt32</type>
               <value>16</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -1699,14 +1701,14 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>2</value>
+              <value>0</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reversed>
             <debouncetime>
               <unitsFamily>time</unitsFamily>
@@ -1730,7 +1732,7 @@
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reversed>
             <debouncetime>
               <unitsFamily>time</unitsFamily>
@@ -1747,14 +1749,14 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>2</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reversed>
             <debouncetime>
               <unitsFamily>time</unitsFamily>
@@ -1780,14 +1782,14 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0</value>
+              <value>0.421387</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reverse>
           </CANcoder>
           <CANcoder>
@@ -1799,6 +1801,7 @@
               <type>UInt32</type>
               <value>4</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <offset>
               <unitsFamily>none</unitsFamily>
               <name>doubleParameter</name>
