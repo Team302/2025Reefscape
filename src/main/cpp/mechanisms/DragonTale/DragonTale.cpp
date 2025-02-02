@@ -267,7 +267,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "rio");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.456787109375);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.030518);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
