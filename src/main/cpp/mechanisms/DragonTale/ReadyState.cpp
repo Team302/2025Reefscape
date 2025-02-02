@@ -55,6 +55,8 @@ void ReadyState::InitPRACTICE_BOT9999()
 	m_mechanism->UpdateTargetAlgaePercentOutput(m_AlgaeTarget);
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
+	m_mechanism->SetPIDElevatorLeaderPositionInch();
+	m_mechanism->SetPIDArmPositionDegree();
 }
 
 void ReadyState::Run()
@@ -79,5 +81,7 @@ bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) || (m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode()));
+	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) ||
+			(m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD)) ||
+			m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_INITIALIZE);
 }
