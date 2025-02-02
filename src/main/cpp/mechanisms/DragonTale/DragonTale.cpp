@@ -267,7 +267,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "rio");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.456787109375);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
@@ -276,10 +276,10 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		0,												  // double proportional
-		0,												  // double integral
-		0,												  // double derivative
-		0,												  // double feedforward
+		2.0,											  // double proportional
+		0.2,											  // double integral
+		0.0,											  // double derivative
+		0.3,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -426,6 +426,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	MotorOutputConfigs motorconfig{};
 	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
 	motorconfig.NeutralMode = NeutralModeValue::Brake;
+
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
@@ -494,7 +495,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Algae->GetConfigurator().Apply(motorconfig);
+	m_Algae->GetConfigurator().Apply(motorconfig, units::time::second_t(0.5));
 
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
@@ -545,7 +546,7 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
 	m_ElevatorFollower->GetConfigurator().Apply(motorconfig);
-	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{8});
+	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
 void DragonTale::SetPIDArmPositionDegree()
@@ -563,8 +564,8 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kI = m_PositionInch->GetI();
 	slot0Configs.kD = m_PositionInch->GetD();
 	slot0Configs.kG = m_PositionInch->GetF();
-	slot0Configs.kV = 0.0;
-	slot0Configs.kA = 0.0;
+	slot0Configs.kV = 0.3;
+	slot0Configs.kA = 0.05;
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
@@ -588,10 +589,12 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Pos", GetArmAngleSensor()->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armTarget.value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Motor", m_ElevatorLeader->GetPosition().GetValueAsDouble());
+
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState()); // Ask how to get state enum map
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 
 	/* Can enable for testing
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test3 Sensor", test3->Get());
@@ -758,8 +761,8 @@ void DragonTale::ManualControl()
 	units::inch_t ElevatorChange = (abs(elevatorInput) > 0.05) ? units::length::inch_t(elevatorInput * m_elevatorChangeRate) : units::length::inch_t(0);
 	units::angle::degree_t ArmChange = (abs(armInput) > 0.05) ? units::angle::degree_t(armInput * m_armChangeRate) : units::angle::degree_t(0);
 
-	m_elevatorTarget += ElevatorChange;
-	m_armTarget += ArmChange;
+	SetElevatorTarget(m_elevatorTarget + ElevatorChange);
+	SetArmTarget(m_armTarget + ArmChange);
 }
 
 void DragonTale::UpdateTarget()
