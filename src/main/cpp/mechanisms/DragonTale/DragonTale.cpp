@@ -252,13 +252,14 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_CoralOutSensor = new frc::DigitalInput(1); // black reverse
 	m_AlgaeSensor = new frc::DigitalInput(2);	 // red reverse this one
 
-	test3 = new frc::DigitalInput(3);
+	/*test3 = new frc::DigitalInput(3);
 	test4 = new frc::DigitalInput(4);
 	test5 = new frc::DigitalInput(5);
 	test6 = new frc::DigitalInput(6);
 	test7 = new frc::DigitalInput(7);
 	test8 = new frc::DigitalInput(8);
 	test9 = new frc::DigitalInput(9);
+	Leave here for testing */
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.421387);
@@ -432,7 +433,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackRemoteSensorID = 4;
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 1 / 7.853981634;
+	fxConfig.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
 	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
 }
 
@@ -592,13 +593,14 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Motor", m_ElevatorLeader->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState()); // Ask how to get state enum map
 
+	/* Can enable for testing
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test3 Sensor", test3->Get());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test4 Sensor", test4->Get());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test5 Sensor", test5->Get());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test6 Sensor", test6->Get());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test7 Sensor", test7->Get());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test8 Sensor", test8->Get());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test9 Sensor", test9->Get());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "test9 Sensor", test9->Get());*/
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).

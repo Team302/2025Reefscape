@@ -4310,7 +4310,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>50</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -4569,7 +4569,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>51</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
