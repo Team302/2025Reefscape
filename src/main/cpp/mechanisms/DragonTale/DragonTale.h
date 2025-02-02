@@ -237,12 +237,4 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
-
-	frc::DigitalInput *test3;
-	frc::DigitalInput *test4;
-	frc::DigitalInput *test5;
-	frc::DigitalInput *test6;
-	frc::DigitalInput *test7;
-	frc::DigitalInput *test8;
-	frc::DigitalInput *test9;
 };
