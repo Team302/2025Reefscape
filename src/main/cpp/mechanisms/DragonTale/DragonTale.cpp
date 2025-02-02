@@ -292,7 +292,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
+		0.2,											  // double proportional
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
@@ -373,7 +373,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	m_Arm->GetConfigurator().Apply(hwswitch);
 
 	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
+	motorconfig.Inverted = InvertedValue::Clockwise_Positive;
 	motorconfig.NeutralMode = NeutralModeValue::Brake;
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
@@ -767,7 +767,7 @@ void DragonTale::ManualControl()
 
 void DragonTale::UpdateTarget()
 {
-	units::angle::degree_t actualTargetAngle;
+	units::angle::degree_t actualTargetAngle = m_armTarget;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 
 	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
