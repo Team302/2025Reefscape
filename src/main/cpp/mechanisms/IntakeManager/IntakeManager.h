@@ -82,19 +82,8 @@ public:
 	}
 	void UpdateTargetExtenderPositionDegree(units::angle::turn_t position)
 	{
-		m_ExtenderPositionDegree.Position = position * 1;
+		m_ExtenderPositionDegree.Position = position;
 		m_ExtenderActiveTarget = &m_ExtenderPositionDegree;
-	}
-	void UpdateTargetExtenderPercentOutput(double percentOut)
-	{
-		m_ExtenderPercentOutput.Output = percentOut;
-		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
-	}
-	void UpdateTargetExtenderPercentOutput(double percentOut, bool enableFOC)
-	{
-		m_ExtenderPercentOutput.Output = percentOut;
-		m_ExtenderPercentOutput.EnableFOC = enableFOC;
-		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
 	}
 
 	void SetPIDExtenderPositionDegree();
@@ -146,7 +135,7 @@ private:
 
 	ctre::phoenix6::controls::DutyCycleOut m_IntakePercentOutput{0.0};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
-	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
+
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
 

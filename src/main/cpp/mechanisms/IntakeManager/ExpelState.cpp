@@ -51,8 +51,9 @@ void ExpelState::Init()
 
 void ExpelState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput(-1, false);
-	m_mechanism->UpdateTargetExtenderPercentOutput(0, false);
+	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
+	m_mechanism->SetPIDExtenderPositionDegree();
+	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
 }
 
 void ExpelState::Run()

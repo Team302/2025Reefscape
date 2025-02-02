@@ -51,9 +51,9 @@ void OffState::Init()
 
 void OffState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput(0, false);
+	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
 	m_mechanism->SetPIDExtenderPositionDegree();
-	m_mechanism->UpdateTargetExtenderPositionDegree(units::angle::turn_t(0));
+	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
 }
 
 void OffState::Run()
