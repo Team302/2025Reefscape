@@ -19,11 +19,10 @@
 #include <map>
 #include <tuple>
 
-#include "frc/geometry/Pose2d.h"
-#include "units/angle.h"
-
 #include "chassis/ChassisMovement.h"
 #include "chassis/SwerveChassis.h"
+#include "frc/geometry/Pose2d.h"
+#include "units/angle.h"
 #include "vision/DragonVision.h"
 
 class DragonDriveTargetFinder
@@ -89,17 +88,15 @@ private:
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> blueMap = {
         {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::BLUE_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, AprilTagIDs::BLUE_SPEAKER},
         {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::BLUE_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::BARGE, AprilTagIDs::BLUE_STAGE_CENTER}};
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> redMap = {
         {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, AprilTagIDs::RED_SPEAKER},
         {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::RED_AMP},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::CAGE, AprilTagIDs::RED_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::BARGE, AprilTagIDs::RED_STAGE_CENTER}};
 
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };

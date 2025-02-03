@@ -17,17 +17,16 @@
 #include <optional>
 #include <string>
 
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Transform3d.h"
-#include "units/angle.h"
-
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/DragonDriveTargetFinder.h"
 #include "chassis/states/ISwerveDriveOrientation.h"
-#include "vision/DragonVisionStructLogger.h"
-#include "utils/FMSData.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/geometry/Transform3d.h"
+#include "units/angle.h"
 #include "utils/FieldConstants.h"
+#include "utils/FMSData.h"
+#include "vision/DragonVisionStructLogger.h"
 
 /// DEBUGGING
 #include "utils/logging/Logger.h"
@@ -64,6 +63,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
         {
             auto data = vision->GetVisionData(item);
 
+            /** TODO: come back to this
             if (data && item == DragonVision::VISION_ELEMENT::NOTE)
             {
                 auto trans3d = data.value().transformToTarget;
@@ -79,11 +79,12 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
                 targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::VISION_BASED, frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle));
 
                 return targetInfo;
-            }
+            } **/
         }
 
         int aprilTag = -1;
         auto fieldConstants = FieldConstants::GetInstance();
+        /** TODO: come back to this one
         units::length::meter_t centerYLine = fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_CENTER_STAGE).Y();
 
         if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::kBlue)
@@ -118,6 +119,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
                 return targetInfo;
             }
         }
+        **/
 
         if (aprilTag > 0)
         {

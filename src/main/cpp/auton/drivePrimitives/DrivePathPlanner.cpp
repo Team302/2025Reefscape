@@ -75,7 +75,7 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
+    // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 }
 
 void DrivePathPlanner::Init(PrimitiveParams *params)
@@ -86,9 +86,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
-    m_isVisionDrive = (m_pathname == "DRIVE_TO_NOTE");
+    // m_isVisionDrive = (m_pathname == "DRIVE_TO_NOTE");
     m_visionAlignment = params->GetVisionAlignment();
-    m_checkDriveToNote = params->GetPathUpdateOption() == ChassisOptionEnums::PathUpdateOption::NOTE;
+    // m_checkDriveToNote = params->GetPathUpdateOption() == ChassisOptionEnums::PathUpdateOption::NOTE;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
     // Start timeout timer for path
@@ -114,15 +114,10 @@ void DrivePathPlanner::InitMoveInfo()
     auto speed = m_chassis->GetChassisSpeeds();
     if (m_isVisionDrive)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "In DriveToNote", true);
+        // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 
-        m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
-
-        m_driveToNote->InitFromTrajectory(m_moveInfo, m_trajectory);
-        m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE;
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Original time", "Original time: ", m_maxTime.value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Added time", "Added time", m_moveInfo.pathplannerTrajectory.getTotalTime().value());
+        // m_driveToNote->InitFromTrajectory(m_moveInfo, m_trajectory);
+        // m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE;
 
         m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
 
@@ -164,30 +159,24 @@ bool DrivePathPlanner::IsDone()
 
     if (m_timer.get()->Get() > m_maxTime && m_timer.get()->Get().to<double>() > 0.0)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "why done", "Time Out");
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "time:", m_timer.get()->Get().value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Max time:", m_maxTime.value());
-
         return true;
     }
 
     if (m_checkDriveToNote && !m_isVisionDrive)
     {
-        CheckForDriveToNote();
+        // CheckForDriveToNote();
     }
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Switched To Vision Drive", m_isVisionDrive);
 
     if (m_isVisionDrive)
     {
-        return m_driveToNote->IsDone();
+        // return m_driveToNote->IsDone();
     }
     auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "Trajectory drive is done:", trajectoryDrive->IsDone());
 
     return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
 }
 
+/** TODO rework for REEF, CORAL_STATION and later PROCESSOR and ALGAE
 void DrivePathPlanner::CheckForDriveToNote()
 {
     // Need to check if there is a note
@@ -248,3 +237,4 @@ bool DrivePathPlanner::ShouldConsiderNote(units::length::meter_t xposition)
 
     return ((xposition >= (m_centerLine - m_offset)));
 }
+**/
