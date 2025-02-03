@@ -12,12 +12,13 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include <math.h>
 #include <string>
 
-#include "frc/geometry/Pose2d.h"
+#include <math.h>
+
 #include "frc/controller/PIDController.h"
 #include "frc/controller/ProfiledPIDController.h"
+#include "frc/geometry/Pose2d.h"
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
 
@@ -98,6 +99,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
             Init(chassisMovement);
         }
         /// TO DO If a the target position changes by 0.3m then re generate the path
+        /** TODO come back to this one
         auto info = DragonDriveTargetFinder::GetInstance()->GetPose(DragonVision::VISION_ELEMENT::NOTE);
         auto type = get<0>(info);
         auto newNotePos = get<1>(info);
@@ -108,6 +110,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
             units::length::meter_t distance = currentTargetPos.Translation().Distance(newNotePos.Translation());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "New Note Distance", distance.to<double>());
         }
+        **/
 
         auto desiredState = m_trajectory.sample(m_timer.get()->Get() + units::time::second_t(0.02));
         LogState(desiredState);
