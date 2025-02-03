@@ -119,52 +119,55 @@ void ClimberManager::InitializePRACTICE_BOT9999()
 
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.25);
-	m_Climber->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	VoltageConfigs voltageConfigs{};
-	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
-	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	m_Climber->GetConfigurator().Apply(voltageConfigs);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	m_Climber->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = false;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	hwswitch.ReverseLimitEnable = false;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Climber->GetConfigurator().Apply(hwswitch);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Climber->GetConfigurator().Apply(motorconfig);
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	fxConfig.Feedback.SensorToMechanismRatio = 9;
-	m_Climber->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 9;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
+	}
 }
 
 void ClimberManager::SetPIDClimberPositionDegree()
