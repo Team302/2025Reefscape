@@ -29,6 +29,8 @@
 #include "frc/geometry/Pose3d.h"
 #include "frc/DriverStation.h"
 #include "vision/DragonVisionStructs.h"
+#include "chassis/DragonVisionPoseEstimator.h"
+#include "chassis/DragonVisionPoseEstimatorStruct.h"
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
@@ -36,7 +38,7 @@
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public SensorData
+class DragonLimelight : public SensorData, public DragonVisionPoseEstimator
 {
 public:
     enum CAMERA_TYPE
@@ -183,6 +185,8 @@ public:
     units::angle::degree_t GetTy() const;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
+
+    DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
 
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);

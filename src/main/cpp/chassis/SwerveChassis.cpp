@@ -298,6 +298,14 @@ units::angle::degree_t SwerveChassis::GetRoll() const
     return m_pigeon->GetRoll().GetValue();
 }
 
+bool SwerveChassis::IsPigeonAccurate()
+{
+    if (m_pigeon != nullptr && std::abs(GetRotationRateDegreesPerSecond()) < 720.0)
+    {
+        return m_pigeon->GetStickyFault_Undervoltage().GetValue();
+    }
+    return false;
+}
 //==================================================================================
 /// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
 void SwerveChassis::UpdateOdometry()

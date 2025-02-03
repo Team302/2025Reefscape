@@ -96,6 +96,8 @@ public:
     void ResetYaw();
     void SetYaw(units::angle::degree_t newYaw);
 
+    bool IsPigeonAccurate();
+
     void LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES swerveModule);
 
     units::length::inch_t GetWheelDiameter() const override;

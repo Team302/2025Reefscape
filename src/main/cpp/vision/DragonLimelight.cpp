@@ -18,6 +18,9 @@
 #include <vector>
 
 // FRC includes
+#include "chassis/SwerveChassis.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
@@ -63,6 +66,7 @@ DragonLimelight::DragonLimelight(
     CAM_MODE camMode,
     STREAM_MODE streamMode,
     SNAPSHOT_MODE snapMode) : SensorData(),
+                              DragonVisionPoseEstimator(),
                               m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
@@ -673,4 +677,56 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
     }
 
     return std::nullopt;
+}
+
+DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
+{
+    DragonVisionPoseEstimatorStruct poseStruct;
+
+    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+
+    bool calcMegatag2 = true;
+    bool resetPose = false;
+
+    if (chassis != nullptr)
+    {
+        if (!chassis->IsPigeonAccurate())
+        {
+            auto visionPose = EstimatePoseOdometryLimelight(false);
+            if (visionPose.has_value())
+            {
+                poseStruct.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::MEDIUM;
+                poseStruct.m_visionPose = visionPose.value().estimatedPose.ToPose2d();
+                poseStruct.m_timeStamp = visionPose.value().timeStamp;
+                poseStruct.m_stds = visionPose.value().visionMeasurementStdDevs;
+
+                chassis->SetYaw(poseStruct.m_visionPose.Rotation().Degrees());
+                calcMegatag2 = true;
+                resetPose = true;
+            }
+            else
+            {
+                poseStruct.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+                calcMegatag2 = false;
+            }
+        }
+        if (calcMegatag2)
+        {
+            auto megatag2Pose = EstimatePoseOdometryLimelight(true);
+            if (megatag2Pose.has_value())
+            {
+                poseStruct.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+                poseStruct.m_visionPose = megatag2Pose.value().estimatedPose.ToPose2d();
+                poseStruct.m_timeStamp = megatag2Pose.value().timeStamp;
+                poseStruct.m_stds = megatag2Pose.value().visionMeasurementStdDevs;
+                if (resetPose)
+                {
+                    chassis->ResetPose(megatag2Pose.value().estimatedPose.ToPose2d());
+                }
+            }
+        }
+    }
+
+    return DragonVisionPoseEstimatorStruct{};
 }
