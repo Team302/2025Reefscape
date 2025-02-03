@@ -546,6 +546,12 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
+	slot0Configs.kG = m_PositionDegree->GetF();
+	slot0Configs.kS = 2.05;
+	slot0Configs.kV = 0.25;
+	slot0Configs.kA = 0.05;
+	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_Arm->GetConfigurator().Apply(slot0Configs);
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
