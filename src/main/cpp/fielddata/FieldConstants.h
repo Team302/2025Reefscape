@@ -15,60 +15,108 @@
 #pragma once
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation3d.h>
+
 #include "units/angle.h"
 #include "units/base.h"
+
 class FieldConstants
 {
 public:
     static FieldConstants *GetInstance();
     enum FIELD_ELEMENT
     {
-        //2024 old elements
-        BLUE_SOURCE,
-        BLUE_AMP,
-        BLUE_SPEAKER,
-        BLUE_CENTER_STAGE,
-        BLUE_RIGHT_STAGE,
-        BLUE_LEFT_STAGE,
-        RED_SOURCE,
-        RED_AMP,
-        RED_SPEAKER,
-        RED_CENTER_STAGE,
-        RED_RIGHT_STAGE,
-        RED_LEFT_STAGE,
-        // 2025
-        BLUE_CORAL_STATION,
+        // 2025 - BLUE APRIL TAGS
+        BLUE_CORAL_STATION_LEFT,
+        BLUE_CORAL_STATION_RIGHT,
         BLUE_PROCESSOR,
-        BLUE_REEF,
-        BLUE_CENTER_CAGE,
+        BLUE_BARGE_FRONT,
+        BLUE_BARGE_BACK,
+        BLUE_REEF_AB,
+        BLUE_REEF_CD,
+        BLUE_REEF_EF,
+        BLUE_REEF_GH,
+        BLUE_REEF_IJ,
+        BLUE_REEF_KL,
+        // 2025 - RED APRIL TAGS
+        RED_CORAL_STATION_LEFT,
+        RED_CORAL_STATION_RIGHT,
+        RED_PROCESSOR,
+        RED_BARGE_FRONT,
+        RED_BARGE_BACK,
+        RED_REEF_AB,
+        RED_REEF_CD,
+        RED_REEF_EF,
+        RED_REEF_GH,
+        RED_REEF_IJ,
+        RED_REEF_KL,
+        // 2025 - Blue Calculated Positions
+        BLUE_CORAL_STATION_LEFT_ALLIANCE,
+        BLUE_CORAL_STATION_LEFT_SIDEWALL,
+        BLUE_CORAL_STATION_RIGHT_ALLIANCE,
+        BLUE_CORAL_STATION_RIGHT_SIDEWALL,
         BLUE_RIGHT_CAGE,
         BLUE_LEFT_CAGE,
-        RED_CORAL_STATION,
-        RED_PROCESSOR,
-        RED_REEF,
-        RED_CENTER_CAGE,
+        BLUE_REEF_CENTER,
+        BLUE_REEF_A,
+        BLUE_REEF_B,
+        BLUE_REEF_C,
+        BLUE_REEF_D,
+        BLUE_REEF_E,
+        BLUE_REEF_F,
+        BLUE_REEF_G,
+        BLUE_REEF_H,
+        BLUE_REEF_I,
+        BLUE_REEF_J,
+        BLUE_REEF_K,
+        BLUE_REEF_L,
+        // 2025 - Red Calculated Positions
+        RED_CORAL_STATION_LEFT_ALLIANCE,
+        RED_CORAL_STATION_LEFT_SIDEWALL,
+        RED_CORAL_STATION_RIGHT_ALLIANCE,
+        RED_CORAL_STATION_RIGHT_SIDEWALL,
         RED_RIGHT_CAGE,
-        RED_LEFT_CAGE
+        RED_LEFT_CAGE,
+        RED_REEF_CENTER,
+        RED_REEF_A,
+        RED_REEF_B,
+        RED_REEF_C,
+        RED_REEF_D,
+        RED_REEF_E,
+        RED_REEF_F,
+        RED_REEF_G,
+        RED_REEF_H,
+        RED_REEF_I,
+        RED_REEF_J,
+        RED_REEF_K,
+        RED_REEF_L
     };
 
     enum AprilTagIDs
     {
-        FI_BLUE_SOURCE_ONE = 1,
-        FI_BLUE_SOURCE_TWO = 2,
-        FI_RED_SOURCE_ONE = 10,
-        FI_RED_SOURCE_TWO = 9,
-        FI_BLUE_AMP = 6,
-        FI_BLUE_STAGE_LEFT = 15,
-        FI_BLUE_STAGE_CENTER = 14,
-        FI_BLUE_STAGE_RIGHT = 16,
-        FI_RED_AMP = 5,
-        FI_RED_STAGE_LEFT = 11,
-        FI_RED_STAGE_CENTER = 13,
-        FI_RED_STAGE_RIGHT = 12,
-        FI_BLUE_SUBWOOFER = 8,
-        FI_BLUE_SPEAKER = 7,
-        FI_RED_SUBWOOFER = 3,
-        FI_RED_SPEAKER = 4,
+        // Blue
+        BLUE_CORAL_STATION_LEFT_TAG = 13,
+        BLUE_CORAL_STATION_RIGHT_TAG = 12,
+        BLUE_PROCESSOR_TAG = 16,
+        BLUE_BARGE_FRONT_TAG = 14,
+        BLUE_BARGE_BACK_TAG = 4,
+        BLUE_REEF_AB_TAG = 18,
+        BLUE_REEF_CD_TAG = 17,
+        BLUE_REEF_EF_TAG = 22,
+        BLUE_REEF_GH_TAG = 21,
+        BLUE_REEF_IJ_TAG = 20,
+        BLUE_REEF_KL_TAG = 19,
+        // Red
+        RED_CORAL_STATION_LEFT_TAG = 1,
+        RED_CORAL_STATION_RIGHT_TAG = 2,
+        RED_PROCESSOR_TAG = 3,
+        RED_BARGE_FRONT_TAG = 5,
+        RED_BARGE_BACK_TAG = 15,
+        RED_REEF_AB_TAG = 7,
+        RED_REEF_CD_TAG = 8,
+        RED_REEF_EF_TAG = 9,
+        RED_REEF_GH_TAG = 10,
+        RED_REEF_IJ_TAG = 11,
+        RED_REEF_KL_TAG = 6
     };
     frc::Pose3d GetFieldElement(FIELD_ELEMENT element);
 
@@ -81,71 +129,379 @@ private:
     FieldConstants(const FieldConstants &) = delete;
     FieldConstants &operator=(const FieldConstants &) = delete;
 
+    void ReadFieldCalibrationData();
+    void CalculateDerivedValues();
+    void CalculateReefPositions();
+    void CalculateCSALocations();
+    void CalculateCageLocations();
+
     // specified here
     // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/2025LayoutMarkingDiagram.pdf
 
-    // blue
-    //TODO: update the meter t values to the values from the field
-    const frc::Pose3d m_BlueCoralStation = frc::Pose3d(
-        units::length::meter_t(15.63),
-        units::length::meter_t(0.565),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120)));
-    const frc::Pose3d m_BlueProcessor = frc::Pose3d(
-        units::length::meter_t(1.84),
-        units::length::meter_t(8.2),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-90.0)));
-    const frc::Pose3d m_BlueReef = frc::Pose3d(
-        units::length::meter_t(-.04),
-        units::length::meter_t(5.55),
-        units::length::meter_t(1.45),
+    // TODO: JW - took values blindly from table, there was only a Z and Y rotation, so we probably need to calculate the X rotation
+    // TODO: JW - these values are the defaults, but should be able to be set/overridden from WpiCal json file
+    frc::Pose3d m_aprilTag1 = frc::Pose3d(
+        units::length::inch_t(657.37),
+        units::length::inch_t(25.8),
+        units::length::inch_t(58.5),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(126, 0)));
+
+    frc::Pose3d m_aprilTag2 = frc::Pose3d(
+        units::length::inch_t(657.37),
+        units::length::inch_t(291.2),
+        units::length::inch_t(58.5),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(234.0)));
+
+    frc::Pose3d m_aprilTag3 = frc::Pose3d(
+        units::length::inch_t(455.15),
+        units::length::inch_t(317.15),
+        units::length::inch_t(51.25),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(270.0)));
+
+    frc::Pose3d m_aprilTag4 = frc::Pose3d(
+        units::length::inch_t(365.20),
+        units::length::inch_t(241.64),
+        units::length::inch_t(73.54),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_aprilTag5 = frc::Pose3d(
+        units::length::inch_t(365.20),
+        units::length::inch_t(75.39),
+        units::length::inch_t(73.54),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_aprilTag6 = frc::Pose3d(
+        units::length::inch_t(530.49),
+        units::length::inch_t(130.17),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(300.0)));
+
+    frc::Pose3d m_aprilTag7 = frc::Pose3d(
+        units::length::inch_t(546.87),
+        units::length::inch_t(158.50),
+        units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    const frc::Pose3d m_BlueCenterCage = frc::Pose3d(
-        units::length::meter_t(5.32),
-        units::length::meter_t(4.11),
-        units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    const frc::Pose3d m_BlueRightCage = frc::Pose3d(
-        units::length::meter_t(4.64),
-        units::length::meter_t(3.71),
-        units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-120.0)));
-    const frc::Pose3d m_BlueLeftCage = frc::Pose3d(
-        units::length::meter_t(4.64),
-        units::length::meter_t(4.5),
-        units::length::meter_t(1.32),
+
+    frc::Pose3d m_aprilTag8 = frc::Pose3d(
+        units::length::inch_t(530.49),
+        units::length::inch_t(186.83),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(60.0)));
+
+    frc::Pose3d m_aprilTag9 = frc::Pose3d(
+        units::length::inch_t(497.77),
+        units::length::inch_t(186.83),
+        units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120.0)));
-    // red
-    const frc::Pose3d m_RedCoralStation = frc::Pose3d(
-        units::length::meter_t(.91),
-        units::length::meter_t(.565),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(60.0)));
-    const frc::Pose3d m_RedProcessor = frc::Pose3d(
-        units::length::meter_t(14.7),
-        units::length::meter_t(8.2),
-        units::length::meter_t(1.36),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-90.0)));
-    const frc::Pose3d m_RedReef = frc::Pose3d(
-        units::length::meter_t(16.58),
-        units::length::meter_t(5.55),
-        units::length::meter_t(1.45),
+
+    frc::Pose3d m_aprilTag10 = frc::Pose3d(
+        units::length::inch_t(481.39),
+        units::length::inch_t(158.50),
+        units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(180.0)));
-    const frc::Pose3d m_RedCenterCage = frc::Pose3d(
-        units::length::meter_t(11.22),
-        units::length::meter_t(4.11),
-        units::length::meter_t(1.32),
+
+    frc::Pose3d m_aprilTag11 = frc::Pose3d(
+        units::length::inch_t(497.77),
+        units::length::inch_t(130.17),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(240.0)));
+
+    frc::Pose3d m_aprilTag12 = frc::Pose3d(
+        units::length::inch_t(33.51),
+        units::length::inch_t(25.80),
+        units::length::inch_t(58.50),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(54.0)));
+
+    frc::Pose3d m_aprilTag13 = frc::Pose3d(
+        units::length::inch_t(33.51),
+        units::length::inch_t(291.20),
+        units::length::inch_t(58.50),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(306.0)));
+
+    frc::Pose3d m_aprilTag14 = frc::Pose3d(
+        units::length::inch_t(325.68),
+        units::length::inch_t(241.64),
+        units::length::inch_t(73.54),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(180.0)));
+
+    frc::Pose3d m_aprilTag15 = frc::Pose3d(
+        units::length::inch_t(325.68),
+        units::length::inch_t(75.39),
+        units::length::inch_t(73.54),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(180.0)));
+
+    frc::Pose3d m_aprilTag16 = frc::Pose3d(
+        units::length::inch_t(235.73),
+        units::length::inch_t(-0.15),
+        units::length::inch_t(51.25),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(90.0)));
+
+    frc::Pose3d m_aprilTag17 = frc::Pose3d(
+        units::length::inch_t(160.39),
+        units::length::inch_t(130.17),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(240.0)));
+
+    frc::Pose3d m_aprilTag18 = frc::Pose3d(
+        units::length::inch_t(144.00),
+        units::length::inch_t(158.50),
+        units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(180.0)));
-    const frc::Pose3d m_RedRightCage = frc::Pose3d(
-        units::length::meter_t(11.9),
-        units::length::meter_t(3.71),
-        units::length::meter_t(1.32),
+
+    frc::Pose3d m_aprilTag19 = frc::Pose3d(
+        units::length::inch_t(160.39),
+        units::length::inch_t(186.83),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(120.0)));
+
+    frc::Pose3d m_aprilTag20 = frc::Pose3d(
+        units::length::inch_t(193.10),
+        units::length::inch_t(186.83),
+        units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(60.0)));
-    const frc::Pose3d m_RedLeftCage = frc::Pose3d(
-        units::length::meter_t(11.9),
-        units::length::meter_t(4.5),
-        units::length::meter_t(1.32),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-60.0)));
+
+    frc::Pose3d m_aprilTag21 = frc::Pose3d(
+        units::length::inch_t(209.49),
+        units::length::inch_t(158.50),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_aprilTag22 = frc::Pose3d(
+        units::length::inch_t(193.10),
+        units::length::inch_t(130.17),
+        units::length::inch_t(12.13),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(300.0)));
+
+    // TODO: JW these need to be calculated
+    // Blue Calculated Positions
+    frc::Pose3d m_blueCalcCoralLeftAlliance = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcCoralLeftSidewall = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcCoralRightAlliance = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcCoralRightSidewall = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcRightCage = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcLeftCage = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefCenter = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefA = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefB = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefC = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefD = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefE = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefF = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefG = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefH = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefI = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefJ = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefK = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_blueCalcReefL = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    // Red Calculated Positions
+    frc::Pose3d m_redCalcCoralLeftAlliance = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcCoralLeftSidewall = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcCoralRightAlliance = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcCoralRightSidewall = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcRightCage = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcLeftCage = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefCenter = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefA = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefB = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefC = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefD = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefE = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefF = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefG = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefH = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefI = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefJ = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefK = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
+    frc::Pose3d m_redCalcReefL = frc::Pose3d(
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        units::length::meter_t(0.0),
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
     std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
 };

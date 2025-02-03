@@ -19,7 +19,8 @@
 
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "fielddata/DragonTargetFinder.h" #include "chassis/states/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "fielddata/FieldConstants.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Transform3d.h"
@@ -243,6 +244,7 @@ SwerveChassis *DragonTargetFinder::GetChassis()
 
 int DragonTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
 {
+    /** TODO JW come back to
     if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::kBlue)
     {
         auto itr = blueMap.find(item);
@@ -259,6 +261,7 @@ int DragonTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
             return itr->second;
         }
     }
+    **/
     return -1;
 }
 
