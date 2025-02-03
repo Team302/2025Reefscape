@@ -12,35 +12,19 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include "FieldConstants.h"
 
-FieldConstants *FieldConstants::m_instance = nullptr;
-FieldConstants *FieldConstants::GetInstance()
-{
-    if (FieldConstants::m_instance == nullptr)
-    {
-        FieldConstants::m_instance = new FieldConstants();
-    }
-    return FieldConstants::m_instance;
-}
+#pragma once
+#include "chassis/DragonVisionPoseEstimatorStruct.h"
 
-FieldConstants::FieldConstants()
+class DragonVisionPoseEstimator
 {
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CENTER_CAGE] = m_BlueCenterCage;
-    fieldConstantsPoseMap[BLUE_PROCESSOR] = m_BlueProcessor;
-    fieldConstantsPoseMap[BLUE_RIGHT_CAGE] = m_BlueRightCage;
-    fieldConstantsPoseMap[BLUE_LEFT_CAGE] = m_BlueLeftCage;
-    fieldConstantsPoseMap[BLUE_CORAL_STATION] = m_BlueCoralStation;
-    fieldConstantsPoseMap[BLUE_REEF] = m_BlueReef;
-    fieldConstantsPoseMap[RED_PROCESSOR] = m_RedProcessor;
-    fieldConstantsPoseMap[RED_CENTER_CAGE] = m_RedCenterCage;
-    fieldConstantsPoseMap[RED_LEFT_CAGE] = m_RedLeftCage;
-    fieldConstantsPoseMap[RED_RIGHT_CAGE] = m_RedRightCage;
-    fieldConstantsPoseMap[RED_REEF] = m_RedReef;
-    fieldConstantsPoseMap[RED_CORAL_STATION] = m_RedCoralStation;
-}
-frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
-{
-    frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
-    return Pose3d;
-}
+public:
+    DragonVisionPoseEstimator();
+    ~DragonVisionPoseEstimator() = default;
+
+    virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
+
+private:
+    DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;
+    DragonVisionPoseEstimator &operator=(const DragonVisionPoseEstimator &) = delete;
+};

@@ -41,17 +41,25 @@ public:
 
     enum VISION_ELEMENT
     {
-        LAUNCHER_NOTE,
-        PLACER_NOTE,
-        NOTE,
+        ALGAE,
+        CAGE,
+        CORAL,
+        CORAL_STATION,
+        PROCESSOR,
+        REEF,
+        // 2024 old elements
         SPEAKER,
-        AMP,
+        NOTE,
         STAGE,
+        RED_LEFT_STAGE,
+        RED_RIGHT_STAGE,
+        RED_CENTER_STAGE,
+        BLUE_LEFT_STAGE,
+        BLUE_RIGHT_STAGE,
+        BLUE_CENTER_STAGE,
         LEFT_STAGE,
         RIGHT_STAGE,
         CENTER_STAGE,
-        SOURCE,
-        REEF,
         NEAREST_APRILTAG
     };
 
@@ -114,10 +122,10 @@ private:
     DragonVision();
     ~DragonVision() = default;
 
-    std::optional<VisionData> GetVisionDataFromNote(VISION_ELEMENT element);
+    std::optional<VisionData> GetVisionDataFromAlgae(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataFromElement(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataToNearestTag();
-    std::optional<VisionData> GetVisionDataToNearestStageTag(VISION_ELEMENT element);
+    std::optional<VisionData> GetVisionDataToNearestReefTag(VISION_ELEMENT element);
 
     std::optional<VisionData> MultiTagToElement(frc::Pose3d elementPose);
     std::optional<VisionData> SingleTagToElement(frc::Pose3d elementPose, int idToSearch);

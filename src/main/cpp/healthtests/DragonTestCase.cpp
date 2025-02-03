@@ -13,8 +13,8 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "DragonTestCase.h"
-#include "DragonTestSuiteManager.h"
+#include "healthtests/DragonTestCase.h"
+#include "healthtests/DragonTestSuiteManager.h"
 
 DragonTestCase::DragonTestCase(string testSuiteName, string testCaseName) : m_testCaseName(testCaseName)
 {

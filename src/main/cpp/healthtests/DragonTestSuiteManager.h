@@ -12,35 +12,39 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include "FieldConstants.h"
 
-FieldConstants *FieldConstants::m_instance = nullptr;
-FieldConstants *FieldConstants::GetInstance()
-{
-    if (FieldConstants::m_instance == nullptr)
-    {
-        FieldConstants::m_instance = new FieldConstants();
-    }
-    return FieldConstants::m_instance;
-}
+#pragma once
+#include <map>
+#include <optional>
+#include <string>
+#include <vector>
 
-FieldConstants::FieldConstants()
+#include "healthtests/DragonTestCase.h"
+
+using std::string;
+
+class DragonTestSuiteManager
 {
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CENTER_CAGE] = m_BlueCenterCage;
-    fieldConstantsPoseMap[BLUE_PROCESSOR] = m_BlueProcessor;
-    fieldConstantsPoseMap[BLUE_RIGHT_CAGE] = m_BlueRightCage;
-    fieldConstantsPoseMap[BLUE_LEFT_CAGE] = m_BlueLeftCage;
-    fieldConstantsPoseMap[BLUE_CORAL_STATION] = m_BlueCoralStation;
-    fieldConstantsPoseMap[BLUE_REEF] = m_BlueReef;
-    fieldConstantsPoseMap[RED_PROCESSOR] = m_RedProcessor;
-    fieldConstantsPoseMap[RED_CENTER_CAGE] = m_RedCenterCage;
-    fieldConstantsPoseMap[RED_LEFT_CAGE] = m_RedLeftCage;
-    fieldConstantsPoseMap[RED_RIGHT_CAGE] = m_RedRightCage;
-    fieldConstantsPoseMap[RED_REEF] = m_RedReef;
-    fieldConstantsPoseMap[RED_CORAL_STATION] = m_RedCoralStation;
-}
-frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
-{
-    frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
-    return Pose3d;
-}
+public:
+	static DragonTestSuiteManager *GetInstance();
+	void RegisterTest(string testSuiteName, DragonTestCase *testCase);
+	void Init();
+	void Run();
+
+private:
+	DragonTestSuiteManager();
+
+	// stores mapping between test suite name and associated test cases
+	std::map<string, std::vector<DragonTestCase *>> m_testSuites;
+	int m_currTestSlot;
+	DragonTestCase *m_currTest;
+
+	// list of all test suite names
+	std::vector<string> m_testSuiteNames;
+	// index of the current test suite name in m_testSuiteNames
+	int m_currTestSuiteIndex;
+
+	static DragonTestSuiteManager *m_instance;
+
+	void GetNextTest();
+};
