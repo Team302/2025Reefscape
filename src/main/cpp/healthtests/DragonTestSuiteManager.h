@@ -13,10 +13,38 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "DragonTestCase.h"
-#include "DragonTestSuiteManager.h"
+#pragma once
+#include <map>
+#include <optional>
+#include <string>
+#include <vector>
 
-DragonTestCase::DragonTestCase(string testSuiteName, string testCaseName) : m_testCaseName(testCaseName)
+#include "healthtests/DragonTestCase.h"
+
+using std::string;
+
+class DragonTestSuiteManager
 {
-    DragonTestSuiteManager::GetInstance()->RegisterTest(testSuiteName, this);
-}
+public:
+	static DragonTestSuiteManager *GetInstance();
+	void RegisterTest(string testSuiteName, DragonTestCase *testCase);
+	void Init();
+	void Run();
+
+private:
+	DragonTestSuiteManager();
+
+	// stores mapping between test suite name and associated test cases
+	std::map<string, std::vector<DragonTestCase *>> m_testSuites;
+	int m_currTestSlot;
+	DragonTestCase *m_currTest;
+
+	// list of all test suite names
+	std::vector<string> m_testSuiteNames;
+	// index of the current test suite name in m_testSuiteNames
+	int m_currTestSuiteIndex;
+
+	static DragonTestSuiteManager *m_instance;
+
+	void GetNextTest();
+};
