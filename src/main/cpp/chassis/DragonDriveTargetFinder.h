@@ -24,6 +24,7 @@
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
 #include "vision/DragonVision.h"
+#include "utils/FieldConstants.h"
 
 class DragonDriveTargetFinder
 {
@@ -65,26 +66,12 @@ private:
     frc::Pose2d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
 
-    // TODO:: Move these to field constants
-    enum AprilTagIDs
-    {
-        BLUE_SOURCE_ONE = 1,
-        BLUE_SOURCE_TWO = 2,
-        RED_SOURCE_ONE = 10,
-        RED_SOURCE_TWO = 9,
-        BLUE_AMP = 6,
-        BLUE_STAGE_LEFT = 15,
-        BLUE_STAGE_CENTER = 14,
-        BLUE_STAGE_RIGHT = 16,
-        RED_AMP = 5,
-        RED_STAGE_LEFT = 11,
-        RED_STAGE_CENTER = 13,
-        RED_STAGE_RIGHT = 12,
-        BLUE_SUBWOOFER = 8,
-        BLUE_SPEAKER = 7,
-        RED_SUBWOOFER = 3,
-        RED_SPEAKER = 4,
-    };
+    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> blueMap = {
+        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_BLUE_SPEAKER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_BLUE_AMP},
+        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
+        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_LEFT},
+        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_RIGHT}};
 
     const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> blueMap = {
         {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::BLUE_SPEAKER},
