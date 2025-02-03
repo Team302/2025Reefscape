@@ -13,7 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "DragonTestSuiteManager.h"
+#include "healthtests/DragonTestSuiteManager.h"
 
 DragonTestSuiteManager *DragonTestSuiteManager::m_instance = nullptr;
 
