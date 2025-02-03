@@ -37,48 +37,48 @@ void RobotStateChangeBroker::Notify(int value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(double value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(units::length::meter_t value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(units::angle::degree_t value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(units::velocity::meters_per_second_t value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(units::angular_velocity::degrees_per_second_t value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }
 void RobotStateChangeBroker::Notify(frc::Pose2d value)
 {
     for (auto subscriber : m_subscribers)
     {
-        subscriber->UpdateSubscriber(m_change, value);
+        subscriber->NotifyStateUpdate(m_change, value);
     }
 }

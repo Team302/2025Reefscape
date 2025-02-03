@@ -263,7 +263,7 @@ void ClimberManager::PushTuningParamsToNT()
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
 	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
 }
-void ClimberManager::UpdateSubscriber(RobotStateChanges::StateChange statechange, int ival)
+void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)
 {
 	if (statechange == RobotStateChanges::StateChange::ClimbModeStatus_Int)
 	{
