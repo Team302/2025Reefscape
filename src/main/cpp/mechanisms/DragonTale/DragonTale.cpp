@@ -59,11 +59,6 @@
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::configs::VoltageConfigs;
@@ -329,104 +324,114 @@ void DragonTale::InitializePRACTICE_BOT9999()
 }
 void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.25);
-	m_Arm->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	VoltageConfigs voltageConfigs{};
-	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
-	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	m_Arm->GetConfigurator().Apply(voltageConfigs);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(120);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.5);
-	m_Arm->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Arm->GetConfigurator().Apply(hwswitch);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::Clockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Arm->GetConfigurator().Apply(motorconfig);
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 17;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 1;
-	fxConfig.Feedback.RotorToSensorRatio = 240;
-	m_Arm->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackRemoteSensorID = 17;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
+	configs.Feedback.SensorToMechanismRatio = 1;
+	configs.Feedback.RotorToSensorRatio = 240;
+
+	/* Retry config apply up to 5 times, report if failure */
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		m_Arm->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
+	}
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
-	m_ElevatorLeader->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	VoltageConfigs voltageConfigs{};
-	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
-	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	m_ElevatorLeader->GetConfigurator().Apply(voltageConfigs);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	m_ElevatorLeader->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = true;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value());
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = true;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_ElevatorLeader->GetConfigurator().Apply(hwswitch);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value());
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_ElevatorLeader->GetConfigurator().Apply(motorconfig);
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 4;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
-	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackRemoteSensorID = 4;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
+	configs.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
+
+	/* Retry config apply up to 5 times, report if failure */
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		m_ElevatorLeader->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
+	}
 }
 
 void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
@@ -447,96 +452,107 @@ void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
 
 void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
-	m_Algae->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	VoltageConfigs voltageConfigs{};
-	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
-	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	m_Algae->GetConfigurator().Apply(voltageConfigs);
-	OpenLoopRampsConfigs rampConfigs{};
-	rampConfigs.VoltageOpenLoopRampPeriod = units::time::second_t(0);
-	m_Algae->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = false;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ReverseLimitEnable = false;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Algae->GetConfigurator().Apply(hwswitch);
+	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Algae->GetConfigurator().Apply(motorconfig);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	fxConfig.Feedback.SensorToMechanismRatio = 1;
-	m_Algae->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
+
+	/* Retry config apply up to 5 times, report if failure */
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		m_Algae->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
+	}
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(40);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
-	m_ElevatorFollower->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	VoltageConfigs voltageConfigs{};
-	voltageConfigs.PeakForwardVoltage = units::voltage::volt_t(11.0);
-	voltageConfigs.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	m_ElevatorFollower->GetConfigurator().Apply(voltageConfigs);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	m_ElevatorFollower->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = true;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = true;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_ElevatorFollower->GetConfigurator().Apply(hwswitch);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::Clockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_ElevatorFollower->GetConfigurator().Apply(motorconfig);
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	/* Retry config apply up to 5 times, report if failure */
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		m_ElevatorFollower->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
+	}
 	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
