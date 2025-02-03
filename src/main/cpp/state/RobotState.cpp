@@ -181,7 +181,7 @@ void RobotState::PublishScoringMode(TeleopControl *controller)
     {
         if (m_scoringModeButtonReleased)
         {
-            m_scoringMode = (m_scoringMode == RobotStateChanges::Coral) ? RobotStateChanges::Algae : RobotStateChanges::Coral;
+            m_scoringMode = (m_scoringMode == RobotStateChanges::ScoringMode::Coral) ? RobotStateChanges::ScoringMode::Algae : RobotStateChanges::ScoringMode::Coral;
             PublishStateChange(RobotStateChanges::DesiredScoringMode_Int, m_scoringMode);
         }
     }
