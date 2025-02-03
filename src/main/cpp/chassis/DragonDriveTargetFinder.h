@@ -23,8 +23,8 @@
 #include "chassis/SwerveChassis.h"
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
-#include "vision/DragonVision.h"
 #include "utils/FieldConstants.h"
+#include "vision/DragonVision.h"
 
 class DragonDriveTargetFinder
 {
@@ -68,22 +68,15 @@ private:
 
     const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> blueMap = {
         {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_BLUE_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
         {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_LEFT},
-        {DragonVision::VISION_ELEMENT::CAGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_RIGHT}};
+        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER}};
 
-    const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> blueMap = {
-        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, AprilTagIDs::BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::BARGE, AprilTagIDs::BLUE_STAGE_CENTER}};
-
-    const std::map<DragonVision::VISION_ELEMENT, AprilTagIDs> redMap = {
-        {DragonVision::VISION_ELEMENT::REEF, AprilTagIDs::RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, AprilTagIDs::RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, AprilTagIDs::RED_AMP},
-        {DragonVision::VISION_ELEMENT::BARGE, AprilTagIDs::RED_STAGE_CENTER}};
+    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> redMap = {
+        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_RED_SPEAKER}};
 
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };
