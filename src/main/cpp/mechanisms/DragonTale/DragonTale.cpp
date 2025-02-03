@@ -712,7 +712,7 @@ ControlData *DragonTale::GetControlData(string name)
 Hand-Coded Things are here :)
 
 ===================================================================================================================*/
-void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int value)
+void DragonTale::UpdateSubscriber(RobotStateChanges::StateChange change, int value)
 {
 	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);

@@ -29,11 +29,11 @@ public:
     IRobotStateChangeSubscriber() = default;
     ~IRobotStateChangeSubscriber() = default;
 
-    virtual void Update(RobotStateChanges::StateChange change, int value) {}
-    virtual void Update(RobotStateChanges::StateChange change, double value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::length::meter_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
-    virtual void Update(RobotStateChanges::StateChange change, frc::Pose2d value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, int value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, double value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, units::length::meter_t value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, units::angle::degree_t value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
+    virtual void UpdateSubscriber(RobotStateChanges::StateChange change, frc::Pose2d value) {}
 };

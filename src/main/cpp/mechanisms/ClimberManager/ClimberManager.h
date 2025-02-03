@@ -80,7 +80,7 @@ public:
 	void RunCommonTasks() override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
-	void UpdateClimbMode(RobotStateChanges::StateChange stchange, int ival);
+	void UpdateSubscriber(RobotStateChanges::StateChange stchange, int ival);
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 

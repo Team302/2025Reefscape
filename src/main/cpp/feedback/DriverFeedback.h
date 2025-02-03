@@ -30,7 +30,7 @@ public:
 
     void UpdateCompressorState();
 
-    void Update(RobotStateChanges::StateChange change, int value) override;
+    void UpdateSubscriber(RobotStateChanges::StateChange change, int value) override;
 
 private:
     void UpdateRumble();

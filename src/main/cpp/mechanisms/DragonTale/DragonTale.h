@@ -149,7 +149,7 @@ public:
 
 	void ManualControl();
 
-	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
+	void UpdateSubscriber(RobotStateChanges::StateChange change, int value);
 
 	units::length::inch_t GetAlgaeHeight();
 
