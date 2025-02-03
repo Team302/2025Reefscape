@@ -87,7 +87,7 @@ void DragonVision::AddLimelight(DragonLimelight *camera, DragonLimelight::CAMERA
 
 std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 {
-	if (element == VISION_ELEMENT::ALGAE) 
+	if (element == VISION_ELEMENT::ALGAE)
 	{
 		return GetVisionDataFromAlgae(element);
 	}
@@ -99,7 +99,11 @@ std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 	{
 		return GetVisionDataToNearestReefTag(element);
 	}
-	else 
+	else if (element == VISION_ELEMENT::BARGE)
+	{
+		return GetVisionDataToNearestReefTag(element);
+	}
+	else
 	{
 		return GetVisionDataFromElement(element);
 	}
@@ -111,11 +115,15 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestReefTag(VISION_ELE
 {
 	std::optional<VisionData> limelightData = std::nullopt;
 
-	
 	if (m_dragonLimelightMap[DragonLimelight::CAMERA_USAGE::FRONT_CAMERA] != nullptr)
 	{
 		limelightData = m_dragonLimelightMap[DragonLimelight::CAMERA_USAGE::FRONT_CAMERA]->GetDataToNearestAprilTag();
-	} 
+	}
+
+	if (!limelightData.has_value())
+	{
+		return std::nullopt;
+	}
 
 	// get alliance color from FMSData
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
@@ -125,66 +133,100 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestReefTag(VISION_ELE
 	switch (element)
 	{
 	case VISION_ELEMENT::REEF:
-		if (allianceColor == frc::DriverStation::Alliance::kBlue)
-		{
-			// TODO: add tag ids for blue alliance reef
-			tagIdsToCheck.emplace_back(14);
-			tagIdsToCheck.emplace_back(15);
-			tagIdsToCheck.emplace_back(16);
-		}
-		else
-		{
-			// TODO: add tag ids for red alliance reef
-			tagIdsToCheck.emplace_back(11);
-			tagIdsToCheck.emplace_back(12);
-			tagIdsToCheck.emplace_back(13);
-		}
+		tagIdsToCheck = GetReefTags(allianceColor);
 		break;
-	case VISION_ELEMENT::LEFT_STAGE:
-		if (allianceColor == frc::DriverStation::Alliance::kBlue)
-		{
-			tagIdsToCheck.emplace_back(15);
-		}
-		else
-		{
-			tagIdsToCheck.emplace_back(11);
-		}
+
+	case VISION_ELEMENT::PROCESSOR:
+		tagIdsToCheck = GetProcessorTags(allianceColor);
 		break;
-	case VISION_ELEMENT::RIGHT_STAGE:
-		if (allianceColor == frc::DriverStation::Alliance::kBlue)
-		{
-			tagIdsToCheck.emplace_back(16);
-		}
-		else
-		{
-			tagIdsToCheck.emplace_back(12);
-		}
+
+	case VISION_ELEMENT::CORAL_STATION:
+		tagIdsToCheck = GetCoralStationsTags(allianceColor);
 		break;
-	case VISION_ELEMENT::CENTER_STAGE:
-		if (allianceColor == frc::DriverStation::Alliance::kBlue)
-		{
-			tagIdsToCheck.emplace_back(14);
-		}
-		else
-		{
-			tagIdsToCheck.emplace_back(13);
-		}
+
+	case VISION_ELEMENT::BARGE:
+		tagIdsToCheck = GetBargeTags(allianceColor);
 		break;
+
 	default:
 		return std::nullopt;
 		break;
 	}
 
-	if (limelightData)
+	if (std::find(tagIdsToCheck.begin(), tagIdsToCheck.end(), limelightData.value().tagId) != tagIdsToCheck.end())
 	{
-		if (std::find(tagIdsToCheck.begin(), tagIdsToCheck.end(), limelightData.value().tagId) != tagIdsToCheck.end())
-		{
-			return limelightData;
-		}
+		return limelightData;
 	}
 
 	// tag doesnt matter or no tag
 	return std::nullopt;
+}
+
+std::vector<int> DragonVision::GetReefTags(frc::DriverStation::Alliance allianceColor) const
+{
+	std::vector<int> tagIdsToCheck = {};
+	if (allianceColor == frc::DriverStation::Alliance::kBlue)
+	{
+		tagIdsToCheck.emplace_back(17);
+		tagIdsToCheck.emplace_back(18);
+		tagIdsToCheck.emplace_back(19);
+		tagIdsToCheck.emplace_back(20);
+		tagIdsToCheck.emplace_back(21);
+		tagIdsToCheck.emplace_back(22);
+	}
+	else
+	{
+		tagIdsToCheck.emplace_back(6);
+		tagIdsToCheck.emplace_back(7);
+		tagIdsToCheck.emplace_back(8);
+		tagIdsToCheck.emplace_back(9);
+		tagIdsToCheck.emplace_back(10);
+		tagIdsToCheck.emplace_back(11);
+	}
+	return tagIdsToCheck;
+}
+std::vector<int> DragonVision::GetCoralStationsTags(frc::DriverStation::Alliance allianceColor) const
+{
+	std::vector<int> tagIdsToCheck = {};
+	if (allianceColor == frc::DriverStation::Alliance::kBlue)
+	{
+		tagIdsToCheck.emplace_back(12);
+		tagIdsToCheck.emplace_back(13);
+	}
+	else
+	{
+		tagIdsToCheck.emplace_back(1);
+		tagIdsToCheck.emplace_back(2);
+	}
+	return tagIdsToCheck;
+}
+std::vector<int> DragonVision::GetProcessorTags(frc::DriverStation::Alliance allianceColor) const
+{
+	std::vector<int> tagIdsToCheck = {};
+	if (allianceColor == frc::DriverStation::Alliance::kBlue)
+	{
+		tagIdsToCheck.emplace_back(16);
+	}
+	else
+	{
+		tagIdsToCheck.emplace_back(3);
+	}
+	return tagIdsToCheck;
+}
+std::vector<int> DragonVision::GetBargeTags(frc::DriverStation::Alliance allianceColor) const
+{
+	std::vector<int> tagIdsToCheck = {};
+	if (allianceColor == frc::DriverStation::Alliance::kBlue)
+	{
+		tagIdsToCheck.emplace_back(4);
+		tagIdsToCheck.emplace_back(14);
+	}
+	else
+	{
+		tagIdsToCheck.emplace_back(5);
+		tagIdsToCheck.emplace_back(15);
+	}
+	return tagIdsToCheck;
 }
 
 std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
@@ -194,7 +236,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 	std::optional<VisionData> frontData = m_dragonLimelightMap[DragonLimelight::CAMERA_USAGE::FRONT_CAMERA]->GetDataToNearestAprilTag();
 	std::optional<VisionData> backData = m_dragonLimelightMap[DragonLimelight::CAMERA_USAGE::BACK_CAMERA]->GetDataToNearestAprilTag();
 
-	//TODO: determine if both cameras are detecting april tags
+	// TODO: determine if both cameras are detecting april tags
 	if ((!frontData) && (!backData)) // if we see no april tags
 	{
 		return std::nullopt;
@@ -205,7 +247,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 		units::length::inch_t frontDistance = frontData.value().translationToTarget.X();
 		units::length::inch_t backDistance = backData.value().translationToTarget.X();
 
-		limelightData = units::math::abs(frontDistance) <= units::math::abs(backDistance) ? frontData : backData; 
+		limelightData = units::math::abs(frontDistance) <= units::math::abs(backDistance) ? frontData : backData;
 	}
 	else // one camera sees an april tag
 	{
@@ -329,17 +371,22 @@ std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT 
 	int idToSearch = -1;
 	switch (element)
 	{
+		// TODO: JW need to handle multiple tags
 	case VISION_ELEMENT::REEF:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF)} /*load red speaker*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF)}; /*load blue speaker*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)}; /*load blue reef*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;																																																											   // should be red 6-11, blue 17-22
 		break;
 	case VISION_ELEMENT::PROCESSOR:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR)} /*load red amp*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR)}; /*load blue amp*/
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR)} /*load red processor*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR)}; /*load blue processor*/
 		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;
 		break;
 	case VISION_ELEMENT::CORAL_STATION:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION)} /*load red source*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION)}; /*load blue source*/
-
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL)} /*load red coral station*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL)}; /*load blue coral station*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																																						// should be red 1 or 2, blue 12 or 13
+		break;
+	case VISION_ELEMENT::BARGE:
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT)} /*load red barge*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT)}; /*load blue barge*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																												// should be red 5 or 15, blue 4 or 14
 		break;
 	default:
 		return std::nullopt;

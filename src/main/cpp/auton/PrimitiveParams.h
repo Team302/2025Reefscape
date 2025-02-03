@@ -38,8 +38,10 @@ public:
     enum VISION_ALIGNMENT
     {
         UNKNOWN = -1,
-        NOTE = DragonVision::VISION_ELEMENT::NOTE,
-        SPEAKER = DragonVision::VISION_ELEMENT::SPEAKER
+        ALGAE = DragonVision::VISION_ELEMENT::ALGAE,
+        CORAL_STATION = DragonVision::VISION_ELEMENT::CORAL_STATION,
+        REEF = DragonVision::VISION_ELEMENT::REEF,
+        PROCESSOR = DragonVision::VISION_ELEMENT::PROCESSOR
     };
     // @ADDMECH add parameter for your mechanism state
     PrimitiveParams(PRIMITIVE_IDENTIFIER id,
@@ -83,9 +85,6 @@ public:
 
     // bool IsNoteStateChanging() const { return m_changeNoteState; }
     // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
-
-    // bool IsClimberStateChanging() const { return m_changeClimberState; }
-    // ClimberManagerGen::STATE_NAMES GetClimberState() const { return m_climberState; }
 
     // Setters
     void SetPathName(std::string path)

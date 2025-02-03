@@ -37,6 +37,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																			m_time(time),
 																			m_headingOption(headingOpt),
 																			m_heading(heading),
+																			m_delayOption(delayOption),
 																			m_pathName(pathName),
 																			m_choreoTrajectoryName(choreoTrajectoryName),
 																			m_pathGainsType(pathgainstype),
@@ -46,8 +47,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																			// m_changeClimberState(climberStateChanged),
 																			// m_climberState(climberState),
 																			m_zones(zones),
-																			m_pathUpdateOption(updatePathOption),
-																			m_delayOption(delayOption)
+																			m_pathUpdateOption(updatePathOption)
 
 // @ADDMECH initilize state mgr attribute
 {

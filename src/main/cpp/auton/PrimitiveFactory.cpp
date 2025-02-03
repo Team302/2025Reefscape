@@ -15,17 +15,17 @@
 //====================================================================================================================================================
 
 // Team 302 includes
-#include "auton/PrimitiveEnums.h"
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParser.h"
-#include "auton/drivePrimitives/VisionDrivePrimitive.h"
-#include "auton/drivePrimitives/DriveStop.h"
-#include "auton/drivePrimitives/DrivePathPlanner.h"
 #include "auton/drivePrimitives/DriveHoldPosition.h"
+#include "auton/drivePrimitives/DrivePathPlanner.h"
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionPathPlanner.h"
 #include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
-#include "auton/drivePrimitives/DriveStopDelay.h"
+#include "auton/drivePrimitives/VisionDrivePrimitive.h"
+#include "auton/PrimitiveEnums.h"
+#include "auton/PrimitiveFactory.h"
+#include "auton/PrimitiveParser.h"
 
 PrimitiveFactory *PrimitiveFactory::m_instance = nullptr;
 
@@ -49,7 +49,7 @@ PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
 
 PrimitiveFactory::~PrimitiveFactory()
 {
-    PrimitiveFactory::m_instance = nullptr; // todo: do we have to delete this pointer?
+    PrimitiveFactory::m_instance = nullptr;
 }
 
 IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)

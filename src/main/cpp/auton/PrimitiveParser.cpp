@@ -16,13 +16,13 @@
 #include <map>
 #include <string>
 
-#include "frc/Filesystem.h"
-
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
 #include "chassis/ChassisOptionEnums.h"
+#include "frc/Filesystem.h"
+
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
@@ -61,16 +61,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     pathGainsMap["LongPath"] = ChassisOptionEnums::PathGainsType::LONG;
     pathGainsMap["ShortPath"] = ChassisOptionEnums::PathGainsType::SHORT;
 
-    map<string, PrimitiveParams::VISION_ALIGNMENT> xmlStringToVisionAlignmentEnumMap{
-        {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
-        {"NOTE", PrimitiveParams::VISION_ALIGNMENT::NOTE},
-        {"SPEAKER", PrimitiveParams::VISION_ALIGNMENT::SPEAKER},
-    };
+    map<string, PrimitiveParams::VISION_ALIGNMENT>
+        xmlStringToVisionAlignmentEnumMap{
+            {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
+            {"ALGAE", PrimitiveParams::VISION_ALIGNMENT::ALGAE},
+            {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
+            {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
 
+    /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
         {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
         {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
     };
+    **/
 
     map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
         {"START", DriveStopDelay::DelayOption::START},
@@ -191,6 +194,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                         }
                         else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                         {
+                            /** TODO come back to this
                             auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
                             if (updateHeadingItr != pathUpdateOptionsMap.end())
                             {
@@ -201,6 +205,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
                                 hasError = true;
                             }
+                            **/
                         }
                         else if (strcmp(attr.name(), "delayOption") == 0)
                         {
@@ -268,6 +273,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                         **/
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
+                            /** TODO come back to this
                             auto visionAlignmentItr = xmlStringToVisionAlignmentEnumMap.find(attr.value());
                             if (visionAlignmentItr != xmlStringToVisionAlignmentEnumMap.end())
                             {
@@ -278,6 +284,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid attribute"), attr.name());
                                 hasError = true;
                             }
+                            **/
                         }
                     }
 

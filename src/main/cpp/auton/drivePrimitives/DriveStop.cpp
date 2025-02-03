@@ -46,9 +46,11 @@ using namespace frc;
 /// @brief constructor that creates/initializes the object
 DriveStop::DriveStop() : IPrimitive(),
 						 m_maxTime(units::time::second_t(0.0)),
+						 m_timer(make_unique<Timer>()),
 						 m_currentTime(0.0),
 						 m_chassis(nullptr),
-						 m_timer(make_unique<Timer>())
+						 m_heading(0.0),
+						 m_headingOption(ChassisOptionEnums::HeadingOption::IGNORE)
 {
 	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
 	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
