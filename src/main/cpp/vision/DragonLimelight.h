@@ -32,6 +32,7 @@
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
+#include "utils/logging/DragonDataLogger.h"
 
 // Third Party Includes
 
@@ -111,8 +112,7 @@ public:
         units::angle::degree_t roll,           /// <I> - Roll of camera
         LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
         LED_MODE ledMode,
-        CAM_MODE camMode
-        );
+        CAM_MODE camMode);
 
     ///-----------------------------------------------------------------------------------
     /// Method:         ~DragonLimelight (destructor)
@@ -163,7 +163,7 @@ public:
     units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
     std::string GetCameraName() const { return m_cameraName; }
 
-    void PeriodicCacheData();
+    void PeriodicCacheData() override;
 
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
@@ -180,6 +180,10 @@ protected:
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
     int m_tagid;
+    bool m_megatag2PosBool = false;
+    bool m_megatag1PosBool = false;
+    VisionPose m_megatag2Pos;
+    VisionPose m_megatag1Pos;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;

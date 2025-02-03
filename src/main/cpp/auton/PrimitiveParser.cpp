@@ -16,13 +16,13 @@
 #include <map>
 #include <string>
 
-#include "frc/Filesystem.h"
-
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
 #include "chassis/ChassisOptionEnums.h"
+#include "frc/Filesystem.h"
+
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
@@ -48,6 +48,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER_NO_VISION"] = RESET_POSITION_PATH_PLANNER_NO_VISION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
+    primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
 
     map<string, ChassisOptionEnums::HeadingOption> headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
@@ -60,15 +61,24 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     pathGainsMap["LongPath"] = ChassisOptionEnums::PathGainsType::LONG;
     pathGainsMap["ShortPath"] = ChassisOptionEnums::PathGainsType::SHORT;
 
-    map<string, PrimitiveParams::VISION_ALIGNMENT> xmlStringToVisionAlignmentEnumMap{
-        {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
-        {"NOTE", PrimitiveParams::VISION_ALIGNMENT::NOTE},
-        {"SPEAKER", PrimitiveParams::VISION_ALIGNMENT::SPEAKER},
-    };
+    map<string, PrimitiveParams::VISION_ALIGNMENT>
+        xmlStringToVisionAlignmentEnumMap{
+            {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
+            {"ALGAE", PrimitiveParams::VISION_ALIGNMENT::ALGAE},
+            {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
+            {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
 
+    /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
         {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
         {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
+    };
+    **/
+
+    map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
+        {"START", DriveStopDelay::DelayOption::START},
+        {"REEF", DriveStopDelay::DelayOption::REEF},
+        {"CORAL_STATION", DriveStopDelay::DelayOption::CORAL_STATION},
     };
 
     xml_document doc;
@@ -142,6 +152,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
                     ZoneParamsVector zones;
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
+                    DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());
@@ -183,6 +194,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                         }
                         else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                         {
+                            /** TODO come back to this
                             auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
                             if (updateHeadingItr != pathUpdateOptionsMap.end())
                             {
@@ -191,6 +203,20 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             else
                             {
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
+                                hasError = true;
+                            }
+                            **/
+                        }
+                        else if (strcmp(attr.name(), "delayOption") == 0)
+                        {
+                            auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
+                            if (delayOptionItr != pathDelayOptionsMap.end())
+                            {
+                                pathDelayOption = delayOptionItr->second;
+                            }
+                            else
+                            {
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
                                 hasError = true;
                             }
                         }
@@ -247,6 +273,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                         **/
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
+                            /** TODO come back to this
                             auto visionAlignmentItr = xmlStringToVisionAlignmentEnumMap.find(attr.value());
                             if (visionAlignmentItr != xmlStringToVisionAlignmentEnumMap.end())
                             {
@@ -257,6 +284,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid attribute"), attr.name());
                                 hasError = true;
                             }
+                            **/
                         }
                     }
 
@@ -292,7 +320,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      // noteStates,
                                                                      // changeClimberState,
                                                                      // climberState,
-                                                                     updateHeadingOption));
+                                                                     updateHeadingOption,
+                                                                     pathDelayOption));
                     }
                     else
                     {

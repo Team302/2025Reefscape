@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -12,35 +13,47 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include "FieldConstants.h"
 
-FieldConstants *FieldConstants::m_instance = nullptr;
-FieldConstants *FieldConstants::GetInstance()
+#pragma once
+
+// C++ Includes
+#include <memory>
+
+// FRC includes
+#include "units/time.h"
+
+// Team 302 includes
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/AutonSelector.h"
+
+// Third Party Includes
+
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
+
+class DriveStopDelay : public DriveStop
 {
-    if (FieldConstants::m_instance == nullptr)
+public:
+    enum DelayOption
     {
-        FieldConstants::m_instance = new FieldConstants();
-    }
-    return FieldConstants::m_instance;
-}
+        START,
+        REEF,
+        CORAL_STATION,
+        MAX_OPTIONS
+    };
+    /// @brief constructor that creates/initializes the object
+    DriveStopDelay();
 
-FieldConstants::FieldConstants()
-{
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CENTER_STAGE] = m_BlueCenterStage;
-    fieldConstantsPoseMap[BLUE_AMP] = m_BlueAmp;
-    fieldConstantsPoseMap[BLUE_RIGHT_STAGE] = m_BlueRightStage;
-    fieldConstantsPoseMap[BLUE_LEFT_STAGE] = m_BlueLeftStage;
-    fieldConstantsPoseMap[BLUE_SOURCE] = m_BlueSource;
-    fieldConstantsPoseMap[BLUE_SPEAKER] = m_BlueSpeaker;
-    fieldConstantsPoseMap[RED_AMP] = m_RedAmp;
-    fieldConstantsPoseMap[RED_CENTER_STAGE] = m_RedCenterStage;
-    fieldConstantsPoseMap[RED_LEFT_STAGE] = m_RedLeftStage;
-    fieldConstantsPoseMap[RED_RIGHT_STAGE] = m_RedRightStage;
-    fieldConstantsPoseMap[RED_SPEAKER] = m_RedSpeaker;
-    fieldConstantsPoseMap[RED_SOURCE] = m_RedSource;
-}
-frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
-{
-    frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
-    return Pose3d;
-}
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopDelay() = default;
+
+    /// @brief check if the end condition has been met
+    /// @return bool true means the end condition was reached, false means it hasn't
+    bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
+
+private:
+    units::time::second_t m_delayTime;
+};

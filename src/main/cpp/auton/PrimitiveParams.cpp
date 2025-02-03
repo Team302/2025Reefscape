@@ -32,20 +32,22 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 								 // noteManagerGen::STATE_NAMES noteState,
 								 // bool climberStateChanged,
 								 // ClimberManagerGen::STATE_NAMES climberState,
-								 ChassisOptionEnums::PathUpdateOption updatePathOption) : m_id(id), // Primitive ID
-																						  m_time(time),
-																						  m_headingOption(headingOpt),
-																						  m_heading(heading),
-																						  m_pathName(pathName),
-																						  m_choreoTrajectoryName(choreoTrajectoryName),
-																						  m_pathGainsType(pathgainstype),
-																						  m_visionAlignment(visionAlignment),
-																						  // m_changeNoteState(noteStateChanged),
-																						  // m_noteState(noteState),
-																						  // m_changeClimberState(climberStateChanged),
-																						  // m_climberState(climberState),
-																						  m_zones(zones),
-																						  m_pathUpdateOption(updatePathOption)
+								 ChassisOptionEnums::PathUpdateOption updatePathOption,
+								 DriveStopDelay::DelayOption delayOption) : m_id(id), // Primitive ID
+																			m_time(time),
+																			m_headingOption(headingOpt),
+																			m_heading(heading),
+																			m_delayOption(delayOption),
+																			m_pathName(pathName),
+																			m_choreoTrajectoryName(choreoTrajectoryName),
+																			m_pathGainsType(pathgainstype),
+																			m_visionAlignment(visionAlignment),
+																			// m_changeNoteState(noteStateChanged),
+																			// m_noteState(noteState),
+																			// m_changeClimberState(climberStateChanged),
+																			// m_climberState(climberState),
+																			m_zones(zones),
+																			m_pathUpdateOption(updatePathOption)
 
 // @ADDMECH initilize state mgr attribute
 {

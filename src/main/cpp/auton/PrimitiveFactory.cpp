@@ -15,16 +15,17 @@
 //====================================================================================================================================================
 
 // Team 302 includes
-#include "auton/PrimitiveEnums.h"
-#include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParser.h"
-#include "auton/drivePrimitives/VisionDrivePrimitive.h"
-#include "auton/drivePrimitives/DriveStop.h"
-#include "auton/drivePrimitives/DrivePathPlanner.h"
 #include "auton/drivePrimitives/DriveHoldPosition.h"
+#include "auton/drivePrimitives/DrivePathPlanner.h"
+#include "auton/drivePrimitives/DriveStop.h"
+#include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionPathPlanner.h"
 #include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
+#include "auton/drivePrimitives/VisionDrivePrimitive.h"
+#include "auton/PrimitiveEnums.h"
+#include "auton/PrimitiveFactory.h"
+#include "auton/PrimitiveParser.h"
 
 PrimitiveFactory *PrimitiveFactory::m_instance = nullptr;
 
@@ -38,15 +39,17 @@ PrimitiveFactory *PrimitiveFactory::GetInstance()
 }
 
 PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
+                                       m_DriveStopDelay(nullptr),
                                        m_DriveHoldPosition(nullptr),
                                        m_resetPositionPathPlanner(nullptr),
-                                       m_resetPositionPathPlannerNoVision(nullptr), m_drivePathPlanner(nullptr)
+                                       m_resetPositionPathPlannerNoVision(nullptr),
+                                       m_drivePathPlanner(nullptr)
 {
 }
 
 PrimitiveFactory::~PrimitiveFactory()
 {
-    PrimitiveFactory::m_instance = nullptr; // todo: do we have to delete this pointer?
+    PrimitiveFactory::m_instance = nullptr;
 }
 
 IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
@@ -60,6 +63,13 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
             m_DriveStop = new DriveStop();
         }
         primitive = m_DriveStop;
+        break;
+    case DO_NOTHING_DELAY:
+        if (m_DriveStopDelay == nullptr)
+        {
+            m_DriveStopDelay = new DriveStopDelay();
+        }
+        primitive = m_DriveStopDelay;
         break;
 
     case HOLD_POSITION:

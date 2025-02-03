@@ -29,7 +29,7 @@
 #include "vision/DragonLimelight.h"
 
 #include "configs/RobotElementNames.h"
-#include "utils/FieldConstants.h"
+#include "fielddata/FieldConstants.h"
 
 #include "units/angular_velocity.h"
 class DragonVision
@@ -41,16 +41,11 @@ public:
 
     enum VISION_ELEMENT
     {
-        LAUNCHER_NOTE,
-        PLACER_NOTE,
-        NOTE,
-        SPEAKER,
-        AMP,
-        STAGE,
-        LEFT_STAGE,
-        RIGHT_STAGE,
-        CENTER_STAGE,
-        SOURCE,
+        ALGAE,
+        BARGE,
+        CORAL,
+        CORAL_STATION,
+        PROCESSOR,
         REEF,
         NEAREST_APRILTAG
     };
@@ -114,10 +109,15 @@ private:
     DragonVision();
     ~DragonVision() = default;
 
-    std::optional<VisionData> GetVisionDataFromNote(VISION_ELEMENT element);
+    std::optional<VisionData> GetVisionDataFromAlgae(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataFromElement(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataToNearestTag();
-    std::optional<VisionData> GetVisionDataToNearestStageTag(VISION_ELEMENT element);
+    std::vector<int> GetReefTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetCoralStationsTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetProcessorTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetBargeTags(frc::DriverStation::Alliance allianceColor) const;
+
+    std::optional<VisionData> GetVisionDataToNearestReefTag(VISION_ELEMENT element);
 
     std::optional<VisionData> MultiTagToElement(frc::Pose3d elementPose);
     std::optional<VisionData> SingleTagToElement(frc::Pose3d elementPose, int idToSearch);

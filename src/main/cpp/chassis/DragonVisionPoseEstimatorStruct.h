@@ -14,36 +14,31 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <string>
 #include <vector>
-#include <map>
-#include <optional>
-#include "DragonTestCase.h"
 
-using std::string;
+#include "frc/geometry/Pose2d.h"
+#include "units/time.h"
+#include "wpi/array.h"
 
-class DragonTestSuiteManager
+struct DragonVisionPoseEstimatorStruct
 {
 public:
-	static DragonTestSuiteManager *GetInstance();
-	void RegisterTest(string testSuiteName, DragonTestCase *testCase);
-	void Init();
-	void Run();
+    DragonVisionPoseEstimatorStruct() : m_confidenceLevel(ConfidenceLevel::NONE),
+                                        m_visionPose(frc::Pose2d{}),
+                                        m_timeStamp(units::time::second_t(0.0)),
+                                        m_stds(wpi::array(0.9, 0.9, 0.9)) {};
+    ~DragonVisionPoseEstimatorStruct() = default;
 
-private:
-	DragonTestSuiteManager();
+    enum ConfidenceLevel
+    {
+        NONE,
+        LOW,
+        MEDIUM,
+        HIGH
+    };
 
-	// stores mapping between test suite name and associated test cases
-	std::map<string, std::vector<DragonTestCase *>> m_testSuites;
-	int m_currTestSlot;
-	DragonTestCase *m_currTest;
-
-	// list of all test suite names
-	std::vector<string> m_testSuiteNames;
-	// index of the current test suite name in m_testSuiteNames
-	int m_currTestSuiteIndex;
-
-	static DragonTestSuiteManager *m_instance;
-
-	void GetNextTest();
+    ConfidenceLevel m_confidenceLevel;
+    frc::Pose2d m_visionPose;
+    units::time::second_t m_timeStamp;
+    wpi::array<double, 3> m_stds;
 };

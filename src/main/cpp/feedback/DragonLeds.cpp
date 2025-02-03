@@ -93,6 +93,19 @@ std::array<int, 3> DragonLeds::getColorValues(Colors c)
     }
 }
 
+std::array<int, 3> DragonLeds::getColorHSV(Colors c)
+{
+    switch (c)
+    {
+    case AZUL:
+        return {180, 255, 255};
+    case WHITE:
+        return {60, 75, 255};
+    default:
+        return {0, 0, 0};
+    }
+}
+
 void DragonLeds::commitLedData()
 {
     if (m_ledBuffer.size() > 0)
@@ -140,4 +153,14 @@ void DragonLeds::setSpecificLED(int id, std::array<int, 3> color)
 void DragonLeds::setBufferAllLEDsBlack()
 {
     setBufferAllLEDsColor(getColorValues(BLACK));
+}
+
+void DragonLeds::setBufferAllLEDsColorBrightness(Colors c, int brightness)
+{
+    std::array<int, 3U> hsvColor = getColorHSV(c);
+    hsvColor[2] = brightness;
+    for (unsigned int i = m_numberofDiagnosticLEDs; i < m_ledBuffer.size(); i++)
+    {
+        m_ledBuffer[i].SetHSV(hsvColor[0], hsvColor[1], hsvColor[2]);
+    }
 }

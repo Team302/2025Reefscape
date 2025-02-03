@@ -16,7 +16,7 @@
 #include <tuple>
 
 // Team302 Includes
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/FaceTarget.h"
 #include "frc/geometry/Pose2d.h"
@@ -36,6 +36,7 @@ std::string FaceTarget::GetHeadingStateName() const
 
 units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMovement) const
 {
+    /** TODO: JW come back to this one
     auto finder = DragonDriveTargetFinder::GetInstance();
     if (finder != nullptr)
     {
@@ -83,6 +84,6 @@ units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMoveme
     {
         return chassis->GetStoredHeading();
     }
-
+    **/
     return chassisMovement.yawAngle;
 }
