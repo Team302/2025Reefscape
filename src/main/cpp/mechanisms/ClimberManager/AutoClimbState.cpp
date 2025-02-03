@@ -51,7 +51,7 @@ void AutoClimbState::Init()
 void AutoClimbState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree(units::angle::turn_t(0));
+	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void AutoClimbState::Run()
