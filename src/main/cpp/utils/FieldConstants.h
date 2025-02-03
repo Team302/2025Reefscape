@@ -50,6 +50,26 @@ public:
         RED_RIGHT_CAGE,
         RED_LEFT_CAGE
     };
+
+    enum AprilTagIDs
+    {
+        FI_BLUE_SOURCE_ONE = 1,
+        FI_BLUE_SOURCE_TWO = 2,
+        FI_RED_SOURCE_ONE = 10,
+        FI_RED_SOURCE_TWO = 9,
+        FI_BLUE_AMP = 6,
+        FI_BLUE_STAGE_LEFT = 15,
+        FI_BLUE_STAGE_CENTER = 14,
+        FI_BLUE_STAGE_RIGHT = 16,
+        FI_RED_AMP = 5,
+        FI_RED_STAGE_LEFT = 11,
+        FI_RED_STAGE_CENTER = 13,
+        FI_RED_STAGE_RIGHT = 12,
+        FI_BLUE_SUBWOOFER = 8,
+        FI_BLUE_SPEAKER = 7,
+        FI_RED_SUBWOOFER = 3,
+        FI_RED_SPEAKER = 4,
+    };
     frc::Pose3d GetFieldElement(FIELD_ELEMENT element);
 
 private:

@@ -47,7 +47,7 @@ public:
         CORAL_STATION,
         PROCESSOR,
         REEF,
-        //2024 old elements
+        // 2024 old elements
         SPEAKER,
         NOTE,
         STAGE,
@@ -57,6 +57,9 @@ public:
         BLUE_LEFT_STAGE,
         BLUE_RIGHT_STAGE,
         BLUE_CENTER_STAGE,
+        LEFT_STAGE,
+        RIGHT_STAGE,
+        CENTER_STAGE,
         NEAREST_APRILTAG
     };
 
