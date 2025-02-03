@@ -27,7 +27,7 @@
 #include "chassis/ChassisMovement.h"
 #include "utils/logging/Logger.h"
 #include "chassis/states/SpecifiedHeading.h"
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "chassis/states/DriveToNote.h"
 
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
@@ -100,11 +100,11 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         }
         /// TO DO If a the target position changes by 0.3m then re generate the path
         /** TODO come back to this one
-        auto info = DragonDriveTargetFinder::GetInstance()->GetPose(DragonVision::VISION_ELEMENT::NOTE);
+        auto info = DragonTargetFinder::GetInstance()->GetPose(DragonVision::VISION_ELEMENT::NOTE);
         auto type = get<0>(info);
         auto newNotePos = get<1>(info);
 
-        if (type == DragonDriveTargetFinder::TARGET_INFO::VISION_BASED && chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE)
+        if (type == DragonTargetFinder::TARGET_INFO::VISION_BASED && chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE)
         {
             frc::Pose2d currentTargetPos = m_trajectory.getEndState().pose;
             units::length::meter_t distance = currentTargetPos.Translation().Distance(newNotePos.Translation());

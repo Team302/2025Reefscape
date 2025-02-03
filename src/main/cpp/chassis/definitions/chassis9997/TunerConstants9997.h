@@ -91,7 +91,6 @@ public:
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    // TODO: need to look up the ratios - these are from 9998
     static constexpr units::scalar_t kCoupleRatio = 3.5714285714285716;
 
     static constexpr units::scalar_t kDriveGearRatio = 6.86;

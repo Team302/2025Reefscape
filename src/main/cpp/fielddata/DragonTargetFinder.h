@@ -21,12 +21,12 @@
 
 #include "chassis/ChassisMovement.h"
 #include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
-#include "utils/FieldConstants.h"
 #include "vision/DragonVision.h"
 
-class DragonDriveTargetFinder
+class DragonTargetFinder
 {
 public:
     // vision = 1
@@ -46,7 +46,7 @@ public:
         FUSE_IF_POSSIBLE
     };
 
-    static DragonDriveTargetFinder *GetInstance();
+    static DragonTargetFinder *GetInstance();
 
     std::tuple<TARGET_INFO, frc::Pose2d> GetPose(DragonVision::VISION_ELEMENT item);
     std::tuple<TARGET_INFO, units::length::meter_t> GetDistance(FINDER_OPTION option, DragonVision::VISION_ELEMENT item);
@@ -57,9 +57,9 @@ public:
                               double kp);
 
 private:
-    DragonDriveTargetFinder() = default;
-    ~DragonDriveTargetFinder() = default;
-    static DragonDriveTargetFinder *m_instance;
+    DragonTargetFinder() = default;
+    ~DragonTargetFinder() = default;
+    static DragonTargetFinder *m_instance;
 
     SwerveChassis *GetChassis();
     int GetAprilTag(DragonVision::VISION_ELEMENT item);

@@ -24,6 +24,8 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
 #include "utils/DragonPower.h"
+#include "utils/DragonPower.h"
+#include "utils/logging/DataTrace.h"
 #include "utils/logging/DataTrace.h"
 #include "utils/logging/DragonDataLoggerMgr.h"
 #include "utils/logging/LoggableItemMgr.h"
@@ -32,15 +34,13 @@
 #include "utils/logging/LoggerEnums.h"
 #include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
-#include "vision/DragonVision.h"
-#include "utils/logging/DataTrace.h"
 #include "vision/DragonQuest.h"
-#include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorDataMgr.h"
-#include "utils/DragonPower.h"
+#include "vision/DragonVision.h"
 
 using std::string;
 
@@ -338,7 +338,7 @@ void Robot::InitializeRobot()
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
-    auto vision = DragonVision::GetDragonVision();
+    // auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();

@@ -26,7 +26,7 @@
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
 #include "vision/DragonVision.h"
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/FMSData.h"
@@ -55,7 +55,7 @@ private:
     void ResetIntakeNoteTimer() { m_intakeNoteTimer = 0; };
     void IntakeNoteTimerIncrement() { m_intakeNoteTimer++; };
 
-    DragonDriveTargetFinder *m_dragonDriveTargetFinder;
+    DragonTargetFinder *m_DragonTargetFinder;
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
     // DragonVision *m_visiondata;
 

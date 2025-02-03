@@ -31,7 +31,7 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "chassis/states/DriveToNote.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "configs/MechanismConfig.h"
@@ -180,9 +180,9 @@ bool DrivePathPlanner::IsDone()
 void DrivePathPlanner::CheckForDriveToNote()
 {
     // Need to check if there is a note
-    DragonDriveTargetFinder *dt = DragonDriveTargetFinder::GetInstance();
+    DragonTargetFinder *dt = DragonTargetFinder::GetInstance();
     auto noteInfo = dt->GetPose(DragonVision::NOTE);
-    if (get<0>(noteInfo) != DragonDriveTargetFinder::NOT_FOUND) // see a note
+    if (get<0>(noteInfo) != DragonTargetFinder::NOT_FOUND) // see a note
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Note Found: ", true);
         auto notePose = get<1>(noteInfo);
