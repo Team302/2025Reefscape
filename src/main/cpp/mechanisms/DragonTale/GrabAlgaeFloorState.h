@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -48,6 +47,6 @@ namespace DragonTaleStates
 		const units::angle::degree_t m_ArmTarget = units::angle::degree_t(-30);
 		const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t(7.7);
 		const double m_CoralTarget = double(0);
-		const double m_AlgaeTarget = double(0.25);
+		const double m_AlgaeTarget = double(0.5);
 	};
 }

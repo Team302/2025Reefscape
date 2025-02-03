@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -60,6 +59,8 @@ void L4ScoringPositionState::InitPRACTICE_BOT9999()
 void L4ScoringPositionState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Run"));
+	if (m_mechanism->GetAlgaeSensorState())
+		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 
 void L4ScoringPositionState::Exit()

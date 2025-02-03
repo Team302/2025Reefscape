@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -60,6 +59,8 @@ void HoldState::InitPRACTICE_BOT9999()
 void HoldState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HoldState"), string("Run"));
+	if (m_mechanism->GetAlgaeSensorState())
+		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 
 void HoldState::Exit()

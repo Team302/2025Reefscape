@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -62,6 +61,8 @@ void HumanPlayerLoadState::Run()
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HumanPlayerLoadState"), string("Run"));
 	if (m_mechanism->GetCoralInSensorState())
 		m_mechanism->UpdateTargetCoralPercentOutput(0.5);
+	if (m_mechanism->GetAlgaeSensorState())
+		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 
 void HumanPlayerLoadState::Exit()

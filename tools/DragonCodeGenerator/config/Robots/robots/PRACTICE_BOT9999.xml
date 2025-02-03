@@ -2491,7 +2491,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2781,7 +2781,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2909,6 +2909,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.05</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -3036,6 +3037,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.05</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
