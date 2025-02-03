@@ -160,7 +160,7 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
-		m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		status = m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
 		if (status.IsOK())
 			break;
 	}

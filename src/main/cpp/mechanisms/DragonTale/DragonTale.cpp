@@ -368,7 +368,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
-		m_Arm->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		status = m_Arm->GetConfigurator().Apply(configs, units::time::second_t(0.25));
 		if (status.IsOK())
 			break;
 	}
@@ -424,7 +424,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
-		m_ElevatorLeader->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		status = m_ElevatorLeader->GetConfigurator().Apply(configs, units::time::second_t(0.25));
 		if (status.IsOK())
 			break;
 	}
@@ -494,7 +494,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
-		m_Algae->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		status = m_Algae->GetConfigurator().Apply(configs, units::time::second_t(0.25));
 		if (status.IsOK())
 			break;
 	}
@@ -545,7 +545,7 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
-		m_ElevatorFollower->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		status = m_ElevatorFollower->GetConfigurator().Apply(configs, units::time::second_t(0.25));
 		if (status.IsOK())
 			break;
 	}
