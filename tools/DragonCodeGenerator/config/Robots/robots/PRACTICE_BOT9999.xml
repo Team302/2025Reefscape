@@ -2309,7 +2309,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>90</value>
+                  <value>80.25</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2346,7 +2346,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>0.25</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
