@@ -485,7 +485,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>240</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -732,6 +732,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -1496,7 +1497,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>8</value>
+              <value>4</value>
             </followID>
             <enableFollowID>
               <unitsFamily>none</unitsFamily>
@@ -1807,7 +1808,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0</value>
+              <value>0.030518</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -1849,14 +1850,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.3</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.3</value>
+                <value>0</value>
               </iZone>
             </PID>
             <peakValue>
@@ -1905,14 +1906,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>20</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>2</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>

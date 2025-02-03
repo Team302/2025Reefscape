@@ -267,9 +267,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		2.0,											  // double proportional
+		2,												  // double proportional
 		0.2,											  // double integral
-		0.0,											  // double derivative
+		0,												  // double derivative
 		0.3,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
@@ -283,8 +283,8 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0.2,											  // double proportional
-		0,												  // double integral
+		20,												  // double proportional
+		2,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
@@ -486,7 +486,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 	motorconfig.PeakForwardDutyCycle = 1;
 	motorconfig.PeakReverseDutyCycle = -1;
 	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Algae->GetConfigurator().Apply(motorconfig, units::time::second_t(0.5));
+	m_Algae->GetConfigurator().Apply(motorconfig);
 
 	TalonFXConfiguration fxConfig{};
 	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
@@ -649,14 +649,14 @@ void DragonTale::CheckForTuningEnabled()
 void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
-	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0));
-	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 0.0));
-	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0));
+	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0.3));
+	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
+	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 20));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2));
 	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
 }
 

@@ -1028,7 +1028,7 @@
         <name>uintParameter</name>
         <__units__ />
         <type>UInt32</type>
-        <value>8</value>
+        <value>4</value>
       </followID>
       <enableFollowID>
         <unitsFamily>none</unitsFamily>
