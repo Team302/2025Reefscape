@@ -784,10 +784,6 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetAngle = m_armProtectionAngle;
 	}
-	else
-	{
-		actualTargetAngle = m_armTarget;
-	}
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
