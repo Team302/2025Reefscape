@@ -13,12 +13,16 @@ $$_INCLUDE_FILES_$$
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
+#include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
+#include "state/RobotStateChanges.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
-class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_
+#include "RobotIdentifier.h"
+
+class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_, public IRobotStateChangeSubscriber
 {
 public:
     enum STATE_NAMES
