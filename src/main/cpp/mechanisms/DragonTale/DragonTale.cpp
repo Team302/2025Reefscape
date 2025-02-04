@@ -605,8 +605,6 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
-
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState()); // Ask how to get state enum map
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 }
 
@@ -714,7 +712,7 @@ Hand-Coded Things are here :)
 ===================================================================================================================*/
 void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
 {
-	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
+	if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }
 
