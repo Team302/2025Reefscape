@@ -215,6 +215,7 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
