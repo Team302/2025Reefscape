@@ -88,14 +88,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		if (position < GetArmAngle())
-		{
-			SetPIDArmPositionDegreeDown();
-		}
-		else
-		{
-			SetPIDArmPositionDegreeUp();
-		}
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -121,8 +113,7 @@ public:
 		m_AlgaeActiveTarget = &m_AlgaePercentOutput;
 	}
 
-	void SetPIDArmPositionDegreeUp();
-	void SetPIDArmPositionDegreeDown();
+	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
 
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
@@ -145,8 +136,7 @@ public:
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
 	ControlData *GetPositionInch() const { return m_PositionInch; }
-	ControlData *GetPositionDegreeUp() const { return m_PositionDegreeUp; }
-	ControlData *GetPositionDegreeDown() const { return m_PositionDegreeDown; }
+	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOutput() const { return m_PercentOutput; }
 
 	units::length::inch_t GetElevatorHeight() { return units::length::inch_t(m_ElevatorLeader->GetPosition().GetValueAsDouble()); }
@@ -199,8 +189,7 @@ private:
 	ctre::phoenix6::hardware::CANcoder *m_ArmAngleSensor;
 	ctre::phoenix6::hardware::CANcoder *m_ElevatorHeightSensor;
 	ControlData *m_PositionInch;
-	ControlData *m_PositionDegreeUp;
-	ControlData *m_PositionDegreeDown;
+	ControlData *m_PositionDegree;
 	ControlData *m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 

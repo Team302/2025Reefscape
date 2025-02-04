@@ -53,7 +53,7 @@ void InitializeState::InitPRACTICE_BOT9999()
 
 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaePercentOutput(m_AlgaeTarget);
-	m_mechanism->SetPIDArmPositionDegreeUp();
+	m_mechanism->SetPIDArmPositionDegree();
 	m_mechanism->UpdateTargetArmPositionDegree(m_ArmTarget);
 	m_mechanism->SetPIDElevatorLeaderPositionInch();
 	m_mechanism->UpdateTargetElevatorLeaderPositionInch(m_ElevatorLeaderTarget);
