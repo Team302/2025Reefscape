@@ -53,10 +53,10 @@ public:
         RED_LEFT_CAGE,
         RED_MIDDLE_CAGE,
         RED_RIGHT_CAGE,
-        BLUE_FAR_LEFT_HUMAN_PLAYER_,
-        BLUE_FAR_RIGHT_HUMAN_PLAYER,
-        RED_FAR_RIGHT_HUMAN_PLAYER,
-        RED_FAR_LEFT_HUMAN_PLAYER,
+        BLUE_FAR_LEFT_CORAL_STATION,
+        BLUE_FAR_RIGHT_CORAL_STATION,
+        RED_FAR_RIGHT_CORAL_STATION,
+        RED_FAR_LEFT_CORAL_STATION,
         BLUE_HUMAN_PROCESSOR,
         RED_HUMAN_PROCESSOR,
         ALGAE
@@ -96,12 +96,12 @@ private:
         units::length::meter_t(4.11),
         units::length::meter_t(1.32),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    const frc::Pose3d m_BlueHumanPlayer = frc::Pose3d(
+    const frc::Pose3d m_BlueCoralStation = frc::Pose3d(
         units::length::meter_t(4.64),
         units::length::meter_t(3.71),
         units::length::meter_t(1.32),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(-120.0)));
-    const frc::Pose3d m_RedHumanPlayer = frc::Pose3d(
+    const frc::Pose3d m_RedCoralStation = frc::Pose3d(
         units::length::meter_t(4.64),
         units::length::meter_t(4.5),
         units::length::meter_t(1.32),

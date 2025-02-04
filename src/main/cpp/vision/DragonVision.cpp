@@ -87,7 +87,7 @@ void DragonVision::AddCamera(DragonCamera *camera, RobotElementNames::CAMERA_USA
 
 std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 {
-	if ((element == VISION_ELEMENT::NOTE) || (element == VISION_ELEMENT::LAUNCHER_NOTE) || (element == VISION_ELEMENT::PLACER_NOTE)) // if we want to detect a note
+	if ((element == VISION_ELEMENT::ALGAE) || (element == VISION_ELEMENT::LAUNCHER_NOTE) || (element == VISION_ELEMENT::PLACER_NOTE)) // if we want to detect a note
 	{
 		return GetVisionDataFromNote(element);
 	}
@@ -124,7 +124,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 	std::vector<int> tagIdsToCheck = {};
 	switch (element)
 	{
-	case VISION_ELEMENT::STAGE:
+	case VISION_ELEMENT::ALGAE:
 		if (allianceColor == frc::DriverStation::Alliance::kBlue)
 		{
 			// blue alliance stage tag ids are 14, 15, 16
@@ -140,7 +140,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 			tagIdsToCheck.emplace_back(13);
 		}
 		break;
-	case VISION_ELEMENT::LEFT_STAGE:
+	case VISION_ELEMENT::REEF:
 		if (allianceColor == frc::DriverStation::Alliance::kBlue)
 		{
 			tagIdsToCheck.emplace_back(15);
@@ -150,7 +150,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 			tagIdsToCheck.emplace_back(11);
 		}
 		break;
-	case VISION_ELEMENT::RIGHT_STAGE:
+	case VISION_ELEMENT::CAGE:
 		if (allianceColor == frc::DriverStation::Alliance::kBlue)
 		{
 			tagIdsToCheck.emplace_back(16);
@@ -160,7 +160,17 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestStageTag(VISION_EL
 			tagIdsToCheck.emplace_back(12);
 		}
 		break;
-	case VISION_ELEMENT::CENTER_STAGE:
+	case VISION_ELEMENT::CORAL_STATION:
+		if (allianceColor == frc::DriverStation::Alliance::kBlue)
+		{
+			tagIdsToCheck.emplace_back(14);
+		}
+		else
+		{
+			tagIdsToCheck.emplace_back(13);
+		}
+		break;
+	case VISION_ELEMENT::HUMAN_PROCESSOR:
 		if (allianceColor == frc::DriverStation::Alliance::kBlue)
 		{
 			tagIdsToCheck.emplace_back(14);
@@ -331,17 +341,16 @@ std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT 
 	int idToSearch = -1;
 	switch (element)
 	{
-	case VISION_ELEMENT::SPEAKER:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_SPEAKER)} /*load red speaker*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_SPEAKER)}; /*load blue speaker*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;
+	case VISION_ELEMENT::REEF:
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::)} /*load red speaker*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_SPEAKER)}; /*load blue speaker*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed;
 		break;
-	case VISION_ELEMENT::AMP:
+	case VISION_ELEMENT::CAGE:
 		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_AMP)} /*load red amp*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_AMP)}; /*load blue amp*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed;
 		break;
-	case VISION_ELEMENT::SOURCE:
+	case VISION_ELEMENT::CORAL_STATION:
 		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_SOURCE)} /*load red source*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_SOURCE)}; /*load blue source*/
-
 		break;
 	default:
 		return std::nullopt;

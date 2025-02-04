@@ -56,10 +56,10 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[RED_LEFT_CAGE] = m_RedCage;
     fieldConstantsPoseMap[RED_MIDDLE_CAGE] = m_RedCage;
     fieldConstantsPoseMap[RED_RIGHT_CAGE] = m_RedCage;
-    fieldConstantsPoseMap[BLUE_FAR_LEFT_HUMAN_PLAYER_] = m_BlueHumanPlayer;
-    fieldConstantsPoseMap[BLUE_FAR_RIGHT_HUMAN_PLAYER] = m_BlueHumanPlayer;
-    fieldConstantsPoseMap[RED_FAR_LEFT_HUMAN_PLAYER] = m_RedHumanPlayer;
-    fieldConstantsPoseMap[RED_FAR_RIGHT_HUMAN_PLAYER] = m_RedHumanPlayer;
+    fieldConstantsPoseMap[BLUE_FAR_LEFT_CORAL_STATION] = m_BlueCoralStation;
+    fieldConstantsPoseMap[BLUE_FAR_RIGHT_CORAL_STATION] = m_BlueCoralStation;
+    fieldConstantsPoseMap[RED_FAR_LEFT_CORAL_STATION] = m_RedCoralStation;
+    fieldConstantsPoseMap[RED_FAR_RIGHT_CORAL_STATION] = m_RedCoralStation;
     fieldConstantsPoseMap[RED_HUMAN_PROCESSOR] = m_RedHumanProcessor;
     fieldConstantsPoseMap[RED_HUMAN_PROCESSOR] = m_RedHumanProcessor;
 }

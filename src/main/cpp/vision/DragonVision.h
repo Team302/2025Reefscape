@@ -45,7 +45,7 @@ public:
         ALGAE,
         CAGE,
         REEF,
-        HUMAN_PLAYER,
+        CORAL_STATION,
         HUMAN_PROCESSOR
     };
 
