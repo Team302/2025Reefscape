@@ -59,7 +59,7 @@ void HoldState::InitPRACTICE_BOT9999()
 void HoldState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HoldState"), string("Run"));
-	if (m_mechanism->GetAlgaeSensorState())
+	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
 		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 

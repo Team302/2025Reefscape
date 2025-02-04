@@ -363,8 +363,6 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
-	SetPIDArmPositionDegree();
-
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -374,6 +372,8 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
+
+	SetPIDArmPositionDegree();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
@@ -599,6 +599,7 @@ void DragonTale::RunCommonTasks()
 	UpdateTarget();
 	Cyclic();
 
+	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());

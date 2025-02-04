@@ -59,7 +59,7 @@ void L4ScoringPositionState::InitPRACTICE_BOT9999()
 void L4ScoringPositionState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Run"));
-	if (m_mechanism->GetAlgaeSensorState())
+	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
 		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 

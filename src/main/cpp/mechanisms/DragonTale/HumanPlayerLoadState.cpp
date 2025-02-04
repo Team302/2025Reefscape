@@ -59,9 +59,7 @@ void HumanPlayerLoadState::InitPRACTICE_BOT9999()
 void HumanPlayerLoadState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HumanPlayerLoadState"), string("Run"));
-	if (m_mechanism->GetCoralInSensorState())
-		m_mechanism->UpdateTargetCoralPercentOutput(0.5);
-	if (m_mechanism->GetAlgaeSensorState())
+	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
 		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 
