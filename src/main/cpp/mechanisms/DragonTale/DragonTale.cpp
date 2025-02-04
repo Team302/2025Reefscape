@@ -335,7 +335,6 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
 	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
@@ -366,7 +365,6 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 
 	SetPIDArmPositionDegree();
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -375,9 +373,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
@@ -422,7 +418,6 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -431,9 +426,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
@@ -465,8 +458,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-
-	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0);
+	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
 
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
@@ -492,7 +484,6 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 1;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -501,9 +492,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Algae", "m_Algae Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
@@ -543,7 +532,6 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -552,9 +540,8 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorFollower", "m_ElevatorFollower Status", status.GetName());
+
 	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
@@ -688,9 +675,9 @@ void DragonTale::ReadTuningParamsFromNT()
 	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 20));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.5));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 35));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2.5));
 	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
 }
 

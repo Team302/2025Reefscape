@@ -23,6 +23,7 @@
 #include "ClimberManager.h"
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -30,16 +31,10 @@
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
-#include "state/RobotState.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
-using ctre::phoenix6::configs::VoltageConfigs;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -47,7 +42,6 @@ using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
-
 using std::string;
 using namespace ClimberManagerStates;
 
@@ -165,9 +159,7 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
 }
 
 void ClimberManager::SetPIDClimberPositionDegree()

@@ -515,7 +515,7 @@
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </closedLoopRampTime>
               <enableClosedLoop>
                 <unitsFamily>none</unitsFamily>

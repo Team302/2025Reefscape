@@ -23,6 +23,7 @@
 #include "IntakeManager.h"
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -37,14 +38,9 @@
 #include "mechanisms/IntakeManager/ProcessState.h"
 #include "mechanisms/IntakeManager/ExpelState.h"
 #include "teleopcontrol/TeleopControl.h"
-#include "teleopcontrol/TeleopControlFunctions.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
@@ -167,7 +163,6 @@ void IntakeManager::InitializePRACTICE_BOT9999()
 void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 {
 	TalonFXConfiguration configs{};
-
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
@@ -175,8 +170,9 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
 
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
-
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -197,6 +193,9 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -206,15 +205,12 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Intake", "m_Intake Status", status.GetName());
 }
 
 void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 {
 	TalonFXConfiguration configs{};
-
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
@@ -222,8 +218,9 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
 
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -245,6 +242,9 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -253,11 +253,8 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Extender", "m_Extender Status", status.GetName());
 }
-
 // IntakeSensor : Digital inputs do not have initialization needs
 
 void IntakeManager::SetPIDExtenderPositionDegree()
