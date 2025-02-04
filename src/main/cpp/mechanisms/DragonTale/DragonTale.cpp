@@ -274,14 +274,14 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double nominalValue
 		true											  // bool enableFOC
 	);
-	m_PositionDegree = new ControlData(
+	m_PositionDegreeUp = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
-		"m_PositionDegree",								  // std::string indentifier
-		20,												  // double proportional
+		"m_PositionDegreeUp",							  // std::string indentifier
+		30,												  // double proportional
 		2,												  // double integral
 		0,												  // double derivative
-		0,												  // double feedforward
+		1.5,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -298,6 +298,22 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
+		0,												  // double integralZone
+		0,												  // double maxAcceleration
+		0,												  // double cruiseVelocity
+		0,												  // double peakValue
+		0,												  // double nominalValue
+		false											  // bool enableFOC
+	);
+	m_PositionDegreeDown = new ControlData(
+		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PositionDegreeDown",							  // std::string indentifier
+		30,												  // double proportional
+		2,												  // double integral
+		0,												  // double derivative
+		1.5,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -556,14 +572,15 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
-void DragonTale::SetPIDArmPositionDegree()
+void DragonTale::SetPIDArmPositionDegreeUp()
 {
 	Slot0Configs slot0Configs{};
-	slot0Configs.kP = m_PositionDegree->GetP();
-	slot0Configs.kI = m_PositionDegree->GetI();
-	slot0Configs.kD = m_PositionDegree->GetD();
-	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = 2.05;
+	slot0Configs.kP = m_PositionDegreeUp->GetP();
+	slot0Configs.kI = m_PositionDegreeUp->GetI();
+	slot0Configs.kD = m_PositionDegreeUp->GetD();
+	slot0Configs.kG = m_PositionDegreeUp->GetF();
+	slot0Configs.kG = m_PositionDegreeUp->GetF();
+	slot0Configs.kS = 0.25;
 	slot0Configs.kV = 0.25;
 	slot0Configs.kA = 0.05;
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
@@ -582,6 +599,21 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
+}
+void DragonTale::SetPIDArmPositionDegreeDown()
+{
+	Slot0Configs slot0Configs{};
+	slot0Configs.kP = m_PositionDegreeDown->GetP();
+	slot0Configs.kI = m_PositionDegreeDown->GetI();
+	slot0Configs.kD = m_PositionDegreeDown->GetD();
+	slot0Configs.kG = m_PositionDegreeDown->GetF();
+	slot0Configs.kG = m_PositionDegreeDown->GetF();
+	slot0Configs.kS = 0.25;
+	slot0Configs.kV = 0.25;
+	slot0Configs.kA = 0.05;
+	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
+	m_Arm->GetConfigurator().Apply(slot0Configs);
 }
 
 void DragonTale::SetCurrentState(int state, bool run)
@@ -673,11 +705,16 @@ void DragonTale::ReadTuningParamsFromNT()
 	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
 	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
-	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 20));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegreeUp->SetIZone(m_table.get()->GetNumber("PositionDegreeUp_iZone", 0));
+	m_PositionDegreeUp->SetF(m_table.get()->GetNumber("PositionDegreeUp_fGain", 1.5));
+	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 30));
+	m_PositionDegreeUp->SetI(m_table.get()->GetNumber("PositionDegreeUp_iGain", 2));
+	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0));
+	m_PositionDegreeDown->SetIZone(m_table.get()->GetNumber("PositionDegreeDown_iZone", 0));
+	m_PositionDegreeDown->SetF(m_table.get()->GetNumber("PositionDegreeDown_fGain", 1.5));
+	m_PositionDegreeDown->SetP(m_table.get()->GetNumber("PositionDegreeDown_pGain", 30));
+	m_PositionDegreeDown->SetI(m_table.get()->GetNumber("PositionDegreeDown_iGain", 2));
+	m_PositionDegreeDown->SetD(m_table.get()->GetNumber("PositionDegreeDown_dGain", 0));
 }
 
 void DragonTale::PushTuningParamsToNT()
@@ -687,22 +724,28 @@ void DragonTale::PushTuningParamsToNT()
 	m_table.get()->PutNumber("PositionInch_pGain", m_PositionInch->GetP());
 	m_table.get()->PutNumber("PositionInch_iGain", m_PositionInch->GetI());
 	m_table.get()->PutNumber("PositionInch_dGain", m_PositionInch->GetD());
-	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
-	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
-	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
-	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
+	m_table.get()->PutNumber("PositionDegreeUp_iZone", m_PositionDegreeUp->GetIZone());
+	m_table.get()->PutNumber("PositionDegreeUp_fGain", m_PositionDegreeUp->GetF());
+	m_table.get()->PutNumber("PositionDegreeUp_pGain", m_PositionDegreeUp->GetP());
+	m_table.get()->PutNumber("PositionDegreeUp_iGain", m_PositionDegreeUp->GetI());
+	m_table.get()->PutNumber("PositionDegreeUp_dGain", m_PositionDegreeUp->GetD());
+	m_table.get()->PutNumber("PositionDegreeDown_iZone", m_PositionDegreeDown->GetIZone());
+	m_table.get()->PutNumber("PositionDegreeDown_fGain", m_PositionDegreeDown->GetF());
+	m_table.get()->PutNumber("PositionDegreeDown_pGain", m_PositionDegreeDown->GetP());
+	m_table.get()->PutNumber("PositionDegreeDown_iGain", m_PositionDegreeDown->GetI());
+	m_table.get()->PutNumber("PositionDegreeDown_dGain", m_PositionDegreeDown->GetD());
 }
 
 ControlData *DragonTale::GetControlData(string name)
 {
 	if (name.compare("PositionInch") == 0)
 		return m_PositionInch;
-	if (name.compare("PositionDegree") == 0)
-		return m_PositionDegree;
+	if (name.compare("PositionDegreeUp") == 0)
+		return m_PositionDegreeUp;
 	if (name.compare("PercentOutput") == 0)
 		return m_PercentOutput;
-
+	if (name.compare("PositionDegreeDown") == 0)
+		return m_PositionDegreeDown;
 	return nullptr;
 }
 /*==================================================================================================================

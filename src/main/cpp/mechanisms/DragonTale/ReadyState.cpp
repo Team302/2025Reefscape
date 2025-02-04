@@ -55,7 +55,7 @@ void ReadyState::InitPRACTICE_BOT9999()
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 	m_mechanism->SetPIDElevatorLeaderPositionInch();
-	m_mechanism->SetPIDArmPositionDegree();
+	m_mechanism->SetPIDArmPositionDegreeUp();
 }
 
 void ReadyState::Run()
