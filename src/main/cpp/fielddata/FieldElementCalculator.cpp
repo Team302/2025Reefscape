@@ -159,5 +159,9 @@ void FieldElementCalculator::InitializeTransforms()
     transformConstantsMap[FieldConstants::RED_REEF_L] =
         TransformToPose(FieldConstants::RED_REEF_KL, m_redCalcReefL);
 
-    
+    // TODO: Need a different transform for these
+    transformConstantsMap[FieldConstants::RED_REEF_CENTER] =
+        TransformToPose(FieldConstants::RED_REEF_EF, m_redCalcReefCenter);
+    transformConstantsMap[FieldConstants::BLUE_REEF_CENTER] =
+        TransformToPose(FieldConstants::BLUE_REEF_EF, m_blueCalcReefCenter);
 }

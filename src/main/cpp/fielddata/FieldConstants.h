@@ -137,10 +137,6 @@ private:
     FieldConstants &operator=(const FieldConstants &) = delete;
 
     void ReadFieldCalibrationData();
-    void CalculateDerivedValues();
-    void CalculateReefPositions();
-    void CalculateCSALocations();
-    void CalculateCageLocations();
 
     // specified here
     // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/2025LayoutMarkingDiagram.pdf
