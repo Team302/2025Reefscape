@@ -60,8 +60,8 @@
 #include "utils/FMSData.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
-using ctre::phoenix6::configs::VoltageConfigs;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -278,10 +278,10 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		20,												  // double proportional
-		2,												  // double integral
+		35,												  // double proportional
+		2.5,											  // double integral
 		0,												  // double derivative
-		0,												  // double feedforward
+		1.5,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -363,6 +363,8 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
+
+	SetPIDArmPositionDegree();
 
 	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -568,7 +570,19 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kA = 0.05;
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
-	m_Arm->GetConfigurator().Apply(slot0Configs);
+	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
+
+	Slot1Configs slot1Configs{}; // making it 0 to verify it works
+	slot1Configs.kP = 0;		 // m_PositionDegree->GetP() / 2.0;
+	slot1Configs.kI = 0;		 // m_PositionDegree->GetI() / 2.0;
+	slot1Configs.kD = 0;		 // m_PositionDegree->GetD();
+	slot1Configs.kG = 0;		 // m_PositionDegree->GetF();
+	slot1Configs.kS = 0.0;
+	slot1Configs.kV = 0; // 0.25;
+	slot1Configs.kA = 0; // 0.05;
+	slot1Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+	slot1Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
+	m_Arm->GetConfigurator().Apply(slot1Configs, units::time::second_t(0.25));
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {

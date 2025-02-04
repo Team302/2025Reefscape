@@ -88,6 +88,11 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
+		if (position < GetArmAngle())
+			m_ArmPositionDegree.WithSlot(0);
+		else
+			m_ArmPositionDegree.WithSlot(1);
+
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
