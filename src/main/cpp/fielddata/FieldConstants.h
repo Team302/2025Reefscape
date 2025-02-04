@@ -57,8 +57,9 @@ public:
         BLUE_CORAL_STATION_LEFT_SIDEWALL,
         BLUE_CORAL_STATION_RIGHT_ALLIANCE,
         BLUE_CORAL_STATION_RIGHT_SIDEWALL,
-        BLUE_RIGHT_CAGE,
         BLUE_LEFT_CAGE,
+        BLUE_RIGHT_CAGE,
+        BLUE_CENTER_CAGE,
         BLUE_REEF_CENTER,
         BLUE_REEF_A,
         BLUE_REEF_B,
@@ -77,8 +78,9 @@ public:
         RED_CORAL_STATION_LEFT_SIDEWALL,
         RED_CORAL_STATION_RIGHT_ALLIANCE,
         RED_CORAL_STATION_RIGHT_SIDEWALL,
-        RED_RIGHT_CAGE,
         RED_LEFT_CAGE,
+        RED_RIGHT_CAGE,
+        RED_CENTER_CAGE,
         RED_REEF_CENTER,
         RED_REEF_A,
         RED_REEF_B,
@@ -135,10 +137,6 @@ private:
     FieldConstants &operator=(const FieldConstants &) = delete;
 
     void ReadFieldCalibrationData();
-    void CalculateDerivedValues();
-    void CalculateReefPositions();
-    void CalculateCSALocations();
-    void CalculateCageLocations();
 
     // specified here
     // https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/2025LayoutMarkingDiagram.pdf
@@ -277,236 +275,7 @@ private:
         units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(300.0)));
 
-    // TODO: JW these need to be calculated
-    // Blue Calculated Positions
-    frc::Pose3d m_blueCalcCoralLeftAlliance = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcCoralLeftSidewall = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcCoralRightAlliance = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcCoralRightSidewall = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcRightCage = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcLeftCage = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefCenter = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefA = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefB = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefC = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefD = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefE = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefF = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefG = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefH = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefI = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefJ = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefK = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_blueCalcReefL = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    // Red Calculated Positions
-    frc::Pose3d m_redCalcCoralLeftAlliance = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcCoralLeftSidewall = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcCoralRightAlliance = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcCoralRightSidewall = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcRightCage = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcLeftCage = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefCenter = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefA = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefB = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefC = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefD = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefE = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefF = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefG = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefH = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefI = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefJ = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefK = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-
-    frc::Pose3d m_redCalcReefL = frc::Pose3d(
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        units::length::meter_t(0.0),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+    frc::Pose3d m_placeholder = frc::Pose3d();
 
     std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
     std::map<int, frc::Pose3d> aprilTagPoseMap;
