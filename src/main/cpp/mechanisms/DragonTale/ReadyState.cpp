@@ -81,6 +81,6 @@ bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 	// To get the current state use m_mechanism->GetCurrentState()
 
 	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) ||
-			(m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD)) ||
-			(m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_INITIALIZE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL));
+			(m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))) ||
+			(m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_INITIALIZE));
 }
