@@ -15,9 +15,12 @@
 #pragma once
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation3d.h>
+#include <iostream>
+#include <filesystem>
 
 #include "units/angle.h"
 #include "units/base.h"
+#include "frc/apriltag/AprilTagFieldLayout.h"
 
 class FieldConstants
 {
@@ -123,6 +126,8 @@ public:
 private:
     // make a singleton
     static FieldConstants *m_instance;
+    std::vector<frc::AprilTag> m_aprilTagVector;
+    const std::string m_feildFilePath = "/home/lvuser/FieldData/output.json";
     // make constructor private
     FieldConstants();
     // make singleton copy constructor private
@@ -504,4 +509,5 @@ private:
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
 
     std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
+    std::map<int, frc::Pose3d> aprilTagPoseMap;
 };
