@@ -13,6 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "FieldConstants.h"
+#include "FieldElementCalculator.h"
 
 FieldConstants *FieldConstants::m_instance = nullptr;
 FieldConstants *FieldConstants::GetInstance()
@@ -27,8 +28,6 @@ FieldConstants *FieldConstants::GetInstance()
 FieldConstants::FieldConstants()
 {
     ReadFieldCalibrationData();
-
-    CalculateDerivedValues();
 
     // Blue AprilTag locations
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT] = m_aprilTag13;
@@ -97,6 +96,10 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_J] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_K] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_L] = m_placeholder;
+
+    FieldElementCalculator fc;
+    fc.CalcPositionsForField(fieldConstantsPoseMap);
+    
 }
 frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
 {
@@ -109,21 +112,3 @@ void FieldConstants::ReadFieldCalibrationData()
     // TODO: implement 242
 }
 
-void FieldConstants::CalculateDerivedValues()
-{
-    CalculateReefPositions();
-    CalculateCSALocations();
-    CalculateCageLocations();
-}
-void FieldConstants::CalculateReefPositions()
-{
-    // TODO: implement 249
-}
-void FieldConstants::CalculateCSALocations()
-{
-    // TODO: implement 250
-}
-void FieldConstants::CalculateCageLocations()
-{
-    // TODO: implement 254
-}
