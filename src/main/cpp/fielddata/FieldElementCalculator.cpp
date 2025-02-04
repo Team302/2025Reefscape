@@ -17,34 +17,45 @@
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    InitializeTranslations();
+    InitializeTransforms();
 
     // Iterate and update values
     for (auto &[key, translatedPose] : fieldConstantsPoseMap)
     {
-
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[transformConstantsMap[key].referencePose] + transformConstantsMap[key].transform;
     }
 }
 
 
 
-void FieldElementCalculator::InitializeTranslations()
+void FieldElementCalculator::InitializeTransforms()
 {
 
-    // Blue AprilTag locations
-    translationConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT] =
-        TranslationToPose{TRANSLATION_MAP::BLUE_CORAL_STATION_LEFT_2_BLUE_CORAL_STATION_LEFT_ALLIANCE, m_blueCoralStationLeft2BlueCoralStationLeftAlliance};
-    /*fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT] = m_aprilTag12;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_PROCESSOR] = m_aprilTag16;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_FRONT] = m_aprilTag14;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_BACK] = m_aprilTag4;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_AB] = m_aprilTag18;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_CD] = m_aprilTag17;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_EF] = m_aprilTag22;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_GH] = m_aprilTag21;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_IJ] = m_aprilTag20;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_KL] = m_aprilTag19;
+    //no transforms for april tags
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT] =
+        TransformToPose{FieldConstants::BLUE_CORAL_STATION_LEFT, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT] =
+        TransformToPose{FieldConstants::BLUE_CORAL_STATION_RIGHT, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_PROCESSOR] =
+        TransformToPose{FieldConstants::BLUE_PROCESSOR, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_BARGE_FRONT] =
+        TransformToPose{FieldConstants::BLUE_BARGE_FRONT, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_BARGE_BACK] =
+        TransformToPose{FieldConstants::BLUE_BARGE_BACK, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_AB] =
+        TransformToPose{FieldConstants::BLUE_REEF_AB, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_CD] =
+        TransformToPose{FieldConstants::BLUE_REEF_CD, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_EF] =
+        TransformToPose{FieldConstants::BLUE_REEF_EF, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_GH] =
+        TransformToPose{FieldConstants::BLUE_REEF_GH, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_IJ] =
+        TransformToPose{FieldConstants::BLUE_REEF_IJ, m_noTransform};
+    transformConstantsMap[FieldConstants::BLUE_REEF_KL] =
+        TransformToPose{FieldConstants::BLUE_REEF_KL, m_noTransform};
 
+    /** 
     // Blue Calculated Positions
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] = m_blueCalcCoralLeftAlliance;
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] = m_blueCalcCoralLeftSidewall;
