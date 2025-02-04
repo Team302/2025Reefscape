@@ -26,8 +26,9 @@
 #include "frc/kinematics/SwerveModuleState.h"
 
 #include "wpi/DataLog.h"
+#include "mechanisms/MechanismDataLoggerSignals.h"
 
-class DragonDataLoggerSignals
+class DragonDataLoggerSignals : public MechanismLoggerSignals
 {
     friend class DragonDataLogger;
 

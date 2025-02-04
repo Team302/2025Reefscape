@@ -31,6 +31,7 @@
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
 #include "state/RobotState.h"
+#include "utils/logging/DragonDataLoggerSignals.h"
 
 using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
 using ctre::phoenix6::configs::CurrentLimitsConfigs;
@@ -277,4 +278,14 @@ ControlData *ClimberManager::GetControlData(string name)
 		return m_PositionDegree;
 
 	return nullptr;
+}
+
+void ClimberManager::LogSignals()
+{
+	auto signals = DragonDataLoggerSignals::GetInstance();
+	if (signals != nullptr)
+	{
+		signals->LogClimberManagerState(GetCurrentState());
+		// log more signals here
+	}
 }

@@ -110,6 +110,7 @@ private:
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
 	void PushTuningParamsToNT();
+	void LogSignals();
 
 	void InitializeTalonFXClimberPRACTICE_BOT9999();
 

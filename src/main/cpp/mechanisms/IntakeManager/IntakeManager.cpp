@@ -38,6 +38,7 @@
 #include "mechanisms/IntakeManager/ExpelState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
+#include "utils/logging/DragonDataLoggerSignals.h"
 
 using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
 using ctre::phoenix6::configs::CurrentLimitsConfigs;
@@ -287,6 +288,8 @@ void IntakeManager::RunCommonTasks()
 			m_failedSensorLatch = !m_failedSensorLatch;
 	}
 	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
+
+	LogSignals();
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -371,4 +374,14 @@ ControlData *IntakeManager::GetControlData(string name)
 		return m_PositionDegree;
 
 	return nullptr;
+}
+
+void IntakeManager::LogSignals()
+{
+	auto signals = DragonDataLoggerSignals::GetInstance();
+	if (signals != nullptr)
+	{
+		signals->LogIntakeManagerState(GetCurrentState());
+		// log more signals here
+	}
 }

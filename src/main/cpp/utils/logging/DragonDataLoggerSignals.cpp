@@ -62,7 +62,7 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_storedHeading.Append(m_currStoredHeading);
     m_chassisYaw = wpi::log::DoubleLogEntry(log, "/Chassis/Yaw(Degrees)");
     m_chassisYaw.Append(m_currChassisYaw);
-    //electrical signals
+    // electrical signals
     m_electricalVoltage = wpi::log::DoubleLogEntry(log, "/Electrical/Voltage(Volts)");
     m_electricalVoltage.Append(m_currElectricalVoltage);
     m_electricalCurrent = wpi::log::DoubleLogEntry(log, "/Electrical/Current(Amps)");
@@ -71,7 +71,6 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_electricalPower.Append(m_currElectricalPower);
     m_electricalEnergy = wpi::log::DoubleLogEntry(log, "/Electrical/Energy(Joules)");
     m_electricalEnergy.Append(m_currElectricalEnergy);
-
 
     /**
     m_nmTargetAngle = wpi::log::DoubleLogEntry(log, "/NoteManager/TargetAngle(Degrees)");
