@@ -65,7 +65,10 @@ public:
 		STATE_L2SCORING_POSITION,
 		STATE_L3SCORING_POSITION,
 		STATE_L4SCORING_POSITION,
-		STATE_SCORE_CORAL
+		STATE_SCORE_CORAL,
+		STATE_MANUAL_CORAL_LOAD,
+		STATE_MANUAL_GRAB_ALGAE_REEF,
+		STATE_MANUAL_GRAB_ALGAE_FLOOR
 	};
 
 	DragonTale ( RobotIdentifier activeRobotId );
@@ -116,6 +119,8 @@ public:
 	ControlData* GetPositionDegree() const {return m_PositionDegree;}
 	ControlData* GetPercentOutput() const {return m_PercentOutput;}
 
+	bool AllSensorsFalse() {return !GetCoralInSensorState() && !GetCoralOutSensorState() && !GetAlgaeSensorState();}
+
 	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble() * 0.95 * 2 *std::numbers::pi);}
 	units::angle::degree_t GetArmAngle() {return m_ArmAngleSensor->GetAbsolutePosition().GetValue();}
 
@@ -131,7 +136,12 @@ public:
 	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
 	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
 
+	bool GetManualMode() {return m_manualMode;}
+	void SetSensorFailSafe();
+
 	void UpdateTarget();
+
+	bool AtTarget();
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -198,4 +208,9 @@ private:
 	double m_loopRate = 0.02;
 	double m_armChangeRate = 1 * m_loopRate;
 	double m_elevatorChangeRate= 1*m_loopRate;
+
+	bool m_manualMode = false;
+
+	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
+	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 };

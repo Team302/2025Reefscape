@@ -26,6 +26,8 @@
 
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
 // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 
 using frc::DriverStation;
@@ -61,7 +63,14 @@ void DriverFeedback::UpdateRumble()
 
 void DriverFeedback::UpdateLEDStates()
 {
+    auto mechanismConfigMgr = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+    StateMgr *taleStateManager = mechanismConfigMgr != nullptr ? mechanismConfigMgr->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
+    auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
     oldState = currentState;
+    if (frc::DriverStation::IsDisabled())
+    {
+        m_LEDStates->DisabledPattern();
+    }
     if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
     {
         currentState = DragonLeds::RED;
@@ -87,26 +96,68 @@ void DriverFeedback::UpdateLEDStates()
             currentState = DragonLeds::AZUL;
             m_LEDStates->SolidColorPattern(currentState);
         }
+        if (taleMgr != nullptr)
+        {
+            if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
+            {
+                m_LEDStates->BlinkingPattern(currentState);
+            }
+            else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+            {
+                if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
+                {
+                    m_LEDStates->AlternatingColorBlinkingPattern(DragonLeds::WHITE, DragonLeds::AZUL);
+                }
+                else if (taleMgr->GetCoralOutSensorState())
+                {
+                    m_LEDStates->BreathingPattern(currentState);
+                }
+                else if (taleMgr->GetAlgaeSensorState())
+                {
+                    m_LEDStates->BreathingPattern(currentState);
+                }
+            }
+            else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                     taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+            {
+                taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
+            }
+        }
     }
 }
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-    /**
-    StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-    auto noteMgr = noteStateManager != nullptr ? dynamic_cast<noteManagerGen *>(noteStateManager) : nullptr;
-    if (noteMgr != nullptr)
+
+    if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
-        bool backintake = noteMgr->getbackIntakeSensor()->Get();
-        bool frontintake = noteMgr->getfrontIntakeSensor()->Get();
-        bool feeder = noteMgr->getfeederSensor()->Get();
-        bool launcher = noteMgr->getlauncherSensor()->Get();
-        bool placerin = noteMgr->getplacerInSensor()->Get();
-        bool placermid = noteMgr->getplacerMidSensor()->Get();
-        bool placerout = noteMgr->getplacerOutSensor()->Get();
-        m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), backintake, frontintake, feeder, launcher, placerin, placermid, placerout);
+        StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
+        auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
+        auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
+
+        if (taleMgr != nullptr && intakeMgr != nullptr)
+        {
+            if (DragonVision::GetDragonVision() != nullptr)
+            {
+                // auto vision = DragonVision::GetDragonVision();
+                // vision->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE);
+                bool questStatus = false;
+                bool ll1Status = false;
+                bool ll2Status = false;
+                bool pigeonfaults = false;
+                bool coralInSensor = taleMgr->GetCoralInSensorState();
+                bool coralOutSensor = taleMgr->GetCoralOutSensorState();
+                bool algaeSensor = taleMgr->GetAlgaeSensorState();
+                bool intsakeSensor = intakeMgr->GetIntakeSensorState();
+                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+            }
+        }
     }
-    **/
 }
 
 void DriverFeedback::ResetRequests(void)

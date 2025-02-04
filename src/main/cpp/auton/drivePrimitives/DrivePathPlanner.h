@@ -47,8 +47,8 @@ public:
 
 private:
     void InitMoveInfo();
-    void CheckForDriveToNote();
-    bool ShouldConsiderNote(units::length::meter_t xposition);
+    // void CheckForDriveToNote();
+    // bool ShouldConsiderNote(units::length::meter_t xposition);
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;

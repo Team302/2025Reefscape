@@ -12,17 +12,30 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include "FieldConstants.h"
 
-FieldConstants *FieldConstants::m_instance = nullptr;
-FieldConstants *FieldConstants::GetInstance()
+#pragma once
+#include <vector>
+
+#include "frc/geometry/Pose2d.h"
+#include "units/time.h"
+#include "wpi/array.h"
+
+struct DragonVisionPoseEstimatorStruct
 {
-    if (FieldConstants::m_instance == nullptr)
+public:
+    DragonVisionPoseEstimatorStruct() : m_confidenceLevel(ConfidenceLevel::NONE),
+                                        m_visionPose(frc::Pose2d{}),
+                                        m_timeStamp(units::time::second_t(0.0)),
+                                        m_stds(wpi::array(0.9, 0.9, 0.9)) {};
+    ~DragonVisionPoseEstimatorStruct() = default;
+
+    enum ConfidenceLevel
     {
-        FieldConstants::m_instance = new FieldConstants();
-    }
-    return FieldConstants::m_instance;
-}
+        NONE,
+        LOW,
+        MEDIUM,
+        HIGH
+    };
 
 FieldConstants::FieldConstants()
 {
@@ -69,3 +82,8 @@ frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
     frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
     return Pose3d;
 }
+    ConfidenceLevel m_confidenceLevel;
+    frc::Pose2d m_visionPose;
+    units::time::second_t m_timeStamp;
+    wpi::array<double, 3> m_stds;
+};

@@ -48,6 +48,9 @@
 #include "mechanisms/DragonTale/L3ScoringPositionState.h"
 #include "mechanisms/DragonTale/L4ScoringPositionState.h"
 #include "mechanisms/DragonTale/ScoreCoralState.h"
+#include "mechanisms/DragonTale/ManualCoralLoadState.h"
+#include "mechanisms/DragonTale/ManualGrabAlgaeReefState.h"
+#include "mechanisms/DragonTale/ManualGrabAlgaeFloorState.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
@@ -118,6 +121,15 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralState *ScoreCoralStateInst = new ScoreCoralState(string("ScoreCoral"), 13, this, m_activeRobotId);
 	AddToStateVector(ScoreCoralStateInst);
 
+	ManualCoralLoadState *ManualCoralLoadStateInst = new ManualCoralLoadState(string("ManualCoralLoad"), 14, this, m_activeRobotId);
+	AddToStateVector(ManualCoralLoadStateInst);
+
+	ManualGrabAlgaeReefState *ManualGrabAlgaeReefStateInst = new ManualGrabAlgaeReefState(string("ManualGrabAlgaeReef"), 15, this, m_activeRobotId);
+	AddToStateVector(ManualGrabAlgaeReefStateInst);
+
+	ManualGrabAlgaeFloorState *ManualGrabAlgaeFloorStateInst = new ManualGrabAlgaeFloorState(string("ManualGrabAlgaeFloor"), 16, this, m_activeRobotId);
+	AddToStateVector(ManualGrabAlgaeFloorStateInst);
+
 	InitializeStateInst->RegisterTransitionState(ReadyStateInst);
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
@@ -179,6 +191,19 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ProcessStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(NetStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualGrabAlgaeFloorStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ProcessStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
 }
 
 DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
@@ -208,7 +233,11 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_L3SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L3SCORING_POSITION},
 	{"STATE_L4SCORING_POSITION", DragonTale::STATE_NAMES::STATE_L4SCORING_POSITION},
 	{"STATE_SCORE_CORAL", DragonTale::STATE_NAMES::STATE_SCORE_CORAL},
+	{"STATE_MANUAL_CORAL_LOAD", DragonTale::STATE_NAMES::STATE_MANUAL_CORAL_LOAD},
+	{"STATE_MANUAL_GRAB_ALGAE_REEF", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_REEF},
+	{"STATE_MANUAL_GRAB_ALGAE_FLOOR", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_FLOOR},
 };
+
 void DragonTale::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "DragonTale";
@@ -485,19 +514,11 @@ void DragonTale::SetCurrentState(int state, bool run)
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
-void DragonTale::ManualControl()
-{
-	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
-	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
-
-	m_elevatorTarget += ElevatorChange;
-	m_armTarget += ArmChange;
-}
-
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
 }
@@ -613,8 +634,8 @@ void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int valu
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{}; //TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); //TODO: get reef pose values from visdrive *thumbs up*
+	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
 	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
 	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
@@ -625,17 +646,18 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
 
 	// Adjust the angle to the nearest 60-degree increment
-	units::angle::degree_t allianceAdjustment = allianceColor == FMSData::BLUE ? units::angle::degree_t(180) : units::angle::degree_t(0);
-	
+	units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
+
 	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
 
 	int multipleNumber = closestMultiple.value() / 60.0;
 
-	if(multipleNumber % 2 == 0)
+	if (multipleNumber % 2 == 0)
 		return m_grabAlgaeHigh;
 	else
 		return m_grabAlgaeLow;
 }
+
 void DragonTale::UpdateTarget()
 {
 	units::angle::degree_t actualTargetAngle;
@@ -659,4 +681,30 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+}
+
+void DragonTale::ManualControl()
+{
+	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
+	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
+
+	m_elevatorTarget += ElevatorChange;
+	m_armTarget += ArmChange;
+}
+
+void DragonTale::SetSensorFailSafe()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
+	{
+		m_manualMode = false;
+	}
+}
+
+bool DragonTale::AtTarget()
+{
+	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
 }

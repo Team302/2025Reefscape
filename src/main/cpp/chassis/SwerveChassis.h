@@ -18,34 +18,31 @@
 #include <map>
 #include <string>
 
+#include "chassis/ChassisMovement.h"
+#include "chassis/ChassisOptionEnums.h"
+#include "chassis/DragonSwervePoseEstimator.h"
+#include "chassis/IChassis.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
+#include "chassis/states/ISwerveDriveState.h"
+#include "chassis/SwerveModule.h"
+#include "ctre/phoenix6/Pigeon2.hpp"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Translation2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveModuleState.h"
+#include "pathplanner/lib/config/RobotConfig.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"
 #include "units/mass.h"
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
-#include "wpi/DataLog.h"
-
-// #include "grpl/LaserCan.h"
-
-#include "chassis/ChassisOptionEnums.h"
-#include "chassis/states/ISwerveDriveState.h"
-#include "chassis/states/ISwerveDriveOrientation.h"
-#include "chassis/IChassis.h"
-#include "chassis/SwerveModule.h"
-#include "chassis/ChassisMovement.h"
-#include "vision/DragonVision.h"
 #include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/LoggableItem.h"
-
-#include "ctre/phoenix6/Pigeon2.hpp"
-#include "pathplanner/lib/config/RobotConfig.h"
+#include "vision/DragonVision.h"
+#include "wpi/DataLog.h"
 
 class RobotDrive;
 
@@ -145,6 +142,7 @@ public:
     frc::Translation2d GetBackRightOffset() const { return m_backRightLocation; }
 
     pathplanner::RobotConfig GetRobotConfig() { return m_robotConfig; }
+    DragonSwervePoseEstimator *GetSwervePoseEstimator() { return m_swervePoseEstimator; }
 
 private:
     ISwerveDriveOrientation *GetHeadingState(const ChassisMovement &moveInfo);
@@ -178,18 +176,12 @@ private:
     frc::Translation2d m_frontRightLocation;
     frc::Translation2d m_backLeftLocation;
     frc::Translation2d m_backRightLocation;
-
     frc::SwerveDriveKinematics<4> m_kinematics;
-
-    frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
-
+    DragonSwervePoseEstimator *m_swervePoseEstimator;
     units::angle::degree_t m_storedYaw;
-
     units::angle::degree_t m_targetHeading;
-
     ISwerveDriveState *m_currentDriveState;
     ISwerveDriveOrientation *m_currentOrientationState;
-
     bool m_initialized = false;
     std::string m_networkTableName;
     bool m_isRotating = false;
@@ -198,11 +190,9 @@ private:
     double m_coseAngle = 0.707;
     DragonVision *m_vision;
     std::array<frc::SwerveModuleState, 4U> m_targetStates;
-
     units::mass::kilogram_t m_mass = units::mass::kilogram_t(52.0);                                                                // TODO put a real value in
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
-
     frc::Timer m_velocityTimer;
 
     struct Velocity2D

@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <frc/smartdashboard/SendableChooser.h>
+#include "units/time.h"
 
 class AutonSelector
 {
@@ -38,12 +39,20 @@ public:
 	// Description: default cleanup
 	//---------------------------------------------------------------------
 	virtual ~AutonSelector() = default;
+
+	static AutonSelector *GetInstance();
+
 	std::string GetSelectedAutoFile();
 	std::string GetAlianceColor();
 	std::string GetStartPos();
 	std::string GetTargetGamePiece();
 	std::string GetDesiredScoringLevel();
 	std::string GetTargetFace();
+
+	units::time::second_t GetStartDelay();
+	units::time::second_t GetReefDelay();
+	units::time::second_t GetCoralStationDelay();
+
 	//---------------------------------------------------------------------
 	// Method: 		GetSelectedAutoFile
 	// Description: This returns the selected auton file to run.  If it
@@ -63,9 +72,14 @@ private:
 	void PutChoicesOnDashboard();
 	bool FileExists(const std::string &name);
 	bool FileValid(const std::string &name);
+
 	// Attributues
 	frc::SendableChooser<std::string> m_startposchooser;
 	frc::SendableChooser<std::string> m_targetFace;
 	frc::SendableChooser<std::string> m_targetGamePiece;
 	frc::SendableChooser<std::string> m_desiredScoringLevel;
+
+	const std::string m_startDelay = "StartDelay";
+	const std::string m_reefDelay = "Reef Delay";
+	const std::string m_coralStationDelay = "Coral Station Delay";
 };

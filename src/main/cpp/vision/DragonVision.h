@@ -26,13 +26,12 @@
 
 // Team 302 Includes
 #include "vision/DragonVisionStructs.h"
-#include "vision/DragonCamera.h"
+#include "vision/DragonLimelight.h"
 
 #include "configs/RobotElementNames.h"
-#include "utils/FieldConstants.h"
+#include "fielddata/FieldConstants.h"
 
 #include "units/angular_velocity.h"
-class DragonCamera;
 class DragonVision
 {
 public:
@@ -44,6 +43,10 @@ public:
     {
         ALGAE,
         CAGE,
+        BARGE,
+        CORAL,
+        CORAL_STATION,
+        PROCESSOR,
         REEF,
         CORAL_STATION,
         HUMAN_PROCESSOR
@@ -76,34 +79,52 @@ public:
     /// @brief detects and returns transformation to the closest AprilTag using a specified camera
     /// @param position the physical position of the camera
     /// @return /// @return std::optional<VisionData> - a transform containg x, y, z distances and yaw, pitch, roll to target, and AprilTag Id
-    std::optional<VisionData> GetDataToNearestAprilTag(RobotElementNames::CAMERA_USAGE position);
+    std::optional<VisionData> GetDataToNearestAprilTag(DragonLimelight::CAMERA_USAGE position);
 
     /// @brief adds a camera at the specified position to DragonVision
     /// @param camera pointer to the camera object that should be added
     /// @param position the physical position of the camera
-    void AddCamera(DragonCamera *camera, RobotElementNames::CAMERA_USAGE position);
+    void AddLimelight(DragonLimelight *camera, DragonLimelight::CAMERA_USAGE position);
 
-    DragonCamera *GetCamera(RobotElementNames::CAMERA_USAGE position) { return m_dragonCameraMap[position]; }
+    // raw data methods
+
+    std::optional<units::angle::degree_t> GetTargetYaw(DragonLimelight::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetPitch(DragonLimelight::CAMERA_USAGE position);
+    std::optional<units::angle::degree_t> GetTargetSkew(DragonLimelight::CAMERA_USAGE position);
+
+    std::optional<int> GetAprilTagID(DragonLimelight::CAMERA_USAGE position);
+    bool HasTarget(DragonLimelight::CAMERA_USAGE position);
+    std::optional<double> GetTargetArea(DragonLimelight::CAMERA_USAGE position);
+
+    units::angle::degree_t GetTx(DragonLimelight::CAMERA_USAGE position);
+    units::angle::degree_t GetTy(DragonLimelight::CAMERA_USAGE position);
+
+    DragonLimelight *GetCamera(DragonLimelight::CAMERA_USAGE position) { return m_dragonLimelightMap[position]; }
 
     static frc::AprilTagFieldLayout m_aprilTagLayout;
 
     void testAndLogVisionData();
 
-    bool HealthCheck(RobotElementNames::CAMERA_USAGE position);
+    bool HealthCheck(DragonLimelight::CAMERA_USAGE position);
 
 private:
     DragonVision();
     ~DragonVision() = default;
 
-    std::optional<VisionData> GetVisionDataFromNote(VISION_ELEMENT element);
+    std::optional<VisionData> GetVisionDataFromAlgae(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataFromElement(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataToNearestTag();
-    std::optional<VisionData> GetVisionDataToNearestStageTag(VISION_ELEMENT element);
+    std::vector<int> GetReefTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetCoralStationsTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetProcessorTags(frc::DriverStation::Alliance allianceColor) const;
+    std::vector<int> GetBargeTags(frc::DriverStation::Alliance allianceColor) const;
+
+    std::optional<VisionData> GetVisionDataToNearestReefTag(VISION_ELEMENT element);
 
     std::optional<VisionData> MultiTagToElement(frc::Pose3d elementPose);
     std::optional<VisionData> SingleTagToElement(frc::Pose3d elementPose, int idToSearch);
 
     static DragonVision *m_dragonVision;
 
-    std::map<RobotElementNames::CAMERA_USAGE, DragonCamera *> m_dragonCameraMap;
+    std::map<DragonLimelight::CAMERA_USAGE, DragonLimelight *> m_dragonLimelightMap;
 };

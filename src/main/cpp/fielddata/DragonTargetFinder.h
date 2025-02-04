@@ -19,14 +19,14 @@
 #include <map>
 #include <tuple>
 
-#include "frc/geometry/Pose2d.h"
-#include "units/angle.h"
-
 #include "chassis/ChassisMovement.h"
 #include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/geometry/Pose2d.h"
+#include "units/angle.h"
 #include "vision/DragonVision.h"
 
-class DragonDriveTargetFinder
+class DragonTargetFinder
 {
 public:
     // vision = 1
@@ -46,7 +46,7 @@ public:
         FUSE_IF_POSSIBLE
     };
 
-    static DragonDriveTargetFinder *GetInstance();
+    static DragonTargetFinder *GetInstance();
 
     std::tuple<TARGET_INFO, frc::Pose2d> GetPose(DragonVision::VISION_ELEMENT item);
     std::tuple<TARGET_INFO, units::length::meter_t> GetDistance(FINDER_OPTION option, DragonVision::VISION_ELEMENT item);
@@ -57,9 +57,9 @@ public:
                               double kp);
 
 private:
-    DragonDriveTargetFinder() = default;
-    ~DragonDriveTargetFinder() = default;
-    static DragonDriveTargetFinder *m_instance;
+    DragonTargetFinder() = default;
+    ~DragonTargetFinder() = default;
+    static DragonTargetFinder *m_instance;
 
     SwerveChassis *GetChassis();
     int GetAprilTag(DragonVision::VISION_ELEMENT item);
@@ -150,5 +150,18 @@ private:
         {DragonVision::VISION_ELEMENT::HUMAN_PLAYER, AprilTagIDs::RED_FAR_LEFT_HUMAN_PLAYER},
         {DragonVision::VISION_ELEMENT::HUMAN_PLAYER, AprilTagIDs::RED_FAR_RIGHT_HUMAN_PLAYER},
         {DragonVision::VISION_ELEMENT::HUMAN_PROCESSOR, AprilTagIDs::RED_HUMAN_PROCESSOR}};
+    /** TODO JW come back to this one
+    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> blueMap = {
+        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_BLUE_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_BLUE_AMP},
+        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER}};
+
+    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> redMap = {
+        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
+        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_RED_SPEAKER}};
+    **/
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };

@@ -43,6 +43,7 @@ public:
         POLAR_DRIVE,
         SLOW_MODE,
         HOLD_POSITION,
+        MANUAL_CLIMB,
 
         // tip correction controls
         TIPCORRECTION_TOGGLE,
@@ -50,6 +51,7 @@ public:
         MANUAL_LAUNCH_INC,
         MANUAL_LAUNCH_DEC,
         CLIMB_MODE,
+        AUTO_CLIMB,
         INTAKE,
         ELAVATOR,
         ARM,
@@ -61,7 +63,12 @@ public:
         SCORING_MODE,
         HUMAN_PLAYER_STATION,
         ALGAE_INTAKE,
-        EXPEL
+        EXPEL,
+        MANUAL_ON,
+        MANUAL_OFF,
+        MANUAL_IN,
+        MANUAL_OUT,
+        FAILED_INTAKE_SENSOR
 
     };
 };

@@ -21,10 +21,10 @@ void LEDStates::BlinkingPattern(DragonLeds::Colors c)
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
-        if (timer > blinkPatternPeriod)
-            timer = 0;
+        if (m_timer > m_blinkPatternPeriod)
+            m_timer = 0;
 
-        int blinkState = (timer / blinkPatternPeriod) % 2;
+        int blinkState = (m_timer / m_blinkPatternPeriod) % 2;
 
         if (blinkState == 0)
             m_LEDstring->setBufferAllLEDsColor(m_LEDstring->getColorValues(c));
@@ -33,7 +33,7 @@ void LEDStates::BlinkingPattern(DragonLeds::Colors c)
 
         m_LEDstring->commitLedData();
 
-        timer++;
+        m_timer++;
     }
 }
 
@@ -52,10 +52,10 @@ void LEDStates::AlternatingColorBlinkingPattern(DragonLeds::Colors c1, DragonLed
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
-        if (timer > 2 * alternatingColorBlinkPatternPeriod)
-            timer = 0;
+        if (m_timer > 2 * m_altColorBlinkPatternPeriod)
+            m_timer = 0;
 
-        int blinkState = (timer / blinkPatternPeriod) % 2;
+        int blinkState = (m_timer / m_blinkPatternPeriod) % 2;
 
         if (blinkState == 0)
             m_LEDstring->setBufferAllLEDsAlternatingColor(m_LEDstring->getColorValues(c1), m_LEDstring->getColorValues(c2));
@@ -64,7 +64,7 @@ void LEDStates::AlternatingColorBlinkingPattern(DragonLeds::Colors c1, DragonLed
 
         m_LEDstring->commitLedData();
 
-        timer++;
+        m_timer++;
     }
 }
 
@@ -72,20 +72,20 @@ void LEDStates::ClosingInChaserPattern(DragonLeds::Colors c)
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
-        if (timer == 7)
+        if (m_timer == 7)
         {
             int halfLength = (m_LEDstring->m_ledBuffer.size() - 1) / 2;
-            loopThroughIndividualLEDs += loopThroughIndividualLEDs < halfLength ? 1 : -loopThroughIndividualLEDs;
-            int loopout = (m_LEDstring->m_ledBuffer.size() - 1) - loopThroughIndividualLEDs;
-            auto color = colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(m_LEDstring->BLACK);
-            colorLoop += colorLoop < halfLength ? 1 : -((colorLoop * 2) + 1);
-            m_LEDstring->m_ledBuffer[loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
+            m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < halfLength ? 1 : -m_loopThroughIndividualLEDs;
+            int loopout = (m_LEDstring->m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
+            auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(m_LEDstring->BLACK);
+            m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
+            m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
             m_LEDstring->m_ledBuffer[loopout].SetRGB(color[0], color[1], color[2]);
 
             m_LEDstring->commitLedData();
-            timer = 0;
+            m_timer = 0;
         }
-        timer++;
+        m_timer++;
     }
 }
 
@@ -93,17 +93,17 @@ void LEDStates::ChaserPattern(DragonLeds::Colors c)
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
-        loopThroughIndividualLEDs += loopThroughIndividualLEDs < static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1 ? 1 : -loopThroughIndividualLEDs;
-        if (!switchColor)
+        m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1 ? 1 : -m_loopThroughIndividualLEDs;
+        if (!m_switchColor)
         {
             color = color == m_LEDstring->getColorValues(c) ? m_LEDstring->getColorValues(DragonLeds::BLACK) : m_LEDstring->getColorValues(c);
         }
-        // auto color = colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(DragonLeds::BLACK);
+        // auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(DragonLeds::BLACK);
 
-        // colorLoop += colorLoop < m_LEDstring->m_ledBuffer.size() - 1 ? 1 : -((colorLoop * 2) + 1);
-        switchColor = loopThroughIndividualLEDs != static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1;
+        // m_colorLoop += m_colorLoop < m_LEDstring->m_ledBuffer.size() - 1 ? 1 : -((m_colorLoop * 2) + 1);
+        m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1;
 
-        m_LEDstring->m_ledBuffer[loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
+        m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
         m_LEDstring->commitLedData();
     }
 }
@@ -114,81 +114,61 @@ void LEDStates::RainbowPattern()
     m_LEDstring->commitLedData();
 }
 
-void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool bintake, bool fintake, bool feeder, bool launcher, bool placerin, bool placermid, bool placerout)
+void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
-    if (alliancecolor == frc::DriverStation::Alliance::kBlue)
-    {
-        m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::BLUE));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(DragonLeds::RED));
-    }
-    if (fintake)
-    {
-        m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (bintake)
-    {
-        m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (feeder)
-    {
-        m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (launcher)
-    {
-        m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (placerin)
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (placermid)
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
-    if (placerout)
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::YELLOW));
-    }
-    else
-    {
-        m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(DragonLeds::BLACK));
-    }
+    auto alliancecolorcolor = alliancecolor ? DragonLeds::BLUE : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(alliancecolorcolor));
+
+    auto coralInSensorcolor = coralInSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(coralInSensorcolor));
+
+    auto coralOutSensorcolor = coralOutSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(coralOutSensorcolor));
+
+    auto algaeSensorcolor = algaeSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(algaeSensorcolor));
+
+    auto intakesensorcolor = intakesensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(intakesensorcolor));
+
+    auto questStatuscolor = questStatus ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(questStatuscolor));
+
+    auto ll1Statuscolor = ll1Status ? DragonLeds::GREEN : DragonLeds::RED;
+    m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(ll1Statuscolor));
+
+    auto ll2Statuscolor = ll2Status ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(ll2Statuscolor));
+
+    auto pigeonfaultscolor = pigeonfaults ? DragonLeds::YELLOW : DragonLeds::BLACK;
+    m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(pigeonfaultscolor));
+
     m_LEDstring->commitLedData();
+}
+
+void LEDStates::DisabledPattern()
+{
+    ChaserPattern(DragonLeds::AZUL);
+}
+
+void LEDStates::BreathingPattern(DragonLeds::Colors c)
+{
+    if (m_LEDstring->m_ledBuffer.size() > 0)
+    {
+        // brightness follows sin wave shifted to range [0, 254] with period of m_breathePatternPeriod ticks
+        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;
+        m_LEDstring->setBufferAllLEDsColorBrightness(c, brightness);
+        m_LEDstring->commitLedData();
+        m_timer++;
+    }
 }
 
 void LEDStates::ResetVariables()
 {
-    loopThroughIndividualLEDs = -1;
-    colorLoop = 0;
-    timer = 0;
-    switchColor = false;
+    m_loopThroughIndividualLEDs = -1;
+    m_colorLoop = 0;
+    m_timer = 0;
+    m_switchColor = false;
 }
 
 LEDStates *LEDStates::m_instance = nullptr;

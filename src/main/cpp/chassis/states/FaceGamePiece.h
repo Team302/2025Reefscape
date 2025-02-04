@@ -23,7 +23,7 @@ class FaceGamePiece : public ISwerveDriveOrientation
 {
 public:
     FaceGamePiece();
-    ~FaceGamePiece();
+    ~FaceGamePiece() = default;
 
     std::string GetHeadingStateName() const override;
 

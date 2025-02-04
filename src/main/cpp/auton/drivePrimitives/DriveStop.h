@@ -64,11 +64,13 @@ public:
 	/// @return bool true means the end condition was reached, false means it hasn't
 	bool IsDone() override;
 
-private:
+protected:
 	units::time::second_t m_maxTime; // Target time
-	float m_currentTime;			 // Time since init
-	SwerveChassis *m_chassis;
 	std::unique_ptr<frc::Timer> m_timer;
+
+private:
+	float m_currentTime; // Time since init
+	SwerveChassis *m_chassis;
 	double m_heading;
 	// noteManager *m_noteManager;
 	ChassisOptionEnums::HeadingOption m_headingOption;

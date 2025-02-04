@@ -33,8 +33,6 @@ void ChassisConfigChassis_9998::DefinePigeon()
 
 void ChassisConfigChassis_9998::DefineChassis()
 {
-    string moduleconfig{string("swervemodule_9998.xml")};
-    string chassisconfig{string("swervechassis_9998.xml")};
     string networkTableName{string("swerve")};
     string canbusName;
     canbusName.assign(TunerConstants9998::kCANBusName);
@@ -61,7 +59,6 @@ void ChassisConfigChassis_9998::DefineChassis()
 
                                          TunerConstants9998::steerGains,
 
-                                         // moduleconfig,
                                          networkTableName);
 
     m_leftBackModule = new SwerveModule(canbusName,
@@ -85,7 +82,6 @@ void ChassisConfigChassis_9998::DefineChassis()
 
                                         TunerConstants9998::steerGains,
 
-                                        // moduleconfig,
                                         networkTableName);
 
     m_rightFrontModule = new SwerveModule(canbusName,
@@ -109,7 +105,6 @@ void ChassisConfigChassis_9998::DefineChassis()
 
                                           TunerConstants9998::steerGains,
 
-                                          // moduleconfig,
                                           networkTableName);
 
     m_rightBackModule = new SwerveModule(canbusName,
@@ -133,7 +128,6 @@ void ChassisConfigChassis_9998::DefineChassis()
 
                                          TunerConstants9998::steerGains,
 
-                                         // moduleconfig,
                                          networkTableName);
 
     units::length::inch_t wheelbase = TunerConstants9998::kFrontLeftXPos -

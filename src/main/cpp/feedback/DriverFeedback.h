@@ -17,6 +17,7 @@
 #pragma once
 #include <feedback/LEDStates.h>
 #include <state/IRobotStateChangeSubscriber.h>
+#include "vision/DragonVision.h"
 
 class DriverFeedback : public IRobotStateChangeSubscriber
 {

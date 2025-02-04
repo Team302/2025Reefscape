@@ -17,17 +17,16 @@
 #include <optional>
 #include <string>
 
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
+#include "fielddata/DragonTargetFinder.h"
+#include "fielddata/FieldConstants.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Transform3d.h"
 #include "units/angle.h"
-
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/DragonDriveTargetFinder.h"
-#include "chassis/states/ISwerveDriveOrientation.h"
-#include "vision/DragonVisionStructLogger.h"
 #include "utils/FMSData.h"
-#include "utils/FieldConstants.h"
+#include "vision/DragonVisionStructLogger.h"
 
 /// DEBUGGING
 #include "utils/logging/Logger.h"
@@ -39,20 +38,20 @@ using std::optional;
 using std::string;
 using std::tuple;
 
-DragonDriveTargetFinder *DragonDriveTargetFinder::m_instance = nullptr;
-DragonDriveTargetFinder *DragonDriveTargetFinder::GetInstance()
+DragonTargetFinder *DragonTargetFinder::m_instance = nullptr;
+DragonTargetFinder *DragonTargetFinder::GetInstance()
 {
-    if (DragonDriveTargetFinder::m_instance == nullptr)
+    if (DragonTargetFinder::m_instance == nullptr)
     {
-        DragonDriveTargetFinder::m_instance = new DragonDriveTargetFinder();
+        DragonTargetFinder::m_instance = new DragonTargetFinder();
     }
-    return DragonDriveTargetFinder::m_instance;
+    return DragonTargetFinder::m_instance;
 }
 
-tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::GetPose(DragonVision::VISION_ELEMENT item)
+tuple<DragonTargetFinder::TARGET_INFO, Pose2d> DragonTargetFinder::GetPose(DragonVision::VISION_ELEMENT item)
 {
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> targetInfo;
+    tuple<DragonTargetFinder::TARGET_INFO, Pose2d> targetInfo;
 
     /* if (chassisConfig != nullptr)
     {
@@ -62,6 +61,7 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
         auto vision = DragonVision::GetDragonVision();
         if (vision != nullptr)
         {
+            /** TODO: JW come back to this
             auto data = vision->GetVisionData(item);
 
             if (data && item == DragonVision::VISION_ELEMENT::ALGAE)
@@ -76,13 +76,14 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
                     robotRelativeAngle -= units::angle::degree_t(180.0);
 
                 units::angle::degree_t fieldRelativeAngle = chassis->GetPose().Rotation().Degrees() + robotRelativeAngle;
-                targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::VISION_BASED, frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle));
+                targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::VISION_BASED, frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle));
 
                 return targetInfo;
-            }
+            } **/
         }
 
         int aprilTag = -1;
+        /** TODO: JW come back to this one
         auto fieldConstants = FieldConstants::GetInstance();
         units::length::meter_t centerYLine = fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::REEF).Y();
 
@@ -96,9 +97,9 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
             else if (item == DragonVision::VISION_ELEMENT::CAGE)
             {
                 if (chassis->GetPose().Y() > centerYLine)
-                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_LEFT_STAGE).ToPose2d());
+                    targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_LEFT_STAGE).ToPose2d());
                 else
-                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_RIGHT_STAGE).ToPose2d());
+                    targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::BLUE_RIGHT_STAGE).ToPose2d());
                 return targetInfo;
             }
         }
@@ -128,12 +129,13 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
             else if (item == DragonVision::VISION_ELEMENT::HUMAN_PLAYER)
             {
                 if (chassis->GetPose().Y() > centerYLine)
-                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_RIGHT_STAGE).ToPose2d());
+                    targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_RIGHT_STAGE).ToPose2d());
                 else
-                    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_LEFT_STAGE).ToPose2d());
+                    targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::ODOMETRY_BASED, fieldConstants->GetFieldElement(fieldConstants->FIELD_ELEMENT::RED_LEFT_STAGE).ToPose2d());
                 return targetInfo;
             }
         }
+        **/
 
         if (aprilTag > 0)
         {
@@ -147,21 +149,21 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, Pose2d> DragonDriveTargetFinder::Get
 
                 units::angle::degree_t rawCorrection = units::math::atan(yTrans / xTrans);
 
-                targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::ODOMETRY_BASED, frc::Pose2d(xTrans, yTrans, rawCorrection));
+                targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::ODOMETRY_BASED, frc::Pose2d(xTrans, yTrans, rawCorrection));
 
                 return targetInfo;
             }
         }
     } */
     auto pose2d = Pose2d();
-    targetInfo = make_tuple(DragonDriveTargetFinder::TARGET_INFO::NOT_FOUND, pose2d);
+    targetInfo = make_tuple(DragonTargetFinder::TARGET_INFO::NOT_FOUND, pose2d);
     return targetInfo;
 }
-tuple<DragonDriveTargetFinder::TARGET_INFO, units::length::meter_t> DragonDriveTargetFinder::GetDistance(FINDER_OPTION option,
-                                                                                                         DragonVision::VISION_ELEMENT item)
+tuple<DragonTargetFinder::TARGET_INFO, units::length::meter_t> DragonTargetFinder::GetDistance(FINDER_OPTION option,
+                                                                                               DragonVision::VISION_ELEMENT item)
 {
-    tuple<DragonDriveTargetFinder::TARGET_INFO, units::length::meter_t> targetInfo;
-    auto type = DragonDriveTargetFinder::TARGET_INFO::NOT_FOUND;
+    tuple<DragonTargetFinder::TARGET_INFO, units::length::meter_t> targetInfo;
+    auto type = DragonTargetFinder::TARGET_INFO::NOT_FOUND;
 
     units::length::meter_t dist = units::length::meter_t(0.0);
 
@@ -227,10 +229,10 @@ tuple<DragonDriveTargetFinder::TARGET_INFO, units::length::meter_t> DragonDriveT
     targetInfo = make_tuple(type, dist);
     return targetInfo;
 }
-void DragonDriveTargetFinder::SetCorrection(ChassisMovement &chassisMovement,
-                                            SwerveChassis *chassis,
-                                            units::angle::degree_t target,
-                                            double kp)
+void DragonTargetFinder::SetCorrection(ChassisMovement &chassisMovement,
+                                       SwerveChassis *chassis,
+                                       units::angle::degree_t target,
+                                       double kp)
 {
     chassis->SetStoredHeading(target);
     if (chassis != nullptr)
@@ -246,7 +248,7 @@ void DragonDriveTargetFinder::SetCorrection(ChassisMovement &chassisMovement,
     }
 }
 
-SwerveChassis *DragonDriveTargetFinder::GetChassis()
+SwerveChassis *DragonTargetFinder::GetChassis()
 {
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     if (chassisConfig != nullptr)
@@ -256,8 +258,9 @@ SwerveChassis *DragonDriveTargetFinder::GetChassis()
     return nullptr;
 }
 
-int DragonDriveTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
+int DragonTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
 {
+    /** TODO JW come back to
     if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::kBlue)
     {
         auto itr = blueMap.find(item);
@@ -274,10 +277,11 @@ int DragonDriveTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
             return itr->second;
         }
     }
+    **/
     return -1;
 }
 
-frc::Pose2d DragonDriveTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMENT item)
+frc::Pose2d DragonTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMENT item)
 {
     auto aprilTag = GetAprilTag(item);
     if (aprilTag > 0)
@@ -291,7 +295,7 @@ frc::Pose2d DragonDriveTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMEN
     return {};
 }
 
-units::angle::degree_t DragonDriveTargetFinder::AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle)
+units::angle::degree_t DragonTargetFinder::AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle)
 {
     auto robotRelativeAngle = angle;
     if (robotRelativeAngle <= units::angle::degree_t(-90.0)) // Intake for front and back (optimizing movement)

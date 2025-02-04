@@ -43,6 +43,7 @@ void FaceGamePiece::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
         auto vision = DragonVision::GetDragonVision();
         if (vision != nullptr)
         {
+            /** TODO come back to this one
             auto data = vision->GetVisionData(DragonVision::VISION_ELEMENT::NOTE);
             if (data)
             {
@@ -73,6 +74,7 @@ void FaceGamePiece::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
 
                 chassisMovement.targetPose = frc::Pose2d(data.value().transformToTarget.X(), data.value().transformToTarget.X(), fieldRelativeAngle);
             }
+            **/
         }
     }
 }

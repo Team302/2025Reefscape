@@ -50,8 +50,8 @@
 ///-----------------------------------------------------------------------------------
 DragonLimelight::DragonLimelight(
     std::string networkTableName, /// <I> networkTableName
-    DragonCamera::CAMERA_TYPE cameraType,
-    DragonCamera::CAMERA_USAGE cameraUsage,
+    DragonLimelight::CAMERA_TYPE cameraType,
+    DragonLimelight::CAMERA_USAGE cameraUsage,
     units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
     units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
     units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
@@ -60,19 +60,18 @@ DragonLimelight::DragonLimelight(
     units::angle::degree_t roll,           /// <I> - Roll of camera
     LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
-    CAM_MODE camMode,
-    STREAM_MODE streamMode,
-    SNAPSHOT_MODE snapMode) : DragonCamera(networkTableName, cameraType, cameraUsage, mountingXOffset, mountingYOffset, mountingZOffset, pitch, yaw, roll),
-                              SensorData(),
-                              m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+    CAM_MODE camMode) : SensorData(),
+                        m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
     SetPipeline(initialPipeline);
-    SetStreamMode(streamMode);
-    ToggleSnapshot(snapMode);
     SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
     m_healthTimer = new frc::Timer();
+    for (int port = 5800; port <= 5809; port++)
+    {
+        wpi::PortForwarder::GetInstance().Add(port + cameraUsage, "limelight.local", port);
+    }
 }
 
 void DragonLimelight::PeriodicCacheData()
@@ -80,16 +79,23 @@ void DragonLimelight::PeriodicCacheData()
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
-
+        m_megatag1PosBool = false;
+        m_megatag2PosBool = false;
         m_tv = LimelightHelpers::getTV(m_cameraName);
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
+        m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
     }
     else
     {
+        m_megatag1PosBool = false;
+        m_megatag2PosBool = false;
         m_tv = false;
         m_tx = units::angle::degree_t(0.0);
         m_ty = units::angle::degree_t(0.0);
+        m_tagid = -1;
+        m_megatag1Pos = {};
+        m_megatag2Pos = {};
     }
 }
 
@@ -124,102 +130,7 @@ bool DragonLimelight::HealthCheck()
 /// @return -1 if the network table cannot be found
 std::optional<int> DragonLimelight::GetAprilTagID()
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        double value = LimelightHelpers::getFiducialID(m_cameraName);
-        int aprilTagInt = static_cast<int>(value + (value > 0 ? 0.5 : -0.5));
-        if (aprilTagInt < 0) // unclear when this would ever be -1
-        {
-            return std::nullopt;
-        }
-        return aprilTagInt;
-    }
-
-    return std::nullopt;
-}
-
-std::optional<VisionPose> DragonLimelight::GetFieldPosition()
-{
-    return GetBlueFieldPosition();
-}
-
-std::optional<VisionPose> DragonLimelight::GetFieldPosition(frc::DriverStation::Alliance alliance)
-{
-    if (alliance == frc::DriverStation::Alliance::kRed)
-        return GetRedFieldPosition();
-    else
-    {
-        return GetBlueFieldPosition();
-    }
-}
-
-std::optional<VisionPose> DragonLimelight::GetRedFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto redTopic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpired");
-
-        std::vector<double> redPosition = redTopic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(redPosition[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(redPosition[3]), units::angle::degree_t(redPosition[4]), units::angle::degree_t(redPosition[5])};
-
-        return VisionPose{frc::Pose3d{units::meter_t(redPosition[0]), units::meter_t(redPosition[1]), units::meter_t(redPosition[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-/**
- * @brief Get the Blue Field Position object
- *
- */
-std::optional<VisionPose> DragonLimelight::GetBlueFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-        std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-
-        // frc::Rotation3d rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::math::atan2(units::meter_t(position[0]), units::meter_t(position[2]))); // roll pitch yaw
-
-        return VisionPose{frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-std::optional<VisionPose> DragonLimelight::GetOriginFieldPosition()
-{
-    if (m_networktable.get() != nullptr)
-    {
-        auto redTopic = m_networktable.get()->GetDoubleArrayTopic("botpose");
-
-        std::vector<double> position = redTopic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-        units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-        units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
-
-        frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-
-        return VisionPose{frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation}, timestamp};
-    }
-
-    return std::nullopt;
-}
-
-std::vector<double> DragonLimelight::Get3DSolve()
-{
-    std::vector<double> output;
-    return output;
+    return m_tagid;
 }
 
 bool DragonLimelight::HasTarget()
@@ -315,55 +226,59 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         // Megatag 1
         if (!megatag2)
         {
-            nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-            std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
+            if (!m_megatag1PosBool)
+            {
+                nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
+                std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
 
-            units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-            units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
+                units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
+                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
 
-            frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-            frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
+                frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
+                frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
 
-            double numberOfTagsDetected = position[7];
-            double averageTagTargetArea = position[10];
+                double numberOfTagsDetected = position[7];
+                double averageTagTargetArea = position[10];
 
-            // in case of invalid Limelight targets
-            if (pose3d.ToPose2d().X() == units::meter_t(0.0))
-            {
-                return std::nullopt;
-            }
+                // in case of invalid Limelight targets
+                if (pose3d.ToPose2d().X() == units::meter_t(0.0))
+                {
+                    return std::nullopt;
+                }
 
-            double xyStds;
-            double degStds;
-            // multiple targets detected
-            if (numberOfTagsDetected == 0)
-            {
-                return std::nullopt;
+                double xyStds;
+                double degStds;
+                // multiple targets detected
+                if (numberOfTagsDetected == 0)
+                {
+                    return std::nullopt;
+                }
+                else if (numberOfTagsDetected >= 2)
+                {
+                    xyStds = 0.5;
+                    degStds = 6;
+                }
+                // 1 target with large area and close to estimated pose
+                else if (averageTagTargetArea > 0.8)
+                {
+                    xyStds = 1.0;
+                    degStds = 12;
+                }
+                // 1 target farther away and estimated pose is close
+                else if (averageTagTargetArea > 0.1)
+                {
+                    xyStds = 2.0;
+                    degStds = 30;
+                }
+                // conditions don't match to add a vision measurement
+                else
+                {
+                    return std::nullopt;
+                }
+                m_megatag1PosBool = true;
+                m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
             }
-            else if (numberOfTagsDetected >= 2)
-            {
-                xyStds = 0.5;
-                degStds = 6;
-            }
-            // 1 target with large area and close to estimated pose
-            else if (averageTagTargetArea > 0.8)
-            {
-                xyStds = 1.0;
-                degStds = 12;
-            }
-            // 1 target farther away and estimated pose is close
-            else if (averageTagTargetArea > 0.1)
-            {
-                xyStds = 2.0;
-                degStds = 30;
-            }
-            // conditions don't match to add a vision measurement
-            else
-            {
-                return std::nullopt;
-            }
-            VisionPose LimelightVisionPose = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
-            return LimelightVisionPose;
+            return m_megatag1Pos;
         }
 
         // Megatag 2
@@ -380,11 +295,16 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             // conditions don't match to add a vision measurement
             else
             {
-                xyStds = .7;
-                degStds = 9999999;
+                if (!m_megatag2PosBool)
+                {
+                    xyStds = .7;
+                    degStds = 9999999;
+                    m_megatag2PosBool = true;
+                    m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
+                }
+
+                return m_megatag2Pos;
             }
-            VisionPose pose = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-            return pose;
         }
     }
     return std::nullopt;
@@ -405,19 +325,19 @@ void DragonLimelight::SetLEDMode(DragonLimelight::LED_MODE mode)
 {
     switch (mode)
     {
-        case LED_MODE::LED_PIPELINE_CONTROL:
-            LimelightHelpers::setLEDMode_PipelineControl(m_cameraName);
-            break;
-        case LED_MODE::LED_BLINK:
-            LimelightHelpers::setLEDMode_ForceBlink(m_cameraName);
-            break;
-        case LED_MODE::LED_ON:
-            LimelightHelpers::setLEDMode_ForceOn(m_cameraName);
-            break;
-        case LED_MODE::LED_OFF: //default to off
-        default:
-            LimelightHelpers::setLEDMode_ForceOff(m_cameraName);
-            break;
+    case LED_MODE::LED_PIPELINE_CONTROL:
+        LimelightHelpers::setLEDMode_PipelineControl(m_cameraName);
+        break;
+    case LED_MODE::LED_BLINK:
+        LimelightHelpers::setLEDMode_ForceBlink(m_cameraName);
+        break;
+    case LED_MODE::LED_ON:
+        LimelightHelpers::setLEDMode_ForceOn(m_cameraName);
+        break;
+    case LED_MODE::LED_OFF: // default to off
+    default:
+        LimelightHelpers::setLEDMode_ForceOff(m_cameraName);
+        break;
     }
 }
 
@@ -439,52 +359,6 @@ void DragonLimelight::SetPipeline(LL_PIPELINE pipeline)
     LimelightHelpers::setPipelineIndex(m_cameraName, pipeline);
 }
 
-void DragonLimelight::SetStreamMode(DragonLimelight::STREAM_MODE mode)
-{
-    switch (mode){
-        case STREAM_MODE::STREAM_PIP_MAIN:
-            LimelightHelpers::setStreamMode_PiPMain(m_cameraName);
-            break;
-        case STREAM_MODE::STREAM_PIP_SECONDARY:
-            LimelightHelpers::setStreamMode_PiPSecondary(m_cameraName);
-            break;
-        case STREAM_MODE::STREAM_STANDARD: //default to standard
-        default:
-            LimelightHelpers::setStreamMode_Standard(m_cameraName);
-            break;
-        }
-}
-
-void DragonLimelight::SetCrosshairPos(double crosshairPosX, double crosshairPosY)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("cx0", crosshairPosX);
-        nt->PutNumber("cy0", crosshairPosY);
-    }
-}
-
-void DragonLimelight::SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("cx1", crosshairPosX);
-        nt->PutNumber("cy1", crosshairPosY);
-    }
-}
-
-// MAX of 32 snapshots can be saved
-void DragonLimelight::ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle)
-{
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        nt->PutNumber("snapshot", toggle);
-    }
-}
-
 void DragonLimelight::SetPriorityTagID(int id)
 {
     LimelightHelpers::setPriorityTagID(m_cameraName, id);
@@ -494,7 +368,6 @@ void DragonLimelight::SetCameraPose_RobotSpace(double forward, double left, doub
 {
     LimelightHelpers::setCameraPose_RobotSpace(m_cameraName, forward, left, up, roll, pitch, yaw);
 }
-
 
 void DragonLimelight::PrintValues()
 { /*

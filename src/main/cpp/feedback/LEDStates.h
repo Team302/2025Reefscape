@@ -33,7 +33,9 @@ public:
     void AlternatingColorBlinkingPattern(DragonLeds::Colors c1, DragonLeds::Colors c2);
     void ClosingInChaserPattern(DragonLeds::Colors c);
     void RainbowPattern();
-    void DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool bintake, bool fintake, bool feeder, bool launcher, bool placerin, bool placermid, bool placerout);
+    void DisabledPattern();
+    void DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
+    void BreathingPattern(DragonLeds::Colors c);
     DragonLeds *m_LEDstring = DragonLeds::GetInstance();
     static LEDStates *GetInstance();
 
@@ -41,13 +43,14 @@ private:
     LEDStates() = default;
     ~LEDStates() = default;
 
-    int loopThroughIndividualLEDs = -1;
-    int colorLoop = 0;
-    int timer;
-    bool switchColor = false;
+    int m_loopThroughIndividualLEDs = -1;
+    int m_colorLoop = 0;
+    int m_timer = 0;
+    bool m_switchColor = false;
     std::array<int, 3U> color = m_LEDstring->getColorValues(DragonLeds::BLACK);
     static LEDStates *m_instance;
 
-    const int blinkPatternPeriod = 10;
-    const int alternatingColorBlinkPatternPeriod = 10;
+    const int m_blinkPatternPeriod = 10;
+    const int m_altColorBlinkPatternPeriod = 10;
+    const int m_breathePatternPeriod = 10;
 };

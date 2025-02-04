@@ -50,12 +50,14 @@ public:
 	void setBufferAllLEDsBlack();
 	void setBufferAllLEDsRainbow();
 	void setSpecificLED(int id, std::array<int, 3> color);
+	void setBufferAllLEDsColorBrightness(Colors c, int brightness);
 
 	std::array<int, 3> getColorValues(Colors c);
 
 	static DragonLeds *GetInstance();
 
 private:
+	std::array<int, 3> getColorHSV(Colors c);
 	static DragonLeds *m_instance;
 	frc::AddressableLED *m_addressibleLeds;
 	int m_rainbowFirstPixelHue = 0;

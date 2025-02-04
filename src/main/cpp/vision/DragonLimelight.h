@@ -26,17 +26,35 @@
 #include "units/length.h"
 #include "units/time.h"
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/DriverStation.h"
+#include "vision/DragonVisionStructs.h"
 
 // Team 302 includes
-#include "vision/DragonCamera.h"
 #include "utils/sensors/SensorData.h"
+#include "utils/logging/DragonDataLogger.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonCamera, public SensorData
+class DragonLimelight : public SensorData
 {
 public:
+    enum CAMERA_TYPE
+    {
+        LIMELIGHT4,
+        LIMELIGHT4_W_HAILO8,
+        LIMELIGHT3G,
+        LIMELIGHT3,
+        LIMELIGHT3_W_CORAL
+    };
+
+    enum CAMERA_USAGE
+    {
+        BACK_CAMERA,
+        FRONT_CAMERA,
+    };
+
     enum LED_MODE
     {
         LED_UNKNOWN = -1,
@@ -56,9 +74,9 @@ public:
     enum STREAM_MODE
     {
         STREAM_UNKNOWN = -1,
-        STREAM_STANDARD,         // side by side if two cams
-        STREAM_PIP_MAIN, // Second Cam bottom right of Main Cam
-        STREAM_PIP_SECONDARY  // Main Cam bottom right of Second Cam
+        STREAM_STANDARD,     // side by side if two cams
+        STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
+        STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
     };
 
     enum SNAPSHOT_MODE
@@ -84,8 +102,8 @@ public:
     DragonLimelight() = delete;
     DragonLimelight(
         std::string name, /// <I> - network table name'
-        DragonCamera::CAMERA_TYPE cameraType,
-        DragonCamera::CAMERA_USAGE cameraUsage,
+        DragonLimelight::CAMERA_TYPE cameraType,
+        DragonLimelight::CAMERA_USAGE cameraUsage,
         units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
         units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
         units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
@@ -94,9 +112,7 @@ public:
         units::angle::degree_t roll,           /// <I> - Roll of camera
         LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
         LED_MODE ledMode,
-        CAM_MODE camMode,
-        STREAM_MODE streamMode,
-        SNAPSHOT_MODE snapMode);
+        CAM_MODE camMode);
 
     ///-----------------------------------------------------------------------------------
     /// Method:         ~DragonLimelight (destructor)
@@ -116,16 +132,7 @@ public:
     std::optional<units::time::millisecond_t> GetPipelineLatency();
     std::optional<int> GetAprilTagID();
 
-    std::vector<double> Get3DSolve();
-
-    std::optional<VisionPose> GetFieldPosition();
-    std::optional<VisionPose> GetFieldPosition(frc::DriverStation::Alliance alliance);
-
     std::optional<VisionPose> EstimatePoseOdometryLimelight(bool megatag2);
-
-    std::optional<VisionPose> GetRedFieldPosition();
-    std::optional<VisionPose> GetBlueFieldPosition();
-    std::optional<VisionPose> GetOriginFieldPosition();
 
     std::optional<VisionData> GetDataToNearestAprilTag();
     std::optional<VisionData> GetDataToSpecifiedTag(int id);
@@ -145,33 +152,47 @@ public:
     void SetLEDMode(DragonLimelight::LED_MODE mode);
     void SetCamMode(DragonLimelight::CAM_MODE mode);
     void SetPipeline(DragonLimelight::LL_PIPELINE pipeline);
-    void SetStreamMode(DragonLimelight::STREAM_MODE mode);
-    void ToggleSnapshot(DragonLimelight::SNAPSHOT_MODE toggle);
-    void SetCrosshairPos(double crosshairPosX, double crosshairPosY);
-    void SetSecondaryCrosshairPos(double crosshairPosX, double crosshairPosY);
     void SetPriorityTagID(int id);
     void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
+    units::angle::degree_t GetCameraPitch() const { return m_cameraPose.Rotation().Y(); }
+    units::angle::degree_t GetCameraYaw() const { return m_cameraPose.Rotation().Z(); }
+    units::angle::degree_t GetCameraRoll() const { return m_cameraPose.Rotation().X(); } // rotates around x-axis
+    units::length::inch_t GetMountingXOffset() const { return m_cameraPose.X(); }
+    units::length::inch_t GetMountingYOffset() const { return m_cameraPose.Y(); }
+    units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
+    std::string GetCameraName() const { return m_cameraName; }
+
     void PeriodicCacheData() override;
 
-    
+    units::angle::degree_t GetTx() const;
+    units::angle::degree_t GetTy() const;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
 protected:
-    units::angle::degree_t GetTx() const;
-    units::angle::degree_t GetTy() const;
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
 
+    // cached elements
     bool m_tv;
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
+    int m_tagid;
+    bool m_megatag2PosBool = false;
+    bool m_megatag1PosBool = false;
+    VisionPose m_megatag2Pos;
+    VisionPose m_megatag1Pos;
 
     const double START_HB = -9999;
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
     LL_PIPELINE m_pipeline;
+
+    // from old dragon camera
+    std::string m_cameraName;
+    frc::Pose3d m_cameraPose;
+    const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);
 };

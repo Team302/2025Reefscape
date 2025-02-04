@@ -28,7 +28,7 @@
 #include "chassis/HolonomicDrive.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "state/State.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
