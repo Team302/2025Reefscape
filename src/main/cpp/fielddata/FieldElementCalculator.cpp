@@ -55,27 +55,49 @@ void FieldElementCalculator::InitializeTransforms()
     transformConstantsMap[FieldConstants::BLUE_REEF_KL] =
         TransformToPose{FieldConstants::BLUE_REEF_KL, m_noTransform};
 
-    /** 
+    
     // Blue Calculated Positions
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] = m_blueCalcCoralLeftAlliance;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] = m_blueCalcCoralLeftSidewall;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_ALLIANCE] = m_blueCalcCoralRightAlliance;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = m_blueCalcCoralRightSidewall;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_RIGHT_CAGE] = m_blueCalcRightCage;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_LEFT_CAGE] = m_blueCalcLeftCage;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_CENTER] = m_blueCalcReefCenter;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_A] = m_blueCalcReefA;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_B] = m_blueCalcReefB;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_C] = m_blueCalcReefC;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_D] = m_blueCalcReefD;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_E] = m_blueCalcReefE;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_F] = m_blueCalcReefF;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_G] = m_blueCalcReefG;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_H] = m_blueCalcReefH;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_I] = m_blueCalcReefI;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_J] = m_blueCalcReefJ;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_K] = m_blueCalcReefK;
-    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_L] = m_blueCalcReefL;
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT_ALLIANCE] =
+        TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_blueCalcCoralLeftAlliance);
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT_SIDEWALL] =
+        TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_blueCalcCoralLeftSidewall);
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_ALLIANCE] =
+        TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_blueCalcCoralRightAlliance);
+    transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_SIDEWALL] =
+        TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_blueCalcCoralRightSidewall);
+    transformConstantsMap[FieldConstants::BLUE_LEFT_CAGE] =
+        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_blueCalcCageLeft);
+    transformConstantsMap[FieldConstants::BLUE_RIGHT_CAGE] =
+        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_blueCalcCageRight);
+    transformConstantsMap[FieldConstants::BLUE_CENTER_CAGE] =
+        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_blueCalcCageCenter);
+    transformConstantsMap[FieldConstants::BLUE_REEF_A] =
+        TransformToPose(FieldConstants::BLUE_REEF_AB, m_blueCalcReefA);
+    transformConstantsMap[FieldConstants::BLUE_REEF_B] =
+        TransformToPose(FieldConstants::BLUE_REEF_AB, m_blueCalcReefB);
+    transformConstantsMap[FieldConstants::BLUE_REEF_C] =
+        TransformToPose(FieldConstants::BLUE_REEF_CD, m_blueCalcReefC);
+    transformConstantsMap[FieldConstants::BLUE_REEF_D] =
+        TransformToPose(FieldConstants::BLUE_REEF_CD, m_blueCalcReefD);
+    transformConstantsMap[FieldConstants::BLUE_REEF_E] =
+        TransformToPose(FieldConstants::BLUE_REEF_EF, m_blueCalcReefE);
+    transformConstantsMap[FieldConstants::BLUE_REEF_F] =
+        TransformToPose(FieldConstants::BLUE_REEF_EF, m_blueCalcReefF);
+    transformConstantsMap[FieldConstants::BLUE_REEF_G] =
+        TransformToPose(FieldConstants::BLUE_REEF_GH, m_blueCalcReefG);
+    transformConstantsMap[FieldConstants::BLUE_REEF_H] =
+        TransformToPose(FieldConstants::BLUE_REEF_GH, m_blueCalcReefH);
+    transformConstantsMap[FieldConstants::BLUE_REEF_I] =
+        TransformToPose(FieldConstants::BLUE_REEF_IJ, m_blueCalcReefI);
+    transformConstantsMap[FieldConstants::BLUE_REEF_J] =
+        TransformToPose(FieldConstants::BLUE_REEF_IJ, m_blueCalcReefJ);
+    transformConstantsMap[FieldConstants::BLUE_REEF_K] =
+        TransformToPose(FieldConstants::BLUE_REEF_KL, m_blueCalcReefK);
+    transformConstantsMap[FieldConstants::BLUE_REEF_L] =
+        TransformToPose(FieldConstants::BLUE_REEF_KL, m_blueCalcReefL);
+
+
+/*
 
     // Red AprilTag locations
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT] = m_aprilTag1;

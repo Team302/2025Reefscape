@@ -56,6 +56,7 @@ public:
         BLUE_CORAL_STATION_RIGHT_SIDEWALL,
         BLUE_LEFT_CAGE,
         BLUE_RIGHT_CAGE,
+        BLUE_CENTER_CAGE,
         BLUE_REEF_CENTER,
         BLUE_REEF_A,
         BLUE_REEF_B,
