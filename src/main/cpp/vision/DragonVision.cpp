@@ -71,18 +71,6 @@ void DragonVision::AddLimelight(DragonLimelight *camera, DragonLimelight::CAMERA
 {
 	m_dragonLimelightMap[position] = camera;
 
-	// if ((position == RobotElementNames::CAMERA_USAGE::LAUNCHE) || (position == RobotElementNames::CAMERA_USAGE::PLACER))
-	{
-		// may switch above pose fallback to reference or last pose, may be able to use odometry as a fallback and get closest
-		// to odometry's slightly inaccurate pose
-		/**
-		 * m_poseEstimators.emplace_back(photon::PhotonPoseEstimator{GetAprilTagLayout(),
-																  photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
-																  std::move(photon::PhotonCamera{camera->GetCameraName()}),
-																  camera->GetTransformFromRobotCenter()});
-		m_poseEstimators.back().SetMultiTagFallbackStrategy(photon::PoseStrategy::AVERAGE_BEST_TARGETS);
-		**/
-	}
 }
 
 std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)

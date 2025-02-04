@@ -27,6 +27,7 @@
 #include "auton/PrimitiveEnums.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
+#include "utils/FieldConstants.h"
 #include "auton/ZoneParams.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
 
@@ -45,6 +46,7 @@ public:
         REEF = DragonVision::VISION_ELEMENT::REEF,
         PROCESSOR = DragonVision::VISION_ELEMENT::PROCESSOR
     };
+
     // @ADDMECH add parameter for your mechanism state
     PrimitiveParams(PRIMITIVE_IDENTIFIER id,
                     units::time::second_t time,
@@ -54,7 +56,7 @@ public:
                     std::string choreoTrajectoryName,
                     ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
-                    VISION_ALIGNMENT visionAlignment,
+                    FieldConstants::FIELD_ELEMENT visionAlignment,
                     // bool changeNoteState,
                     // noteManagerGen::STATE_NAMES noteState,
                     // bool changeClimberState,
@@ -74,7 +76,7 @@ public:
     std::string GetTrajectoryName() const { return m_choreoTrajectoryName; };
     ChassisOptionEnums::PathGainsType GetPathGainsType() const { return m_pathGainsType; }
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
-    VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
+    FieldConstants::FIELD_ELEMENT GetVisionAlignment() const { return m_visionAlignment; }
     ChassisOptionEnums::PathUpdateOption GetPathUpdateOption() const { return m_pathUpdateOption; }
     DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
 
@@ -94,6 +96,8 @@ public:
         m_pathName = path;
     }
     void SetVisionAlignment(VISION_ALIGNMENT visionAlignment) { m_visionAlignment = visionAlignment; }
+    void SetPathName(std::string path) { m_pathName = path; }
+    void SetVisionAlignment(FieldConstants::FIELD_ELEMENT visionAlignment) { m_visionAlignment = visionAlignment; }
 
 private:
     // Primitive Parameters
@@ -111,7 +115,7 @@ private:
     std::string m_pathName;
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
-    VISION_ALIGNMENT m_visionAlignment;
+    FieldConstants::FIELD_ELEMENT m_visionAlignment;
     // bool m_changeNoteState;
     // noteManagerGen::STATE_NAMES m_noteState;
     // bool m_changeClimberState;

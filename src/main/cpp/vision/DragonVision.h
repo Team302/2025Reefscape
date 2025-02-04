@@ -41,6 +41,19 @@ public:
 
     enum VISION_ELEMENT
     {
+        NEAREST_APRILTAG,
+        // old elements
+        LAUNCHER_NOTE,
+        PLACER_NOTE,
+        NOTE,
+        SPEAKER,
+        AMP,
+        STAGE,
+        LEFT_STAGE,
+        RIGHT_STAGE,
+        CENTER_STAGE,
+        SOURCE,
+        // new for 2025
         ALGAE,
         CAGE,
         BARGE,
