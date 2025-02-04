@@ -3,8 +3,7 @@
 
 <auton>
     <zone 
-        circlex = "4.4821"
-        circley = "4.008"
-        radius = "65.25" 
-     />
+        circlex="4.4821"
+        circley="4.008"
+        radius="65.25" />
 </auton>

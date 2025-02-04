@@ -98,15 +98,15 @@ void CyclePrimitives::Run()
 
 			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("CurrentPrimSlot "), m_currentPrimSlot);
 			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("Prim Size "), (int)m_primParams.size());
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("zone size "), (int)m_zones.size());
 
 			if (!m_zones.empty())
 			{
 
 				for (auto zone : m_zones)
 				{
-					Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("Zone Mode"), (zone->GetZoneMode()));
-
 					bool isInZone = false;
+
 					if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
 					{
 						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
@@ -117,10 +117,9 @@ void CyclePrimitives::Run()
 					}
 					else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
 					{
-						Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("isInZone "), isInZone);
-						// isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
-						// 												  zone->getRadius(),
-						// 												  m_chassis->GetPose());
+						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
+																		  zone->getRadius(),
+																		  m_chassis->GetPose());
 					}
 
 					if (isInZone)

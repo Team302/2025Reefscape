@@ -50,8 +50,8 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
 }
 bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
 {
-
-    auto distanceToTheReef = circleZonePose.Translation().Distance(robotPose.Translation());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "circle zones", "in zone", distanceToTheReef <= radius);
-    return distanceToTheReef <= radius;
+    auto translationToTheReef = circleZonePose.Translation().Distance(robotPose.Translation());
+    bool inZone = translationToTheReef <= radius;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "circle zones", "in zone", inZone);
+    return inZone;
 }
