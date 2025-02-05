@@ -1906,14 +1906,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>35</value>
+                <value>50</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>2.5</value>
+                <value>3</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
@@ -1927,7 +1927,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1.5</value>
+                <value>1.8</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>

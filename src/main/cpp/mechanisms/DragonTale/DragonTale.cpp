@@ -556,23 +556,11 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kD = m_PositionDegree->GetD();
 	slot0Configs.kG = m_PositionDegree->GetF();
 	slot0Configs.kS = 0;
-	slot0Configs.kV = 0.25;
-	slot0Configs.kA = 0.05;
+	slot0Configs.kV = 0.75;
+	slot0Configs.kA = 0.25;
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
-
-	Slot1Configs slot1Configs{}; // making it 0 to verify it works
-	slot1Configs.kP = 40;		 // m_PositionDegree->GetP() / 2.0;
-	slot1Configs.kI = 3;		 // m_PositionDegree->GetI() / 2.0;
-	slot1Configs.kD = 1;		 // m_PositionDegree->GetD();
-	slot1Configs.kG = 2;		 // m_PositionDegree->GetF();
-	slot1Configs.kS = 0.0;
-	slot1Configs.kV = 0.25; // 0.25;
-	slot1Configs.kA = 0.05; // 0.05;
-	slot1Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
-	slot1Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
-	m_Arm->GetConfigurator().Apply(slot1Configs, units::time::second_t(0.25));
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {
