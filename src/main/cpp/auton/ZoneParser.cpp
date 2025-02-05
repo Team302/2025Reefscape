@@ -141,20 +141,26 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
     if (result)
     {
         xml_node auton = doc.root();
-        for (xml_node zonenode = auton.first_child(); zonenode; zonenode = zonenode.next_sibling())
+        for (xml_node zonenode = auton.first_child().first_child(); zonenode; zonenode = zonenode.next_sibling())
         {
+
+            double radius = -1;
+            double circleX = -1;
+            double circleY = -1;
 
             AutonGrid::XGRID xgrid1 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid1 = AutonGrid::YGRID::NONE;
             AutonGrid::XGRID xgrid2 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid2 = AutonGrid::YGRID::NONE;
+
+            AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
+
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
             // bool isNoteStateChanging = false;
             // noteManagerGen::STATE_NAMES noteChosenOption = noteManagerGen::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
             // looping through the zone xml attributes to define the location of a given zone (based on 2 sets grid coordinates)
-
             for (xml_attribute attr = zonenode.first_attribute(); attr; attr = attr.next_attribute())
             {
 
@@ -163,6 +169,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     auto itr = X_xmlStringToGridEnumMap.find(attr.value());
                     if (itr != X_xmlStringToGridEnumMap.end())
                     {
+                        zoneMode = AutonGrid::RECTANGLE;
                         xgrid1 = itr->second;
                     }
                     else
@@ -205,6 +212,23 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     {
                         hasError = true;
                     }
+                }
+                else if (strcmp(attr.name(), "circlex") == 0)
+                {
+                    zoneMode = AutonGrid::CIRCLE;
+                    circleX = attr.as_double();
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "parsed circlex", circleX);
+                }
+                else if (strcmp(attr.name(), "circley") == 0)
+                {
+
+                    zoneMode = AutonGrid::CIRCLE;
+                    circleY = attr.as_double();
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "parsed circley", circleX);
+                }
+                else if (strcmp(attr.name(), "radius") == 0)
+                {
+                    radius = attr.as_double();
                 }
                 /**
                 else if (strcmp(attr.name(), "noteOption") == 0)
@@ -249,14 +273,19 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 
             if (!hasError) // if no error returns the zone parameters
             {
+
+                auto circlePose2d = frc::Pose2d(units::length::meter_t(circleX), units::length::meter_t(circleY), units::degree_t(0));
                 return (new ZoneParams(xgrid1,
                                        ygrid1,
                                        xgrid2,
                                        ygrid2,
+                                       circlePose2d,
+                                       units::inch_t(radius),
                                        // isNoteStateChanging,
                                        // noteChosenOption,
                                        chassisChosenOption,
-                                       avoidChosenOption));
+                                       avoidChosenOption,
+                                       zoneMode));
             }
 
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("ZoneParser"), string("ParseXML"), string("Has Error"));
