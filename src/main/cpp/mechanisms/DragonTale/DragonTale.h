@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -71,33 +70,59 @@ public:
 		STATE_MANUAL_GRAB_ALGAE_FLOOR
 	};
 
-	DragonTale ( RobotIdentifier activeRobotId );
+	DragonTale(RobotIdentifier activeRobotId);
 	DragonTale() = delete;
 	~DragonTale() = default;
 
 	void CreatePRACTICE_BOT9999();
 	void InitializePRACTICE_BOT9999();
 
-
 	/// @brief Set the control constants (e.g. PIDF values).
 	/// @param indentifier the motor controller usage to identify the motor
 	/// @param slot position on the motor controller to set
 	/// @param pid control data / constants
-	virtual void SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid );
+	virtual void SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE indentifier, int slot, ControlData pid);
 
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
-	void UpdateTargetArmPositionDegree ( units::angle::turn_t position ) { m_ArmPositionDegree.Position = position; m_ArmActiveTarget = &m_ArmPositionDegree;}
-	void UpdateTargetElevatorLeaderPositionInch ( units::length::inch_t position ) { m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value()); m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;}
-	void UpdateTargetCoralPercentOutput ( double percentOut )  {m_CoralActiveTarget = percentOut;}
-	void UpdateTargetAlgaePercentOutput ( double percentOut )  {m_AlgaeActiveTarget = percentOut;}
+	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
+	{
+		if (position < GetArmAngle())
+			m_ArmPositionDegree.WithSlot(0);
+		else
+			m_ArmPositionDegree.WithSlot(1);
+
+		m_ArmPositionDegree.Position = position;
+		m_ArmActiveTarget = &m_ArmPositionDegree;
+	}
+	void UpdateTargetElevatorLeaderPositionInch(units::length::inch_t position)
+	{
+		if (position < GetElevatorHeight())
+		{
+			m_ElevatorLeaderPositionInch.Velocity = 20_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
+		}
+		else
+		{
+			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 100_tr_per_s_sq;
+		}
+		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
+		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
+	}
+	void UpdateTargetCoralPercentOutput(double percentOut) { m_CoralActiveTarget = percentOut; }
+	void UpdateTargetAlgaePercentOutput(double percentOut)
+	{
+		m_AlgaePercentOutput.Output = percentOut;
+		m_AlgaeActiveTarget = &m_AlgaePercentOutput;
+	}
 
 	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
 
-	virtual bool IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
-	virtual bool IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const;
+	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
+	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 
 	void CreateAndRegisterStates();
 	void Cyclic();
@@ -105,38 +130,38 @@ public:
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
-	ctre::phoenix6::hardware::TalonFX* GetArm() const {return m_Arm;}
-	ctre::phoenix6::hardware::TalonFX* GetElevatorLeader() const {return m_ElevatorLeader;}
-	ctre::phoenix::motorcontrol::can::TalonSRX* GetCoral() const {return m_Coral;}
-	ctre::phoenix::motorcontrol::can::TalonSRX* GetAlgae() const {return m_Algae;}
-	ctre::phoenix6::hardware::TalonFX* GetElevatorFollower() const {return m_ElevatorFollower;}
-	bool GetCoralInSensorState() const {return m_CoralInSensor->Get();}
-	bool GetCoralOutSensorState() const {return m_CoralOutSensor->Get();}
-	bool GetAlgaeSensorState() const {return m_AlgaeSensor->Get();}
-	ctre::phoenix6::hardware::CANcoder* GetArmAngleSensor() const {return m_ArmAngleSensor;}
-	ctre::phoenix6::hardware::CANcoder* GetElevatorHeightSensor() const {return m_ElevatorHeightSensor;}
-	ControlData* GetPositionInch() const {return m_PositionInch;}
-	ControlData* GetPositionDegree() const {return m_PositionDegree;}
-	ControlData* GetPercentOutput() const {return m_PercentOutput;}
+	ctre::phoenix6::hardware::TalonFX *GetArm() const { return m_Arm; }
+	ctre::phoenix6::hardware::TalonFX *GetElevatorLeader() const { return m_ElevatorLeader; }
+	ctre::phoenix::motorcontrol::can::TalonSRX *GetCoral() const { return m_Coral; }
+	ctre::phoenix6::hardware::TalonFX *GetAlgae() const { return m_Algae; }
+	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
+	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
+	bool GetCoralOutSensorState() const { return m_CoralOutSensor->Get(); }
+	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
+	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
+	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
+	ControlData *GetPositionInch() const { return m_PositionInch; }
+	ControlData *GetPositionDegree() const { return m_PositionDegree; }
+	ControlData *GetPercentOutput() const { return m_PercentOutput; }
 
-	bool AllSensorsFalse() {return !GetCoralInSensorState() && !GetCoralOutSensorState() && !GetAlgaeSensorState();}
+	units::length::inch_t GetElevatorHeight() { return units::length::inch_t(m_ElevatorLeader->GetPosition().GetValueAsDouble()); }
+	bool AllSensorsFalse() { return !GetCoralInSensorState() && !GetCoralOutSensorState() && !GetAlgaeSensorState(); }
 
-	units::length::inch_t GetElevatorHeight() {return units::length::inch_t(m_ElevatorHeightSensor->GetPosition().GetValueAsDouble() * 0.95 * 2 *std::numbers::pi);}
-	units::angle::degree_t GetArmAngle() {return m_ArmAngleSensor->GetAbsolutePosition().GetValue();}
+	units::angle::degree_t GetArmAngle() { return m_ArmAngleSensor->GetAbsolutePosition().GetValue(); }
 
-	bool IsCoralMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Coral;}
-	bool IsAlgaeMode() const {return m_scoringMode == RobotStateChanges::ScoringMode::Algae;}
+	bool IsCoralMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Coral; }
+	bool IsAlgaeMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Algae; }
 
 	void ManualControl();
 
-	void UpdateScoreMode(RobotStateChanges::StateChange change, int value);
+	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value);
 
 	units::length::inch_t GetAlgaeHeight();
 
-	void SetArmTarget(units::angle::degree_t target) {m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);}
-	void SetElevatorTarget(units::length::inch_t target) {m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight);}
+	void SetArmTarget(units::angle::degree_t target) { m_armTarget = std::clamp(target, m_minAngle, m_maxAngle); }
+	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
-	bool GetManualMode() {return m_manualMode;}
+	bool GetManualMode() { return m_manualMode; }
 	void SetSensorFailSafe();
 
 	void UpdateTarget();
@@ -152,40 +177,42 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState ( int state, bool run ) override;
-	ControlData *GetControlData ( std::string name ) override;
+	void SetCurrentState(int state, bool run) override;
+	ControlData *GetControlData(std::string name) override;
 
 private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;
 
-	ctre::phoenix6::hardware::TalonFX* m_Arm;
-	ctre::phoenix6::hardware::TalonFX* m_ElevatorLeader;
+	ctre::phoenix6::hardware::TalonFX *m_Arm;
+	ctre::phoenix6::hardware::TalonFX *m_ElevatorLeader;
 	ctre::phoenix::motorcontrol::can::TalonSRX *m_Coral;
-	ctre::phoenix::motorcontrol::can::TalonSRX *m_Algae;
-	ctre::phoenix6::hardware::TalonFX* m_ElevatorFollower;
-	frc::DigitalInput* m_CoralInSensor;
-	frc::DigitalInput* m_CoralOutSensor;
-	frc::DigitalInput* m_AlgaeSensor;
-	ctre::phoenix6::hardware::CANcoder* m_ArmAngleSensor;
-	ctre::phoenix6::hardware::CANcoder* m_ElevatorHeightSensor;
-	ControlData* m_PositionInch;
-	ControlData* m_PositionDegree;
-	ControlData* m_PercentOutput;
+	ctre::phoenix6::hardware::TalonFX *m_Algae;
+	ctre::phoenix6::hardware::TalonFX *m_ElevatorFollower;
+	frc::DigitalInput *m_CoralInSensor;
+	frc::DigitalInput *m_CoralOutSensor;
+	frc::DigitalInput *m_AlgaeSensor;
+	ctre::phoenix6::hardware::CANcoder *m_ArmAngleSensor;
+	ctre::phoenix6::hardware::CANcoder *m_ElevatorHeightSensor;
+	ControlData *m_PositionInch;
+	ControlData *m_PositionDegree;
+	ControlData *m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(10.7); //change these later
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(10.7); // change these later
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(3.7);
-	
+
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
-	const units::angle::degree_t m_minAngle{-90.0};
+	const units::angle::degree_t m_minAngle{-30.0};
 	const units::angle::degree_t m_maxAngle{90.0};
 
 	const units::length::inch_t m_minHeight{0.0};
-	const units::length::inch_t m_maxHeight{100.0};
+	const units::length::inch_t m_maxHeight{30.0};
 
-	const units::length::inch_t m_elevatorErrorThreshold{5.0};
+	const units::length::inch_t m_elevatorErrorThreshold{4.0};
+	const units::length::inch_t m_elevatorProtectionHeight{5.0};
+	const units::angle::degree_t m_armProtectionAngle{70.0};
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
@@ -194,20 +221,22 @@ private:
 	void InitializeTalonFXArmPRACTICE_BOT9999();
 	void InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
 	void InitializeTalonSRXCoralPRACTICE_BOT9999();
-	void InitializeTalonSRXAlgaePRACTICE_BOT9999();
+	void InitializeTalonFXAlgaePRACTICE_BOT9999();
 	void InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ArmPositionDegree{units::angle::turn_t ( 0.0 ) };
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ElevatorLeaderPositionInch{units::angle::turn_t ( 0.0 ) };
-	double  m_CoralActiveTarget;
-	double  m_AlgaeActiveTarget;
+	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ArmPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
+
+	double m_CoralActiveTarget;
+	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
+	ctre::phoenix6::controls::ControlRequest *m_AlgaeActiveTarget;
 
 	double m_loopRate = 0.02;
 	double m_armChangeRate = 1 * m_loopRate;
-	double m_elevatorChangeRate= 1*m_loopRate;
+	double m_elevatorChangeRate = 1 * m_loopRate;
 
 	bool m_manualMode = false;
 
