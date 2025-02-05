@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -24,6 +23,7 @@
 #include "ClimberManager.h"
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -31,136 +31,135 @@
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
-#include "state/RobotState.h"
 
-using ctre::phoenix6::signals::ForwardLimitSourceValue;
-using ctre::phoenix6::signals::ForwardLimitTypeValue;
-using ctre::phoenix6::signals::ReverseLimitSourceValue;
-using ctre::phoenix6::signals::ReverseLimitTypeValue;
-using ctre::phoenix6::signals::InvertedValue;
-using ctre::phoenix6::signals::NeutralModeValue;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
-
+using ctre::phoenix6::signals::ForwardLimitSourceValue;
+using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::InvertedValue;
+using ctre::phoenix6::signals::NeutralModeValue;
+using ctre::phoenix6::signals::ReverseLimitSourceValue;
+using ctre::phoenix6::signals::ReverseLimitTypeValue;
 using std::string;
 using namespace ClimberManagerStates;
 
-
 void ClimberManager::CreateAndRegisterStates()
 {
-	OffState* OffStateInst = new OffState ( string ( "Off" ), 0, this, m_activeRobotId );
-	AddToStateVector ( OffStateInst );
+	OffState *OffStateInst = new OffState(string("Off"), 0, this, m_activeRobotId);
+	AddToStateVector(OffStateInst);
 
-	ManualClimbState* ManualClimbStateInst = new ManualClimbState ( string ( "ManualClimb" ), 1, this, m_activeRobotId );
-	AddToStateVector ( ManualClimbStateInst );
+	ManualClimbState *ManualClimbStateInst = new ManualClimbState(string("ManualClimb"), 1, this, m_activeRobotId);
+	AddToStateVector(ManualClimbStateInst);
 
-	AutoClimbState* AutoClimbStateInst = new AutoClimbState ( string ( "AutoClimb" ), 2, this, m_activeRobotId );
-	AddToStateVector ( AutoClimbStateInst );
+	AutoClimbState *AutoClimbStateInst = new AutoClimbState(string("AutoClimb"), 2, this, m_activeRobotId);
+	AddToStateVector(AutoClimbStateInst);
 
-	OffStateInst->RegisterTransitionState ( ManualClimbStateInst );
-	ManualClimbStateInst->RegisterTransitionState ( OffStateInst );
-	ManualClimbStateInst->RegisterTransitionState ( AutoClimbStateInst );
-	AutoClimbStateInst->RegisterTransitionState ( OffStateInst );
+	OffStateInst->RegisterTransitionState(ManualClimbStateInst);
+	ManualClimbStateInst->RegisterTransitionState(OffStateInst);
+	ManualClimbStateInst->RegisterTransitionState(AutoClimbStateInst);
+	AutoClimbStateInst->RegisterTransitionState(OffStateInst);
 }
 
-ClimberManager::ClimberManager ( RobotIdentifier activeRobotId ) : BaseMech ( MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string ( "ClimberManager" ) ),
-	m_activeRobotId ( activeRobotId ),
-	m_stateMap(),
-	m_climbMode(RobotStateChanges::ClimbMode::ClimbModeOff)
+ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string("ClimberManager")),
+																m_activeRobotId(activeRobotId),
+																m_stateMap(),
+																m_climbMode(RobotStateChanges::ClimbMode::ClimbModeOff)
 {
-	PeriodicLooper::GetInstance()->RegisterAll ( this );
+	PeriodicLooper::GetInstance()->RegisterAll(this);
 	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
-std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap
-{
+std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap{
 	{"STATE_OFF", ClimberManager::STATE_NAMES::STATE_OFF},
 	{"STATE_MANUAL_CLIMB", ClimberManager::STATE_NAMES::STATE_MANUAL_CLIMB},
-	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},};
+	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},
+};
 
 void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
-	m_Climber = new ctre::phoenix6::hardware::TalonFX ( 0, "rio" );
+	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "rio");
 
-
-
-
-
-
-
-	m_PositionDegree = new ControlData (
-	    ControlModes::CONTROL_TYPE::POSITION_DEGREES, // ControlModes::CONTROL_TYPE mode
-	    ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
-	    "m_PositionDegree", // std::string indentifier
-	    0, // double proportional
-	    0, // double integral
-	    0, // double derivative
-	    0, // double feedforward
-	    ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-	    0, // double integralZone
-	    0, // double maxAcceleration
-	    0, // double cruiseVelocity
-	    0, // double peakValue
-	    0, // double nominalValue
-	    true  // bool enableFOC
+	m_PositionDegree = new ControlData(
+		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PositionDegree",								  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
+		0,												  // double integralZone
+		0,												  // double maxAcceleration
+		0,												  // double cruiseVelocity
+		0,												  // double peakValue
+		0,												  // double nominalValue
+		true											  // bool enableFOC
 	);
 
-	ReadConstants ( "ClimberManager.xml", 9999 );
+	ReadConstants("ClimberManager.xml", 9999);
 
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable ( m_ntName );
+	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
 	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean ( m_tuningIsEnabledStr, m_tuning );
+	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void ClimberManager::InitializePRACTICE_BOT9999()
 {
 	InitializeTalonFXClimberPRACTICE_BOT9999();
 }
+
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t ( 0 );
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t ( 70 );
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t ( 35 );
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t ( 0.25 );
-	m_Climber->GetConfigurator().Apply ( currconfigs );
+	TalonFXConfiguration configs{};
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t ( 0.25 );
-	m_Climber->GetConfigurator().Apply ( rampConfigs );
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = false;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t ( 0 );
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ReverseLimitEnable = false;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t ( 0 );
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Climber->GetConfigurator().Apply ( hwswitch );
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Climber->GetConfigurator().Apply ( motorconfig );
+	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 9;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
 }
 
 void ClimberManager::SetPIDClimberPositionDegree()
@@ -169,13 +168,13 @@ void ClimberManager::SetPIDClimberPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
-	m_Climber->GetConfigurator().Apply ( slot0Configs );
+	m_Climber->GetConfigurator().Apply(slot0Configs);
 }
 
-void ClimberManager::SetCurrentState ( int state, bool run )
+void ClimberManager::SetCurrentState(int state, bool run)
 {
-	StateMgr::SetCurrentState ( state, run );
-	PeriodicLooper::GetInstance()->RegisterAll ( this );
+	StateMgr::SetCurrentState(state, run);
+	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void ClimberManager::RunCommonTasks()
@@ -184,11 +183,10 @@ void ClimberManager::RunCommonTasks()
 	Cyclic();
 }
 
-
 /// @brief  Set the control constants (e.g. PIDF values).
 /// @param [in] ControlData*                                   pid:  the control constants
 /// @return void
-void ClimberManager::SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier, int slot, ControlData pid )
+void ClimberManager::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier, int slot, ControlData pid)
 {
 }
 
@@ -196,13 +194,10 @@ void ClimberManager::SetControlConstants ( RobotElementNames::MOTOR_CONTROLLER_U
 /// @return void
 void ClimberManager::Update()
 {
-	m_Climber->SetControl ( *m_ClimberActiveTarget );
+	m_Climber->SetControl(*m_ClimberActiveTarget);
 }
 
-
-
-
-bool ClimberManager::IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const
+bool ClimberManager::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
 {
 	// auto motor = GetMotorMech(identifier);
 	// if (motor != nullptr)
@@ -212,7 +207,7 @@ bool ClimberManager::IsAtMinPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE
 	return false;
 }
 
-bool ClimberManager::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE identifier ) const
+bool ClimberManager::IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
 {
 	// auto motor = GetMotorMech(identifier);
 	// if (motor != nullptr)
@@ -222,17 +217,12 @@ bool ClimberManager::IsAtMaxPosition ( RobotElementNames::MOTOR_CONTROLLER_USAGE
 	return false;
 }
 
-
-
-
-
-
 void ClimberManager::Cyclic()
 {
 	Update();
 
 	CheckForTuningEnabled();
-	if ( m_tuning )
+	if (m_tuning)
 	{
 		ReadTuningParamsFromNT();
 	}
@@ -241,8 +231,8 @@ void ClimberManager::Cyclic()
 void ClimberManager::CheckForTuningEnabled()
 {
 	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean ( m_tuningIsEnabledStr, false );
-	if ( pastTuning != m_tuning && m_tuning == true )
+	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
+	if (pastTuning != m_tuning && m_tuning == true)
 	{
 		PushTuningParamsToNT();
 	}
@@ -250,33 +240,33 @@ void ClimberManager::CheckForTuningEnabled()
 
 void ClimberManager::ReadTuningParamsFromNT()
 {
-	m_PositionDegree->SetIZone ( m_table.get()->GetNumber ( "PositionDegree_iZone", 0 ) );
-	m_PositionDegree->SetF ( m_table.get()->GetNumber ( "PositionDegree_fGain", 0 ) );
-	m_PositionDegree->SetP ( m_table.get()->GetNumber ( "PositionDegree_pGain", 0 ) );
-	m_PositionDegree->SetI ( m_table.get()->GetNumber ( "PositionDegree_iGain", 0 ) );
-	m_PositionDegree->SetD ( m_table.get()->GetNumber ( "PositionDegree_dGain", 0 ) );
-
+	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
 }
 
 void ClimberManager::PushTuningParamsToNT()
 {
-	m_table.get()->PutNumber ( "PositionDegree_iZone", m_PositionDegree->GetIZone() );
-	m_table.get()->PutNumber ( "PositionDegree_fGain", m_PositionDegree->GetF() );
-	m_table.get()->PutNumber ( "PositionDegree_pGain", m_PositionDegree->GetP() );
-	m_table.get()->PutNumber ( "PositionDegree_iGain", m_PositionDegree->GetI() );
-	m_table.get()->PutNumber ( "PositionDegree_dGain", m_PositionDegree->GetD() );
+	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
+	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
+	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
+	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
 }
-void ClimberManager::UpdateClimbMode(RobotStateChanges::StateChange statechange, int ival){
-	if (statechange==RobotStateChanges::StateChange::ClimbModeStatus_Int){
-		m_climbMode=static_cast<RobotStateChanges::ClimbMode>(ival);
+void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)
+{
+	if (statechange == RobotStateChanges::StateChange::ClimbModeStatus_Int)
+	{
+		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(ival);
 	}
 }
 
-ControlData *ClimberManager::GetControlData ( string name )
+ControlData *ClimberManager::GetControlData(string name)
 {
-	if ( name.compare ( "PositionDegree" ) == 0 )
+	if (name.compare("PositionDegree") == 0)
 		return m_PositionDegree;
-
 
 	return nullptr;
 }

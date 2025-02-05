@@ -23,6 +23,7 @@ MechanismConfig::MechanismConfig()
 void MechanismConfig::BuildRobot()
 {
     DefineMechanisms();
+    DefineLEDs();
 }
 
 MechanismConfig::~MechanismConfig()
@@ -30,6 +31,9 @@ MechanismConfig::~MechanismConfig()
 }
 
 void MechanismConfig::DefineMechanisms()
+{
+}
+void MechanismConfig::DefineLEDs()
 {
 }
 
