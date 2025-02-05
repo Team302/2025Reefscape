@@ -3,13 +3,11 @@
 <auton>
 
     <primitive id= "RESET_POSITION_PATH_PLANNER"
-                choreoname= "TestPath"/>
+                choreoname= "ZoneTest"/>
 
         <primitive id= "DRIVE_PATH_PLANNER"
-            choreoname= "TestPath">
+            choreoname= "ZoneTest">
             <zone filename="CircleTestZone.xml"/>
         </primitive>
-
-
 
 </auton>
