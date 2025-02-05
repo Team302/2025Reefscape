@@ -278,10 +278,10 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		30,												  // double proportional
+		50,												  // double proportional
 		3,												  // double integral
-		1.6,											  // double derivative
-		2,												  // double feedforward
+		0,												  // double derivative
+		1.8,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -667,9 +667,9 @@ void DragonTale::ReadTuningParamsFromNT()
 	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.5));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 35));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2.5));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 50));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 3));
 	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
 }
 
