@@ -561,6 +561,7 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
+	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {
@@ -574,6 +575,9 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
+	m_ElevatorLeaderPositionInch.LimitReverseMotion = true;
+	m_ElevatorLeaderPositionInch.LimitReverseMotion = true; // check what these do
 }
 
 void DragonTale::SetCurrentState(int state, bool run)
