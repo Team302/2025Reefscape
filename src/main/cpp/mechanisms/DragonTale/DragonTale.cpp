@@ -278,10 +278,10 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		35,												  // double proportional
-		2.5,											  // double integral
-		0,												  // double derivative
-		1.5,											  // double feedforward
+		30,												  // double proportional
+		3,												  // double integral
+		1.6,											  // double derivative
+		2,												  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -362,6 +362,9 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
+
+	configs.MotionMagic.MotionMagicCruiseVelocity = 50_tps;
+	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -552,7 +555,7 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
 	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = 2.05;
+	slot0Configs.kS = 0;
 	slot0Configs.kV = 0.25;
 	slot0Configs.kA = 0.05;
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
@@ -560,13 +563,13 @@ void DragonTale::SetPIDArmPositionDegree()
 	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
 
 	Slot1Configs slot1Configs{}; // making it 0 to verify it works
-	slot1Configs.kP = 0;		 // m_PositionDegree->GetP() / 2.0;
-	slot1Configs.kI = 0;		 // m_PositionDegree->GetI() / 2.0;
-	slot1Configs.kD = 0;		 // m_PositionDegree->GetD();
-	slot1Configs.kG = 0;		 // m_PositionDegree->GetF();
+	slot1Configs.kP = 40;		 // m_PositionDegree->GetP() / 2.0;
+	slot1Configs.kI = 3;		 // m_PositionDegree->GetI() / 2.0;
+	slot1Configs.kD = 1;		 // m_PositionDegree->GetD();
+	slot1Configs.kG = 2;		 // m_PositionDegree->GetF();
 	slot1Configs.kS = 0.0;
-	slot1Configs.kV = 0; // 0.25;
-	slot1Configs.kA = 0; // 0.05;
+	slot1Configs.kV = 0.25; // 0.25;
+	slot1Configs.kA = 0.05; // 0.05;
 	slot1Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot1Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_Arm->GetConfigurator().Apply(slot1Configs, units::time::second_t(0.25));

@@ -22,7 +22,6 @@
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
-
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
@@ -88,11 +87,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		if (position < GetArmAngle())
-			m_ArmPositionDegree.WithSlot(0);
-		else
-			m_ArmPositionDegree.WithSlot(1);
-
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -224,7 +218,7 @@ private:
 	void InitializeTalonFXAlgaePRACTICE_BOT9999();
 	void InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ArmPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
 
 	double m_CoralActiveTarget;
