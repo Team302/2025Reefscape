@@ -21,6 +21,6 @@
 
 class MechanismLoggerSignals : public ClimberManagerLoggerSignals, public IntakeManagerLoggerSignals
 {
-private:
+public:
     MechanismLoggerSignals();
 };
