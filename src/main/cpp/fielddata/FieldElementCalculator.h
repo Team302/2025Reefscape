@@ -28,10 +28,11 @@ class FieldElementCalculator
 
 public:
     void CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
-    
 
 private:
     void InitializeTransforms();
+    void CalculateCenters();
+    frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
     frc::Transform3d m_noTransform = frc::Transform3d(
         frc::Translation3d(
@@ -40,7 +41,7 @@ private:
             units::length::meter_t(0.0)),
         frc::Rotation3d());
 
-    //TODO: These need to be updated with the correct transforms to the physical field elements
+    // TODO: These need to be updated with the correct transforms to the physical field elements
     frc::Transform3d m_blueCalcCoralLeftAlliance = frc::Transform3d(
         frc::Translation3d(
             units::length::meter_t(0.0),
@@ -321,8 +322,7 @@ private:
             units::length::meter_t(0.0),
             units::length::meter_t(0.0)),
         frc::Rotation3d());
-        
 
-    std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> transformConstantsMap;
+    std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformConstantsMap;
+    std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> m_fieldConstantsPoseMap;
 };
-
