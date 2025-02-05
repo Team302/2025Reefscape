@@ -297,6 +297,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             {
                                 if (strcmp(attr.name(), "filename") == 0)
                                 {
+                                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone filename", "name", std::string(attr.value()));
                                     auto zone = ZoneParser::ParseXML(attr.value());
                                     zones.emplace_back(zone);
                                 }
