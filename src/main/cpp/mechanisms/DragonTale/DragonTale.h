@@ -45,6 +45,7 @@
 #include "frc/geometry/Pose2d.h"
 
 #include "RobotIdentifier.h"
+#include "fielddata/FieldConstants.h"
 
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
@@ -170,6 +171,10 @@ public:
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
+	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
+
+	frc::Pose3d GetReefCenter();
+
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
@@ -242,4 +247,5 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
+	frc::Pose2d m_robotPose;
 };
