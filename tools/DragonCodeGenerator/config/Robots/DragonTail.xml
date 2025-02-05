@@ -343,7 +343,6 @@
         <value>false</value>
       </enableFollowID>
       <remoteSensor>
-        <Source>CANCoder</Source>
         <CanID>
           <unitsFamily>none</unitsFamily>
           <name>uintParameter</name>

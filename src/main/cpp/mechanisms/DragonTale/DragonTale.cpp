@@ -417,10 +417,13 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1.27323954473516;
+	/*
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
-
+	*/
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
