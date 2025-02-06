@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,14 +14,18 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "chassis/definitions/chassis9999/TunerConstants9999.h"
+#include "chassis/definitions/ChassisConfig.h"
+#include "ctre/phoenix6/Pigeon2.hpp"
+#include "units/length.h"
 
-enum class RobotIdentifier
+class ChassisConfigChassis_9999 : public ChassisConfig
 {
-    COMP_BOT_302 = 302,
-    PRACTICE_BOT_9999 = 9999,
-    CHASSIS_BOT_9998 = 9998,
-    CHASSIS_BOT_9997 = 9997,
-    CHASSIS_BOT_9999 = 9999,
+public:
+	ChassisConfigChassis_9999() = default;
+	~ChassisConfigChassis_9999() = default;
 
-    MAX_ROBOT_IDENTIFIERS
+protected:
+	void DefinePigeon() override;
+	void DefineChassis() override;
 };
