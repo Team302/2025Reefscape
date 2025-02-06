@@ -22,7 +22,6 @@
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
-
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
@@ -45,6 +44,7 @@
 #include "frc/geometry/Pose2d.h"
 
 #include "RobotIdentifier.h"
+#include "fielddata/FieldConstants.h"
 
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
@@ -88,11 +88,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		if (position < GetArmAngle())
-			m_ArmPositionDegree.WithSlot(0);
-		else
-			m_ArmPositionDegree.WithSlot(1);
-
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -170,6 +165,10 @@ public:
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
+	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
+
+	frc::Pose3d GetReefCenter();
+
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
@@ -212,7 +211,7 @@ private:
 
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
-	const units::angle::degree_t m_armProtectionAngle{70.0};
+	const units::angle::degree_t m_armProtectionAngle{80.0};
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
@@ -224,7 +223,7 @@ private:
 	void InitializeTalonFXAlgaePRACTICE_BOT9999();
 	void InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ArmPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
 
 	double m_CoralActiveTarget;
@@ -242,4 +241,5 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
+	frc::Pose2d m_robotPose;
 };
