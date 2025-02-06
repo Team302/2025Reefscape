@@ -47,6 +47,8 @@ void DriverFeedback::UpdateFeedback()
 {
     UpdateRumble();
     UpdateLEDStates();
+    UpdateDiagnosticLEDs();
+
     CheckControllers();
 }
 
@@ -128,7 +130,6 @@ void DriverFeedback::UpdateLEDStates()
                     taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
                 }
             }
-            UpdateDiagnosticLEDs();
         }
     }
 }
