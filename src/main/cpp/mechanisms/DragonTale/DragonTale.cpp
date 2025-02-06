@@ -211,6 +211,7 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
@@ -730,9 +731,9 @@ void DragonTale::SetSensorFailSafe()
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
-	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
+	frc::Pose2d chassisPose = m_robotPose;								  // TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = GetReefCenter().X() - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
+	units::length::meter_t yDiff = GetReefCenter().Y() - chassisPose.Y();
 	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
 	// Adjust angleToReefCenter to be between -180 and 180 degrees
@@ -786,6 +787,20 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+}
+
+frc::Pose3d DragonTale::GetReefCenter()
+{
+	frc::Pose3d fieldElementPose = frc::Pose3d{};
+	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+	return fieldElementPose;
+}
+
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
+{
+	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
+		m_robotPose = value;
 }
 
 bool DragonTale::AtTarget()
