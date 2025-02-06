@@ -278,9 +278,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		50,												  // double proportional
-		3,												  // double integral
-		0,												  // double derivative
+		57,												  // double proportional
+		20,												  // double integral
+		7,												  // double derivative
 		1.8,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
@@ -418,7 +418,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.Feedback.SensorToMechanismRatio = 1.27323954473516;
+	configs.Feedback.SensorToMechanismRatio = 0.9;
 	/*
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
@@ -579,8 +579,6 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
 	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
-	m_ElevatorLeaderPositionInch.LimitReverseMotion = true;
-	m_ElevatorLeaderPositionInch.LimitReverseMotion = true; // check what these do
 }
 
 void DragonTale::SetCurrentState(int state, bool run)
@@ -602,7 +600,6 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
@@ -675,9 +672,9 @@ void DragonTale::ReadTuningParamsFromNT()
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 50));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 3));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 57));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 20));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 7));
 }
 
 void DragonTale::PushTuningParamsToNT()
@@ -782,6 +779,7 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetAngle = m_armProtectionAngle;
 	}
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);

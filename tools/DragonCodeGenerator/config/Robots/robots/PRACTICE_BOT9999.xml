@@ -1905,21 +1905,21 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>50</value>
+                <value>57</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>3</value>
+                <value>20</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>7</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
