@@ -24,8 +24,8 @@
 // Team 302 includes
 #include "auton/AutonGrid.h"
 #include "chassis/ChassisOptionEnums.h"
-// Manager/generated/noteManagerGen.h"
-
+#include "mechanisms\IntakeManager\IntakeManager.h"
+#include "mechanisms\DragonTale\DragonTale.h"
 // Third Party Includes
 
 class ZoneParams
@@ -37,8 +37,10 @@ public:
                AutonGrid::YGRID ygrid2,
                frc::Pose2d circlePose,
                units::length::inch_t radius,
-               // bool isNoteStateChanging,
-               // noteManagerGen::STATE_NAMES noteoption,
+               bool isTaleStateChanging,
+               bool isIntakeStateChanging,
+               IntakeManager::STATE_NAMES intakeoption,
+               DragonTale::STATE_NAMES taleoption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
@@ -56,8 +58,12 @@ public:
     frc::Pose2d getCircleZonePose() const { return m_circlePose; }
     units::length::inch_t getRadius() const { return m_radius; }
 
-    // bool IsNoteStateChanging() const { return m_isNoteStateChanging; }
-    // noteManagerGen::STATE_NAMES GetNoteOption() const { return m_noteoption; }
+    bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
+    bool IsTaleStateChanging() const { return m_isTaleStateChanging; }
+
+    IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeoption; }
+    DragonTale::STATE_NAMES GetTaleOption() const { return m_taleoption; }
+
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
     ChassisOptionEnums::AutonAvoidOptions GetAvoidOption() const { return m_avoidoption; }
 
@@ -66,8 +72,10 @@ private:
     AutonGrid::YGRID m_ygrid1;
     AutonGrid::XGRID m_xgrid2;
     AutonGrid::YGRID m_ygrid2;
-    // bool m_isNoteStateChanging;
-    // noteManagerGen::STATE_NAMES m_noteoption;
+    bool m_isIntakeStateChanging;
+    bool m_isTaleStateChanging;
+    IntakeManager::STATE_NAMES m_intakeoption;
+    DragonTale::STATE_NAMES m_taleoption;
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
 

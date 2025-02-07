@@ -21,8 +21,9 @@
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
-// #include "mechanisms/noteManager/generated/noteManagerGen.h"
 #include "utils/logging/Logger.h"
+#include "mechanisms\DragonTale\DragonTale.h"
+#include "mechanisms\IntakeManager\IntakeManager.h"
 
 #include "pugixml/pugixml.hpp"
 
@@ -156,8 +157,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
 
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
-            // bool isNoteStateChanging = false;
-            // noteManagerGen::STATE_NAMES noteChosenOption = noteManagerGen::STATE_NAMES::STATE_OFF;
+            bool isTaleStateChanging = false;
+            bool isIntakeStateChanging = false;
+            DragonTale::STATE_NAMES taleChosenOption = DragonTale::STATE_NAMES::STATE_READY;
+            IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
             // looping through the zone xml attributes to define the location of a given zone (based on 2 sets grid coordinates)
@@ -230,21 +233,34 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 {
                     radius = attr.as_double();
                 }
-                /**
-                else if (strcmp(attr.name(), "noteOption") == 0)
+
+                else if (strcmp(attr.name(), "intakeOption") == 0)
                 {
-                    auto itr = noteManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                    if (itr != noteManagerGen::stringToSTATE_NAMESEnumMap.end())
+                    auto itr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
+                    if (itr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
                     {
-                        noteChosenOption = itr->second;
-                        isNoteStateChanging = false;
+                        intakeChosenOption = itr->second;
+                        isIntakeStateChanging = false;
                     }
                     else
                     {
                         hasError = true;
                     }
                 }
-                **/
+                else if (strcmp(attr.name(), "taleOption") == 0)
+                {
+                    auto itr = DragonTale::stringToSTATE_NAMESEnumMap.find(attr.value());
+                    if (itr != DragonTale::stringToSTATE_NAMESEnumMap.end())
+                    {
+                        taleChosenOption = itr->second;
+                        isTaleStateChanging = false;
+                    }
+                    else
+                    {
+                        hasError = true;
+                    }
+                }
+
                 else if (strcmp(attr.name(), "chassisOption") == 0)
                 {
                     auto itr = xmlStringToChassisOptionEnumMap.find(attr.value());
@@ -281,8 +297,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        ygrid2,
                                        circlePose2d,
                                        units::inch_t(radius),
-                                       // isNoteStateChanging,
-                                       // noteChosenOption,
+                                       isTaleStateChanging,
+                                       isIntakeStateChanging,
+                                       intakeChosenOption,
+                                       taleChosenOption,
                                        chassisChosenOption,
                                        avoidChosenOption,
                                        zoneMode));
