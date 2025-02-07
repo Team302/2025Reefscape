@@ -320,6 +320,11 @@ void Robot::SimulationInit()
 void Robot::SimulationPeriodic()
 {
     PeriodicLooper::GetInstance()->SimulationRunCurrentState();
+    InitializeRobot();
+    if (m_robotState != nullptr)
+    {
+        m_robotState->Run();
+    }
 }
 
 void Robot::InitializeRobot()

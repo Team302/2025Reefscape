@@ -24,6 +24,7 @@
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
+#include "frc/RobotController.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -81,6 +82,11 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
 	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "rio");
+
+	m_Sim = true;
+	m_ClimberSim = &m_Climber->GetSimState();
+	m_ClimberSim->SetRawRotorPosition(units::angle::degree_t(95) * 9);
+	m_ClimberSim->SetSupplyVoltage(frc::RobotController::GetBatteryVoltage());
 
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -194,7 +200,15 @@ void ClimberManager::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USA
 /// @return void
 void ClimberManager::Update()
 {
-	m_Climber->SetControl(*m_ClimberActiveTarget);
+	if (m_Sim)
+	{
+		units::voltage::volt_t targetVoltage{CalculateTargetVoltage()}; // See explanation below
+		m_motorSimModel.SetInputVoltage(targetVoltage);
+		m_motorSimModel.Update(20_ms); // assume 20 ms loop time
+		m_ClimberSim->SetRawRotorPosition(m_motorSimModel.GetAngularPosition() * 9);
+	}
+	else
+		m_Climber->SetControl(*m_ClimberActiveTarget);
 }
 
 bool ClimberManager::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
@@ -269,4 +283,28 @@ ControlData *ClimberManager::GetControlData(string name)
 		return m_PositionDegree;
 
 	return nullptr;
+}
+
+double ClimberManager::CalculateTargetVoltage()
+{
+	// 1. Get Current Position (from TalonFXSim or encoder if real)
+	units::angle::turn_t currentPosition = units::angle::turn_t(0);
+	if (m_Sim)
+	{
+		currentPosition = units::angle::turn_t(m_motorSimModel.GetAngularPosition() / 9.0); // Convert Sim position to turns
+	}
+
+	// 2. Get Target Position (from your state machine or wherever it's stored)
+	units::angle::turn_t targetPosition = m_ClimberPositionDegree.Position;
+
+	// 3. Calculate Error
+	units::angle::turn_t error = targetPosition - currentPosition;
+
+	// 4. Run PID Controller (using your ControlData and PID class)
+	double voltage = m_climberPID.Calculate(error.value()); // Assuming m_PositionDegree handles PID
+
+	// 5. Clamp Voltage (Important!)
+	voltage = std::clamp(voltage, -12.0, 12.0); // Or your voltage limits
+
+	return voltage;
 }

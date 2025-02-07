@@ -26,6 +26,11 @@
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
+#include "frc/simulation/DCMotorSim.h"
+#include "frc/simulation/EncoderSim.h"
+#include "frc/simulation/SimDeviceSim.h"
+#include <frc/system/plant/LinearSystemId.h>
+#include "frc/controller/PIDController.h"
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -103,6 +108,13 @@ private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;
 
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
+	ctre::phoenix6::sim::TalonFXSimState *m_ClimberSim;
+	frc::sim::DCMotorSim m_motorSimModel{
+		frc::LinearSystemId::DCMotorSystem(
+			frc::DCMotor::KrakenX60FOC(1),
+			0.001_kg_sq_m,
+			9),
+		frc::DCMotor::KrakenX60FOC(1)};
 	ControlData *m_PositionDegree;
 
 	RobotStateChanges::ClimbMode m_climbMode;
@@ -110,9 +122,14 @@ private:
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
 	void PushTuningParamsToNT();
+	double CalculateTargetVoltage();
 
-	void InitializeTalonFXClimberPRACTICE_BOT9999();
+	void
+	InitializeTalonFXClimberPRACTICE_BOT9999();
 
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
+
+	bool m_Sim = false;
+	frc::PIDController m_climberPID{1.0, 0.0, 0.0};
 };
