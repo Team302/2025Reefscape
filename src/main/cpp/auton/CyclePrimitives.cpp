@@ -213,6 +213,10 @@ void CyclePrimitives::RunDriveStop()
 										  ChassisOptionEnums::PathGainsType::LONG,
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
+										  false,
+										  IntakeManager::STATE_NAMES::STATE_OFF, // ask Mr. Witz
+										  false,
+										  DragonTale::STATE_NAMES::STATE_READY, // ask MR. WItz
 										  ChassisOptionEnums::PathUpdateOption::NONE,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);

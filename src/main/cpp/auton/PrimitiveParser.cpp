@@ -142,10 +142,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
-                    // auto noteStates = noteManagerGen::STATE_OFF;
-                    // bool changeNoteState = false;
-                    // auto climberState = ClimberManagerGen::STATE_OFF;
-                    // bool changeClimberState = false;
+                    auto intakeStates = IntakeManager::STATE_OFF;
+                    bool changeIntakeState = false;
+                    auto taleState = DragonTale::STATE_READY;
+                    bool changeTaleState = false;
                     // auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
                     std::string pathName;
                     std::string choreoTrajectoryName;
@@ -317,10 +317,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      zones, // vector of all zones included as part of the path
                                                                             // can have multiple zones as part of a complex path
                                                                      visionAlignment,
-                                                                     // changeNoteState,
-                                                                     // noteStates,
-                                                                     // changeClimberState,
-                                                                     // climberState,
+                                                                     changeIntakeState,
+                                                                     intakeStates,
+                                                                     changeTaleState,
+                                                                     taleState,
                                                                      updateHeadingOption,
                                                                      pathDelayOption));
                     }
