@@ -59,7 +59,7 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 	case RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
 		break;
-	case RobotIdentifier::CHASSIS_BOT_9999:
+	case RobotIdentifier::PRACTICE_BOT_9999:
 		m_config = new ChassisConfigChassis_9999();
 		break;
 
