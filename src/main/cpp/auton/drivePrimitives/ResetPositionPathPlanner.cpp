@@ -55,9 +55,9 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
             auto initialPose = path.get()->getStartingHolonomicPose();
             if (initialPose)
             {
-                // Check to see if current post is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
+                // Check to see if current pose is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
-                units::length::meter_t poseDiff = actualPose.X() - centerline;
+                const units::length::meter_t poseDiff = actualPose.X() - m_centerline;
                 bool poseNeedsUpdating = poseDiff > units::length::meter_t(2.0) || poseDiff < units::length::meter_t(-2.0);
 
                 if (poseNeedsUpdating)
