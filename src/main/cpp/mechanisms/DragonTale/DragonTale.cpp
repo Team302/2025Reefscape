@@ -187,15 +187,18 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualGrabAlgaeFloorStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
