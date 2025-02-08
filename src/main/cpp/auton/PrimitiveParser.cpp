@@ -146,7 +146,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     bool changeIntakeState = false;
                     auto taleState = DragonTale::STATE_READY;
                     bool changeTaleState = false;
-                    // auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+                    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
@@ -245,32 +246,32 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        /**
-                        else if (strcmp(attr.name(), "noteOption") == 0)
+
+                        else if (strcmp(attr.name(), "taleOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::NOTE_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
                             {
-                                auto noteStateItr = noteManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (noteStateItr != noteManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto taleStateItr = DragonTale::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (taleStateItr != DragonTale::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    noteStates = noteStateItr->second;
-                                    changeNoteState = true;
+                                    taleState = taleStateItr->second;
+                                    changeTaleState = true;
                                 }
                             }
                         }
-                        else if (strcmp(attr.name(), "climberOption") == 0)
+                        else if (strcmp(attr.name(), "intakeOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::CLIMBER_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
                             {
-                                auto climberStateItr = ClimberManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (climberStateItr != ClimberManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto intakeStateItr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (intakeStateItr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    climberState = climberStateItr->second;
-                                    changeClimberState = true;
+                                    intakeStates = intakeStateItr->second;
+                                    changeIntakeState = true;
                                 }
                             }
                         }
-                        **/
+
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
                             /** TODO come back to this

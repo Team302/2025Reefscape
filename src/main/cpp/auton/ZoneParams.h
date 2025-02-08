@@ -24,8 +24,8 @@
 // Team 302 includes
 #include "auton/AutonGrid.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms\IntakeManager\IntakeManager.h"
-#include "mechanisms\DragonTale\DragonTale.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 // Third Party Includes
 
 class ZoneParams
@@ -39,8 +39,8 @@ public:
                units::length::inch_t radius,
                bool isTaleStateChanging,
                bool isIntakeStateChanging,
-               IntakeManager::STATE_NAMES intakeoption,
-               DragonTale::STATE_NAMES taleoption,
+               IntakeManager::STATE_NAMES intakeOption,
+               DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
@@ -61,8 +61,8 @@ public:
     bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
     bool IsTaleStateChanging() const { return m_isTaleStateChanging; }
 
-    IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeoption; }
-    DragonTale::STATE_NAMES GetTaleOption() const { return m_taleoption; }
+    IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeOption; }
+    DragonTale::STATE_NAMES GetTaleOption() const { return m_taleOption; }
 
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
     ChassisOptionEnums::AutonAvoidOptions GetAvoidOption() const { return m_avoidoption; }
@@ -74,8 +74,10 @@ private:
     AutonGrid::YGRID m_ygrid2;
     bool m_isIntakeStateChanging;
     bool m_isTaleStateChanging;
-    IntakeManager::STATE_NAMES m_intakeoption;
-    DragonTale::STATE_NAMES m_taleoption;
+
+    IntakeManager::STATE_NAMES m_intakeOption;
+    DragonTale::STATE_NAMES m_taleOption;
+
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
 

@@ -30,7 +30,7 @@
 #include "auton/ZoneParams.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
-#include "mechanisms\DragonTale\DragonTale.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
 
@@ -113,10 +113,13 @@ private:
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
+
     bool m_changeIntakeState;
-    IntakeManager::STATE_NAMES m_intakeState;
     bool m_changeTaleState;
+
+    IntakeManager::STATE_NAMES m_intakeState;
     DragonTale::STATE_NAMES m_taleState;
+
     ZoneParamsVector m_zones;
     ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
 };

@@ -124,17 +124,8 @@ void CyclePrimitives::Run()
 
 					if (isInZone)
 					{
-						/**
-					auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-					if (config != nullptr && zone->IsNoteStateChanging())
-					{
-						auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-						if (noteMgr != nullptr)
-						{
-							noteMgr->SetCurrentState(zone->GetNoteOption(), true);
-						}
-					}
-						**/
+
+						SetMechanismStatesFromZone(zone);
 
 						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
 						{
@@ -241,6 +232,24 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 		if (taleMgr != nullptr && params->IsTaleStateChanging())
 		{
 			taleMgr->SetCurrentState(params->GetTaleState(), true);
+		}
+	}
+}
+void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
+{
+	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+	if (params != nullptr && config != nullptr)
+	{
+		auto intakeMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
+		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
+		{
+			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);
+		}
+
+		auto taleMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+		if (taleMgr != nullptr && params->IsTaleStateChanging())
+		{
+			taleMgr->SetCurrentState(params->GetTaleOption(), true);
 		}
 	}
 }

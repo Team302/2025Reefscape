@@ -163,6 +163,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
+            auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+
             // looping through the zone xml attributes to define the location of a given zone (based on 2 sets grid coordinates)
             for (xml_attribute attr = zonenode.first_attribute(); attr; attr = attr.next_attribute())
             {
@@ -237,23 +239,30 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 else if (strcmp(attr.name(), "intakeOption") == 0)
                 {
                     auto itr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
-                    if (itr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
+                    if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
                     {
-                        intakeChosenOption = itr->second;
-                        isIntakeStateChanging = false;
-                    }
-                    else
-                    {
-                        hasError = true;
+
+                        if (itr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
+                        {
+                            intakeChosenOption = itr->second;
+                            isIntakeStateChanging = false;
+                        }
+                        else
+                        {
+                            hasError = true;
+                        }
                     }
                 }
                 else if (strcmp(attr.name(), "taleOption") == 0)
                 {
                     auto itr = DragonTale::stringToSTATE_NAMESEnumMap.find(attr.value());
-                    if (itr != DragonTale::stringToSTATE_NAMESEnumMap.end())
+                    if (config != nullptr && config->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
                     {
-                        taleChosenOption = itr->second;
-                        isTaleStateChanging = false;
+                        if (itr != DragonTale::stringToSTATE_NAMESEnumMap.end())
+                        {
+                            taleChosenOption = itr->second;
+                            isTaleStateChanging = false;
+                        }
                     }
                     else
                     {
