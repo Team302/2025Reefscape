@@ -100,7 +100,8 @@
     "expected": "cpp",
     "source_location": "cpp",
     "ranges": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "charconv": "cpp"
   },
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,

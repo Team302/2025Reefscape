@@ -994,7 +994,6 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
-              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -1686,6 +1685,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
