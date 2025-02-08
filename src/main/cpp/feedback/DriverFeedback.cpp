@@ -23,7 +23,6 @@
 #include <networktables/NetworkTableEntry.h>
 #include <feedback/LEDStates.h>
 #include <frc/DriverStation.h>
-#include "utils/logging/Logger.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
@@ -147,13 +146,11 @@ void DriverFeedback::UpdateDiagnosticLEDs()
 
         if (taleMgr != nullptr /* && intakeMgr != nullptr*/)
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("A"), std::string("tale and intake not null"), std::string("true"));
 
             if (DragonVision::GetDragonVision() != nullptr)
             {
                 // auto vision = DragonVision::GetDragonVision();
                 // vision->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE);
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("A"), std::string("Vision not null"), std::string("true"));
                 bool questStatus = false;
                 bool ll1Status = false;
                 bool ll2Status = false;
