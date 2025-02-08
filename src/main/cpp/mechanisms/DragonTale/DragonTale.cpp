@@ -187,15 +187,18 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualGrabAlgaeFloorStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
@@ -411,7 +414,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
@@ -530,7 +533,7 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
@@ -792,7 +795,7 @@ frc::Pose3d DragonTale::GetReefCenter()
 {
 	frc::Pose3d fieldElementPose = frc::Pose3d{};
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
 	return fieldElementPose;
 }
 

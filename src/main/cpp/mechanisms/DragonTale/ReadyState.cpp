@@ -36,7 +36,7 @@ using namespace DragonTaleStates;
 ReadyState::ReadyState(std::string stateName,
 					   int stateId,
 					   DragonTale *mech,
-					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
+					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId), m_scoringTimer(new frc::Timer())
 {
 }
 
@@ -78,8 +78,20 @@ bool ReadyState::AtTarget()
 bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-
+	bool transition = false;
+	int currentState = m_mechanism->GetCurrentState();
+	if ((m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (currentState == DragonTale::STATE_NAMES::STATE_HOLD || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))))
+	{
+		m_scoringTimer->Start(); // This works becuase IsTransitionCondition is called every loop and it is the the first state to check the transition condition
+		if (m_scoringTimer->Get() > units::time::second_t(0.25))
+			transition = true;
+	}
+	else
+	{
+		m_scoringTimer->Stop();
+		m_scoringTimer->Reset();
+	}
 	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) ||
-			(m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))) ||
-			(m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_INITIALIZE));
+			transition ||
+			(currentState == DragonTale::STATE_NAMES::STATE_INITIALIZE));
 }
