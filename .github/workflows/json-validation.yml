@@ -6,11 +6,11 @@ name: json validation
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - '**/*.traj'
-      - '**/*.path'
-      - '**/*.json'
-      - '**/*.vpr'
+    #paths:
+    #  - '**/*.traj'
+    #  - '**/*.path'
+    #  - '**/*.json'
+    #  - '**/*.vpr'
 
 jobs:
   validate-json:
