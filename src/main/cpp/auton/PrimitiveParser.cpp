@@ -49,8 +49,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
+    primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
 
-    map<string, ChassisOptionEnums::HeadingOption> headingOptionMap;
+    map<string, ChassisOptionEnums::HeadingOption>
+        headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;

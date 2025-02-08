@@ -168,6 +168,7 @@ public:
 	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
 	frc::Pose3d GetReefCenter();
+	void SetCurrentState(int state, bool run) override;
 
 protected:
 	RobotIdentifier m_activeRobotId;
@@ -176,7 +177,6 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState(int state, bool run) override;
 	ControlData *GetControlData(std::string name) override;
 
 private:

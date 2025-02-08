@@ -105,6 +105,7 @@ public:
 	bool GetFailedSensor() const { return m_failedSensorLatch; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
+	void SetCurrentState(int state, bool run) override;
 
 protected:
 	RobotIdentifier m_activeRobotId;
@@ -113,7 +114,6 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState(int state, bool run) override;
 	ControlData *GetControlData(std::string name) override;
 
 private:
