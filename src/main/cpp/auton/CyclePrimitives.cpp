@@ -124,17 +124,8 @@ void CyclePrimitives::Run()
 
 					if (isInZone)
 					{
-						/**
-					auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-					if (config != nullptr && zone->IsNoteStateChanging())
-					{
-						auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-						if (noteMgr != nullptr)
-						{
-							noteMgr->SetCurrentState(zone->GetNoteOption(), true);
-						}
-					}
-						**/
+
+						SetMechanismStatesFromZone(zone);
 
 						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
 						{
@@ -213,6 +204,10 @@ void CyclePrimitives::RunDriveStop()
 										  ChassisOptionEnums::PathGainsType::LONG,
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
+										  false,
+										  IntakeManager::STATE_NAMES::STATE_OFF,
+										  false,
+										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::PathUpdateOption::NONE,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
@@ -223,23 +218,40 @@ void CyclePrimitives::RunDriveStop()
 
 void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 {
-	/**
+
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-	auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-	if (noteMgr != nullptr && params->IsNoteStateChanging())
-	{
-		noteMgr->SetCurrentState(params->GetNoteState(), true);
-	}
+		auto intakeMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
+		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
+		{
+			intakeMgr->SetCurrentState(params->GetIntakeState(), true);
+		}
 
-	auto climbMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER);
-	if (climbMgr != nullptr && params->IsClimberStateChanging())
+		auto taleMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+		if (taleMgr != nullptr && params->IsTaleStateChanging())
+		{
+			taleMgr->SetCurrentState(params->GetTaleState(), true);
+		}
+	}
+}
+void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
+{
+	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+	if (params != nullptr && config != nullptr)
 	{
-		noteMgr->SetCurrentState(params->GetClimberState(), true);
+		auto intakeMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
+		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
+		{
+			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);
+		}
+
+		auto taleMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+		if (taleMgr != nullptr && params->IsTaleStateChanging())
+		{
+			taleMgr->SetCurrentState(params->GetTaleOption(), true);
+		}
 	}
-	}
-	**/
 }
 void CyclePrimitives::InitDriveStopDelayTimes()
 {
