@@ -13,6 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "FieldConstants.h"
+
 #include "FieldElementCalculator.h"
 
 
@@ -125,7 +126,7 @@ FieldConstants::FieldConstants()
     fc.CalcPositionsForField(fieldConstantsPoseMap);
 
 }
-frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
+frc::Pose3d FieldConstants::GetFieldElementPose(FIELD_ELEMENT element)
 {
     frc::Pose3d Pose3d = fieldConstantsPoseMap[element];
     return Pose3d;
@@ -144,3 +145,8 @@ void FieldConstants::ReadFieldCalibrationData()
     }
 }
 
+frc::Pose3d FieldConstants::GetAprilTagPose(AprilTagIDs tag)
+{
+    auto pose = aprilTagPoseMap[tag];
+    return pose;
+}

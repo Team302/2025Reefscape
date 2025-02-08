@@ -13,14 +13,15 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #pragma once
+#include <filesystem>
+#include <iostream>
+
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation3d.h>
-#include <iostream>
-#include <filesystem>
 
+#include "frc/apriltag/AprilTagFieldLayout.h"
 #include "units/angle.h"
 #include "units/base.h"
-#include "frc/apriltag/AprilTagFieldLayout.h"
 
 class FieldConstants
 {
@@ -123,7 +124,9 @@ public:
         RED_REEF_IJ_TAG = 11,
         RED_REEF_KL_TAG = 6
     };
-    frc::Pose3d GetFieldElement(FIELD_ELEMENT element);
+    frc::Pose3d GetFieldElementPose(FIELD_ELEMENT element);
+
+    frc::Pose3d GetAprilTagPose(AprilTagIDs tag);
 
 private:
     // make a singleton
