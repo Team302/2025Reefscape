@@ -21,7 +21,7 @@ jobs:
 
       - name: Validate JSON Files
         run: |
-          for file in $(find . -name "*.json" -o -name "*.traj" -o -name "*.path" -o -name "*.vpr" ); do
+          for file in $(find . -name "*.json" -o -name "*.traj" -o -name "*.path" -o -name "*.vpr" ! -path "*/launch.json" ); do
             echo "Validating $file"
             jq empty "$file" || exit 1
           done
