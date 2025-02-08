@@ -14,23 +14,87 @@
 //====================================================================================================================================================
 
 #include <fielddata/FieldConstantsPoseLogger.h>
+
+#ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #include "wpi/DataLog.h"
 #include "frc/DataLogManager.h"
 #include "frc/geometry/Pose3d.h"
-//#include <wpi/log/FileLogger.h>
 
 void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    frc::DataLogManager::Start("/home/lvuser/", "field_poses.log");
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_A] = "RED_REEF_A";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_B] = "RED_REEF_B";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_C] = "RED_REEF_C";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_D] = "RED_REEF_D";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_E] = "RED_REEF_E";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_F] = "RED_REEF_F";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_G] = "RED_REEF_G";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_H] = "RED_REEF_H";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_I] = "RED_REEF_I";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_J] = "RED_REEF_J";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_K] = "RED_REEF_K";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_L] = "RED_REEF_L";
+
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER] = "RED_REEF_CENTER";
+
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE] = "RED_LEFT_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] = "RED_RIGHT_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE] = "RED_CENTER_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = "RED_CORAL_STATION_RIGHT_ALLIANCE"; 
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] = "RED_CORAL_STATION_RIGHT_SIDEWALL";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] = "RED_CORAL_STATION_LEFT_ALLIANCE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
+    
+    
+    
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR] = "BLUE_PROCESSOR";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT] = "BLUE_BARGE_FRONT";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK] = "BLUE_BARGE_BACK";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB] = "BLUE_REEF_AB";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD] = "BLUE_REEF_CD";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF] = "BLUE_REEF_EF";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH] = "BLUE_REEF_GH";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ] = "BLUE_REEF_IJ";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL] = "BLUE_REEF_KL";
+
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_A] = "BLUE_REEF_A";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_B] = "BLUE_REEF_B";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_C] = "BLUE_REEF_C";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_D] = "BLUE_REEF_D";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_E] = "BLUE_REEF_E";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_F] = "BLUE_REEF_F";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_G] = "BLUE_REEF_G";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_H] = "BLUE_REEF_H";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_I] = "BLUE_REEF_I";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_J] = "BLUE_REEF_J";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_K] = "BLUE_REEF_K";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_L] = "BLUE_REEF_L";
+
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER] = "BLUE_REEF_CENTER";
+
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_LEFT_CAGE] = "BLUE_LEFT_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE] = "BLUE_RIGHT_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE] = "BLUE_CENTER_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] = "BLUE_CORAL_STATION_LEFT_SIDEWALL";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT] = "BLUE_CORAL_STATION_LEFT";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] = "BLUE_CORAL_STATION_LEFT_ALLIANCE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_ALLIANCE] = "BLUE_CORAL_STATION_RIGHT_ALLIANCE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT] = "BLUE_CORAL_STATION_RIGHT";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = "BLUE_CORAL_STATION_RIGHT_SIDEWALL";
+
+
+        frc::DataLogManager::Start("/home/lvuser/", "field_poses.wpilog");
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
     
     for (auto &[key, pose] : fieldConstantsPoseMap)
     {
-        auto poseLog = wpi::log::StructLogEntry<frc::Pose3d>(log, std::to_string(key));
+        auto poseLog = wpi::log::StructLogEntry<frc::Pose3d>(log, m_fieldConstantsNameMap[key]);
         poseLog.Append(pose);
     }
 
     log.Flush();
-    frc::DataLogManager::Stop();
 
 }
+
+#endif

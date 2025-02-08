@@ -14,6 +14,9 @@
 //====================================================================================================================================================
 #pragma once
 
+#define INCLUDE_FIELD_ELEMENT_POSE_LOGGER
+#ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
+
 #include <frc/geometry/Pose3d.h>
 #include <fielddata/FieldConstants.h>
 
@@ -21,4 +24,12 @@ class FieldConstantsPoseLogger
 {
     public :
         void LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
+
+    private :
+        std::map<FieldConstants::FIELD_ELEMENT, std::string> m_fieldConstantsNameMap;
+
+
+
 };
+
+#endif 

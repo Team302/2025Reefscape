@@ -14,7 +14,7 @@
 //====================================================================================================================================================
 #include "FieldConstants.h"
 #include "FieldElementCalculator.h"
-#include "FieldConstantsPoseLogger.h"
+
 
 FieldConstants *FieldConstants::m_instance = nullptr;
 FieldConstants *FieldConstants::GetInstance()
@@ -124,8 +124,6 @@ FieldConstants::FieldConstants()
     FieldElementCalculator fc;
     fc.CalcPositionsForField(fieldConstantsPoseMap);
 
-    FieldConstantsPoseLogger fpl;
-    fpl.LogFieldElementPoses(fieldConstantsPoseMap);
 }
 frc::Pose3d FieldConstants::GetFieldElement(FIELD_ELEMENT element)
 {
