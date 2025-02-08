@@ -3,12 +3,8 @@
 name: xml validation
 
 on:
-  push:
-    # Run on pushes that modify XML files
-    paths:
-      - '**/*.xml'
-      - '**/*.dtd'
   pull_request:
+    branches: [ main ]
     paths:
       - '**/*.xml'
       - '**/*.dtd'
