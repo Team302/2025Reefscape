@@ -16,17 +16,12 @@
 
 #pragma once
 
-#include <array>
-#include <map>
 #include <optional>
-#include <vector>
 
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
 #include "frc/DriverStation.h"
-#include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
-#include "utils/FMSData.h"
 
 class CoralStationHelper
 {

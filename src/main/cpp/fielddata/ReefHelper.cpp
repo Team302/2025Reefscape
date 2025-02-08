@@ -36,22 +36,6 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrent
 {
     m_blueReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d();
     m_redReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d();
-
-    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_AB_TAG).ToPose2d();
-    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_CD_TAG).ToPose2d();
-    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_KL_TAG).ToPose2d();
-
-    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_EF_TAG).ToPose2d();
-    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d();
-    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG).ToPose2d();
-
-    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG).ToPose2d();
-    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG).ToPose2d();
-    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG).ToPose2d();
-
-    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG).ToPose2d();
-    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d();
-    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG).ToPose2d();
 }
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()

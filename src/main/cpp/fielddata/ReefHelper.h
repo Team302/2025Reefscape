@@ -16,17 +16,12 @@
 
 #pragma once
 
-#include <array>
-#include <map>
 #include <optional>
-#include <vector>
 
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
 #include "frc/DriverStation.h"
-#include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
-#include "utils/FMSData.h"
 
 class ReefHelper
 {
@@ -47,35 +42,6 @@ private:
     SwerveChassis *m_chassis;
     frc::DriverStation::Alliance m_allianceColor;
     FieldConstants *m_fieldConstants;
-
-    // Ordering the AprilTags so the face parallel to the alliance wall is first.  Then we may be able to do fewer distance calculations
-    std::map<FieldConstants::AprilTagIDs, frc::Pose2d> m_blueFrontTags{{FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG, frc::Pose2d()},
-                                                                       {FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG, frc::Pose2d()},
-                                                                       {FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG, frc::Pose2d()}};
-    std::map<FieldConstants::AprilTagIDs, frc::Pose2d> m_blueBackTags{{FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG, frc::Pose2d()},
-                                                                      {FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG, frc::Pose2d()},
-                                                                      {FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG, frc::Pose2d()}};
-
-    std::map<FieldConstants::AprilTagIDs, frc::Pose2d> m_redFrontTags{{FieldConstants::AprilTagIDs::RED_REEF_AB_TAG, frc::Pose2d()},
-                                                                      {FieldConstants::AprilTagIDs::RED_REEF_CD_TAG, frc::Pose2d()},
-                                                                      {FieldConstants::AprilTagIDs::RED_REEF_KL_TAG, frc::Pose2d()}};
-    std::map<FieldConstants::AprilTagIDs, frc::Pose2d> m_redBackTags{{FieldConstants::AprilTagIDs::RED_REEF_GH_TAG, frc::Pose2d()},
-                                                                     {FieldConstants::AprilTagIDs::RED_REEF_EF_TAG, frc::Pose2d()},
-                                                                     {FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG, frc::Pose2d()}};
-
-    std::array<FieldConstants::FIELD_ELEMENT, 3> m_blueFrontElements{FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB,
-                                                                     FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD,
-                                                                     FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL};
-    std::array<FieldConstants::FIELD_ELEMENT, 3> m_blueBackElements{FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH,
-                                                                    FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF,
-                                                                    FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ};
-
-    std::array<FieldConstants::FIELD_ELEMENT, 3> m_redFrontElements{FieldConstants::FIELD_ELEMENT::RED_REEF_AB,
-                                                                    FieldConstants::FIELD_ELEMENT::RED_REEF_CD,
-                                                                    FieldConstants::FIELD_ELEMENT::RED_REEF_KL};
-    std::array<FieldConstants::FIELD_ELEMENT, 3> m_redBackElements{FieldConstants::FIELD_ELEMENT::RED_REEF_GH,
-                                                                   FieldConstants::FIELD_ELEMENT::RED_REEF_EF,
-                                                                   FieldConstants::FIELD_ELEMENT::RED_REEF_IJ};
 
     frc::Pose2d m_redReefCenter;
     frc::Pose2d m_blueReefCenter;

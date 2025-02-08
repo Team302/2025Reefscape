@@ -67,22 +67,10 @@ private:
     SwerveChassis *m_chassis;
     DragonVision *m_vision;
 
-    int GetAprilTag(DragonVision::VISION_ELEMENT item);
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose2d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
+    frc::Pose2d GetVisonPose(VisionData data);
 
-    /** TODO JW come back to this one
-    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> blueMap = {
-        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER}};
-
-    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> redMap = {
-        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_RED_SPEAKER}};
-    **/
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };
