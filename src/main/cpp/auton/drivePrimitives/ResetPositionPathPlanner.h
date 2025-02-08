@@ -36,4 +36,5 @@ private:
     void ResetPose(frc::Pose2d pose);
     const double m_maxAngularVelocityDegreesPerSecond = 720.0;
     const units::length::meter_t distanceThreshold{1.0};
+    units::length::meter_t centerline{8.89};
 };
