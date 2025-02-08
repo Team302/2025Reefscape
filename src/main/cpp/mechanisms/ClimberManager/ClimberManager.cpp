@@ -280,12 +280,18 @@ ControlData *ClimberManager::GetControlData(string name)
 	return nullptr;
 }
 
-void ClimberManager::LogSignals()
+void ClimberManager::DataLog()
 {
-	auto signals = DragonDataLoggerSignals::GetInstance();
-	if (signals != nullptr)
+	LogState(GetCurrentState());
+	// log more signals here
+}
+
+void ClimberManager::LogState(int value)
+{
+	static int currentValue = 0;
+	if (currentValue != value)
 	{
-		signals->LogClimberManagerState(GetCurrentState());
-		// log more signals here
+		currentValue = value;
+		m_LogState.Append(value);
 	}
 }

@@ -22,6 +22,7 @@
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
+#include "wpi/DataLog.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -35,10 +36,11 @@
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
+#include "utils/logging/DragonDataLogger.h"
 
 #include "RobotIdentifier.h"
 
-class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
+class ClimberManager : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -78,6 +80,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void DataLog() override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int ival);
@@ -116,4 +119,10 @@ private:
 
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
+
+	// Add here all the loggong objects
+	wpi::log::IntegerLogEntry m_LogState;
+
+	// Add here all the logging functions
+	void LogState(int value);
 };

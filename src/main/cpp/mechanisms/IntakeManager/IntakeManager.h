@@ -128,7 +128,6 @@ private:
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
 	void PushTuningParamsToNT();
-	void LogSignals();
 
 	void InitializeTalonFXIntakePRACTICE_BOT9999();
 	void InitializeTalonFXExtenderPRACTICE_BOT9999();

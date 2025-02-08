@@ -72,18 +72,18 @@ void BaseMech::LogInformation()
     // NO-OP - subclasses override when necessary
 }
 
-ControlData* BaseMech::GetControlData(string name)
+ControlData *BaseMech::GetControlData(string name)
 {
     return nullptr;
 }
 
-void BaseMech::ReadConstants(string configfilename, int robotId )
+void BaseMech::ReadConstants(string configfilename, int robotId)
 {
     auto deployDir = frc::filesystem::GetDeployDirectory();
     auto filename = deployDir + string("/") + std::to_string(robotId) + string("/mechanisms/") + configfilename;
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Reading parameters from "), filename);
-    
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.c_str());
 
@@ -92,10 +92,10 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string(""), "Loaded xml file");
 
         pugi::xml_node parent = doc.root();
-        
+
         pugi::xml_node MechanismParameters = parent.child("MechanismParameters");
         pugi::xml_node controlDataNodes = MechanismParameters.child("MotorControlData");
-        
+
         for (pugi::xml_node aNode = controlDataNodes.child("MinimalMotorControlData"); aNode; aNode = aNode.next_sibling("MinimalMotorControlData"))
         {
             string name = aNode.attribute("name").as_string();
@@ -103,7 +103,7 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Loaded ControlData "), name);
 
             ControlData *theData = GetControlData(name);
-            if(theData != nullptr)
+            if (theData != nullptr)
             {
                 theData->SetP(aNode.attribute("pGain").as_double());
                 theData->SetI(aNode.attribute("iGain").as_double());
@@ -127,7 +127,7 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
     }
     else
     {
-            std::cout << "Config File not found" << std::endl;
+        std::cout << "Config File not found" << std::endl;
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Config File not found"), configfilename);
     }

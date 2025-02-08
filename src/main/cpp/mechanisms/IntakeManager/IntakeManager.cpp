@@ -288,8 +288,6 @@ void IntakeManager::RunCommonTasks()
 			m_failedSensorLatch = !m_failedSensorLatch;
 	}
 	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
-
-	LogSignals();
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -374,14 +372,4 @@ ControlData *IntakeManager::GetControlData(string name)
 		return m_PositionDegree;
 
 	return nullptr;
-}
-
-void IntakeManager::LogSignals()
-{
-	auto signals = DragonDataLoggerSignals::GetInstance();
-	if (signals != nullptr)
-	{
-		signals->LogIntakeManagerState(GetCurrentState());
-		// log more signals here
-	}
 }
