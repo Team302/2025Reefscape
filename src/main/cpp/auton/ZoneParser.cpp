@@ -22,8 +22,8 @@
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
 #include "utils/logging/Logger.h"
-#include "mechanisms\DragonTale\DragonTale.h"
-#include "mechanisms\IntakeManager\IntakeManager.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
 
 #include "pugixml/pugixml.hpp"
 
