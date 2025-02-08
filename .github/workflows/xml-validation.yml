@@ -1,4 +1,5 @@
 # workflow for validating auton xml
+# this only validates that all of the json and dtd are ok with each other
 
 name: xml validation
 
