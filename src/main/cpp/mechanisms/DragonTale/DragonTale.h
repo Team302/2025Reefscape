@@ -40,13 +40,14 @@
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
+#include "utils/logging/DragonDataLogger.h"
 
 #include "state/IRobotStateChangeSubscriber.h"
 #include "frc/geometry/Pose2d.h"
 
 #include "RobotIdentifier.h"
 
-class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
+class DragonTale : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -122,6 +123,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void DataLog() override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -237,4 +239,24 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
+
+	wpi::log::IntegerLogEntry m_LogState;
+	wpi::log::DoubleLogEntry m_LogArmTargetAngle;
+	wpi::log::DoubleLogEntry m_LogElevatorTargetPosition;
+	wpi::log::DoubleLogEntry m_LogArmAngle;
+	wpi::log::DoubleLogEntry m_LogElevatorPosition;
+	wpi::log::BooleanLogEntry m_LogCoralInSensor;
+	wpi::log::BooleanLogEntry m_LogCoralOutSensor;
+	wpi::log::BooleanLogEntry m_LogAlgaeSensor;
+	wpi::log::IntegerLogEntry m_LogScoringMode;
+
+	void LogState(int value);
+	void LogArmTargetAngle(double value);
+	void LogElevatorTargetPosition(double value);
+	void LogArmAngle(double value);
+	void LogElevatorPosition(double value);
+	void LogCoralInSensor(bool value);
+	void LogCoralOutSensor(bool value);
+	void LogAlgaeSensor(bool value);
+	void LogScoringMode(int value);
 };

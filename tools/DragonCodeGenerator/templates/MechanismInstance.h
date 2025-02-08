@@ -22,7 +22,7 @@ $$_INCLUDE_FILES_$$
 
 #include "RobotIdentifier.h"
 
-class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_, public IRobotStateChangeSubscriber
+class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
 public:
     enum STATE_NAMES
@@ -69,6 +69,7 @@ public:
     void CreateAndRegisterStates();
     void Cyclic();
     void RunCommonTasks() override;
+    void DataLog() override;
 
     RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -100,4 +101,8 @@ private:
     $$_PRIVATE_INITIALZATION_FUNCTIONS_$$
 
     $$_TARGET_MEMBER_VARIABLES_$$
+
+    $$_LOGGING_OBJECTS_$$
+
+    $$_LOGGING_FUNCTIONS_$$
 };

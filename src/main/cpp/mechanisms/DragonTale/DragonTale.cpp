@@ -597,6 +597,7 @@ void DragonTale::RunCommonTasks()
 	ManualControl();
 	UpdateTarget();
 	Cyclic();
+	DataLog();
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
@@ -793,4 +794,108 @@ void DragonTale::UpdateTarget()
 bool DragonTale::AtTarget()
 {
 	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
+}
+
+void DragonTale::LogState(int value)
+{
+	static int currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogState.Append(value);
+	}
+}
+
+void DragonTale::LogArmTargetAngle(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogArmTargetAngle.Append(value);
+	}
+}
+
+void DragonTale::LogElevatorTargetPosition(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogElevatorTargetPosition.Append(value);
+	}
+}
+
+void DragonTale::LogArmAngle(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogArmAngle.Append(value);
+	}
+}
+
+void DragonTale::LogElevatorPosition(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogElevatorPosition.Append(value);
+	}
+}
+
+void DragonTale::LogCoralInSensor(bool value)
+{
+	static bool currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogCoralInSensor.Append(value);
+	}
+}
+
+void DragonTale::LogCoralOutSensor(bool value)
+{
+	static bool currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogCoralOutSensor.Append(value);
+	}
+}
+
+void DragonTale::LogAlgaeSensor(bool value)
+{
+	static bool currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogAlgaeSensor.Append(value);
+	}
+}
+
+void DragonTale::LogScoringMode(int value)
+{
+	static int currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogScoringMode.Append(value);
+	}
+}
+
+void DragonTale::DataLog()
+{
+	LogState(GetCurrentState());
+	LogArmTargetAngle(m_armTarget.value());
+	LogElevatorTargetPosition(m_elevatorTarget.value());
+	LogArmAngle(GetArmAngle().value());
+	LogElevatorPosition(GetElevatorHeight().value());
+	LogCoralInSensor(GetCoralInSensorState());
+	LogCoralOutSensor(GetCoralOutSensorState());
+	LogAlgaeSensor(GetAlgaeSensorState());
+	LogScoringMode(m_scoringMode);
+	// log more signals here
 }
