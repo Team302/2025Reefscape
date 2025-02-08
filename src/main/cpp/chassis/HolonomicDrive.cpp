@@ -186,16 +186,14 @@ void HolonomicDrive::Run()
         }
 
         CheckTipping(checkTipping);
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Heading Option", m_moveInfo.headingOption);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Drive Option", m_moveInfo.driveOption);
-
         m_swerve->Drive(m_moveInfo);
     }
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Run"), string("nullptr"));
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Heading Option", m_moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Drive Option", m_moveInfo.driveOption);
 }
 
 void HolonomicDrive::InitChassisMovement()
@@ -314,7 +312,7 @@ void HolonomicDrive::SlowMode()
 void HolonomicDrive::PolarDrive()
 {
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::POLAR_DRIVE;
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF;
+    // m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF;
 }
 
 void HolonomicDrive::CheckTipping(bool isSelected)

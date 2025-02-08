@@ -20,6 +20,7 @@
 // FRC Includes
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/ChassisSpeeds.h>
+#include "frc/controller/PIDController.h"
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
@@ -37,4 +38,8 @@ public:
 private:
     RobotDrive *m_robotDrive;
     double m_loopRate = 0.02;
+
+    const std::pair<double, double> kPSpecifiedHeading = {6.0, 12.0}; // kP, kI
+
+    static frc::PIDController *m_pid;
 };

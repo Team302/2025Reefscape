@@ -23,6 +23,7 @@
 
 /// DEBUGGING
 #include "utils/logging/Logger.h"
+#include "utils/AngleUtils.h"
 
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
@@ -31,6 +32,10 @@ using std::string;
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
+    m_pid->EnableContinuousInput(-180.0, 180.0);
+    m_pid->SetIZone(20.0);
+    m_pid->SetIntegratorRange(-360.0, 360.0);
+    m_pid->Reset();
 }
 
 std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
@@ -43,27 +48,60 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
         frc::Pose2d currentPose = m_chassis->GetPose();
-        double xDiff = currentPose.X().value() - reefXPos.value();
-        double yDiff = currentPose.Y().value() - reefYPos.value();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Y", currentPose.Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "X", currentPose.X().value());
+        auto xDiff = currentPose.X() - reefXPos;
+        auto yDiff = currentPose.Y() - reefYPos;
 
-        double radius = std::hypot(xDiff, yDiff);
-        double angle = std::atan2(yDiff, xDiff);
+        double radius = units::math::hypot(xDiff, yDiff).value();
+        double angle = (units::math::atan2(yDiff, xDiff)).value();
 
         // Radial velocity: Changes radius
         double radialVelocity = chassisSpeeds.vx.value(); // Forward/backward motion directly affects radius
-        radius += radialVelocity * m_loopRate * -1;       // Negative since forward decreases radius
+        if (radialVelocity > 0.1)
+        {
+            radius += radialVelocity * m_loopRate * -1; // Negative since forward decreases radius
+        }
 
         // Angular velocity: Changes angle
         double angularVelocity = chassisSpeeds.vy.value() / radius; // Clockwise/counter-clockwise motion
         angle += angularVelocity * m_loopRate;
 
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "radialVelocity", radialVelocity);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "angularVelocity", angularVelocity);
+
         // Convert polar velocities back to Cartesian
         double vxNew = radialVelocity * std::cos(angle) - (radius * angularVelocity * std::sin(angle));
         double vyNew = radialVelocity * std::sin(angle) + (radius * angularVelocity * std::cos(angle));
 
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Raidus", radius);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Angle", angle);
+
         chassisSpeeds.vx = units::velocity::meters_per_second_t(vxNew);
         chassisSpeeds.vy = units::velocity::meters_per_second_t(vyNew);
         auto rot2d = Rotation2d(m_chassis->GetYaw());
+
+        // calculate the field relative angle
+        units::angle::degree_t angleToReefCenter = units::angle::degree_t(units::math::atan2(currentPose.Y().value() - 4.0, currentPose.X().value() - 4.5));
+
+        // wrap angleToReefCenter between -180 and 180 degrees
+        angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
+
+        units::angle::degree_t angleRelativeToFace = (units::math::fmod((angleToReefCenter + 30_deg), 60_deg)) - 30_deg;
+        if (angleRelativeToFace < -30_deg)
+        {
+            angleRelativeToFace += 60_deg;
+        }
+
+        units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace;
+        units::angle::degree_t fieldRelativeAngle = AngleUtils::GetEquivAngle(closestMultiple);
+
+        units::angle::degree_t currentAngle = currentPose.Rotation().Degrees();
+
+        chassisMovement.chassisSpeeds.omega = units::angle::degree_t(m_pid->Calculate(currentAngle.value(), fieldRelativeAngle.value()));
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VyNew", vyNew);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VxNew", vxNew);
         chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
                                                                                chassisMovement.chassisSpeeds.vy,
                                                                                chassisMovement.chassisSpeeds.omega,
