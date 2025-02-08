@@ -243,11 +243,11 @@ void HolonomicDrive::ResetPose()
 
     if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
     {
-        m_swerve->SetYaw(units::angle::degree_t(180.0));
+        m_swerve->SetYaw(units::angle::degree_t(0.0));
     }
     else
     {
-        m_swerve->SetYaw(units::angle::degree_t(0.0));
+        m_swerve->SetYaw(units::angle::degree_t(180.0));
     }
 
     // m_swerve->ResetYaw();

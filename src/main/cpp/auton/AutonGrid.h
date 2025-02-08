@@ -24,6 +24,12 @@
 class AutonGrid
 {
 public:
+    enum ZoneMode
+    {
+        NOTHING = -1,
+        RECTANGLE,
+        CIRCLE,
+    };
     enum XGRID
     {
         NO_VALUE = -1,
@@ -121,6 +127,7 @@ public:
     static AutonGrid *GetInstance();
 
     bool IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygrid2, frc::Pose2d robotPose);
+    bool IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose);
 
 private:
     AutonGrid() = default;

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+<primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueRightOutside_C.traj"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightOutside_C.traj"
+time = "3.0"/>
+
+<!--add in a placer mech-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_C2.traj"
+time = "3.0"/>
+
+<!--add in an intake mech if any-->
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_D1.traj"
+time = "3.0"/>
+
+<!--add in a placer mech-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_D2.traj"
+time = "3.0"/>
+
+<!--add in an intake mech if any-->
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_E1.traj"
+time = "3.0"/>
+
+<!--add in a placer mech-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_E2.traj"
+time = "3.0"/>
+
+<!--add in an intake mech if needed-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_F1.traj"
+time = "3.0"/>
+
+<!--add in a placer mech-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_F2.traj"
+time = "3.0"/>
+
+<!--add in an intake mech if needed-->
+
+</auton>

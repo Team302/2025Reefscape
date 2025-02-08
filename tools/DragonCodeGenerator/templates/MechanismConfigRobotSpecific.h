@@ -17,6 +17,7 @@ public:
 
 protected:
     void DefineMechanisms() override;
+    void DefineLEDs() override;
 
 private:
     $$_MECHANISM_PTR_DECLARATIONS_$$

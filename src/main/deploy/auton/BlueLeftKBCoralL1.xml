@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+<primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueLeftOutside_K.traj"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftOutside_K.traj"
+time = "3.0"/>
+
+<!--placer-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_K2.traj"
+time = "3.0"/>
+
+<!--intake-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_L1.traj"
+time= "3.0"/>
+
+<!--placer-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_L2.traj"
+time = "3.0"/>
+
+<!--intake-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_A1.traj"
+time = "3.0"/>
+
+<!--placer-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_A2.traj"
+time = "3.0"/>
+
+<!--intake-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_B1.traj"
+time = "3.0"/>
+
+<!--placer-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_B2.traj"
+time = "3.0"/>
+
+<!--intake-->
+
+</auton>

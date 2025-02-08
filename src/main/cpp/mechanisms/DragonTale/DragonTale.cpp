@@ -59,12 +59,8 @@
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
@@ -215,6 +211,7 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
@@ -241,35 +238,35 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 void DragonTale::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "DragonTale";
-	m_Arm = new ctre::phoenix6::hardware::TalonFX(0, "rio");
-	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(8, "rio");
-	m_Coral = new ctre::phoenix::motorcontrol::can::TalonSRX(0);
-	m_Algae = new ctre::phoenix::motorcontrol::can::TalonSRX(0);
-	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(13, "rio");
+	m_Arm = new ctre::phoenix6::hardware::TalonFX(17, "rio");
+	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(4, "canivore");
+	m_Coral = new ctre::phoenix::motorcontrol::can::TalonSRX(18);
+	m_Algae = new ctre::phoenix6::hardware::TalonFX(19, "rio");
+	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "canivore");
 
-	m_CoralInSensor = new frc::DigitalInput(0);
-	m_CoralOutSensor = new frc::DigitalInput(0);
-	m_AlgaeSensor = new frc::DigitalInput(0);
+	m_CoralInSensor = new frc::DigitalInput(0);	 // yellow wire reverse
+	m_CoralOutSensor = new frc::DigitalInput(1); // black
+	m_AlgaeSensor = new frc::DigitalInput(2);	 // red reverse this one
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0);
-	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
-	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(0, "rio");
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.421387);
+	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::Clockwise_Positive;
+	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "rio");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(-0.15673828125);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
-	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(0, "rio");
+	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
 
 	m_PositionInch = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		0.2,											  // double proportional
-		0,												  // double integral
+		2,												  // double proportional
+		0.2,											  // double integral
 		0,												  // double derivative
-		0,												  // double feedforward
+		0.3,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -282,10 +279,10 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
-		0,												  // double integral
-		0,												  // double derivative
-		0,												  // double feedforward
+		57,												  // double proportional
+		20,												  // double integral
+		7,												  // double derivative
+		1.8,											  // double feedforward
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -323,99 +320,117 @@ void DragonTale::InitializePRACTICE_BOT9999()
 	InitializeTalonFXArmPRACTICE_BOT9999();
 	InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
 	InitializeTalonSRXCoralPRACTICE_BOT9999();
-	InitializeTalonSRXAlgaePRACTICE_BOT9999();
+	InitializeTalonFXAlgaePRACTICE_BOT9999();
 	InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
 }
 void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.25);
-	m_Arm->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.5);
-	m_Arm->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = false;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(120);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = false;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_Arm->GetConfigurator().Apply(hwswitch);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_Arm->GetConfigurator().Apply(motorconfig);
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
-	fxConfig.Feedback.SensorToMechanismRatio = 1;
-	fxConfig.Feedback.RotorToSensorRatio = 240;
-	m_Arm->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackRemoteSensorID = 17;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
+	configs.Feedback.SensorToMechanismRatio = 1;
+	configs.Feedback.RotorToSensorRatio = 240;
+
+	configs.MotionMagic.MotionMagicCruiseVelocity = 50_tps;
+	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_Arm->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
+
+	SetPIDArmPositionDegree();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
-	m_ElevatorLeader->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	m_ElevatorLeader->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = true;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value());
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = true;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_ElevatorLeader->GetConfigurator().Apply(hwswitch);
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_ElevatorLeader->GetConfigurator().Apply(motorconfig);
-	TalonFXConfiguration fxConfig{};
-	fxConfig.Feedback.FeedbackRemoteSensorID = 0;
-	fxConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder; // might need to switch to fully remote sensor, fused assumed perfect linerarity
-	fxConfig.Feedback.SensorToMechanismRatio = 0.167531519;
-	fxConfig.Feedback.RotorToSensorRatio = 7.6;
-	m_ElevatorLeader->GetConfigurator().Apply(fxConfig);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value());
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackRemoteSensorID = 4;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
+	configs.Feedback.SensorToMechanismRatio = 0.108878152421;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_ElevatorLeader->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
@@ -434,61 +449,104 @@ void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
 	m_Coral->ConfigSupplyCurrentLimit(climit, 0);
 }
 
-void DragonTale::InitializeTalonSRXAlgaePRACTICE_BOT9999()
+void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 {
-	m_Algae->SetInverted(true);
-	m_Algae->EnableVoltageCompensation(true);
-	m_Algae->ConfigVoltageCompSaturation(10.0, 0);
-	m_Algae->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-	m_Algae->ConfigOpenloopRamp(0.25);
+	TalonFXConfiguration configs{};
 
-	ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration climit;
-	climit.enable = true;
-	climit.currentLimit = 10;
-	climit.triggerThresholdCurrent = 13;
-	climit.triggerThresholdTime = 1;
-	m_Algae->ConfigSupplyCurrentLimit(climit, 0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
+
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
+
+	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_Algae->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Algae", "m_Algae Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 {
-	CurrentLimitsConfigs currconfigs{};
-	currconfigs.StatorCurrentLimit = units::current::ampere_t(0);
-	currconfigs.StatorCurrentLimitEnable = false;
-	currconfigs.SupplyCurrentLimit = units::current::ampere_t(70);
-	currconfigs.SupplyCurrentLimitEnable = true;
-	currconfigs.SupplyCurrentLowerLimit = units::current::ampere_t(40);
-	currconfigs.SupplyCurrentLowerTime = units::time::second_t(0.5);
-	m_ElevatorFollower->GetConfigurator().Apply(currconfigs);
+	TalonFXConfiguration configs{};
 
-	ClosedLoopRampsConfigs rampConfigs{};
-	rampConfigs.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	m_ElevatorFollower->GetConfigurator().Apply(rampConfigs);
-	HardwareLimitSwitchConfigs hwswitch{};
-	hwswitch.ForwardLimitEnable = true;
-	hwswitch.ForwardLimitRemoteSensorID = 0;
-	hwswitch.ForwardLimitAutosetPositionEnable = true;
-	hwswitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
+	configs.CurrentLimits.StatorCurrentLimitEnable = false;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
 
-	hwswitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
-	hwswitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 
-	hwswitch.ReverseLimitEnable = true;
-	hwswitch.ReverseLimitRemoteSensorID = 0;
-	hwswitch.ReverseLimitAutosetPositionEnable = true;
-	hwswitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	hwswitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
-	hwswitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
-	m_ElevatorFollower->GetConfigurator().Apply(hwswitch);
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
-	MotorOutputConfigs motorconfig{};
-	motorconfig.Inverted = InvertedValue::CounterClockwise_Positive;
-	motorconfig.NeutralMode = NeutralModeValue::Brake;
-	motorconfig.PeakForwardDutyCycle = 1;
-	motorconfig.PeakReverseDutyCycle = -1;
-	motorconfig.DutyCycleNeutralDeadband = 0;
-	m_ElevatorFollower->GetConfigurator().Apply(motorconfig);
-	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{8});
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_ElevatorFollower->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorFollower", "m_ElevatorFollower Status", status.GetName());
+
+	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
 void DragonTale::SetPIDArmPositionDegree()
@@ -497,7 +555,14 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
-	m_Arm->GetConfigurator().Apply(slot0Configs);
+	slot0Configs.kG = m_PositionDegree->GetF();
+	slot0Configs.kS = 0;
+	slot0Configs.kV = 0.75;
+	slot0Configs.kA = 0.25;
+	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
+	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
+	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {
@@ -505,7 +570,13 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kP = m_PositionInch->GetP();
 	slot0Configs.kI = m_PositionInch->GetI();
 	slot0Configs.kD = m_PositionInch->GetD();
+	slot0Configs.kG = m_PositionInch->GetF();
+	slot0Configs.kV = 0.3;
+	slot0Configs.kA = 0.05;
+	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
+	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::SetCurrentState(int state, bool run)
@@ -517,10 +588,23 @@ void DragonTale::SetCurrentState(int state, bool run)
 void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
-	Cyclic();
 	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
+	Cyclic();
+
+	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValueAsDouble());
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -537,7 +621,7 @@ void DragonTale::Update()
 	m_Arm->SetControl(*m_ArmActiveTarget);
 	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
 	m_Coral->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_CoralActiveTarget);
-	m_Algae->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_AlgaeActiveTarget);
+	m_Algae->SetControl(*m_AlgaeActiveTarget);
 }
 
 bool DragonTale::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
@@ -584,15 +668,15 @@ void DragonTale::CheckForTuningEnabled()
 void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
-	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0));
-	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 0.2));
-	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0));
+	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0.3));
+	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
+	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 57));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 20));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 7));
 }
 
 void DragonTale::PushTuningParamsToNT()
@@ -625,18 +709,30 @@ ControlData *DragonTale::GetControlData(string name)
 Hand-Coded Things are here :)
 
 ===================================================================================================================*/
-void DragonTale::UpdateScoreMode(RobotStateChanges::StateChange change, int value)
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
 {
-	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
+	if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+}
+
+void DragonTale::SetSensorFailSafe()
+{
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
+	{
+		m_manualMode = true;
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
+	{
+		m_manualMode = false;
+	}
 }
 
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
-	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
+	frc::Pose2d chassisPose = m_robotPose;								  // TODO: get current chassis pose from visdrive later :)
+	units::length::meter_t xDiff = GetReefCenter().X() - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
+	units::length::meter_t yDiff = GetReefCenter().Y() - chassisPose.Y();
 	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
 	// Adjust angleToReefCenter to be between -180 and 180 degrees
@@ -658,50 +754,52 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		return m_grabAlgaeLow;
 }
 
+void DragonTale::ManualControl()
+{
+	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR);
+	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM);
+
+	units::inch_t ElevatorChange = (abs(elevatorInput) > 0.05) ? units::length::inch_t(elevatorInput * m_elevatorChangeRate) : units::length::inch_t(0);
+	units::angle::degree_t ArmChange = (abs(armInput) > 0.05) ? units::angle::degree_t(armInput * m_armChangeRate) : units::angle::degree_t(0);
+
+	SetElevatorTarget(m_elevatorTarget + ElevatorChange);
+	SetArmTarget(m_armTarget + ArmChange);
+}
+
 void DragonTale::UpdateTarget()
 {
-	units::angle::degree_t actualTargetAngle;
+	units::angle::degree_t actualTargetAngle = m_armTarget;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 
-	units::length::inch_t elevatorError = m_elevatorTarget - GetElevatorHeight();
-
-	double circumference = 0.75 * std::numbers::pi;
-
-	m_ElevatorLeader->SetPosition(units::angle::turn_t(GetElevatorHeight().value() / circumference * 3));
+	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = units::angle::degree_t(90);
+		actualTargetAngle = units::angle::degree_t(70);
 	}
-	else
+	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
 	{
-		actualTargetAngle = m_armTarget;
+		actualTargetAngle = m_armProtectionAngle;
 	}
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }
 
-void DragonTale::ManualControl()
+frc::Pose3d DragonTale::GetReefCenter()
 {
-	units::inch_t ElevatorChange = units::inch_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_elevatorChangeRate);
-	units::angle::degree_t ArmChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_armChangeRate);
-
-	m_elevatorTarget += ElevatorChange;
-	m_armTarget += ArmChange;
+	frc::Pose3d fieldElementPose = frc::Pose3d{};
+	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+	return fieldElementPose;
 }
 
-void DragonTale::SetSensorFailSafe()
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
 {
-	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
-	{
-		m_manualMode = true;
-	}
-	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_OFF))
-	{
-		m_manualMode = false;
-	}
+	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
+		m_robotPose = value;
 }
 
 bool DragonTale::AtTarget()

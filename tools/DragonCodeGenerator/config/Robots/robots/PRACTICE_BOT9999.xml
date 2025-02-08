@@ -27,15 +27,22 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>9</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -65,7 +72,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>7</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -96,6 +103,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -471,15 +485,22 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>240</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -494,7 +515,7 @@
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </closedLoopRampTime>
               <enableClosedLoop>
                 <unitsFamily>none</unitsFamily>
@@ -509,7 +530,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>17</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -540,6 +561,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -704,6 +732,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -725,6 +754,13 @@
                 <type>Double</type>
                 <value>0.75</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>true</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -754,8 +790,9 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>8</value>
+              <value>4</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -778,13 +815,21 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
+              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
                 <__units__ />
                 <type>UInt32</type>
-                <value>0</value>
+                <value>4</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.108878152421</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -792,7 +837,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>true</value>
+                <value>false</value>
               </enable>
               <fusedCANcoder>
                 <name>ElevatorHeightSensor</name>
@@ -802,7 +847,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.167531519</value>
+                <value>5.969</value>
               </sensorToMechanismRatio>
               <rotorToSensorRatio>
                 <unitsFamily>none</unitsFamily>
@@ -949,6 +994,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -966,10 +1012,17 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -999,7 +1052,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>18</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -1030,18 +1083,6 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
-            </remoteSensor>
-            <fusedSyncCANcoder>
-              <enable>
-                <unitsFamily>none</unitsFamily>
-                <name>boolParameter</name>
-                <__units__ />
-                <type>Boolean</type>
-                <value>false</value>
-              </enable>
-              <fusedCANcoder>
-                <name>CANcoderInstance</name>
-              </fusedCANcoder>
               <sensorToMechanismRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
@@ -1049,145 +1090,6 @@
                 <type>Double</type>
                 <value>0</value>
               </sensorToMechanismRatio>
-              <rotorToSensorRatio>
-                <unitsFamily>none</unitsFamily>
-                <name>doubleParameter</name>
-                <__units__ />
-                <type>Double</type>
-                <value>0</value>
-              </rotorToSensorRatio>
-              <fusedSyncChoice>FUSED</fusedSyncChoice>
-            </fusedSyncCANcoder>
-            <sensorIsInverted>
-              <unitsFamily>none</unitsFamily>
-              <name>boolParameter</name>
-              <__units__ />
-              <type>Boolean</type>
-              <value>false</value>
-            </sensorIsInverted>
-            <limitSwitches>
-              <LimitSwitchesEnabled>
-                <unitsFamily>none</unitsFamily>
-                <name>boolParameter</name>
-                <__units__ />
-                <type>Boolean</type>
-                <value>false</value>
-              </LimitSwitchesEnabled>
-            </limitSwitches>
-            <currentLimits>
-              <EnableCurrentLimits>
-                <unitsFamily>none</unitsFamily>
-                <name>boolParameter</name>
-                <__units__ />
-                <type>Boolean</type>
-                <value>true</value>
-              </EnableCurrentLimits>
-              <currentLimit>
-                <unitsFamily>current</unitsFamily>
-                <name>intParameter</name>
-                <__units__>A</__units__>
-                <type>Int32</type>
-                <value>10</value>
-              </currentLimit>
-              <triggerThresholdCurrent>
-                <unitsFamily>time</unitsFamily>
-                <name>intParameter</name>
-                <__units__>s</__units__>
-                <type>Int32</type>
-                <value>13</value>
-              </triggerThresholdCurrent>
-              <triggerThresholdTime>
-                <unitsFamily>time</unitsFamily>
-                <name>intParameter</name>
-                <__units__>s</__units__>
-                <type>Int32</type>
-                <value>1</value>
-              </triggerThresholdTime>
-            </currentLimits>
-            <theConfigMotorSettings>
-              <mode>Brake</mode>
-            </theConfigMotorSettings>
-            <feedbackSensorConfig />
-            <remoteFeedbackSensorConfig />
-          </MotorController>
-          <MotorController xsi:type="TalonSRX">
-            <name>Algae</name>
-            <ControllerEnabled>Yes</ControllerEnabled>
-            <theDistanceAngleCalcInfo>
-              <gearRatio>
-                <unitsFamily>none</unitsFamily>
-                <name>doubleParameter</name>
-                <__units__ />
-                <type>Double</type>
-                <value>1</value>
-              </gearRatio>
-              <diameter>
-                <unitsFamily>length</unitsFamily>
-                <name>doubleParameter</name>
-                <__units__>m</__units__>
-                <type>Double</type>
-                <value>1</value>
-              </diameter>
-            </theDistanceAngleCalcInfo>
-            <voltageRamping>
-              <openLoopRampTime>
-                <unitsFamily>time</unitsFamily>
-                <name>doubleParameter</name>
-                <__units__>s</__units__>
-                <type>Double</type>
-                <value>0.25</value>
-              </openLoopRampTime>
-              <closedLoopRampTime>
-                <unitsFamily>time</unitsFamily>
-                <name>doubleParameter</name>
-                <__units__>s</__units__>
-                <type>Double</type>
-                <value>0</value>
-              </closedLoopRampTime>
-              <enableClosedLoop>
-                <unitsFamily>none</unitsFamily>
-                <name>boolParameter</name>
-                <__units__ />
-                <type>Boolean</type>
-                <value>false</value>
-              </enableClosedLoop>
-            </voltageRamping>
-            <canID>
-              <unitsFamily>none</unitsFamily>
-              <name>uintParameter</name>
-              <__units__ />
-              <type>UInt32</type>
-              <value>0</value>
-            </canID>
-            <pdpID>
-              <unitsFamily>none</unitsFamily>
-              <name>uintParameter</name>
-              <__units__ />
-              <type>UInt32</type>
-              <value>0</value>
-            </pdpID>
-            <followID>
-              <unitsFamily>none</unitsFamily>
-              <name>uintParameter</name>
-              <__units__ />
-              <type>UInt32</type>
-              <value>0</value>
-            </followID>
-            <enableFollowID>
-              <unitsFamily>none</unitsFamily>
-              <name>boolParameter</name>
-              <__units__ />
-              <type>Boolean</type>
-              <value>false</value>
-            </enableFollowID>
-            <remoteSensor>
-              <CanID>
-                <unitsFamily>none</unitsFamily>
-                <name>uintParameter</name>
-                <__units__ />
-                <type>UInt32</type>
-                <value>0</value>
-              </CanID>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -1269,6 +1171,265 @@
             <remoteFeedbackSensorConfig />
           </MotorController>
           <MotorController xsi:type="TalonFX">
+            <name>Algae</name>
+            <ControllerEnabled>Yes</ControllerEnabled>
+            <theDistanceAngleCalcInfo>
+              <gearRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>1</value>
+              </gearRatio>
+              <diameter>
+                <unitsFamily>length</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>in</__units__>
+                <type>Double</type>
+                <value>1</value>
+              </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
+            </theDistanceAngleCalcInfo>
+            <voltageRamping>
+              <openLoopRampTime>
+                <unitsFamily>time</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>s</__units__>
+                <type>Double</type>
+                <value>0.25</value>
+              </openLoopRampTime>
+              <closedLoopRampTime>
+                <unitsFamily>time</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </closedLoopRampTime>
+              <enableClosedLoop>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </enableClosedLoop>
+            </voltageRamping>
+            <canID>
+              <unitsFamily>none</unitsFamily>
+              <name>uintParameter</name>
+              <__units__ />
+              <type>UInt32</type>
+              <value>19</value>
+            </canID>
+            <pdpID>
+              <unitsFamily>none</unitsFamily>
+              <name>uintParameter</name>
+              <__units__ />
+              <type>UInt32</type>
+              <value>0</value>
+            </pdpID>
+            <followID>
+              <unitsFamily>none</unitsFamily>
+              <name>uintParameter</name>
+              <__units__ />
+              <type>UInt32</type>
+              <value>0</value>
+            </followID>
+            <enableFollowID>
+              <unitsFamily>none</unitsFamily>
+              <name>boolParameter</name>
+              <__units__ />
+              <type>Boolean</type>
+              <value>false</value>
+            </enableFollowID>
+            <remoteSensor>
+              <CanID>
+                <unitsFamily>none</unitsFamily>
+                <name>uintParameter</name>
+                <__units__ />
+                <type>UInt32</type>
+                <value>0</value>
+              </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
+            </remoteSensor>
+            <fusedSyncCANcoder>
+              <enable>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </enable>
+              <fusedCANcoder>
+                <name>CANcoderInstance</name>
+              </fusedCANcoder>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
+              <rotorToSensorRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </rotorToSensorRatio>
+              <fusedSyncChoice>FUSED</fusedSyncChoice>
+            </fusedSyncCANcoder>
+            <sensorIsInverted>
+              <unitsFamily>none</unitsFamily>
+              <name>boolParameter</name>
+              <__units__ />
+              <type>Boolean</type>
+              <value>false</value>
+            </sensorIsInverted>
+            <theCurrentLimits>
+              <enableStatorCurrentLimit>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </enableStatorCurrentLimit>
+              <statorCurrentLimit>
+                <unitsFamily>current</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>A</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </statorCurrentLimit>
+              <enableSupplyCurrentLimit>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>true</value>
+              </enableSupplyCurrentLimit>
+              <supplyCurrentLimit>
+                <unitsFamily>current</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>A</__units__>
+                <type>Double</type>
+                <value>70</value>
+              </supplyCurrentLimit>
+              <supplyCurrentThreshold>
+                <unitsFamily>current</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>A</__units__>
+                <type>Double</type>
+                <value>35</value>
+              </supplyCurrentThreshold>
+              <supplyTimeThreshold>
+                <unitsFamily>time</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>s</__units__>
+                <type>Double</type>
+                <value>0.5</value>
+              </supplyTimeThreshold>
+            </theCurrentLimits>
+            <PIDFs />
+            <theConfigHWLimitSW>
+              <enableForward>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </enableForward>
+              <remoteForwardSensorID>
+                <unitsFamily>none</unitsFamily>
+                <name>intParameter</name>
+                <__units__ />
+                <type>Int32</type>
+                <value>0</value>
+              </remoteForwardSensorID>
+              <forwardResetPosition>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </forwardResetPosition>
+              <forwardPosition>
+                <unitsFamily>angle</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>deg</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </forwardPosition>
+              <forwardType>LimitSwitchPin</forwardType>
+              <forwardOpenClose>NormallyOpen</forwardOpenClose>
+              <enableReverse>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </enableReverse>
+              <remoteReverseSensorID>
+                <unitsFamily>none</unitsFamily>
+                <name>intParameter</name>
+                <__units__ />
+                <type>Int32</type>
+                <value>0</value>
+              </remoteReverseSensorID>
+              <reverseResetPosition>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </reverseResetPosition>
+              <reversePosition>
+                <unitsFamily>angle</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>deg</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </reversePosition>
+              <revType>LimitSwitchPin</revType>
+              <revOpenClose>NormallyOpen</revOpenClose>
+            </theConfigHWLimitSW>
+            <theConfigMotorSettings>
+              <deadbandPercent>
+                <unitsFamily>percent</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>%</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </deadbandPercent>
+              <peakForwardDutyCycle>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>1</value>
+              </peakForwardDutyCycle>
+              <peakReverseDutyCycle>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>-1</value>
+              </peakReverseDutyCycle>
+              <mode>Brake</mode>
+            </theConfigMotorSettings>
+          </MotorController>
+          <MotorController xsi:type="TalonFX">
             <name>ElevatorFollower</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>
@@ -1282,10 +1443,17 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -1315,8 +1483,9 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>13</value>
+              <value>16</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -1329,7 +1498,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>8</value>
+              <value>4</value>
             </followID>
             <enableFollowID>
               <unitsFamily>none</unitsFamily>
@@ -1346,6 +1515,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -1533,7 +1709,7 @@
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reversed>
             <debouncetime>
               <unitsFamily>time</unitsFamily>
@@ -1550,7 +1726,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>1</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -1574,14 +1750,14 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>2</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reversed>
             <debouncetime>
               <unitsFamily>time</unitsFamily>
@@ -1600,21 +1776,21 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>17</value>
             </canID>
             <offset>
               <unitsFamily>none</unitsFamily>
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0</value>
+              <value>0.421387</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </reverse>
           </CANcoder>
           <CANcoder>
@@ -1624,14 +1800,15 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>4</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <offset>
               <unitsFamily>none</unitsFamily>
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0</value>
+              <value>-0.15673828125</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -1652,14 +1829,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.2</value>
+                <value>2</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.2</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
@@ -1673,7 +1850,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.3</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>
@@ -1729,28 +1906,28 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>57</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>20</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>7</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>1.8</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>
@@ -1894,6 +2071,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -1910,7 +2088,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -1964,7 +2142,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2012,6 +2190,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2028,7 +2207,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2082,7 +2261,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2130,6 +2309,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>80.25</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2146,7 +2326,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2166,6 +2346,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -2200,7 +2381,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2255,6 +2436,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2271,7 +2453,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2309,6 +2491,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2325,7 +2508,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2422,6 +2605,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>70</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2438,8 +2622,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>6</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2492,7 +2677,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2540,6 +2725,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2556,8 +2742,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2594,6 +2781,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2610,7 +2798,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2665,6 +2853,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2681,8 +2870,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2719,6 +2909,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.05</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2735,7 +2926,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2790,6 +2981,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>60</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -2806,8 +2998,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>28.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -2844,6 +3037,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>0.05</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2860,7 +3054,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -2917,7 +3111,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -2955,6 +3149,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>-1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -2971,7 +3166,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3040,6 +3235,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>20</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3056,8 +3252,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>6.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3110,7 +3307,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3179,6 +3376,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3195,8 +3393,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>9.2</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3249,7 +3448,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3318,6 +3517,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3334,8 +3534,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>17.2</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3388,7 +3589,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3457,6 +3658,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3473,8 +3675,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>29.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3527,7 +3730,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3591,7 +3794,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -3611,6 +3814,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
+                  <value>1</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -3645,7 +3849,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorFollower</motorName>
@@ -3703,10 +3907,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3739,9 +3944,9 @@
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -3757,9 +3962,9 @@
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -3828,10 +4033,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>40</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3848,7 +4054,7 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>ElevatorLeader</motorName>
@@ -3864,9 +4070,9 @@
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -3882,9 +4088,9 @@
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -3953,10 +4159,11 @@
               <motorTarget>
                 <name>Arm</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>-30</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3973,8 +4180,9 @@
                 <target>
                   <unitsFamily>length</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__>in</__units__>
                   <type>Double</type>
+                  <value>7.7</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3989,9 +4197,9 @@
               <motorTarget>
                 <name>Coral</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Coral</motorName>
@@ -4007,9 +4215,9 @@
               <motorTarget>
                 <name>Algae</name>
                 <target>
-                  <unitsFamily>length</unitsFamily>
+                  <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>m</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Algae</motorName>
@@ -4065,10 +4273,17 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -4098,7 +4313,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>50</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -4129,6 +4344,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -4310,10 +4532,17 @@
               <diameter>
                 <unitsFamily>length</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>m</__units__>
+                <__units__>in</__units__>
                 <type>Double</type>
                 <value>1</value>
               </diameter>
+              <isDistance>
+                <unitsFamily>none</unitsFamily>
+                <name>boolParameter</name>
+                <__units__ />
+                <type>Boolean</type>
+                <value>false</value>
+              </isDistance>
             </theDistanceAngleCalcInfo>
             <voltageRamping>
               <openLoopRampTime>
@@ -4343,7 +4572,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>51</value>
             </canID>
             <pdpID>
               <unitsFamily>none</unitsFamily>
@@ -4374,6 +4603,13 @@
                 <type>UInt32</type>
                 <value>0</value>
               </CanID>
+              <sensorToMechanismRatio>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
               <enable>
@@ -4554,7 +4790,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>3</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -5100,9 +5336,9 @@
               <motorTarget>
                 <name>Extender</name>
                 <target>
-                  <unitsFamily>none</unitsFamily>
+                  <unitsFamily>angle</unitsFamily>
                   <name>Target</name>
-                  <__units__ />
+                  <__units__>deg</__units__>
                   <type>Double</type>
                 </target>
                 <motorName>Extender</motorName>
@@ -5113,7 +5349,7 @@
                   <type>Boolean</type>
                   <value>true</value>
                 </Enabled>
-                <controlDataName>PercentOutput</controlDataName>
+                <controlDataName>PositionDegree</controlDataName>
               </motorTarget>
             </motorTargets>
           </state>
@@ -5130,9 +5366,20 @@
       <name>uintParameter</name>
       <__units__ />
       <type>UInt32</type>
-      <value>0</value>
+      <value>9</value>
     </PwmId>
-    <Segments />
+    <Segments>
+      <LedSegment>
+        <name>LEDs</name>
+        <Count>
+          <unitsFamily>none</unitsFamily>
+          <name>uintParameter</name>
+          <__units__ />
+          <type>UInt32</type>
+          <value>15</value>
+        </Count>
+      </LedSegment>
+    </Segments>
   </LEDs>
   <robotID>
     <unitsFamily>none</unitsFamily>

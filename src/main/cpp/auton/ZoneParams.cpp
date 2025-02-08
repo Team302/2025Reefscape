@@ -17,6 +17,8 @@
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParams.h"
 #include "chassis/ChassisOptionEnums.h"
+#include <frc/geometry/Pose2d.h>
+
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
 
 // @ADDMECH include for your mechanism state mgr
@@ -26,16 +28,21 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 					   AutonGrid::YGRID ygrid1,
 					   AutonGrid::XGRID xgrid2,
 					   AutonGrid::YGRID ygrid2,
+					   frc::Pose2d circlePose,
+					   units::inch_t radius,
 					   // bool isNoteStateChanging,
 					   // noteManagerGen::STATE_NAMES noteoption,
 					   ChassisOptionEnums::AutonChassisOptions autonchassisoption,
-					   ChassisOptionEnums::AutonAvoidOptions autonavoidoption) : m_xgrid1(xgrid1),
-																				 m_ygrid1(ygrid1),
-																				 m_xgrid2(xgrid2),
-																				 m_ygrid2(ygrid2),
-																				 // m_isNoteStateChanging(isNoteStateChanging),
-																				 // m_noteoption(noteoption),
-																				 m_chassisoption(autonchassisoption),
-																				 m_avoidoption(autonavoidoption)
+					   ChassisOptionEnums::AutonAvoidOptions autonavoidoption, AutonGrid::ZoneMode zoneMode) : m_xgrid1(xgrid1),
+																											   m_ygrid1(ygrid1),
+																											   m_xgrid2(xgrid2),
+																											   m_ygrid2(ygrid2),
+																											   m_circlePose(circlePose),
+																											   m_radius(radius),
+																											   // m_isNoteStateChanging(isNoteStateChanging),
+																											   // m_noteoption(noteoption),
+																											   m_chassisoption(autonchassisoption),
+																											   m_avoidoption(autonavoidoption),
+																											   m_zoneMode(zoneMode)
 {
 }
