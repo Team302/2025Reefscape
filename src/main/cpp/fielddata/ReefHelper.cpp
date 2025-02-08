@@ -30,40 +30,32 @@ ReefHelper *ReefHelper::GetInstance()
     return ReefHelper::m_instance;
 }
 
-ReefHelper::ReefHelper() : m_chassis(nullptr),
+ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
                            m_allianceColor(FMSData::GetInstance()->GetAllianceColor()),
                            m_fieldConstants(FieldConstants::GetInstance())
 {
-    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    if (chassisConfig != nullptr)
-    {
-        m_chassis = chassisConfig->GetSwerveChassis();
+    m_blueReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d();
+    m_redReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d();
 
-        m_blueReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d();
-        m_redReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d();
+    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_AB_TAG).ToPose2d();
+    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_CD_TAG).ToPose2d();
+    m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_KL_TAG).ToPose2d();
 
-        m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_AB_TAG).ToPose2d();
-        m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_CD_TAG).ToPose2d();
-        m_redFrontTags[FieldConstants::AprilTagIDs::RED_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_KL_TAG).ToPose2d();
+    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_EF_TAG).ToPose2d();
+    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d();
+    m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG).ToPose2d();
 
-        m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_EF_TAG).ToPose2d();
-        m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d();
-        m_redBackTags[FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG).ToPose2d();
+    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG).ToPose2d();
+    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG).ToPose2d();
+    m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG).ToPose2d();
 
-        m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG).ToPose2d();
-        m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG).ToPose2d();
-        m_blueFrontTags[FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG).ToPose2d();
-
-        m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG).ToPose2d();
-        m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d();
-        m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG).ToPose2d();
-    }
+    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG).ToPose2d();
+    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d();
+    m_blueBackTags[FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG] = m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG).ToPose2d();
 }
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
 {
-    std::optional<FieldConstants::AprilTagIDs> tagID{std::nullopt};
-
     if (m_chassis != nullptr)
     {
         auto pose = m_chassis->GetPose();
@@ -149,13 +141,11 @@ std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
         }
     }
 
-    return tagID;
+    return std::nullopt;
 }
 
 std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag)
 {
-    std::optional<FieldConstants::FIELD_ELEMENT> branch{std::nullopt};
-
     if (m_allianceColor == frc::DriverStation::Alliance::kRed)
     {
         switch (tag) // nearest april
@@ -187,34 +177,32 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestLeftReefBranc
         switch (tag) // nearest april
         {
         case FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_A;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_A;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_C;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_C;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_E;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_E;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_G;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_G;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_I;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_I;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_K;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_K;
             break;
         default:
             break;
         }
     }
-    return branch;
+    return std::nullopt;
 }
 
 std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag)
 {
-    std::optional<FieldConstants::FIELD_ELEMENT> branch{std::nullopt};
-
     if (m_allianceColor == frc::DriverStation::Alliance::kRed)
     {
         switch (tag) // nearest april
@@ -246,28 +234,28 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
         switch (tag) // nearest april
         {
         case FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_B;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_B;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_D;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_D;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_F;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_F;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_H;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_H;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_J;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_J;
             break;
         case FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG:
-            branch = FieldConstants::FIELD_ELEMENT::BLUE_REEF_L;
+            return FieldConstants::FIELD_ELEMENT::BLUE_REEF_L;
             break;
         default:
             break;
         }
     }
-    return branch;
+    return std::nullopt;
 }
 
 units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose)

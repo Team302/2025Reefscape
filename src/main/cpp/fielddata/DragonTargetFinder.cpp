@@ -20,15 +20,13 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/ISwerveDriveOrientation.h"
+#include "fielddata/CoralStationHelper.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "fielddata/FieldConstants.h"
 #include "fielddata/ReefHelper.h"
 #include "frc/geometry/Pose3d.h"
 #include "units/angle.h"
 #include "utils/FMSData.h"
-
-/// DEBUGGING
-#include "utils/logging/Logger.h"
 
 using frc::Pose2d;
 using frc::Pose3d;
@@ -102,6 +100,34 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     {
         // call coral station helper to find the appropriate the coral station,
         // its corresponding APRILTAG ID and the field constant identifier
+        auto taginfo = CoralStationHelper::GetInstance()->GetNearestCoralStationTag();
+        if (taginfo.has_value())
+        {
+            auto tag = taginfo.value();
+            auto tagpose{fieldconst->GetAprilTagPose(tag).ToPose2d()};
+            if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)
+            {
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
+            }
+            else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)
+            {
+                auto sidewall = CoralStationHelper::GetInstance()->GetNearestSideWallCoralStation(tag);
+                if (sidewall.has_value())
+                {
+                    auto sidewallpose = fieldconst->GetFieldElementPose(sidewall.value()).ToPose2d();
+                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, sidewallpose);
+                }
+            }
+            else // CLOSEST_CORAL_STATION_ALLIANCE_SIDE
+            {
+                auto alliance = CoralStationHelper::GetInstance()->GetNearestAllianceWallCoralStation(tag);
+                if (alliance.has_value())
+                {
+                    auto alliancepose = fieldconst->GetFieldElementPose(alliance.value()).ToPose2d();
+                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, alliancepose);
+                }
+            }
+        }
     }
     else if (item == DragonTargetFinderTarget::LEFT_CAGE ||
              item == DragonTargetFinderTarget::CENTER_CAGE ||
