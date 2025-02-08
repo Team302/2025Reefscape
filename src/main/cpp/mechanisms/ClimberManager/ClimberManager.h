@@ -122,7 +122,11 @@ private:
 
 	// Add here all the loggong objects
 	wpi::log::IntegerLogEntry m_LogState;
+	wpi::log::DoubleLogEntry m_LogTarget;
+	wpi::log::DoubleLogEntry m_LogPositionAngle;
 
 	// Add here all the logging functions
 	void LogState(int value);
+	void LogTarget(double value);
+	void LogAngle(double value);
 };

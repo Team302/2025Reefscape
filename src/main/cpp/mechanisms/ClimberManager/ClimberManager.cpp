@@ -283,6 +283,8 @@ ControlData *ClimberManager::GetControlData(string name)
 void ClimberManager::DataLog()
 {
 	LogState(GetCurrentState());
+	// LogAngle(m_Climber);
+	// LogTarget()
 	// log more signals here
 }
 
@@ -293,5 +295,25 @@ void ClimberManager::LogState(int value)
 	{
 		currentValue = value;
 		m_LogState.Append(value);
+	}
+}
+
+void ClimberManager::LogTarget(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogTarget.Append(value);
+	}
+}
+
+void ClimberManager::LogAngle(double value)
+{
+	static double currentValue = 0;
+	if (currentValue != value)
+	{
+		currentValue = value;
+		m_LogPositionAngle.Append(value);
 	}
 }
