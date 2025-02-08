@@ -9,48 +9,64 @@ choreoname = "BlueLeftOutside_K.traj"/>
 choreoname = "BlueLeftOutside_K.traj"
 time = "3.0"/>
 
-<!--placer-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "7.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2.traj"
 time = "3.0"/>
 
-<!--intake-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "5.0"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L1.traj"
 time= "3.0"/>
 
-<!--placer-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "7.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2.traj"
 time = "3.0"/>
 
-<!--intake-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "5.0"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_A1.traj"
 time = "3.0"/>
 
-<!--placer-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "7.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_A2.traj"
 time = "3.0"/>
 
-<!--intake-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "5.0"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_B1.traj"
 time = "3.0"/>
 
-<!--placer-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "7.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_B2.traj"
 time = "3.0"/>
 
-<!--intake-->
+<primitive id = "DO_NOTHING"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "5.0"/> 
 
 </auton>
