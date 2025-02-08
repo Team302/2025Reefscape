@@ -19,14 +19,13 @@
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    m_fieldConstantsPoseMap = fieldConstantsPoseMap;
     InitializeTransforms();
-    CalculateCenters();
+    CalculateCenters(fieldConstantsPoseMap);
 
     // Iterate and update values
     for (auto &[key, translatedPose] : fieldConstantsPoseMap)
     {
-        fieldConstantsPoseMap[key] = m_fieldConstantsPoseMap[m_transformConstantsMap[key].referencePose] + m_transformConstantsMap[key].transform;
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[m_transformConstantsMap[key].referencePose] + m_transformConstantsMap[key].transform;
     }
 
     #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
@@ -171,40 +170,32 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::RED_REEF_CENTER, m_noTransform);
 }
 
-void FieldElementCalculator::CalculateCenters()
+void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    m_fieldConstantsPoseMap[FieldConstants::RED_REEF_CENTER] = AverageHexagonPose(
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_AB],
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_CD],
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_EF],
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_GH],
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_IJ],
-        m_fieldConstantsPoseMap[FieldConstants::RED_REEF_KL]);
-    m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CENTER] = AverageHexagonPose(
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_AB],
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CD],
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_EF],
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_GH],
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_IJ],
-        m_fieldConstantsPoseMap[FieldConstants::BLUE_REEF_KL]);
+    fieldConstantsPoseMap[FieldConstants::RED_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::RED_REEF_KL]);
+
+    fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_KL]);
 }
 
 frc::Pose3d FieldElementCalculator::AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6)
 {
-    //calculate the average of the 6 poses
-    DragonVisionStructLogger::logPose3d("Pose1", pose1);
-    DragonVisionStructLogger::logPose3d("Pose2", pose2);
-    DragonVisionStructLogger::logPose3d("Pose3", pose3);
-    DragonVisionStructLogger::logPose3d("Pose4", pose4);
-    DragonVisionStructLogger::logPose3d("Pose5", pose5);
-    DragonVisionStructLogger::logPose3d("Pose6", pose6);
+
     
     units::length::meter_t averageX = (pose1.X() + pose2.X() + pose3.X() + pose4.X() + pose5.X() + pose6.X()) / 6;
     units::length::meter_t averageY = (pose1.Y() + pose2.Y() + pose3.Y() + pose4.Y() + pose5.Y() + pose6.Y()) / 6;
     units::length::meter_t averageZ = (pose1.Z() + pose2.Z() + pose3.Z() + pose4.Z() + pose5.Z() + pose6.Z()) / 6;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("logger"), std::string("x"), averageX.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("logger"), std::string("y"), averageY.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("logger"), std::string("z"), averageZ.to<double>());
 
     return frc::Pose3d(averageX, averageY, averageZ, frc::Rotation3d());
 }
