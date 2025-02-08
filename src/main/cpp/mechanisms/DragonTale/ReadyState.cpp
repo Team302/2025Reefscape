@@ -36,7 +36,7 @@ using namespace DragonTaleStates;
 ReadyState::ReadyState(std::string stateName,
 					   int stateId,
 					   DragonTale *mech,
-					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
+					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId), m_scoringTimer(new frc::Timer())
 {
 }
 
@@ -82,7 +82,7 @@ bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 	if ((m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))))
 	{
 		m_scoringTimer->Start();
-		if (m_scoringTimer->Get() > units::time::second_t(0.5))
+		if (m_scoringTimer->Get() > units::time::second_t(0.25))
 			transition = true;
 	}
 	else
