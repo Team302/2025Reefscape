@@ -815,6 +815,7 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
+              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
@@ -827,7 +828,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.1273239545</value>
+                <value>0.108878152421</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
@@ -1807,7 +1808,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.030518</value>
+              <value>-0.15673828125</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
