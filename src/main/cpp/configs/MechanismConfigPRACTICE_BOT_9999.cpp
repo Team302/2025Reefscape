@@ -66,5 +66,5 @@ StateMgr *MechanismConfigPRACTICE_BOT_9999::GetMechanism(MechanismTypes::MECHANI
 
 void MechanismConfigPRACTICE_BOT_9999::DefineLEDs()
 {
-	DragonLeds::GetInstance()->Initialize(9, 6);
+	DragonLeds::GetInstance()->Initialize(9, 15);
 }

@@ -17,6 +17,7 @@
 
 #include "chassis/definitions/chassis9997/ChassisConfigChassis_9997.h"
 #include "chassis/definitions/chassis9998/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/chassis9999/ChassisConfigChassis_9999.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "RobotIdentifier.h"
@@ -57,6 +58,9 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 
 	case RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
+		break;
+	case RobotIdentifier::PRACTICE_BOT_9999:
+		m_config = new ChassisConfigChassis_9999();
 		break;
 
 	default:
