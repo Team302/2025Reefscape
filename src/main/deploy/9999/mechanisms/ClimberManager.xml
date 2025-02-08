@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+<DOCTYPE robot SYSTEM "mechanisms.dtd">
 <MechanismParameters xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <MotorControlData>
     <MinimalMotorControlData name="PositionDegree" pGain="0" iGain="0" dGain="0" fGain="0" iZone="0" peakValue="0" nominalValue="0" maxAcceleration="0" cruiseVelocity="0" enableFOC="true" feedForwardType="VOLTAGE" controlType="POSITION_DEGREES" controlLoopLocation="MOTOR_CONTROLLER" />

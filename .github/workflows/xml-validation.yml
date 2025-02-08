@@ -7,9 +7,11 @@ on:
     # Run on pushes that modify XML files
     paths:
       - '**/*.xml'
+      - '**/*.dtd'
   pull_request:
     paths:
       - '**/*.xml'
+      - '**/*.dtd'
 
 jobs:
   validate-xml:
