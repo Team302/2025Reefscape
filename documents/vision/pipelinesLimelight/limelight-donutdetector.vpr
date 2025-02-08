@@ -94,4 +94,4 @@ tsu:0
 val_max:255
 val_min:70
 x_outlier_miqr:1.5
-y_outlier_miqr:1.5
+y_outlier_miqr:1.6
