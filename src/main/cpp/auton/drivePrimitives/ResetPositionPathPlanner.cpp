@@ -56,22 +56,7 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
             auto initialPose = path.get()->getStartingHolonomicPose();
             if (initialPose)
             {
-
-                auto vision = DragonVision::GetDragonVision();
-
-                auto visionPosition = vision->GetRobotPosition();
-                auto hasVisionPose = visionPosition.has_value();
-                auto initialRot = hasVisionPose ? visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees() : initialPose.value().Rotation().Degrees();
-
-                // use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
-                auto megaTag2Position = vision->GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
-                                                                         units::angular_velocity::degrees_per_second_t(0.0),
-                                                                         units::angle::degree_t(0.0),
-                                                                         units::angular_velocity::degrees_per_second_t(0.0),
-                                                                         units::angle::degree_t(0.0),
-                                                                         units::angular_velocity::degrees_per_second_t(0.0));
-
-                // Check to see if current post is within 1 meter (distanceThreshold) of path position (initialPose), if it is, don't reset pose
+                // Check to see if current post is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
                 units::length::meter_t poseDiff = actualPose.X() - centerline;
                 bool poseNeedsUpdating = poseDiff > units::length::meter_t(2.0) || poseDiff < units::length::meter_t(-2.0);
