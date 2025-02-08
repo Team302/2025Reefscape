@@ -29,6 +29,8 @@ using frc::ChassisSpeeds;
 using frc::Rotation2d;
 using std::string;
 
+frc::PIDController *PolarDrive::m_pid = new frc::PIDController(6.0, 5.0, 0.0);
+
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
@@ -82,7 +84,7 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
         auto rot2d = Rotation2d(m_chassis->GetYaw());
 
         // calculate the field relative angle
-        units::angle::degree_t angleToReefCenter = units::angle::degree_t(units::math::atan2(currentPose.Y().value() - 4.0, currentPose.X().value() - 4.5));
+        units::angle::degree_t angleToReefCenter = units::angle::degree_t(units::math::atan2(currentPose.Y() - reefYPos, currentPose.X() - reefXPos));
 
         // wrap angleToReefCenter between -180 and 180 degrees
         angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
@@ -98,7 +100,7 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 
         units::angle::degree_t currentAngle = currentPose.Rotation().Degrees();
 
-        chassisMovement.chassisSpeeds.omega = units::angle::degree_t(m_pid->Calculate(currentAngle.value(), fieldRelativeAngle.value()));
+        chassisMovement.chassisSpeeds.omega = units::angular_velocity::degrees_per_second_t(m_pid->Calculate(currentAngle.value(), fieldRelativeAngle.value()));
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VyNew", vyNew);
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VxNew", vxNew);
