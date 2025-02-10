@@ -27,7 +27,7 @@ std::string FaceReef::GetHeadingStateName() const
     return std::string("FaceReef");
 }
 
-DragonVision::VISION_ELEMENT FaceReef::GetVisionElement() const
+DragonTargetFinderTarget FaceReef::GetTarget() const
 {
-    return DragonVision::VISION_ELEMENT::REEF;
+    return DragonTargetFinderTarget::REEF_CENTER;
 }

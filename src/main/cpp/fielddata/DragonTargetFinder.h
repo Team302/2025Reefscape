@@ -26,30 +26,34 @@
 #include "units/angle.h"
 #include "vision/DragonVision.h"
 
+enum class DragonTargetFinderTarget
+{
+    CLOSEST_LEFT_REEF_BRANCH,
+    CLOSEST_RIGHT_REEF_BRANCH,
+    CLOSEST_REEF_ALGAE,
+    REEF_CENTER,
+    CLOSEST_CORAL_STATION_SIDWALL_SIDE,
+    CLOSEST_CORAL_STATION_MIDDLE,
+    CLOSEST_CORAL_STATION_ALLIANCE_SIDE,
+    LEFT_CAGE,
+    CENTER_CAGE,
+    RIGHT_CAGE
+};
+
+enum class DragonTargetFinderData
+{
+    NOT_FOUND,
+    VISION_BASED = 1,
+    ODOMETRY_BASED = 10,
+    VISION_ODOMETRY_FUSED = 11
+};
+
 class DragonTargetFinder
 {
 public:
-    // vision = 1
-    // odometry = 10
-    enum TARGET_INFO
-    {
-        NOT_FOUND,
-        VISION_BASED = 1,
-        ODOMETRY_BASED = 10,
-        VISION_ODOMETRY_FUSED = 11
-    };
-
-    enum FINDER_OPTION
-    {
-        VISION_ONLY,
-        ODOMETRY_ONLY,
-        FUSE_IF_POSSIBLE
-    };
-
     static DragonTargetFinder *GetInstance();
 
-    std::tuple<TARGET_INFO, frc::Pose2d> GetPose(DragonVision::VISION_ELEMENT item);
-    std::tuple<TARGET_INFO, units::length::meter_t> GetDistance(FINDER_OPTION option, DragonVision::VISION_ELEMENT item);
+    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
 
     static void SetCorrection(ChassisMovement &chassisMovement,
                               SwerveChassis *chassis,
@@ -57,27 +61,17 @@ public:
                               double kp);
 
 private:
-    DragonTargetFinder() = default;
+    DragonTargetFinder();
     ~DragonTargetFinder() = default;
     static DragonTargetFinder *m_instance;
 
-    SwerveChassis *GetChassis();
-    int GetAprilTag(DragonVision::VISION_ELEMENT item);
+    SwerveChassis *m_chassis;
+    DragonVision *m_vision;
+
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose2d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
+    frc::Pose2d GetVisonPose(VisionData data);
 
-    /** TODO JW come back to this one
-    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> blueMap = {
-        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_BLUE_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_BLUE_AMP},
-        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_BLUE_STAGE_CENTER}};
-
-    const std::map<DragonVision::VISION_ELEMENT, FieldConstants::AprilTagIDs> redMap = {
-        {DragonVision::VISION_ELEMENT::REEF, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::CORAL_STATION, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::PROCESSOR, FieldConstants::AprilTagIDs::FI_RED_SPEAKER},
-        {DragonVision::VISION_ELEMENT::BARGE, FieldConstants::AprilTagIDs::FI_RED_SPEAKER}};
-    **/
     const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
 };

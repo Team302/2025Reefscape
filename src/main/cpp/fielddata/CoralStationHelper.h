@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,24 +16,30 @@
 
 #pragma once
 
-// Team302 Includes
-#include "chassis/ChassisOptionEnums.h"
-#include "chassis/states/SpecifiedHeading.h"
-#include "chassis/SwerveChassis.h"
-#include "fielddata/DragonTargetFinder.h"
+#include <optional>
 
-class FaceTarget : public SpecifiedHeading
+#include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/DriverStation.h"
+#include "frc/geometry/Pose2d.h"
+
+class CoralStationHelper
 {
 public:
-    FaceTarget() = delete;
+    static CoralStationHelper *GetInstance();
 
-    FaceTarget(ChassisOptionEnums::HeadingOption headingOption);
-    ~FaceTarget() = default;
+    std::optional<FieldConstants::AprilTagIDs> GetNearestCoralStationTag();
+    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestAllianceWallCoralStation(FieldConstants::AprilTagIDs tag);
+    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestSideWallCoralStation(FieldConstants::AprilTagIDs tag);
 
-    std::string GetHeadingStateName() const override;
+private:
+    CoralStationHelper();
+    ~CoralStationHelper() = default;
+    static CoralStationHelper *m_instance;
 
-protected:
-    virtual DragonTargetFinderTarget GetTarget() const = 0;
-    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
+    units::length::meter_t CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose);
+
     SwerveChassis *m_chassis;
+    frc::DriverStation::Alliance m_allianceColor;
+    FieldConstants *m_fieldConstants;
 };
