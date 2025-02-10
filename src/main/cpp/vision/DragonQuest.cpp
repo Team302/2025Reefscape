@@ -54,7 +54,7 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     double pitch = rotationarray[2] + m_pitchOffset;
     double yaw = rotationarray[1] + m_yawOffset;
 
-    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)}};
+    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(-yaw)}};
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
