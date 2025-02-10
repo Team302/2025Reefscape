@@ -103,6 +103,19 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             }
         }
     }
+    else if (item == DragonTargetFinderTarget::REEF_CENTER)
+    {
+        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        if (allianceColor == frc::DriverStation::Alliance::kRed)
+        {
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d());
+        }
+        else
+        {
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d());
+        }
+    }
+
     else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE ||
              item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE ||
              item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)

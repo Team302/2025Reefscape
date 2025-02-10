@@ -14,17 +14,12 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <optional>
-
-#include "frc/apriltag/AprilTagFieldLayout.h"
-#include "frc/apriltag/AprilTagFields.h"
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Transform3d.h"
 
 // Team302 Includes
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/states/SpecifiedHeading.h"
-#include "vision/DragonVision.h"
+#include "chassis/SwerveChassis.h"
+#include "fielddata/DragonTargetFinder.h"
 
 class FaceTarget : public SpecifiedHeading
 {
@@ -37,6 +32,7 @@ public:
     std::string GetHeadingStateName() const override;
 
 protected:
-    virtual DragonVision::VISION_ELEMENT GetVisionElement() const = 0;
+    virtual DragonTargetFinderTarget GetTarget() const = 0;
     units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
+    SwerveChassis *m_chassis;
 };
