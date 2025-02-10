@@ -20,6 +20,7 @@
 
 // Team302 Includes
 #include "chassis/states/PolarDrive.h"
+#include "utils/FMSData.h"
 
 /// DEBUGGING
 #include "utils/logging/Logger.h"
@@ -35,34 +36,77 @@ PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChass
 
 std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
+
+    /*
+    frc::Pose3d reefCenter = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kRed
+                                 ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)}
+                                 : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+
+    frc::Pose2d currentPose = m_chassis->GetPose();
+    units::length::meter_t xDiff = currentPose.X() - reefCenter.X();  //Still useful for logging
+    units::length::meter_t yDiff = currentPose.Y() - reefCenter.Y(); //Still useful for logging
+    units::length::meter_t radius = units::math::hypot(xDiff, yDiff);
+    units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
+
+    auto chassisSpeeds = chassisMovement.chassisSpeeds;
+
+    double radialInput = chassisSpeeds.vx.value();
+    double radialVelocity = radialInput; // Scale as needed
+
+    double angularInput = chassisSpeeds.vy.value();
+    double angularVelocity = (radius.value() > 0.01) ? angularInput / radius.value() : 0.0;
+    angle += units::angle::degree_t(angularVelocity * m_loopRate);
+
+    // Calculate the *resulting* desired velocities in field coordinates
+    chassisSpeeds.vx = units::velocity::meters_per_second_t(radialVelocity * units::math::cos(angle).value() - radius.value() * angularVelocity * units::math::sin(angle).value());
+    chassisSpeeds.vy = units::velocity::meters_per_second_t(radialVelocity * units::math::sin(angle).value() + radius.value() * angularVelocity * units::math::cos(angle).value());
+
+
+    auto rot2d = Rotation2d(m_chassis->GetYaw());
+    chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx, chassisSpeeds.vy, chassisSpeeds.omega, rot2d);
+*/
     if (m_chassis != nullptr)
     {
-        units::length::meter_t reefXPos = units::length::meter_t(4.5); // TODO needs updating based on alliance and use constants
-        units::length::meter_t reefYPos = units::length::meter_t(4.0); // TODO needs updating based on alliance and use constants
-
+        frc::Pose3d reefCenter = frc::Pose3d{};
+        frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        reefCenter = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
         frc::Pose2d currentPose = m_chassis->GetPose();
-        double xDiff = currentPose.X().value() - reefXPos.value();
-        double yDiff = currentPose.Y().value() - reefYPos.value();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Y", currentPose.Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "X", currentPose.X().value());
+        units::length::meter_t xDiff = currentPose.X() - reefCenter.X();
+        units::length::meter_t yDiff = currentPose.Y() - reefCenter.Y();
 
-        double radius = std::hypot(xDiff, yDiff);
-        double angle = std::atan2(yDiff, xDiff);
+        units::length::meter_t radius = units::math::hypot(xDiff, yDiff);
+        units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
 
         // Radial velocity: Changes radius
         double radialVelocity = chassisSpeeds.vx.value(); // Forward/backward motion directly affects radius
-        radius += radialVelocity * m_loopRate * -1;       // Negative since forward decreases radius
+        if (radialVelocity > 0.1)
+        {
+            radius += units::length::meter_t(radialVelocity * m_loopRate * -1.0); // Negative since forward decreases radius
+        }
 
         // Angular velocity: Changes angle
-        double angularVelocity = chassisSpeeds.vy.value() / radius; // Clockwise/counter-clockwise motion
-        angle += angularVelocity * m_loopRate;
+        double angularVelocity = chassisSpeeds.vy.value() / radius.value(); // Clockwise/counter-clockwise motion
+        angle += units::angle::degree_t(angularVelocity * m_loopRate);
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "radialVelocity", radialVelocity);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "angularVelocity", angularVelocity);
 
         // Convert polar velocities back to Cartesian
-        double vxNew = radialVelocity * std::cos(angle) - (radius * angularVelocity * std::sin(angle));
-        double vyNew = radialVelocity * std::sin(angle) + (radius * angularVelocity * std::cos(angle));
+        double vxNew = radialVelocity * units::math::cos(angle).value() - (radius.value() * angularVelocity * units::math::sin(angle).value());
+        double vyNew = radialVelocity * units::math::sin(angle).value() + (radius.value() * angularVelocity * units::math::cos(angle).value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Raidus", radius.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "Angle", angle.value());
 
         chassisSpeeds.vx = units::velocity::meters_per_second_t(vxNew);
         chassisSpeeds.vy = units::velocity::meters_per_second_t(vyNew);
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VxNew", vxNew);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AlignDebugging", "VyNew", vyNew);
         auto rot2d = Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
                                                                                chassisMovement.chassisSpeeds.vy,
