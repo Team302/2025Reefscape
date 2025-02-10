@@ -23,6 +23,7 @@
 #include "DragonTale.h"
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -55,7 +56,6 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 
-#include "state/RobotState.h"
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
 

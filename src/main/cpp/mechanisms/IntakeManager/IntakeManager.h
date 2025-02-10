@@ -31,14 +31,16 @@
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
+#include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
+#include "state/RobotStateChanges.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
 #include "RobotIdentifier.h"
 
-class IntakeManager : public BaseMech, public StateMgr
+class IntakeManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -107,6 +109,7 @@ public:
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 	void SetCurrentState(int state, bool run) override;
 
+	void SetCurrentState ( int state, bool run ) override;
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
