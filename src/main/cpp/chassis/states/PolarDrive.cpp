@@ -21,6 +21,7 @@
 // Team302 Includes
 #include "chassis/states/PolarDrive.h"
 #include "utils/FMSData.h"
+#include "utils/logging/Logger.h"
 
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
@@ -58,13 +59,10 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 
         units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
 
-        // Radial velocity: Changes radius
-        double radialVelocity = chassisSpeeds.vx.value(); // Forward/backward motion directly affects radius
-
+        double radialVelocity = chassisSpeeds.vx.value();
         m_radiusTarget += units::length::meter_t(radialVelocity * m_loopRate);
 
-        // Angular velocity: Changes angle
-        double angularVelocity = chassisSpeeds.vy.value() / m_radiusTarget.value(); // Clockwise/counter-clockwise motion
+        double angularVelocity = chassisSpeeds.vy.value() / m_radiusTarget.value();
         angle += units::angle::degree_t(angularVelocity * m_loopRate);
 
         // Convert polar velocities back to Cartesian
