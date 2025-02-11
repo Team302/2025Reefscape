@@ -14,20 +14,25 @@
 //====================================================================================================================================================
 
 // Team302 Includes
-#include "chassis/states/FaceReef.h"
+#include "chassis/states/FaceNearestReefFace.h"
 #include "chassis/states/FaceTarget.h"
 #include "vision/DragonVision.h"
 
-FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
+FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
 }
 
-std::string FaceReef::GetHeadingStateName() const
+std::string FaceNearestReefFace::GetHeadingStateName() const
 {
-    return std::string("FaceReef");
+    return std::string("FaceNearestReefFace");
 }
 
-DragonTargetFinderTarget FaceReef::GetTarget() const
+units::angle::degree_t FaceNearestReefFace::DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace)
 {
-    return DragonTargetFinderTarget::REEF_CENTER;
+
+}
+
+DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
+{
+    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
 }

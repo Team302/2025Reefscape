@@ -38,6 +38,8 @@
 #include "chassis/states/MaintainHeading.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "chassis/states/FaceGamePiece.h"
+#include "chassis/states/FaceReefCenter.h"
+#include "chassis/states/FaceNearestReefFace.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
@@ -139,6 +141,8 @@ void SwerveChassis::InitStates()
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE] = new FaceGamePiece();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER] = new FaceReefCenter();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_FACE] = new FaceNearestReefFace();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::IGNORE] = new IgnoreHeading();
 }
 
