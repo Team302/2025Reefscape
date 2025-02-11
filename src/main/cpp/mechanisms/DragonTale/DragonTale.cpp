@@ -606,8 +606,12 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValueAsDouble());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
+
+	// DEBUGGING TEST
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::INTAKE))
+		m_ElevatorHeightSensor->SetPosition(0_tr);
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
