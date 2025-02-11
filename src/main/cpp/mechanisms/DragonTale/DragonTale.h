@@ -240,6 +240,8 @@ private:
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 
+	void InitializeLogging();
+
 	wpi::log::IntegerLogEntry m_LogState;
 	wpi::log::DoubleLogEntry m_LogArmTargetAngle;
 	wpi::log::DoubleLogEntry m_LogElevatorTargetPosition;

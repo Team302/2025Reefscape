@@ -59,6 +59,8 @@
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
 
+#include "frc/DataLogManager.h"
+
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::configs::VoltageConfigs;
@@ -212,6 +214,14 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
+}
+
+void DragonTale::InitializeLogging()
+{
+	wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+
+	m_LogState = wpi::log::IntegerLogEntry(log, "/mechanisms/DragonTale/State"); // do this for all the logging objects
+	m_LogState.Append(0);
 }
 
 std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEnumMap{
