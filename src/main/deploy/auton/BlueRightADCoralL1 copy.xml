@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+<primitive id = "RESET_POSITION_PATH_PLANNER"
+choreoname= "BlueRightOutside_A.traj"
+/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueRightOutside_A.traj"
+taleOption = "STATE_L1SCORING_POSITION"
+filename= "BlueReefPlacerZones.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueRightCSA_A2.traj"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueRightHumanPlayerStation.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_B1.traj"
+taleOption = "STATE_L1SCORING_POSITION"
+filename= "BlueReefPlacerZones.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_B2.traj"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueRightHumanPlayerStation.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_C1.traj"
+taleOption = "STATE_L1SCORING_POSITION"
+filename= "BlueReefPlacerZones.xml"
+time= "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_C2.traj"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueRightHumanPlayerStation.xml"
+time= "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_D1"
+taleOption = "STATE_L1SCORING_POSITION"
+filename= "BlueReefPlacerZones.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_D2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueRightHumanPlayerStation.xml"
+time = "3.0"
+/>
+
+<primitive id = "DRIVE_STOP"
+time = "1.0"/>
+
+</auton>
