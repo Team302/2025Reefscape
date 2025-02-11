@@ -12,10 +12,14 @@ time="2.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-dragonTale="STATE_SCORE_CORAL"
+taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "DO_NOTHING"
+time="15.0"
+/>
+
+<!-- <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueleftCSA_J2"
 dragonTale="STATE_HUMAN_PLAYER_LOAD"
 time = "1.5"/>
@@ -53,6 +57,6 @@ dragonTale="STATE_SCORE_CORAL"
 time="5.0"/>
 
 <primitive id ="DRIVE_STOP"
-time="1.0"/>
+time="1.0"/> -->
 
 </auton>
