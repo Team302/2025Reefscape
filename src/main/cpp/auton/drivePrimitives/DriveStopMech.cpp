@@ -22,7 +22,6 @@
 #include "auton/PrimitiveParams.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
-#include "utils/logging/Logger.h"
 
 // Third Party Includes
 
@@ -54,18 +53,5 @@ void DriveStopMech::Init(PrimitiveParams *params)
 /// @return bool true means the end condition was reached, false means it hasn't
 bool DriveStopMech::IsDone()
 {
-
-    // if note manager is in a launch mode,
-    // don't end the drive stop state as we haven't launched yet
-    /**
-    if (m_noteManager != nullptr)
-    {
-        if ((m_noteManager->GetCurrentState() == noteManagerGen::STATE_AUTO_LAUNCH) || (m_noteManager->GetCurrentState() == noteManagerGen::STATE_MANUAL_LAUNCH))
-        {
-            if (m_noteManager->HasNote())
-                return false;
-        }
-    }
-    **/
     return m_dragonTaleMgr->GetCurrentState() == m_switchState || DriveStop::IsDone();
 }
