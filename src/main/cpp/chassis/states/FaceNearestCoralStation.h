@@ -13,25 +13,21 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
 // Team302 Includes
-#include "chassis/states/FaceNearestReefFace.h"
-#include "vision/DragonVision.h"
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
-FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
+class FaceNearestCoralStation : public FaceTarget
 {
-}
+public:
+    FaceNearestCoralStation();
+    ~FaceNearestCoralStation() = default;
 
-std::string FaceNearestReefFace::GetHeadingStateName() const
-{
-    return std::string("FaceNearestReefFace");
-}
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t DetermineNearestCoralStationAngle(units::angle::degree_t angleToNearestCoralStation);
 
-units::angle::degree_t FaceNearestReefFace::DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace)
-{
-
-}
-
-DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
-{
-    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
-}
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
+};

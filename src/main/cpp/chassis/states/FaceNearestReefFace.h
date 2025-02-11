@@ -17,7 +17,6 @@
 
 // Team302 Includes
 #include "chassis/states/FaceTarget.h"
-#include "chassis/states/FaceNearestReefFace.h"
 #include "fielddata/DragonTargetFinder.h"
 
 class FaceNearestReefFace : public FaceTarget

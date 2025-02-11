@@ -25,6 +25,7 @@ public:
         FACE_GAME_PIECE,
         FACE_REEF_CENTER,
         FACE_REEF_FACE,
+        FACE_CORAL_STATION,
         IGNORE
     };
 
