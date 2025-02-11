@@ -7,67 +7,67 @@ choreoname = "BlueLeftOutside_L.traj"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftOutside_L.traj"
+taleOption = "STATE_L1SCORING_POSITION"
+filename = "BlueReefPlacerZones.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2.traj"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueLeftHumanPlayerStation.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K1"
+taleOption = "STATE_L1SCORING_POSITION"
+filename = "BlueReefPlacerZones.xml"
 time = "4.0"
 />
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueLeftHumanPlayerStation.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J1"
+taleOption = "STATE_L1SCORING_POSITION"
+filename = "BlueReefPlacerZones.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueLeftHumanPlayerStation.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I1"
+taleOption = "STATE_L1SCORING_POSITION"
+filename = "BlueReefPlacerZones.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueLeftHumanPlayerStation.xml"
 time = "4.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
-
+<primitive id = "DRIVE_STOP"
+time = "1.0"/>
 </auton>

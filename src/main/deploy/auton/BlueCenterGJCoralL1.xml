@@ -7,74 +7,67 @@ choreoname = "BlueInside_G.traj"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueInside_G.traj"
+filename = "BlueReefPlacerZones.xml"
+taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
-
-<!--possibly a zone for placer? Refer to the ppt-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_G2.traj"
+filename = "BlueRightHumanPlayerStation.xml"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
-
-<!--...zones??? Thoughts? Would probably help us...-->
+<primitive id = "DRIVE_STOP_MECH"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueLeftCSA_H1.traj"
+filename = "BlueReefPlacerZones.xml"
+taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
-<!--possibility of zones?-->
+<primitive id = "DRIVE_STOP_MECH">
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_H2.traj"
+filename = "BlueRightHumanPlayerStation.xml"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
+<primitive id = "DRIVE_STOP_MECH"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I1.traj"
+filename = "BlueReefPlacerZones.xml"
+taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
-
-<!--again...zones?-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I2.traj"
+filename = "BlueRightHumanPlayerStation.xml"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J1.traj"
+filename = "BlueReefPlacerZones.xml"
+taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_L1SCORING_POSITION"
-time = "7.0"/>
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J2.traj"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+filename = "BlueRightHumanPlayerStation.xml"
 time = "3.0"/>
 
-<primitive id = "DO_NOTHING"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "5.0"/> 
-
+<primitive id = "DRIVE_STOP"
+time = "1.0"/>
 
 </auton>
