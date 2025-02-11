@@ -79,8 +79,6 @@ void LEDStates::ClosingInChaserPattern(DragonLeds::Colors c)
             int loopout = (m_LEDstring->m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
             auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(m_LEDstring->BLACK);
             m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
-            // m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
-            // m_LEDstring->m_ledBuffer[loopout].SetRGB(color[0], color[1], color[2]);
             std::array<int, 3U> colorarray = {color[0], color[1], color[2]};
             m_LEDstring->setSpecificLED(m_loopThroughIndividualLEDs, colorarray);
             m_LEDstring->setSpecificLED(loopout, colorarray);
@@ -101,13 +99,9 @@ void LEDStates::ChaserPattern(DragonLeds::Colors c)
         {
             color = color == m_LEDstring->getColorValues(c) ? m_LEDstring->getColorValues(DragonLeds::BLACK) : m_LEDstring->getColorValues(c);
         }
-        // auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(DragonLeds::BLACK);
-
-        // m_colorLoop += m_colorLoop < m_LEDstring->m_ledBuffer.size() - 1 ? 1 : -((m_colorLoop * 2) + 1);
         m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1;
         std::array<int, 3U> colorarray = {color[0], color[1], color[2]};
         m_LEDstring->setSpecificLED(m_loopThroughIndividualLEDs, colorarray);
-        // m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
         m_LEDstring->commitLedData();
     }
 }
