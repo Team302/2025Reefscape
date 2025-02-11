@@ -214,6 +214,7 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
+	InitializeLogging();
 }
 
 void DragonTale::InitializeLogging()
@@ -222,6 +223,30 @@ void DragonTale::InitializeLogging()
 
 	m_LogState = wpi::log::IntegerLogEntry(log, "/mechanisms/DragonTale/State"); // do this for all the logging objects
 	m_LogState.Append(0);
+
+	m_LogArmTargetAngle = wpi::log::DoubleLogEntry(log, "/mechanisms/DragonTale/ArmTargetAngle");
+	m_LogArmTargetAngle.Append(0.0);
+
+	m_LogElevatorTargetPosition = wpi::log::DoubleLogEntry(log, "/mechanisms/DragonTale/ElevatorTargetPosition");
+	m_LogElevatorTargetPosition.Append(0.0);
+
+	m_LogArmAngle = wpi::log::DoubleLogEntry(log, "/mechanisms/DragonTale/ArmAngle");
+	m_LogArmAngle.Append(0.0);
+
+	m_LogElevatorPosition = wpi::log::DoubleLogEntry(log, "/mechanisms/DragonTale/ElevatorPosition");
+	m_LogElevatorPosition.Append(0.0);
+
+	m_LogCoralInSensor = wpi::log::BooleanLogEntry(log, "/mechanisms/DragonTale/CoralInSensor");
+	m_LogCoralInSensor.Append(false);
+
+	m_LogCoralOutSensor = wpi::log::BooleanLogEntry(log, "/mechanisms/DragonTale/CoralOutSensor");
+	m_LogCoralOutSensor.Append(false);
+
+	m_LogAlgaeSensor = wpi::log::BooleanLogEntry(log, "/mechanisms/DragonTale/AlgaeSensor");
+	m_LogAlgaeSensor.Append(false);
+
+	m_LogScoringMode = wpi::log::IntegerLogEntry(log, "/mechanisms/DragonTale/ScoringMode");
+	m_LogScoringMode.Append(0);
 }
 
 std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEnumMap{
