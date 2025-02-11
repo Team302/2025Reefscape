@@ -31,14 +31,16 @@
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
+#include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
+#include "state/RobotStateChanges.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
 #include "RobotIdentifier.h"
 
-class IntakeManager : public BaseMech, public StateMgr
+class IntakeManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -105,6 +107,7 @@ public:
 	bool GetFailedSensor() const { return m_failedSensorLatch; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
+	void SetCurrentState(int state, bool run) override;
 
 protected:
 	RobotIdentifier m_activeRobotId;
@@ -113,7 +116,6 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState(int state, bool run) override;
 	ControlData *GetControlData(std::string name) override;
 
 private:

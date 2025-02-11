@@ -48,8 +48,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
+    primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
 
-    map<string, ChassisOptionEnums::HeadingOption> headingOptionMap;
+    map<string, ChassisOptionEnums::HeadingOption>
+        headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
@@ -141,11 +143,12 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
-                    // auto noteStates = noteManagerGen::STATE_OFF;
-                    // bool changeNoteState = false;
-                    // auto climberState = ClimberManagerGen::STATE_OFF;
-                    // bool changeClimberState = false;
-                    // auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+                    auto intakeStates = IntakeManager::STATE_OFF;
+                    bool changeIntakeState = false;
+                    auto taleState = DragonTale::STATE_READY;
+                    bool changeTaleState = false;
+                    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
@@ -244,32 +247,32 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        /**
-                        else if (strcmp(attr.name(), "noteOption") == 0)
+
+                        else if (strcmp(attr.name(), "taleOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::NOTE_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
                             {
-                                auto noteStateItr = noteManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (noteStateItr != noteManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto taleStateItr = DragonTale::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (taleStateItr != DragonTale::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    noteStates = noteStateItr->second;
-                                    changeNoteState = true;
+                                    taleState = taleStateItr->second;
+                                    changeTaleState = true;
                                 }
                             }
                         }
-                        else if (strcmp(attr.name(), "climberOption") == 0)
+                        else if (strcmp(attr.name(), "intakeOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::CLIMBER_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
                             {
-                                auto climberStateItr = ClimberManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (climberStateItr != ClimberManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto intakeStateItr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (intakeStateItr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    climberState = climberStateItr->second;
-                                    changeClimberState = true;
+                                    intakeStates = intakeStateItr->second;
+                                    changeIntakeState = true;
                                 }
                             }
                         }
-                        **/
+
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
                             /** TODO come back to this
@@ -316,10 +319,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      zones, // vector of all zones included as part of the path
                                                                             // can have multiple zones as part of a complex path
                                                                      visionAlignment,
-                                                                     // changeNoteState,
-                                                                     // noteStates,
-                                                                     // changeClimberState,
-                                                                     // climberState,
+                                                                     changeIntakeState,
+                                                                     intakeStates,
+                                                                     changeTaleState,
+                                                                     taleState,
                                                                      updateHeadingOption,
                                                                      pathDelayOption));
                     }
