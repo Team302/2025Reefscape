@@ -26,11 +26,6 @@ std::string FaceNearestReefFace::GetHeadingStateName() const
     return std::string("FaceNearestReefFace");
 }
 
-units::angle::degree_t FaceNearestReefFace::DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace)
-{
-
-}
-
 DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
 {
     return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;

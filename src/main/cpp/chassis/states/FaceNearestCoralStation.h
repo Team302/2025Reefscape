@@ -26,7 +26,6 @@ public:
     ~FaceNearestCoralStation() = default;
 
     std::string GetHeadingStateName() const override;
-    units::angle::degree_t DetermineNearestCoralStationAngle(units::angle::degree_t angleToNearestCoralStation);
 
 protected:
     DragonTargetFinderTarget GetTarget() const override;

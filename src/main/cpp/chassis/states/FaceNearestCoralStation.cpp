@@ -26,10 +26,6 @@ std::string FaceNearestCoralStation::GetHeadingStateName() const
     return std::string("FaceNearestCoralStation");
 }
 
-units::angle::degree_t FaceNearestCoralStation::DetermineNearestCoralStationAngle(units::angle::degree_t angleToNearestCoralStation)
-{
-}
-
 DragonTargetFinderTarget FaceNearestCoralStation::GetTarget() const
 {
     return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
