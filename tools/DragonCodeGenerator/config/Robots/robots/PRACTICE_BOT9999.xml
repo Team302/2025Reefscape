@@ -74,6 +74,7 @@
               <type>UInt32</type>
               <value>7</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -3872,6 +3873,13 @@
                 <name>stringParameterConstInMechInstance</name>
                 <__units__ />
                 <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
                 <value>L1ScoringPosition</value>
               </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
@@ -4005,6 +4013,13 @@
                 <name>stringParameterConstInMechInstance</name>
                 <__units__ />
                 <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
                 <value>Process</value>
               </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
@@ -4126,6 +4141,13 @@
           <state>
             <name>ManualGrabAlgaeFloor</name>
             <transitionsTo>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
                 <unitsFamily>none</unitsFamily>
                 <name>stringParameterConstInMechInstance</name>

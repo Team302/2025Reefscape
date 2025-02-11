@@ -17,6 +17,7 @@
 
 // Team302 Includes
 #include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
 class FaceReef : public FaceTarget
 {
@@ -28,5 +29,5 @@ public:
     units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
 
 protected:
-    DragonVision::VISION_ELEMENT GetVisionElement() const override;
+    DragonTargetFinderTarget GetTarget() const override;
 };
