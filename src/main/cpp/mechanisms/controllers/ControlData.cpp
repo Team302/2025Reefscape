@@ -29,6 +29,9 @@ ControlData::ControlData() : m_mode(ControlModes::CONTROL_TYPE::PERCENT_OUTPUT),
                              m_integral(0.0),
                              m_derivative(0.0),
                              m_feedforward(0.0),
+                             m_velocityGain(0.0),
+                             m_accelartionGain(0.0),
+                             m_staticFrictionGain(0.0),
                              m_feedforwardType(FEEDFORWARD_TYPE::DUTY_CYCLE),
                              m_iZone(0.0),
                              m_maxAcceleration(0.0),
@@ -37,6 +40,7 @@ ControlData::ControlData() : m_mode(ControlModes::CONTROL_TYPE::PERCENT_OUTPUT),
                              m_nominalValue(0.0)
 {
 }
+
 ControlData::ControlData(
     ControlModes::CONTROL_TYPE mode,
     ControlModes::CONTROL_RUN_LOCS server,
@@ -45,6 +49,9 @@ ControlData::ControlData(
     double integral,
     double derivative,
     double feedforward,
+    double velocityGain,
+    double accelartionGain,
+    double staticFrictionGain,
     FEEDFORWARD_TYPE feedforwadType,
     double integralZone,
     double maxAcceleration,
@@ -58,6 +65,9 @@ ControlData::ControlData(
                       m_integral(integral),
                       m_derivative(derivative),
                       m_feedforward(feedforward),
+                      m_velocityGain(velocityGain),
+                      m_accelartionGain(accelartionGain),
+                      m_staticFrictionGain(staticFrictionGain),
                       m_feedforwardType(feedforwadType),
                       m_iZone(integralZone),
                       m_maxAcceleration(maxAcceleration),
