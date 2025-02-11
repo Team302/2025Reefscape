@@ -15,68 +15,19 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// Team302 Includes
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class FaceNearestReefFace : public FaceTarget
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        IGNORE
-    };
+    FaceNearestReefFace();
+    ~FaceNearestReefFace() = default;
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_NOTE,
-        STOP_DRIVE
-    };
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace);
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
-
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
-
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_NOTE,
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NOTE,
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
 };
