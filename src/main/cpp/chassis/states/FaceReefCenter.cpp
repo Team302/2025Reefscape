@@ -14,20 +14,20 @@
 //====================================================================================================================================================
 
 // Team302 Includes
-#include "chassis/states/FaceReef.h"
+#include "chassis/states/FaceReefCenter.h"
 #include "chassis/states/FaceTarget.h"
 #include "vision/DragonVision.h"
 
-FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
+FaceReefCenter::FaceReefCenter() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
 }
 
-std::string FaceReef::GetHeadingStateName() const
+std::string FaceReefCenter::GetHeadingStateName() const
 {
-    return std::string("FaceReef");
+    return std::string("FaceReefCenter");
 }
 
-DragonTargetFinderTarget FaceReef::GetTarget() const
+DragonTargetFinderTarget FaceReefCenter::GetTarget() const
 {
     return DragonTargetFinderTarget::REEF_CENTER;
 }

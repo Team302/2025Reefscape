@@ -13,70 +13,25 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
+// Team302 Includes
+#include "chassis/states/FaceNearestReefFace.h"
+#include "vision/DragonVision.h"
 
-class ChassisOptionEnums
+FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
-public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        IGNORE
-    };
+}
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_NOTE,
-        STOP_DRIVE
-    };
+std::string FaceNearestReefFace::GetHeadingStateName() const
+{
+    return std::string("FaceNearestReefFace");
+}
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
+units::angle::degree_t FaceNearestReefFace::DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace)
+{
 
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
+}
 
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_NOTE,
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NOTE,
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
-};
+DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
+{
+    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
+}
