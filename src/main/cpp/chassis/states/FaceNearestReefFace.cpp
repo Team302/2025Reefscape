@@ -28,5 +28,5 @@ std::string FaceNearestReefFace::GetHeadingStateName() const
 
 DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
+    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE; // there is no enum for reef face, so we use reef algae instead.. which is the same thing
 }

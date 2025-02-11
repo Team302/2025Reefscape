@@ -16,6 +16,7 @@
 // Team302 Includes
 #include "chassis/states/FaceNearestCoralStation.h"
 #include "vision/DragonVision.h"
+#include "utils/AngleUtils.h"
 
 FaceNearestCoralStation::FaceNearestCoralStation() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
@@ -28,5 +29,10 @@ std::string FaceNearestCoralStation::GetHeadingStateName() const
 
 DragonTargetFinderTarget FaceNearestCoralStation::GetTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
+}
+
+units::angle::degree_t FaceNearestCoralStation::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    return AngleUtils::GetEquivAngle(FaceTarget::GetTargetAngle(chassisMovement) + units::angle::degree_t(180.0));
 }
