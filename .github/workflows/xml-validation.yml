@@ -29,5 +29,10 @@ jobs:
             # xmllint will use it automatically. Otherwise, specify the DTD file with --dtdvalid.
             # Example if specifying a DTD (adjust the path as needed):
             # xmllint --noout --dtdvalid path/to/your.dtd "$file"
-            xmllint --noout "$file"
+            # if the file is under the path mechansisms, then specify the dtd
+            if [[ "$file" == *"mechanisms"* ]]; then
+              xmllint --noout --dtdvalid src/main/deploy/mechanisms/mechanisms.dtd "$file" 
+            else
+              xmllint --noout "$file"
+            fi 
           done
