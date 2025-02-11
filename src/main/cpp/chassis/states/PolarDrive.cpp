@@ -22,9 +22,6 @@
 #include "chassis/states/PolarDrive.h"
 #include "utils/FMSData.h"
 
-/// DEBUGGING
-#include "utils/logging/Logger.h"
-
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
 using std::string;
