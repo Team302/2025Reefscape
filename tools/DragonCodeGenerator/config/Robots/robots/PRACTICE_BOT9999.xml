@@ -2310,7 +2310,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>80.25</value>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
