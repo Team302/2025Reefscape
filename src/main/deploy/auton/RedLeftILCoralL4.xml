@@ -3,32 +3,56 @@
 <auton>
 
 <primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueLeftOutside_J.traj"/>
+choreoname = "BlueLeftOutside_J"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftOutside_J.traj"
-dragonTale="STATE_L4SCORING_POSITION"
-time = "2.0"/>
+choreoname = "BlueLeftOutside_J"
+time="2.0">
+<zone filename="RedReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+dragonTale="STATE_SCORE_CORAL"
+time="5.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueleftCSA_J2.traj"
+choreoname = "BlueleftCSA_J2"
 dragonTale="STATE_HUMAN_PLAYER_LOAD"
 time = "1.5"/>
 
+<primitive id = "DRIVE_STOP_MECH"
+time="5.0"/>
+
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K1"
-dragonTale="STATE_L4SCORING_POSITION"
-time = "2.0"
-/>
+time = "2.0">
+<zone filename="RedReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+dragonTale="STATE_SCORE_CORAL"
+time="5.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
 dragonTale="STATE_HUMAN_PLAYER_LOAD"
 time = "1.4"/>
 
+<primitive id = "DRIVE_STOP_MECH"
+time="5.0"/>
+
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L1"
-dragonTale="STATE_L4SCORING_POSITION"
-time = "1.3"/>
+filename="RedReefPlacerZones.xml"
+time = "1.3">
+<zone filename="RedReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+dragonTale="STATE_SCORE_CORAL"
+time="5.0"/>
+
+<primitive id ="DRIVE_STOP"
+time="1.0"/>
 
 </auton>
