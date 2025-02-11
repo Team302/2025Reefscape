@@ -18,23 +18,31 @@
 
 // C++ Includes
 
-// FRC includes
-
 // Team 302 includes
+#include "auton/drivePrimitives/DriveStop.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
 
-enum PRIMITIVE_IDENTIFIER
+// forward declares
+
+//========================================================================================================
+/// @class  DriveStop
+/// @brief  This is an auton primitive that causes the chassis to not drive
+//========================================================================================================
+
+class DriveStopMech : public DriveStop
 {
-  UNKNOWN_PRIMITIVE = -1,
-  DO_NOTHING,
-  HOLD_POSITION,
-  DRIVE_PATH_PLANNER,
-  RESET_POSITION_PATH_PLANNER,
-  RESET_POSITION_PATH_PLANNER_NO_VISION,
-  VISION_ALIGN,
-  DRIVE_TO_NOTE,
-  DO_NOTHING_DELAY,
-  DO_NOTHING_MECHANISMS,
-  MAX_AUTON_PRIMITIVES
+public:
+    /// @brief constructor that creates/initializes the object
+    DriveStopMech();
+    /// @brief destructor, clean  up the memory from this object
+    virtual ~DriveStopMech() = default;
+
+    bool IsDone() override;
+    void Init(PrimitiveParams *params) override;
+
+private:
+    DragonTale::STATE_NAMES m_switchState;
+    DragonTale *m_dragonTaleMgr;
 };

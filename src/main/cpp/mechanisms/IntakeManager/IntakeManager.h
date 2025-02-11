@@ -107,8 +107,8 @@ public:
 	bool GetFailedSensor() const { return m_failedSensorLatch; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
+	void SetCurrentState(int state, bool run) override;
 
-	void SetCurrentState ( int state, bool run ) override;
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
