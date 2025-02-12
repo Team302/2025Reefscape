@@ -9,7 +9,7 @@ choreoname = "BlueRightOutside_C"/>
 choreoname = "BlueRightOutside_C"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
-<zone filename= "BlueReefPlacerZones.xml"/>
+<zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -18,7 +18,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_C2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
-<zone filename = "BlueRightHumanPlayerStation.xml"/>
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -27,7 +27,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_D1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
-<zone filename= "BlueReefPlacerZones.xml"/>
+<zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -36,7 +36,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_D2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
-<zone filename = "BlueRightHumanPlayerStation.xml"/>
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -45,7 +45,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_E1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
-<zone filename= "BlueReefPlacerZones.xml"/>
+<zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -54,7 +54,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_E2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
-<zone filename = "BlueRightHumanPlayerStation.xml"/>
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -63,7 +63,7 @@ time = "3.0">
 choreoname = "BlueRightCSA_F1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
-<zone filename= "BlueReefPlacerZones.xml"/>
+<zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -72,8 +72,9 @@ time = "3.0">
 choreoname = "BlueRightCSA_F2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
-<zone filename = "BlueRightHumanPlayerStation.xml"/>
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
+
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>
