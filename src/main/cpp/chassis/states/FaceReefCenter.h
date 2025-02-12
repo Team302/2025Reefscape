@@ -19,11 +19,11 @@
 #include "chassis/states/FaceTarget.h"
 #include "fielddata/DragonTargetFinder.h"
 
-class FaceReef : public FaceTarget
+class FaceReefCenter : public FaceTarget
 {
 public:
-    FaceReef();
-    ~FaceReef() = default;
+    FaceReefCenter();
+    ~FaceReefCenter() = default;
 
     std::string GetHeadingStateName() const override;
     units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
