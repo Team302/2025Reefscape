@@ -76,7 +76,7 @@ time = "3.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 
-<primitive id = "DRIVE_STOP"
+<primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>
 
 </auton>

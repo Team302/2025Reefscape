@@ -18,7 +18,6 @@ time = "3.0">
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_C2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename = "BlueRightHumanPlayerStation.xml"
 time = "3.0">
 <zone filename = "BlueLeftHumanPlayerStation.xml"/>
 </primitive>
@@ -83,7 +82,7 @@ time = "3.0">
 <zone filename = "BlueLeftHumanPlayerStation.xml"/>
 </primitive>
 
-<primitive id = "DRIVE_STOP"
+<primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>
 
 </auton>
