@@ -350,6 +350,7 @@ void SwerveModule::InitDriveMotor(bool driveInverted)
         {
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "SwerveModule::InitDriveMotor", string("Could not apply configs, error code"), status.GetName());
         }
+        m_driveTalon->SetPosition(0_tr);
     }
 }
 
@@ -403,6 +404,8 @@ void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
         {
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "SwerveModule::InitSteerMotorEncoder", string("Could not apply configs, error code"), status.GetName());
         }
+
+        m_steerTalon->SetPosition(0_tr);
 
         CANcoderConfiguration ccConfigs{};
         m_steerCancoder->GetConfigurator().Apply(ccConfigs); // Apply Factory Defaults

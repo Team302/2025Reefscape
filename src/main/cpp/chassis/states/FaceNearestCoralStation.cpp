@@ -13,30 +13,26 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-#include <string>
-
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
-
 // Team302 Includes
-#include "chassis/states/RobotDrive.h"
+#include "chassis/states/FaceNearestCoralStation.h"
+#include "vision/DragonVision.h"
+#include "utils/AngleUtils.h"
 
-class PolarDrive : public RobotDrive
+FaceNearestCoralStation::FaceNearestCoralStation() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
-public:
-    PolarDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+}
 
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+std::string FaceNearestCoralStation::GetHeadingStateName() const
+{
+    return std::string("FaceNearestCoralStation");
+}
 
-    void Init(ChassisMovement &chassisMovement) override;
+DragonTargetFinderTarget FaceNearestCoralStation::GetTarget() const
+{
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
+}
 
-private:
-    RobotDrive *m_robotDrive;
-    double m_loopRate = 0.02;
-    units::length::meter_t m_radiusTarget{5.0};
-    frc::Pose2d m_reefCenter;
-};
+units::angle::degree_t FaceNearestCoralStation::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    return AngleUtils::GetEquivAngle(FaceTarget::GetTargetAngle(chassisMovement) + units::angle::degree_t(180.0));
+}

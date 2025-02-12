@@ -23,7 +23,9 @@ public:
         MAINTAIN,
         SPECIFIED_ANGLE,
         FACE_GAME_PIECE,
-        FACE_REEF,
+        FACE_REEF_CENTER,
+        FACE_REEF_FACE,
+        FACE_CORAL_STATION,
         IGNORE
     };
 

@@ -15,28 +15,19 @@
 
 #pragma once
 
-#include <string>
-
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
-
 // Team302 Includes
-#include "chassis/states/RobotDrive.h"
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
-class PolarDrive : public RobotDrive
+class FaceNearestCoralStation : public FaceTarget
 {
 public:
-    PolarDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+    FaceNearestCoralStation();
+    ~FaceNearestCoralStation() = default;
 
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 
-    void Init(ChassisMovement &chassisMovement) override;
-
-private:
-    RobotDrive *m_robotDrive;
-    double m_loopRate = 0.02;
-    units::length::meter_t m_radiusTarget{5.0};
-    frc::Pose2d m_reefCenter;
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
 };
