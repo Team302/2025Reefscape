@@ -47,8 +47,6 @@
 #include "pugixml/pugixml.hpp"
 #include <ctre/phoenix6/StatusSignal.hpp>
 
-#include "frc/Timer.h"
-
 using std::map;
 using std::string;
 
@@ -102,7 +100,6 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     ResetPose(frc::Pose2d());
     SetStoredHeading(units::angle::degree_t(0.0));
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
-    m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
 
     ctre::phoenix6::BaseStatusSignal::SetUpdateFrequencyForAll(100_Hz, m_pigeon->GetYaw(), m_pigeon->GetPitch(), m_pigeon->GetRoll(), m_pigeon->GetAccelerationX(), m_pigeon->GetAccelerationY());
@@ -161,18 +158,9 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
-    auto timer(std::make_unique<frc::Timer>());
-    timer.get()->Restart();
-    auto offset = timer.get()->GetTimestamp();
-
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
-
-    auto time1 = timer.get()->GetTimestamp();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer1", time1.value() - offset.value());
-    timer.get()->Restart();
-
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
@@ -187,14 +175,9 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         SetStoredHeading(GetYaw());
     }
 
-    auto time2 = timer.get()->GetTimestamp();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer2", time2.value() - offset.value());
-    timer.get()->Restart();
-
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), m_currentOrientationState->GetHeadingOption());
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
     }
     else
@@ -202,47 +185,18 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), -1);
     }
 
-    auto time3 = timer.get()->GetTimestamp();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer3", time3.value() - offset.value());
-    timer.get()->Restart();
-
     m_currentDriveState = GetDriveState(moveInfo);
     if (m_currentDriveState != nullptr)
     {
-        auto time4 = timer.get()->GetTimestamp();
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer4", time4.value() - offset.value());
-        timer.get()->Restart();
-
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
-
-        auto time4a = timer.get()->GetTimestamp();
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "UpdateSwerveModules", time4a.value() - offset.value());
-        timer.get()->Restart();
-
-        // m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        // m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        // m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        // m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-
-        // auto time5 = timer.get()->GetTimestamp();
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer5", time5.value() - offset.value());
-        // timer.get()->Restart();
     }
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), string("NONE"));
     }
 
-    auto time6 = timer.get()->GetTimestamp();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer6", time6.value() - offset.value());
-    timer.get()->Restart();
-
     m_rotate = moveInfo.chassisSpeeds.omega;
     UpdateOdometry();
-
-    auto time7 = timer.get()->GetTimestamp();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer7", time7.value() - offset.value());
-    timer.get()->Restart();
 }
 
 //==================================================================================
@@ -442,39 +396,6 @@ units::angular_velocity::radians_per_second_t SwerveChassis::GetMaxAngularSpeed(
     auto angSpeed = units::angular_velocity::turns_per_second_t(GetMaxSpeed().to<double>() / circumference.to<double>());
     units::angular_velocity::radians_per_second_t retval = angSpeed;
     return retval;
-}
-
-//==================================================================================
-units::velocity::meters_per_second_t SwerveChassis::GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput)
-{
-    units::acceleration::meters_per_second_squared_t accelerationX = m_pigeon->GetAccelerationX().GetValue();
-    units::acceleration::meters_per_second_squared_t accelerationY = m_pigeon->GetAccelerationY().GetValue();
-
-    units::time::second_t deltaTime = m_velocityTimer.Get();
-
-    m_velocityTimer.Reset();
-    m_velocityTimer.Start();
-
-    bool noInput = (units::math::abs(xVelocityInput) < m_velocityThresold) && (units::math::abs(yVelocityInput) < m_velocityThresold);
-
-    // If both accelerations are below the threshold, set velocity to 0
-    if (((units::math::abs(accelerationX) < m_accelerationThreshold) ||
-         (units::math::abs(accelerationY) < m_accelerationThreshold)) &&
-        noInput)
-    {
-        m_currVelocity = {0_mps, 0_mps};
-    }
-    else
-    {
-        m_currVelocity.x += accelerationX * deltaTime;
-        m_currVelocity.y += accelerationY * deltaTime;
-    }
-
-    // Calculate the magnitude of the accumulated velocity vector
-    units::velocity::meters_per_second_t velocityMagnitude = units::velocity::meters_per_second_t{std::sqrt(std::pow(m_currVelocity.x.to<double>(), 2) + std::pow(m_currVelocity.y.to<double>(), 2))};
-
-    // Return the magnitude of the velocity
-    return velocityMagnitude;
 }
 
 //==================================================================================
