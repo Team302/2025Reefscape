@@ -23,7 +23,6 @@
 #include <networktables/NetworkTableEntry.h>
 #include <feedback/LEDStates.h>
 #include <frc/DriverStation.h>
-#include "utils/logging/Logger.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
@@ -130,8 +129,6 @@ void DriverFeedback::UpdateLEDStates()
                 {
                     taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
                 }
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse Periodic", taleMgr->GetElevatorLeader()->GetReverseLimit().GetValue().value);
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward Periodic", taleMgr->GetElevatorLeader()->GetForwardLimit().GetValue().value);
             }
         }
     }
