@@ -9,7 +9,6 @@ choreoname= "BlueRightOutside_A.traj"
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueRightOutside_A.traj"
 taleOption = "STATE_L1SCORING_POSITION"
-filename= "BlueReefPlacerZones.xml"
 time = "3.0">
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
@@ -17,51 +16,50 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueRightCSA_A2.traj"
+choreoname= "BlueRightCSA_A2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename = "BlueRightHumanPlayerStation.xml"
 time = "3.0">
-<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_B1.traj"
+choreoname = "BlueRightCSA_B1"
 taleOption = "STATE_L1SCORING_POSITION"
-filename= "BlueReefPlacerZones.xml"
-time = "3.0">
+time = "3.0"
+>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_B2.traj"
+choreoname = "BlueRightCSA_B2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0">
-<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+time = "3.0"
+>
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_C1.traj"
+choreoname = "BlueRightCSA_C1"
 taleOption = "STATE_L1SCORING_POSITION"
-filename= "BlueReefPlacerZones.xml"
-time= "3.0">
+time= "3.0"
+>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_C2.traj"
+choreoname = "BlueRightCSA_C2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename = "BlueRightHumanPlayerStation.xml"
-time= "3.0">
-<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+time= "3.0"
+>
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
@@ -69,8 +67,8 @@ time= "3.0">
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D1"
 taleOption = "STATE_L1SCORING_POSITION"
-filename= "BlueReefPlacerZones.xml"
-time = "3.0">
+time = "3.0"
+>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -79,12 +77,12 @@ time = "3.0">
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0">
-<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+time = "3.0"
+>
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
 </primitive>
 
-<primitive id = "DRIVE_STOP"
+<primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>
 
 </auton>

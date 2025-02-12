@@ -3,10 +3,10 @@
 <auton>
 
 <primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueLeftOutside_K.traj"/>
+choreoname = "BlueLeftOutside_K"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftOutside_K.traj"
+choreoname = "BlueLeftOutside_K"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
 <zone filename = "RedReefPlacerZones.xml"/>
@@ -15,7 +15,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_K2.traj"
+choreoname = "BlueLeftCSA_K2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
@@ -24,7 +24,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_L1.traj"
+choreoname = "BlueLeftCSA_L1"
 taleOption = "STATE_L1SCORING_POSITION"
 time= "3.0">
 <zone filename = "RedReefPlacerZones.xml"/>
@@ -33,7 +33,7 @@ time= "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_L2.traj"
+choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
@@ -43,7 +43,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_A1.traj"
+choreoname = "BlueLeftCSA_A1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
 <zone filename = "RedReefPlacerZones.xml"/>
@@ -52,7 +52,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_A2.traj"
+choreoname = "BlueLeftCSA_A2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
@@ -61,7 +61,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_B1.traj"
+choreoname = "BlueLeftCSA_B1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
 <zone filename = "RedReefPlacerZones.xml"/>
@@ -70,7 +70,7 @@ time = "3.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_B2.traj"
+choreoname = "BlueLeftCSA_B2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "3.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
