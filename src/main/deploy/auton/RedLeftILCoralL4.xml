@@ -15,17 +15,14 @@ time="2.0">
 taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
-<primitive id = "DO_NOTHING"
-time="15.0"
-/>
-
-<!-- <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueleftCSA_J2"
-dragonTale="STATE_HUMAN_PLAYER_LOAD"
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_J2"
+taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "1.5"/>
 
 <primitive id = "DRIVE_STOP_MECH"
-time="5.0"/>
+time="10.0"/>
+
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K1"
@@ -33,13 +30,14 @@ time = "2.0">
 <zone filename="RedReefPlacerZones.xml"/>
 </primitive>
 
+<!--
 <primitive id = "DRIVE_STOP_MECH"
-dragonTale="STATE_SCORE_CORAL"
+taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
-dragonTale="STATE_HUMAN_PLAYER_LOAD"
+taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "1.4"/>
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -53,7 +51,7 @@ time = "1.3">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-dragonTale="STATE_SCORE_CORAL"
+taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
 <primitive id ="DRIVE_STOP"

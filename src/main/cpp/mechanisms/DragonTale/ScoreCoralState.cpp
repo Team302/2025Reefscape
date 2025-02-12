@@ -50,12 +50,15 @@ void ScoreCoralState::Init()
 
 void ScoreCoralState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaePercentOutput(m_AlgaeTarget);
 }
 
 void ScoreCoralState::Run()
 {
+	if (m_mechanism->AtTarget())
+	{
+		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+	}
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }
 
