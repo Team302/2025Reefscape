@@ -45,7 +45,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["HOLD_POSITION"] = HOLD_POSITION;
     primStringToEnumMap["DRIVE_PATH_PLANNER"] = DRIVE_PATH_PLANNER;
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER"] = RESET_POSITION_PATH_PLANNER;
-    primStringToEnumMap["RESET_POSITION_PATH_PLANNER_NO_VISION"] = RESET_POSITION_PATH_PLANNER_NO_VISION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
