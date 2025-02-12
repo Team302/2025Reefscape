@@ -270,6 +270,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0.2,											  // double integral
 		0,												  // double derivative
 		0.3,											  // double feedforward
+	    0.3,  //double velocityGain
+	    0.05,  //double accelartionGain
+	    0, //double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -286,6 +289,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		20,												  // double integral
 		7,												  // double derivative
 		1.8,											  // double feedforward
+	    0.75,  //double velocityGain
+	    0.25,  //double accelartionGain
+	    0, //double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -302,6 +308,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
+	    0,  //double velocityGain
+	    0,  //double accelartionGain
+	    0, //double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -559,9 +568,9 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
 	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = 0;
-	slot0Configs.kV = 0.75;
-	slot0Configs.kA = 0.25;
+	slot0Configs.kS = m_PositionDegree->GetS();
+	slot0Configs.kV = m_PositionDegree->GetV();
+	slot0Configs.kA = m_PositionDegree->GetA();
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
@@ -574,8 +583,9 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kI = m_PositionInch->GetI();
 	slot0Configs.kD = m_PositionInch->GetD();
 	slot0Configs.kG = m_PositionInch->GetF();
-	slot0Configs.kV = 0.3;
-	slot0Configs.kA = 0.05;
+	slot0Configs.kS = m_PositionInch->GetS();
+	slot0Configs.kV = m_PositionInch->GetV();
+	slot0Configs.kA = m_PositionInch->GetA();
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
@@ -671,11 +681,17 @@ void DragonTale::CheckForTuningEnabled()
 void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
+	m_PositionInch->SetS ( m_table.get()->GetNumber ( "PositionInch_sGain", 0 ) );
+	m_PositionInch->SetV ( m_table.get()->GetNumber ( "PositionInch_vGain", 0.3 ) );
+	m_PositionInch->SetA ( m_table.get()->GetNumber ( "PositionInch_aGain", 0.05 ) );
 	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0.3));
 	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
 	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
+	m_PositionDegree->SetS ( m_table.get()->GetNumber ( "PositionDegree_sGain", 0 ) );
+	m_PositionDegree->SetV ( m_table.get()->GetNumber ( "PositionDegree_vGain", 0.75 ) );
+	m_PositionDegree->SetA ( m_table.get()->GetNumber ( "PositionDegree_aGain", 0.25 ) );
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 57));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 20));
@@ -685,11 +701,17 @@ void DragonTale::ReadTuningParamsFromNT()
 void DragonTale::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionInch_iZone", m_PositionInch->GetIZone());
+	m_table.get()->PutNumber ( "PositionInch_sGain", m_PositionInch->GetS() );
+	m_table.get()->PutNumber ( "PositionInch_vGain", m_PositionInch->GetV() );
+	m_table.get()->PutNumber ( "PositionInch_aGain", m_PositionInch->GetA() );
 	m_table.get()->PutNumber("PositionInch_fGain", m_PositionInch->GetF());
 	m_table.get()->PutNumber("PositionInch_pGain", m_PositionInch->GetP());
 	m_table.get()->PutNumber("PositionInch_iGain", m_PositionInch->GetI());
 	m_table.get()->PutNumber("PositionInch_dGain", m_PositionInch->GetD());
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber ( "PositionDegree_sGain", m_PositionDegree->GetS() );
+	m_table.get()->PutNumber ( "PositionDegree_vGain", m_PositionDegree->GetV() );
+	m_table.get()->PutNumber ( "PositionDegree_aGain", m_PositionDegree->GetA() );
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());

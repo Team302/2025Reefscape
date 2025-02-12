@@ -4,7 +4,7 @@
   xmlns:xsi CDATA #IMPLIED
 >
 
-<!ELEMENT MotorControlData (MinimalMotorControlData)>
+<!ELEMENT MotorControlData (MinimalMotorControlData*)>
 
 <!ELEMENT MinimalMotorControlData EMPTY>
 <!ATTLIST MinimalMotorControlData

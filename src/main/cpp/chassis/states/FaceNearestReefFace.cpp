@@ -13,30 +13,20 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-#include <string>
-
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
-
 // Team302 Includes
-#include "chassis/states/RobotDrive.h"
+#include "chassis/states/FaceNearestReefFace.h"
+#include "vision/DragonVision.h"
 
-class PolarDrive : public RobotDrive
+FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
-public:
-    PolarDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+}
 
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+std::string FaceNearestReefFace::GetHeadingStateName() const
+{
+    return std::string("FaceNearestReefFace");
+}
 
-    void Init(ChassisMovement &chassisMovement) override;
-
-private:
-    RobotDrive *m_robotDrive;
-    double m_loopRate = 0.02;
-    units::length::meter_t m_radiusTarget{5.0};
-    frc::Pose2d m_reefCenter;
-};
+DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
+{
+    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE; // there is no enum for reef face, so we use reef algae instead.. which is the same thing
+}

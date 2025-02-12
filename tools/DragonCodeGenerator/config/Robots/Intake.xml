@@ -595,6 +595,27 @@
           <type>Double</type>
           <value>0</value>
         </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
       </PID>
       <peakValue>
         <unitsFamily>none</unitsFamily>
@@ -671,6 +692,27 @@
           <type>Double</type>
           <value>0</value>
         </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
       </PID>
       <peakValue>
         <unitsFamily>none</unitsFamily>

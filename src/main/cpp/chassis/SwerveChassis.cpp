@@ -31,6 +31,7 @@
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/HoldDrive.h"
 #include "chassis/states/RobotDrive.h"
+#include "chassis/states/PolarDrive.h"
 #include "chassis/states/StopDrive.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/states/IgnoreHeading.h"
@@ -38,6 +39,9 @@
 #include "chassis/states/MaintainHeading.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "chassis/states/FaceGamePiece.h"
+#include "chassis/states/FaceReefCenter.h"
+#include "chassis/states/FaceNearestReefFace.h"
+#include "chassis/states/FaceNearestCoralStation.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
@@ -130,6 +134,7 @@ void SwerveChassis::InitStates()
     auto trajectoryDrivePathPlanner = new TrajectoryDrivePathPlanner(m_robotDrive);
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::POLAR_DRIVE] = new PolarDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::HOLD_DRIVE] = new HoldDrive();
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
@@ -139,6 +144,9 @@ void SwerveChassis::InitStates()
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE] = new FaceGamePiece();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER] = new FaceReefCenter();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_FACE] = new FaceNearestReefFace();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION] = new FaceNearestCoralStation();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::IGNORE] = new IgnoreHeading();
 }
 

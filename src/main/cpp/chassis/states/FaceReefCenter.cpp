@@ -13,21 +13,21 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
 // Team302 Includes
+#include "chassis/states/FaceReefCenter.h"
 #include "chassis/states/FaceTarget.h"
-#include "fielddata/DragonTargetFinder.h"
+#include "vision/DragonVision.h"
 
-class FaceReef : public FaceTarget
+FaceReefCenter::FaceReefCenter() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
-public:
-    FaceReef();
-    ~FaceReef() = default;
+}
 
-    std::string GetHeadingStateName() const override;
-    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
+std::string FaceReefCenter::GetHeadingStateName() const
+{
+    return std::string("FaceReefCenter");
+}
 
-protected:
-    DragonTargetFinderTarget GetTarget() const override;
-};
+DragonTargetFinderTarget FaceReefCenter::GetTarget() const
+{
+    return DragonTargetFinderTarget::REEF_CENTER;
+}

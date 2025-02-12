@@ -13,21 +13,20 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
 // Team302 Includes
-#include "chassis/states/FaceReef.h"
 #include "chassis/states/FaceTarget.h"
-#include "vision/DragonVision.h"
+#include "fielddata/DragonTargetFinder.h"
 
-FaceReef::FaceReef() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF)
+class FaceNearestReefFace : public FaceTarget
 {
-}
+public:
+    FaceNearestReefFace();
+    ~FaceNearestReefFace() = default;
 
-std::string FaceReef::GetHeadingStateName() const
-{
-    return std::string("FaceReef");
-}
+    std::string GetHeadingStateName() const override;
 
-DragonTargetFinderTarget FaceReef::GetTarget() const
-{
-    return DragonTargetFinderTarget::REEF_CENTER;
-}
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
+};
