@@ -45,6 +45,9 @@
 
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
+#include <ctre/phoenix6/StatusSignal.hpp>
+
+#include "frc/Timer.h"
 
 using std::map;
 using std::string;
@@ -102,6 +105,8 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
 
+    ctre::phoenix6::BaseStatusSignal::SetUpdateFrequencyForAll(100_Hz, m_pigeon->GetYaw(), m_pigeon->GetPitch(), m_pigeon->GetRoll(), m_pigeon->GetAccelerationX(), m_pigeon->GetAccelerationY());
+
     m_swervePoseEstimator = new DragonSwervePoseEstimator(m_kinematics,
                                                           Rotation2d(),
                                                           {SwerveModulePosition(),
@@ -156,11 +161,17 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
+    auto timer(std::make_unique<frc::Timer>());
+    timer.get()->Restart();
+    auto offset = timer.get()->GetTimestamp();
+
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
 
-    LogInformation();
+    auto time1 = timer.get()->GetTimestamp();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer1", time1.value() - offset.value());
+    timer.get()->Restart();
 
     if (abs(moveInfo.rawOmega) > 0.05)
     {
@@ -176,6 +187,10 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         SetStoredHeading(GetYaw());
     }
 
+    auto time2 = timer.get()->GetTimestamp();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer2", time2.value() - offset.value());
+    timer.get()->Restart();
+
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
@@ -187,23 +202,47 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), -1);
     }
 
+    auto time3 = timer.get()->GetTimestamp();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer3", time3.value() - offset.value());
+    timer.get()->Restart();
+
     m_currentDriveState = GetDriveState(moveInfo);
     if (m_currentDriveState != nullptr)
     {
+        auto time4 = timer.get()->GetTimestamp();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer4", time4.value() - offset.value());
+        timer.get()->Restart();
+
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
 
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        auto time4a = timer.get()->GetTimestamp();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "UpdateSwerveModules", time4a.value() - offset.value());
+        timer.get()->Restart();
+
+        // m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        // m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        // m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        // m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+
+        // auto time5 = timer.get()->GetTimestamp();
+        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer5", time5.value() - offset.value());
+        // timer.get()->Restart();
     }
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), string("NONE"));
     }
 
+    auto time6 = timer.get()->GetTimestamp();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer6", time6.value() - offset.value());
+    timer.get()->Restart();
+
     m_rotate = moveInfo.chassisSpeeds.omega;
     UpdateOdometry();
+
+    auto time7 = timer.get()->GetTimestamp();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "overrun debugging swerve", "timer7", time7.value() - offset.value());
+    timer.get()->Restart();
 }
 
 //==================================================================================
@@ -283,7 +322,7 @@ Pose2d SwerveChassis::GetPose() const
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
 {
-    return m_pigeon->GetYaw().WaitForUpdate(100_ms).Refresh().GetValue();
+    return m_pigeon->GetYaw().Refresh().GetValue();
 }
 
 //==================================================================================
