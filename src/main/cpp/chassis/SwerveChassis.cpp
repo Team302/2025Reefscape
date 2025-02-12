@@ -31,6 +31,7 @@
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/HoldDrive.h"
 #include "chassis/states/RobotDrive.h"
+#include "chassis/states/PolarDrive.h"
 #include "chassis/states/StopDrive.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/states/IgnoreHeading.h"
@@ -133,6 +134,7 @@ void SwerveChassis::InitStates()
     auto trajectoryDrivePathPlanner = new TrajectoryDrivePathPlanner(m_robotDrive);
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::POLAR_DRIVE] = new PolarDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::HOLD_DRIVE] = new HoldDrive();
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
