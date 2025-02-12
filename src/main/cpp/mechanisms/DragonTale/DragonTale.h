@@ -96,8 +96,8 @@ public:
 	{
 		if (position < GetElevatorHeight())
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 25_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Velocity = 10_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
