@@ -10,6 +10,7 @@ $$_GEN_NOTICE_$$
 #include "$$_MECHANISM_INSTANCE_NAME_$$.h"
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 $$_INCLUDE_FILES_$$
 
@@ -31,7 +32,8 @@ $$_MECHANISM_INSTANCE_NAME_$$::$$_MECHANISM_INSTANCE_NAME_$$(RobotIdentifier act
 }
 
 std::map<std::string, $$_MECHANISM_INSTANCE_NAME_$$::STATE_NAMES> $$_MECHANISM_INSTANCE_NAME_$$::stringToSTATE_NAMESEnumMap{
-    $$_STATE_MAP_$$};
+    $$_STATE_MAP_$$
+};
 
 $$_CREATE_FUNCTIONS_$$
 

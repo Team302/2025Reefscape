@@ -53,6 +53,9 @@ public:
         double integral,
         double derivative,
         double feedforward,
+        double velocityGain,
+        double accelartionGain,
+        double staticFrictionGain,
         FEEDFORWARD_TYPE feedforwadType,
         double integralZone,
         double maxAcceleration,
@@ -98,6 +101,21 @@ public:
     inline double GetF() const { return m_feedforward; }
     inline void SetF(double f) { m_feedforward = f; }
 
+    /// @brief  Retrieve the static coefficient for a PID-based control mode
+    /// @return double - S coefficient
+    inline double GetS() const { return m_staticFrictionGain; }
+    inline void SetS(double s) { m_staticFrictionGain = s; }
+
+    /// @brief  Retrieve the acceleration coefficient for a PID-based control mode
+    /// @return double - A coefficient
+    inline double GetV() const { return m_velocityGain; }
+    inline void SetV(double v) { m_velocityGain = v; }
+
+    /// @brief  Retrieve the acceleration coefficient for a PID-based control mode
+    /// @return double - A coefficient
+    inline double GetA() const { return m_accelerationGain; }
+    inline void SetA(double a) { m_accelerationGain = a; }
+
     inline FEEDFORWARD_TYPE GetFType() const { return m_feedforwardType; }
     inline void SetFType(FEEDFORWARD_TYPE type) { m_feedforwardType = type; }
 
@@ -137,6 +155,9 @@ private:
     double m_integral;
     double m_derivative;
     double m_feedforward;
+    double m_velocityGain;
+    double m_accelerationGain;
+    double m_staticFrictionGain;
     FEEDFORWARD_TYPE m_feedforwardType;
     double m_iZone;
     double m_maxAcceleration;

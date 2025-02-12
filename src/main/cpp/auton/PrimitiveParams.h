@@ -29,6 +29,8 @@
 #include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
 
@@ -53,10 +55,10 @@ public:
                     ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
                     VISION_ALIGNMENT visionAlignment,
-                    // bool changeNoteState,
-                    // noteManagerGen::STATE_NAMES noteState,
-                    // bool changeClimberState,
-                    // ClimberManagerGen::STATE_NAMES climberState,
+                    bool changeIntakeState,
+                    IntakeManager::STATE_NAMES intakeState,
+                    bool changeTaleState,
+                    DragonTale::STATE_NAMES taleState,
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption,
                     DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
 
@@ -83,9 +85,10 @@ public:
     units::time::second_t GetReefDelay() const { return m_reefDelay; }
     units::time::second_t GetCoralStationDelay() const { return m_coralStationDelay; }
 
-    // bool IsNoteStateChanging() const { return m_changeNoteState; }
-    // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
-
+    bool IsIntakeStateChanging() const { return m_changeIntakeState; }
+    IntakeManager::STATE_NAMES GetIntakeState() const { return m_intakeState; }
+    bool IsTaleStateChanging() const { return m_changeTaleState; }
+    DragonTale::STATE_NAMES GetTaleState() const { return m_taleState; }
     // Setters
     void SetPathName(std::string path)
     {
@@ -110,10 +113,13 @@ private:
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
-    // bool m_changeNoteState;
-    // noteManagerGen::STATE_NAMES m_noteState;
-    // bool m_changeClimberState;
-    // ClimberManagerGen::STATE_NAMES m_climberState;
+
+    bool m_changeIntakeState;
+    bool m_changeTaleState;
+
+    IntakeManager::STATE_NAMES m_intakeState;
+    DragonTale::STATE_NAMES m_taleState;
+
     ZoneParamsVector m_zones;
     ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
 };

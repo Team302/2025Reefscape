@@ -13,12 +13,16 @@ $$_INCLUDE_FILES_$$
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
+#include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
+#include "state/RobotStateChanges.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
-class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_
+#include "RobotIdentifier.h"
+
+class $$_MECHANISM_INSTANCE_NAME_$$ : public BaseMech _STATE_MANAGER_START_, public StateMgr _STATE_MANAGER_END_, public IRobotStateChangeSubscriber
 {
 public:
     enum STATE_NAMES
@@ -72,6 +76,8 @@ public:
 
     static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
+    void SetCurrentState(int state, bool run) override;
+
 protected:
     RobotIdentifier m_activeRobotId;
     std::string m_ntName;
@@ -79,7 +85,6 @@ protected:
     bool m_tuning = false;
     std::shared_ptr<nt::NetworkTable> m_table;
 
-    void SetCurrentState(int state, bool run) override;
     ControlData *GetControlData(std::string name) override;
 
 private:

@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -26,30 +25,29 @@ using namespace std;
 
 namespace ClimberManagerStates
 {
-class ManualClimbState : public State
-{
-public:
-	ManualClimbState() = delete;
-	ManualClimbState ( std::string stateName,
-	                   int stateId,
-	                   ClimberManager *mech,
-	                   RobotIdentifier activeRobotId );
-	~ManualClimbState() = default;
-	void Init() override;
-	void Run() override;
-	void Exit() override;
-	bool AtTarget() override;
-	bool IsTransitionCondition ( bool considerGamepadTransitions ) override;
+	class ManualClimbState : public State
+	{
+	public:
+		ManualClimbState() = delete;
+		ManualClimbState(std::string stateName,
+						 int stateId,
+						 ClimberManager *mech,
+						 RobotIdentifier activeRobotId);
+		~ManualClimbState() = default;
+		void Init() override;
+		void Run() override;
+		void Exit() override;
+		bool AtTarget() override;
+		bool IsTransitionCondition(bool considerGamepadTransitions) override;
 
-private:
-	ClimberManager *m_mechanism;
-	double m_manualClimbRate = 0.02;
-	void InitPRACTICE_BOT9999();
-	RobotIdentifier m_RobotId;
-	const units::angle::turn_t m_ClimberTarget = units::angle::turn_t ( 0 );
-	units::angle::degree_t m_manualTarget;
-	units::angle::degree_t m_minClimberAngle{-10.0};
-	units::angle::degree_t m_maxClimberAngle{95.0};
-
-};
+	private:
+		ClimberManager *m_mechanism;
+		double m_manualClimbRate = 0.02;
+		void InitPRACTICE_BOT9999();
+		RobotIdentifier m_RobotId;
+		const units::angle::degree_t m_ClimberTarget = units::angle::degree_t(0);
+		units::angle::degree_t m_manualTarget;
+		units::angle::degree_t m_minClimberAngle{-10.0};
+		units::angle::degree_t m_maxClimberAngle{95.0};
+	};
 }

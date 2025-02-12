@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,23 +33,25 @@ using namespace DragonTaleStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-ManualCoralLoadState::ManualCoralLoadState ( std::string stateName,
-        int stateId,
-        DragonTale *mech,
-        RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+ManualCoralLoadState::ManualCoralLoadState(std::string stateName,
+										   int stateId,
+										   DragonTale *mech,
+										   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void ManualCoralLoadState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "ManualCoralLoadState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualCoralLoadState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void ManualCoralLoadState::InitPRACTICE_BOT9999()
 {
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void ManualCoralLoadState::Run()
@@ -73,7 +74,7 @@ bool ManualCoralLoadState::AtTarget()
 	return atTarget;
 }
 
-bool ManualCoralLoadState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool ManualCoralLoadState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 	return (m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && m_mechanism->GetManualMode());

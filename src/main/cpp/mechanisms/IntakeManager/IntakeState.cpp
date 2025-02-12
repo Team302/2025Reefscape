@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,26 +33,26 @@ using namespace IntakeManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-IntakeState::IntakeState ( std::string stateName,
-                           int stateId,
-                           IntakeManager *mech,
-                           RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+IntakeState::IntakeState(std::string stateName,
+						 int stateId,
+						 IntakeManager *mech,
+						 RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void IntakeState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "IntakeState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("IntakeState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void IntakeState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetIntakePercentOutput ( 1, false );
+	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
 	m_mechanism->SetPIDExtenderPositionDegree();
-	m_mechanism->UpdateTargetExtenderPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
 }
 
 void IntakeState::Run()
@@ -74,7 +73,7 @@ bool IntakeState::AtTarget()
 	return atTarget;
 }
 
-bool IntakeState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool IntakeState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 

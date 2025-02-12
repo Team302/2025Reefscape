@@ -147,6 +147,7 @@ void DragonLeds::setBufferAllLEDsRainbow()
 
 void DragonLeds::setSpecificLED(int id, std::array<int, 3> color)
 {
+    // Todo update after diagnostic leds
     m_ledBuffer[id].SetRGB(color[0], color[1], color[2]);
 }
 

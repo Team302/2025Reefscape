@@ -1,4 +1,3 @@
-// clang-format off
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -34,25 +33,25 @@ using namespace ClimberManagerStates;
 
 /// @class ExampleForwardState
 /// @brief information about the control (open loop, closed loop position, closed loop velocity, etc.) for a mechanism state
-OffState::OffState ( std::string stateName,
-                     int stateId,
-                     ClimberManager *mech, 
-                     RobotIdentifier activeRobotId ) : State ( stateName, stateId ), m_mechanism ( mech ), m_RobotId ( activeRobotId )
+OffState::OffState(std::string stateName,
+				   int stateId,
+				   ClimberManager *mech,
+				   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
 {
 }
 
 void OffState::Init()
 {
-	Logger::GetLogger()->LogData ( LOGGER_LEVEL::PRINT, string ( "ArrivedAt" ), string ( "OffState" ), string ( "Init" ) );
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
 
-	if ( m_RobotId == RobotIdentifier::PRACTICE_BOT_9999 )
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
 
 void OffState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree ( units::angle::turn_t ( 0 ) );
+	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void OffState::Run()
@@ -73,10 +72,10 @@ bool OffState::AtTarget()
 	return atTarget;
 }
 
-bool OffState::IsTransitionCondition ( bool considerGamepadTransitions )
+bool OffState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-		return !m_mechanism->IsClimbMode();
-	
+	return !m_mechanism->IsClimbMode();
+
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

@@ -16,7 +16,6 @@
 // C++ Includes
 #include <memory>
 #include <string>
-#include <unistd.h>
 
 // Team 302 includes
 #include "auton/drivePrimitives/AutonUtils.h"

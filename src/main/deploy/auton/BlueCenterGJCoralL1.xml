@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+<primitive id = "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueInside_G.traj"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueInside_G.traj"
+time = "3.0"/>
+
+<!--placer mech-->
+<!--possibly a zone for placer? Refer to the ppt-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_G2.traj"
+time = "3.0"/>
+
+<!--intake mech if needed-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueLeftCSA_H1.traj"
+time = "3.0"/>
+
+<!--Placer mech - possibility of zones?-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_H2.traj"
+time = "3.0"/>
+
+<!--intake mech if needed-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_I1.traj"
+time = "3.0"/>
+
+<!--placer - again...zones?-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_I2.traj"
+time = "3.0"/>
+
+<!--intake mech if needed-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_J1.traj"
+time = "3.0"/>
+
+<!--Placer-->
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_J2.traj"
+time = "3.0"/>
+
+<!--intake????-->
+
+
+</auton>

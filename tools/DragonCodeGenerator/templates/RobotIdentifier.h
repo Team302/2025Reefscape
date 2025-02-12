@@ -3,9 +3,9 @@ $$_GEN_NOTICE_$$
 
 #pragma once
 
-enum RobotIdentifier
+enum class RobotIdentifier
 {
-    CHASSISBOT_9998 = 9998,
+    CHASSIS_BOT_9998 = 9998,
     CHASSIS_BOT_9997 = 9997,
     $$_ROBOT_CONFIGURATIONS_NAMES_ENUMS_$$
 

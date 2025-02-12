@@ -32,4 +32,5 @@ public:
 
 protected:
     virtual void DefineMechanisms();
+    virtual void DefineLEDs();
 };

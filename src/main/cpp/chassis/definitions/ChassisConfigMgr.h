@@ -16,6 +16,7 @@
 #pragma once
 
 #include "chassis/definitions/ChassisConfig.h"
+#include "chassis/SwerveChassis.h"
 #include "RobotIdentifier.h"
 
 class ChassisConfigMgr
@@ -24,6 +25,7 @@ public:
 	static ChassisConfigMgr *GetInstance();
 	ChassisConfig *GetCurrentConfig() const { return m_config; }
 	void InitChassis(RobotIdentifier id);
+	SwerveChassis *GetCurrentChassis() const { return m_config != nullptr ? m_config->GetSwerveChassis() : nullptr; }
 
 private:
 	ChassisConfigMgr();

@@ -28,7 +28,6 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "state/State.h"
 #include "auton/ZoneParams.h"
-
 // Third Party Includes
 
 class AutonSelector;
@@ -56,6 +55,8 @@ protected:
 
 private:
 	void InitDriveStopDelayTimes();
+	void SetMechanismStatesFromParam(PrimitiveParams *params);
+	void SetMechanismStatesFromZone(ZoneParams *params);
 
 	std::vector<PrimitiveParams *> m_primParams;
 	int m_currentPrimSlot;
@@ -67,7 +68,6 @@ private:
 	units::time::second_t m_maxTime;
 	bool m_isDone;
 	SwerveChassis *m_chassis;
-	static void SetMechanismStatesFromParam(PrimitiveParams *params);
 	ChassisOptionEnums::PathUpdateOption m_updatedHeadingOption;
 	ZoneParamsVector m_zones;
 };

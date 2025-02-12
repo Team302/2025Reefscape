@@ -24,3 +24,8 @@ StateMgr *MechanismConfig$$_ROBOT_NAME_$$::GetMechanism(MechanismTypes::MECHANIS
     }
     return nullptr;
 }
+
+void MechanismConfig$$_ROBOT_NAME_$$::DefineLEDs()
+{
+    $$_LED_INITIALIZATION_$$
+}

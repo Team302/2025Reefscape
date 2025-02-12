@@ -72,18 +72,18 @@ void BaseMech::LogInformation()
     // NO-OP - subclasses override when necessary
 }
 
-ControlData* BaseMech::GetControlData(string name)
+ControlData *BaseMech::GetControlData(string name)
 {
     return nullptr;
 }
 
-void BaseMech::ReadConstants(string configfilename, int robotId )
+void BaseMech::ReadConstants(string configfilename, int robotId)
 {
     auto deployDir = frc::filesystem::GetDeployDirectory();
     auto filename = deployDir + string("/") + std::to_string(robotId) + string("/mechanisms/") + configfilename;
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Reading parameters from "), filename);
-    
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.c_str());
 
@@ -92,10 +92,10 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string(""), "Loaded xml file");
 
         pugi::xml_node parent = doc.root();
-        
+
         pugi::xml_node MechanismParameters = parent.child("MechanismParameters");
         pugi::xml_node controlDataNodes = MechanismParameters.child("MotorControlData");
-        
+
         for (pugi::xml_node aNode = controlDataNodes.child("MinimalMotorControlData"); aNode; aNode = aNode.next_sibling("MinimalMotorControlData"))
         {
             string name = aNode.attribute("name").as_string();
@@ -103,21 +103,37 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Loaded ControlData "), name);
 
             ControlData *theData = GetControlData(name);
-            if(theData != nullptr)
+            if (theData != nullptr)
             {
                 theData->SetP(aNode.attribute("pGain").as_double());
                 theData->SetI(aNode.attribute("iGain").as_double());
                 theData->SetD(aNode.attribute("dGain").as_double());
                 theData->SetF(aNode.attribute("fGain").as_double());
+                theData->SetS(aNode.attribute("sGain").as_double());
+                theData->SetA(aNode.attribute("aGain").as_double());
+                theData->SetV(aNode.attribute("vGain").as_double());
                 theData->SetIZone(aNode.attribute("iZone").as_double());
                 theData->SetPeakValue(aNode.attribute("peakValue").as_double());
                 theData->SetNominalValue(aNode.attribute("nominalValue").as_double());
                 theData->SetMaxAcceleration(aNode.attribute("maxAcceleration").as_double());
                 theData->SetCruiseVelocity(aNode.attribute("cruiseVelocity").as_double());
                 theData->SetFOCEnabled(aNode.attribute("enableFOC").as_bool());
-                theData->SetFType((ControlData::FEEDFORWARD_TYPE)(aNode.attribute("feedForwardType").as_int()));
-                theData->SetMode((ControlModes::CONTROL_TYPE)(aNode.attribute("controlType").as_int()));
-                theData->SetRunLoc((ControlModes::CONTROL_RUN_LOCS)(aNode.attribute("controlLoopLocation").as_int()));
+
+                if (strcmp(aNode.attribute("feedForwardType").as_string(), "VOLTAGE") == 0)
+                    theData->SetFType(ControlData::FEEDFORWARD_TYPE::VOLTAGE);
+                else if (strcmp(aNode.attribute("feedForwardType").as_string(), "TORQUE_CURRENT") == 0)
+                    theData->SetFType(ControlData::FEEDFORWARD_TYPE::TORQUE_CURRENT);
+                else
+                    theData->SetFType(ControlData::FEEDFORWARD_TYPE::DUTY_CYCLE);
+
+                if (strcmp(aNode.attribute("controlType").as_string(), "VOLTAGE_OUTPUT") == 0)
+                    theData->SetMode(ControlModes::CONTROL_TYPE::VOLTAGE_OUTPUT);
+                else if (strcmp(aNode.attribute("controlType").as_string(), "POSITION_DEGREES") == 0)
+                    theData->SetMode(ControlModes::CONTROL_TYPE::POSITION_DEGREES);
+                else if (strcmp(aNode.attribute("controlType").as_string(), "POSITION_INCH") == 0)
+                    theData->SetMode(ControlModes::CONTROL_TYPE::POSITION_INCH);
+                else
+                    theData->SetMode(ControlModes::CONTROL_TYPE::PERCENT_OUTPUT);
             }
             else
             {
@@ -127,7 +143,7 @@ void BaseMech::ReadConstants(string configfilename, int robotId )
     }
     else
     {
-            std::cout << "Config File not found" << std::endl;
+        std::cout << "Config File not found" << std::endl;
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("mech"), string("Config File not found"), configfilename);
     }

@@ -42,6 +42,7 @@ private:
     static PrimitiveFactory *m_instance;
     IPrimitive *m_DriveStop;
     IPrimitive *m_DriveStopDelay;
+    IPrimitive *m_driveStopMech;
     IPrimitive *m_DriveHoldPosition;
     IPrimitive *m_resetPositionPathPlanner;
     IPrimitive *m_resetPositionPathPlannerNoVision;
