@@ -58,7 +58,7 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
                 // Check to see if current pose is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
                 const units::length::meter_t poseDiff = actualPose.X() - m_centerline;
-                bool poseNeedsUpdating = poseDiff > units::length::meter_t(2.75) || poseDiff < units::length::meter_t(-2.75);
+                bool poseNeedsUpdating = poseDiff > m_distanceThreshold || poseDiff < m_distanceThreshold * -1;
 
                 if (poseNeedsUpdating)
                 {
