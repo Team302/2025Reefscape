@@ -96,13 +96,13 @@ public:
 	{
 		if (position < GetElevatorHeight())
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 20_tps;
+			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
 		}
 		else
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 100_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
