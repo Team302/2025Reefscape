@@ -15,8 +15,8 @@
 
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/DragonSwervePoseEstimator.h"
-#include "chassis/DragonVisionPoseEstimator.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"

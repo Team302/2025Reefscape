@@ -14,45 +14,17 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "chassis/pose/DragonVisionPoseEstimatorStruct.h"
 
-#include <vector>
-
-#include "chassis/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveModule.h"
-#include "frc/estimator/SwerveDrivePoseEstimator.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/kinematics/SwerveDriveKinematics.h"
-#include "frc/kinematics/SwerveDriveOdometry.h"
-
-class DragonSwervePoseEstimator
+class DragonVisionPoseEstimator
 {
 public:
-    DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
-                              const frc::Rotation2d &gyroAngle,
-                              const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                              const frc::Pose2d &initialPose);
+    DragonVisionPoseEstimator();
+    ~DragonVisionPoseEstimator() = default;
 
-    void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
-
-    void Update();
-    frc::Pose2d GetPose() const;
-    void ResetPosition(const frc::Pose2d &pose);
-    void ResetPose(const frc::Pose2d &pose);
+    virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
 
 private:
-    void AddVisionMeasurements();
-    DragonSwervePoseEstimator() = delete;
-    ~DragonSwervePoseEstimator() = default;
-
-    DragonSwervePoseEstimator(const DragonSwervePoseEstimator &) = delete;
-    DragonSwervePoseEstimator &operator=(const DragonSwervePoseEstimator &) = delete;
-
-    SwerveModule *m_frontLeft;
-    SwerveModule *m_frontRight;
-    SwerveModule *m_backLeft;
-    SwerveModule *m_backRight;
-    frc::SwerveDriveKinematics<4> m_kinematics;
-    frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
-
-    std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
+    DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;
+    DragonVisionPoseEstimator &operator=(const DragonVisionPoseEstimator &) = delete;
 };

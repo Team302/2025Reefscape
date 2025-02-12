@@ -20,8 +20,8 @@
 
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/DragonSwervePoseEstimator.h"
 #include "chassis/IChassis.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "chassis/states/ISwerveDriveOrientation.h"
 #include "chassis/states/ISwerveDriveState.h"
 #include "chassis/SwerveModule.h"
