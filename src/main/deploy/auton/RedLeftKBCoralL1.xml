@@ -8,64 +8,73 @@ choreoname = "BlueLeftOutside_K.traj"/>
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftOutside_K.traj"
 taleOption = "STATE_L1SCORING_POSITION"
-filename = "RedReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename= "RedLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
-filename = "RedReefPlacerZones.xml"
-time= "3.0"/>
+time= "3.0">
+<zone filename = "RedReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename= "RedLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
+
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_A1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
-filename = "RedReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_A2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename= "RedLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_B1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
-filename = "RedReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_B2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-filename= "RedLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP"
 time = "1.0"/>

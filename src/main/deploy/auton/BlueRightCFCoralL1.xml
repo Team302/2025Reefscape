@@ -9,7 +9,9 @@ choreoname = "BlueRightOutside_C.traj"/>
 choreoname = "BlueRightOutside_C.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename= "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -17,7 +19,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_C2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -25,7 +29,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_D1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename= "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -33,7 +39,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_D2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -41,7 +49,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_E1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename= "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -49,7 +59,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_E2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -57,7 +69,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_F1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename= "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -65,7 +79,9 @@ time = "3.0"/>
 choreoname = "BlueRightCSA_F2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename = "BlueRightHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP"
 time = "1.0"/>

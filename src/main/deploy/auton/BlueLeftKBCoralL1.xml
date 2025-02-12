@@ -10,6 +10,8 @@ choreoname = "BlueLeftOutside_K.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename = "BlueReefPlacerZones.xml"
 time = "3.0"/>
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -18,6 +20,8 @@ choreoname = "BlueLeftCSA_K2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename= "BlueLeftHumanPlayerStation.xml"
 time = "3.0"/>
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -26,6 +30,8 @@ choreoname = "BlueLeftCSA_L1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename = "BlueReefPlacerZones.xml"
 time= "3.0"/>
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -33,7 +39,9 @@ time= "3.0"/>
 choreoname = "BlueLeftCSA_L2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename= "BlueLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -41,7 +49,9 @@ time = "3.0"/>
 choreoname = "BlueLeftCSA_A1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename = "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -49,7 +59,9 @@ time = "3.0"/>
 choreoname = "BlueLeftCSA_A2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename= "BlueLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -57,7 +69,9 @@ time = "3.0"/>
 choreoname = "BlueLeftCSA_B1.traj"
 taleOption = "STATE_L1SCORING_POSITION"
 filename = "BlueReefPlacerZones.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
@@ -65,7 +79,9 @@ time = "3.0"/>
 choreoname = "BlueLeftCSA_B2.traj"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 filename= "BlueLeftHumanPlayerStation.xml"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP"
 time = "1.0"/>
