@@ -102,6 +102,8 @@ private:
 
     $$_TARGET_MEMBER_VARIABLES_$$
 
+    void InitializeLogging();
+
     $$_LOGGING_OBJECTS_$$
 
     $$_LOGGING_FUNCTIONS_$$
