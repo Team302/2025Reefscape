@@ -20,9 +20,9 @@
 
 // Team302 Includes
 #include "chassis/states/PolarDrive.h"
-
-/// DEBUGGING
+#include "utils/FMSData.h"
 #include "utils/logging/Logger.h"
+#include "fielddata/DragonTargetFinder.h"
 
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
@@ -31,41 +31,55 @@ using std::string;
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
+        m_reefCenter = get<1>(info.value());
+    }
+}
+
+void PolarDrive::Init(ChassisMovement &chassismovement)
+{
+    if (m_chassis != nullptr)
+    {
+        frc::Pose2d currentPose = m_chassis->GetPose();
+        units::length::meter_t xDiff = currentPose.X() - m_reefCenter.X();
+        units::length::meter_t yDiff = currentPose.Y() - m_reefCenter.Y();
+
+        m_radiusTarget = units::math::hypot(xDiff, yDiff);
+    }
 }
 
 std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     if (m_chassis != nullptr)
     {
-        units::length::meter_t reefXPos = units::length::meter_t(4.5); // TODO needs updating based on alliance and use constants
-        units::length::meter_t reefYPos = units::length::meter_t(4.0); // TODO needs updating based on alliance and use constants
-
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
         frc::Pose2d currentPose = m_chassis->GetPose();
-        double xDiff = currentPose.X().value() - reefXPos.value();
-        double yDiff = currentPose.Y().value() - reefYPos.value();
 
-        double radius = std::hypot(xDiff, yDiff);
-        double angle = std::atan2(yDiff, xDiff);
+        units::length::meter_t xDiff = currentPose.X() - m_reefCenter.X();
+        units::length::meter_t yDiff = currentPose.Y() - m_reefCenter.Y();
 
-        // Radial velocity: Changes radius
-        double radialVelocity = chassisSpeeds.vx.value(); // Forward/backward motion directly affects radius
-        radius += radialVelocity * m_loopRate * -1;       // Negative since forward decreases radius
+        units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
 
-        // Angular velocity: Changes angle
-        double angularVelocity = chassisSpeeds.vy.value() / radius; // Clockwise/counter-clockwise motion
-        angle += angularVelocity * m_loopRate;
+        double radialVelocity = chassisSpeeds.vx.value();
+        m_radiusTarget += units::length::meter_t(radialVelocity * m_loopRate);
+
+        double angularVelocity = chassisSpeeds.vy.value() / m_radiusTarget.value();
+        angle += units::angle::degree_t(angularVelocity * m_loopRate);
 
         // Convert polar velocities back to Cartesian
-        double vxNew = radialVelocity * std::cos(angle) - (radius * angularVelocity * std::sin(angle));
-        double vyNew = radialVelocity * std::sin(angle) + (radius * angularVelocity * std::cos(angle));
+        double vxNew = radialVelocity * units::math::cos(angle).value() - (m_radiusTarget.value() * angularVelocity * units::math::sin(angle).value());
+        double vyNew = radialVelocity * units::math::sin(angle).value() + (m_radiusTarget.value() * angularVelocity * units::math::cos(angle).value());
 
-        chassisSpeeds.vx = units::velocity::meters_per_second_t(vxNew);
-        chassisSpeeds.vy = units::velocity::meters_per_second_t(vyNew);
+        chassisSpeeds.vx = units::velocity::meters_per_second_t(-vxNew);
+        chassisSpeeds.vy = units::velocity::meters_per_second_t(-vyNew);
+
         auto rot2d = Rotation2d(m_chassis->GetYaw());
-        chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
-                                                                               chassisMovement.chassisSpeeds.vy,
+        chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                               chassisSpeeds.vy,
                                                                                chassisMovement.chassisSpeeds.omega,
                                                                                rot2d);
         return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
@@ -81,8 +95,4 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 std::string PolarDrive::GetDriveStateName() const
 {
     return std::string("PolarDrive");
-}
-
-void PolarDrive::Init(ChassisMovement &chassisMovement)
-{
 }
