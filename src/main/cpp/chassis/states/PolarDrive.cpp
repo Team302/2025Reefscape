@@ -22,6 +22,7 @@
 #include "chassis/states/PolarDrive.h"
 #include "utils/FMSData.h"
 #include "utils/logging/Logger.h"
+#include "fielddata/DragonTargetFinder.h"
 
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
@@ -30,8 +31,12 @@ using std::string;
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
-    frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-    m_reefCenter = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
+        m_reefCenter = get<1>(info.value());
+    }
 }
 
 void PolarDrive::Init(ChassisMovement &chassismovement)

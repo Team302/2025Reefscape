@@ -38,5 +38,5 @@ private:
     RobotDrive *m_robotDrive;
     double m_loopRate = 0.02;
     units::length::meter_t m_radiusTarget{5.0};
-    frc::Pose3d m_reefCenter;
+    frc::Pose2d m_reefCenter;
 };
