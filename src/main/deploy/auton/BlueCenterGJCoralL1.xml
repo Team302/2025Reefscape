@@ -3,56 +3,79 @@
 <auton>
 
 <primitive id = "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueInside_G.traj"/>
+choreoname = "BlueInside_G"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueInside_G.traj"
-time = "3.0"/>
+choreoname= "BlueInside_G"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--placer mech-->
-<!--possibly a zone for placer? Refer to the ppt-->
-
-<primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_G2.traj"
-time = "3.0"/>
-
-<!--intake mech if needed-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueLeftCSA_H1.traj"
-time = "3.0"/>
+choreoname = "BlueLeftCSA_G2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
-<!--Placer mech - possibility of zones?-->
-
-<primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_H2.traj"
-time = "3.0"/>
-
-<!--intake mech if needed-->
+<primitive id = "DRIVE_STOP_MECH"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_I1.traj"
-time = "3.0"/>
+choreoname= "BlueLeftCSA_H1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--placer - again...zones?-->
-
-<primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_I2.traj"
-time = "3.0"/>
-
-<!--intake mech if needed-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_J1.traj"
-time = "3.0"/>
+choreoname = "BlueLeftCSA_H2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
-<!--Placer-->
+<primitive id = "DRIVE_STOP_MECH"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_J2.traj"
-time = "3.0"/>
+choreoname = "BlueLeftCSA_I1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--intake????-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_I2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_J1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftCSA_J2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+time = "1.0"/>
 
 </auton>
