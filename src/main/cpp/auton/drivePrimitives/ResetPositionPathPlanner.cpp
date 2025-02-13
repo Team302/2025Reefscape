@@ -55,6 +55,7 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
             auto initialPose = path.get()->getStartingHolonomicPose();
             if (initialPose)
             {
+                // debugging
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "X", initialPose.value().X().value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Y", initialPose.value().Y().value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Theta", initialPose.value().Rotation().Degrees().value());
@@ -80,7 +81,6 @@ void ResetPositionPathPlanner::ResetPose(Pose2d pose)
 
     if (chassis != nullptr)
     {
-        // chassis->SetYaw(pose.Rotation().Degrees());
         chassis->ResetPose(pose);
     }
 }
