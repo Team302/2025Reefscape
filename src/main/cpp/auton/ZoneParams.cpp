@@ -14,10 +14,11 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#include <frc/geometry/Pose2d.h>
+
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParams.h"
 #include "chassis/ChassisOptionEnums.h"
-#include <frc/geometry/Pose2d.h>
 
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
 
@@ -39,14 +40,14 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 																											   m_ygrid1(ygrid1),
 																											   m_xgrid2(xgrid2),
 																											   m_ygrid2(ygrid2),
-																											   m_circlePose(circlePose),
-																											   m_radius(radius),
 																											   m_isIntakeStateChanging(isIntakeStateChanging),
 																											   m_isTaleStateChanging(isTaleStateChanging),
-																											   m_taleOption(taleOption),
 																											   m_intakeOption(intakeOption),
+																											   m_taleOption(taleOption),
 																											   m_chassisoption(autonchassisoption),
 																											   m_avoidoption(autonavoidoption),
-																											   m_zoneMode(zoneMode)
+																											   m_zoneMode(zoneMode),
+																											   m_circlePose(circlePose),
+																											   m_radius(radius)
 {
 }
