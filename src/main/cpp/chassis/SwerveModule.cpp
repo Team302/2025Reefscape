@@ -166,7 +166,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
 /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
 /// @param [in] const SwerveModuleState& targetState:   state to set the module to
 /// @returns void
-void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius)
+void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius)
 {
     // Update targets so the angle turned is less than 90 degrees
     // If the desired angle is less than 90 degrees from the target angle (e.g., -90 to 90 is the amount of turn), just use the angle and speed values
