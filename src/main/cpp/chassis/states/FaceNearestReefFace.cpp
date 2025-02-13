@@ -16,6 +16,7 @@
 // Team302 Includes
 #include "chassis/states/FaceNearestReefFace.h"
 #include "vision/DragonVision.h"
+#include "utils/logging/Logger.h"
 
 FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {
@@ -29,4 +30,20 @@ std::string FaceNearestReefFace::GetHeadingStateName() const
 DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
 {
     return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE; // there is no enum for reef face, so we use reef algae instead.. which is the same thing
+}
+units::angle::degree_t FaceNearestReefFace::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(GetTarget());
+        if (info.has_value())
+        {
+            auto targetpose = get<1>(info.value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Face Nearest Reef Face", "angle", targetpose.Rotation().Degrees().value());
+            return targetpose.Rotation().Degrees() - 180_deg;
+        }
+    }
+
+    return units::angle::degree_t(0);
 }

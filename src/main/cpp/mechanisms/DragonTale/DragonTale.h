@@ -96,13 +96,13 @@ public:
 	{
 		if (position < GetElevatorHeight())
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 20_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Velocity = 10_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 100_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
+			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
@@ -167,10 +167,10 @@ public:
 	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
 	frc::Pose3d GetReefCenter();
-	
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
-	void SetCurrentState ( int state, bool run ) override;
+	void SetCurrentState(int state, bool run) override;
 
 protected:
 	RobotIdentifier m_activeRobotId;
@@ -236,8 +236,8 @@ private:
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeActiveTarget;
 
 	double m_loopRate = 0.02;
-	double m_armChangeRate = 1 * m_loopRate;
-	double m_elevatorChangeRate = 1 * m_loopRate;
+	double m_armChangeRate = 3 * m_loopRate;
+	double m_elevatorChangeRate = 3 * m_loopRate;
 
 	bool m_manualMode = false;
 
