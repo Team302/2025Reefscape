@@ -187,6 +187,10 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     if (m_currentOrientationState != nullptr)
     {
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
+        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
     }
     else
     {
@@ -361,7 +365,7 @@ void SwerveChassis::ResetPose(const Pose2d &pose)
 //=================================================================================
 void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
 {
-    m_pigeon->SetYaw(newYaw, units::time::second_t(0.1));
+    m_pigeon->SetYaw(newYaw);
     SetStoredHeading(newYaw);
 }
 

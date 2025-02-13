@@ -84,7 +84,7 @@ public:
     /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
     /// @param [in] SwerveModuleState& referenceState:   state to set the module to
     /// @returns void
-    void SetDesiredState(frc::SwerveModuleState &state, units::velocity::meters_per_second_t inertialVelocity, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius);
+    void SetDesiredState(frc::SwerveModuleState &state, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius);
 
     void RunCurrentState();
 
