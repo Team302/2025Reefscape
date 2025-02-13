@@ -84,7 +84,7 @@ void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIE
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = "BLUE_CORAL_STATION_RIGHT_SIDEWALL";
 
 
-        frc::DataLogManager::Start("/home/lvuser/", "field_poses.wpilog");
+        frc::DataLogManager::Start("", "field_poses.wpilog");
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
     
     for (auto &[key, pose] : fieldConstantsPoseMap)
