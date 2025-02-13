@@ -245,7 +245,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         if (itr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
                         {
                             intakeChosenOption = itr->second;
-                            isIntakeStateChanging = false;
+                            isIntakeStateChanging = true;
                         }
                         else
                         {
@@ -261,7 +261,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         if (itr != DragonTale::stringToSTATE_NAMESEnumMap.end())
                         {
                             taleChosenOption = itr->second;
-                            isTaleStateChanging = false;
+                            isTaleStateChanging = true;
                         }
                     }
                     else
