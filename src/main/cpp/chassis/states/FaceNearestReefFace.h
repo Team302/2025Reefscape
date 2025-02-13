@@ -29,4 +29,5 @@ public:
 
 protected:
     DragonTargetFinderTarget GetTarget() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 };
