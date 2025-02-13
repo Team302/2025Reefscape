@@ -101,8 +101,6 @@ void DragonQuest::ZeroPosition()
 void DragonQuest::DataLog()
 {
     Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
-    std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
-    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, frc::Pose3d{units::length::meter_t(limelightpose[0]), units::length::meter_t(limelightpose[1]), units::length::meter_t(limelightpose[2]), frc::Rotation3d{units::angle::degree_t(limelightpose[3]), units::angle::degree_t(limelightpose[4]), units::angle::degree_t(limelightpose[5])}});
 }
 
 void DragonQuest::DoStuff()

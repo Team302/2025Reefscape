@@ -40,7 +40,7 @@
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public SensorData, public DragonVisionPoseEstimator
+class DragonLimelight : public DragonVisionPoseEstimator, public SensorData, public DragonDataLogger
 {
 public:
     enum CAMERA_TYPE
@@ -174,6 +174,7 @@ public:
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
+    void DataLog() override;
 
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);

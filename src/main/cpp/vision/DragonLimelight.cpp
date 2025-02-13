@@ -62,8 +62,9 @@ DragonLimelight::DragonLimelight(
     units::angle::degree_t roll,           /// <I> - Roll of camera
     LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
-    CAM_MODE camMode) : SensorData(),
-                        DragonVisionPoseEstimator(),
+    CAM_MODE camMode) : DragonVisionPoseEstimator(),
+                        SensorData(),
+                        DragonDataLogger(),
                         m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
                         m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis())
 {
@@ -584,4 +585,13 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
         }
     }
     return DragonVisionPoseEstimatorStruct();
+}
+
+void DragonLimelight::DataLog()
+{
+    auto vispose = EstimatePoseOdometryLimelight(true);
+    if (vispose.has_value())
+    {
+        Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+    }
 }
