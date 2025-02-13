@@ -293,7 +293,7 @@ void HolonomicDrive::SlowMode()
 void HolonomicDrive::PolarDrive()
 {
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::POLAR_DRIVE;
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
 }
 
 void HolonomicDrive::CheckTipping(bool isSelected)
