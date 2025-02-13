@@ -1,5 +1,5 @@
 {
- "name":"BlueLeftOutside",
+ "name":"Paths",
  "version":1,
  "type":"Swerve",
  "variables":{
@@ -9,35 +9,35 @@
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"11.375 in",
+    "val":0.288925
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"12.375 in",
+    "val":0.31432499999999997
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-11 in",
-    "val":-0.2794
+    "exp":"-11.375 in",
+    "val":-0.288925
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"12.375 in",
+    "val":0.31432499999999997
    }
   },
   "mass":{
-   "exp":"150 lbs",
-   "val":68.0388555
+   "exp":"130 lbs",
+   "val":58.9670081
   },
   "inertia":{
    "exp":"6 kg m ^ 2",
    "val":6.0
   },
   "gearing":{
-   "exp":"6.5",
-   "val":6.5
+   "exp":"6.746031746031747",
+   "val":6.746031746031747
   },
   "radius":{
    "exp":"2 in",
@@ -57,16 +57,16 @@
   },
   "bumper":{
    "front":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"17 in",
+    "val":0.4318
    },
    "side":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"18 in",
+    "val":0.4572
    },
    "back":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"17 in",
+    "val":0.4318
    }
   },
   "differentialTrackWidth":{
