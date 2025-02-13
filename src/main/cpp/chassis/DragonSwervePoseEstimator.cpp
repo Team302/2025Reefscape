@@ -58,7 +58,7 @@ void DragonSwervePoseEstimator::Update()
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
-        if (m_frontLeft == nullptr)
+        if (m_frontLeft != nullptr)
         {
             m_frontLeft = chassis->GetFrontLeft();
             m_frontRight = chassis->GetFrontRight();
