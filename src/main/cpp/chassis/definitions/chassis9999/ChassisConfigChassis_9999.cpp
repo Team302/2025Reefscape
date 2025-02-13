@@ -29,6 +29,7 @@ void ChassisConfigChassis_9999::DefinePigeon()
     string canbusName;
     canbusName.assign(TunerConstants9999::kCANBusName);
     m_pigeon2 = new Pigeon2(TunerConstants9999::kPigeonId, canbusName);
+    m_pigeon2->Reset();
 }
 
 void ChassisConfigChassis_9999::DefineChassis()

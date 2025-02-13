@@ -126,7 +126,7 @@ public:
     ISwerveDriveOrientation *GetSpecifiedHeadingState(ChassisOptionEnums::HeadingOption headingOption);
     ISwerveDriveState *GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType driveOption);
 
-    bool IsRotating() const { return m_isRotating; }
+    bool IsRotating() const { return m_rotatingLatch; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation() override;
     void DataLog() override;
@@ -182,7 +182,6 @@ private:
     ISwerveDriveOrientation *m_currentOrientationState;
     bool m_initialized = false;
     std::string m_networkTableName;
-    bool m_isRotating = false;
     bool m_rotatingLatch = false;
     bool m_initDataLog = false;
     double m_coseAngle = 0.707;
