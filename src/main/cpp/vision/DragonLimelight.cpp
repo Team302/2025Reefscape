@@ -594,6 +594,13 @@ void DragonLimelight::DataLog()
     auto vispose = EstimatePoseOdometryLimelight(true);
     if (vispose.has_value())
     {
-        Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+        if (m_identifier == DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA)
+        {
+            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+        }
+        else
+        {
+            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
+        }
     }
 }
