@@ -64,7 +64,7 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
 
         units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
 
-        double radialVelocity = chassisSpeeds.vx.value();
+        double radialVelocity = abs((chassisSpeeds.vx / m_chassis->GetMaxSpeed()).value()) > 0.25 ? chassisSpeeds.vx.value() : 0;
         m_radiusTarget += units::length::meter_t(radialVelocity * m_loopRate);
 
         double angularVelocity = chassisSpeeds.vy.value() / m_radiusTarget.value();
