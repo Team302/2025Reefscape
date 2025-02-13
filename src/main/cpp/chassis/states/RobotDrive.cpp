@@ -60,28 +60,13 @@ std::string RobotDrive::GetDriveStateName() const
 
 std::array<frc::SwerveModuleState, 4> RobotDrive::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("input vx"), chassisMovement.chassisSpeeds.vx.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("input vy"), chassisMovement.chassisSpeeds.vy.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("input omega"), chassisMovement.chassisSpeeds.omega.value());
-
     if (chassisMovement.checkTipping)
     {
         AntiTip::DecideTipCorrection(chassisMovement, m_maxspeed);
     }
-
     auto speeds = frc::ChassisSpeeds::Discretize(chassisMovement.chassisSpeeds, units::time::millisecond_t(20.0));
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("Discrete vx"), chassisMovement.chassisSpeeds.vx.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("Discrete vy"), chassisMovement.chassisSpeeds.vy.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("Discrete omega"), chassisMovement.chassisSpeeds.omega.value());
-
     wpi::array<frc::SwerveModuleState, 4> states = m_chassis->GetKinematics().ToSwerveModuleStates(speeds, chassisMovement.centerOfRotationOffset + m_centerOfRotation);
-
     m_chassis->GetKinematics().DesaturateWheelSpeeds(&states, m_chassis->GetMaxSpeed());
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("DesaturateWheelSpeeds vx"), chassisMovement.chassisSpeeds.vx.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("DesaturateWheelSpeeds vy"), chassisMovement.chassisSpeeds.vy.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("RobotDrive"), string("DesaturateWheelSpeeds omega"), chassisMovement.chassisSpeeds.omega.value());
 
     return {states[0], states[1], states[2], states[3]};
 }
