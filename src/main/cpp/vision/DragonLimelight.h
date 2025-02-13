@@ -39,83 +39,91 @@
 
 // Third Party Includes
 
+enum class DRAGON_LIMELIGHT_CAMERA_TYPE
+{
+    LIMELIGHT4,
+    LIMELIGHT4_W_HAILO8,
+    LIMELIGHT3G,
+    LIMELIGHT3,
+    LIMELIGHT3_W_CORAL
+};
+
+enum class DRAGON_LIMELIGHT_CAMERA_IDENTIFIER
+{
+    BACK_CAMERA,
+    FRONT_CAMERA
+};
+
+enum class DRAGON_LIMELIGHT_CAMERA_USAGE
+{
+    APRIL_TAGS,
+    OBJECT_DETECTION,
+    BOTH
+};
+
+enum class DRAGON_LIMELIGHT_LED_MODE
+{
+    LED_UNKNOWN = -1,
+    LED_PIPELINE_CONTROL,
+    LED_OFF,
+    LED_BLINK,
+    LED_ON
+};
+
+enum class DRAGON_LIMELIGHT_CAM_MODE
+{
+    CAM_UNKNOWN = -1,
+    CAM_VISION,
+    CAM_DRIVER
+};
+
+enum class DRAGON_LIMELIGHT_STREAM_MODE
+{
+    STREAM_UNKNOWN = -1,
+    STREAM_STANDARD,     // side by side if two cams
+    STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
+    STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
+};
+
+enum class DRAGON_LIMELIGHT_SNAPSHOT_MODE
+{
+    SNAPSHOT_MODE_UNKNOWN = -1,
+    SNAP_OFF,
+    SNAP_ON
+};
+
+enum class DRAGON_LIMELIGHT_PIPELINE
+{
+    UNKNOWN = -1,
+    OFF,
+    MACHINE_LEARNING_PL,
+    APRIL_TAG,
+    COLOR_THRESHOLD
+};
+
 // DragonLimelight needs to be a child of DragonCamera
 class DragonLimelight : public DragonVisionPoseEstimator, public SensorData, public DragonDataLogger
 {
 public:
-    enum CAMERA_TYPE
-    {
-        LIMELIGHT4,
-        LIMELIGHT4_W_HAILO8,
-        LIMELIGHT3G,
-        LIMELIGHT3,
-        LIMELIGHT3_W_CORAL
-    };
-
-    enum CAMERA_USAGE
-    {
-        BACK_CAMERA,
-        FRONT_CAMERA,
-    };
-
-    enum LED_MODE
-    {
-        LED_UNKNOWN = -1,
-        LED_PIPELINE_CONTROL,
-        LED_OFF,
-        LED_BLINK,
-        LED_ON
-    };
-
-    enum CAM_MODE
-    {
-        CAM_UNKNOWN = -1,
-        CAM_VISION,
-        CAM_DRIVER
-    };
-
-    enum STREAM_MODE
-    {
-        STREAM_UNKNOWN = -1,
-        STREAM_STANDARD,     // side by side if two cams
-        STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
-        STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
-    };
-
-    enum SNAPSHOT_MODE
-    {
-        SNAPSHOT_MODE_UNKNOWN = -1,
-        SNAP_OFF,
-        SNAP_ON
-    };
-
-    enum LL_PIPELINE
-    {
-        UNKNOWN = -1,
-        OFF,
-        MACHINE_LEARNING_PL,
-        APRIL_TAG,
-        COLOR_THRESHOLD
-    };
-
     ///-----------------------------------------------------------------------------------
     /// Method:         DragonLimelight (constructor)
     /// Description:    Create the object
     ///-----------------------------------------------------------------------------------
     DragonLimelight() = delete;
     DragonLimelight(
-        std::string name, /// <I> - network table name'
-        DragonLimelight::CAMERA_TYPE cameraType,
-        DragonLimelight::CAMERA_USAGE cameraUsage,
-        units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
-        units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
-        units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-        units::angle::degree_t pitch,          /// <I> - Pitch of camera
-        units::angle::degree_t yaw,            /// <I> - Yaw of camera
-        units::angle::degree_t roll,           /// <I> - Roll of camera
-        LL_PIPELINE initialPipeline,           /// <I> enum for starting pipeline
-        LED_MODE ledMode,
-        CAM_MODE camMode);
+        std::string name, /// <I> - network table name
+        DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier,
+        DRAGON_LIMELIGHT_CAMERA_TYPE cameraType,
+        DRAGON_LIMELIGHT_CAMERA_USAGE cameraUsage,
+        units::length::inch_t mountingXOffset,     /// <I> x offset of cam from robot center (forward relative to robot)
+        units::length::inch_t mountingYOffset,     /// <I> y offset of cam from robot center (left relative to robot)
+        units::length::inch_t mountingZOffset,     /// <I> z offset of cam from robot center (up relative to robot)
+        units::angle::degree_t pitch,              /// <I> - Pitch of camera
+        units::angle::degree_t yaw,                /// <I> - Yaw of camera
+        units::angle::degree_t roll,               /// <I> - Roll of camera
+        DRAGON_LIMELIGHT_PIPELINE initialPipeline, /// <I> enum for starting pipeline
+        DRAGON_LIMELIGHT_LED_MODE ledMode,
+        DRAGON_LIMELIGHT_CAM_MODE camMode);
 
     ///-----------------------------------------------------------------------------------
     /// Method:         ~DragonLimelight (destructor)
@@ -152,12 +160,13 @@ public:
     units::length::inch_t CalcYTargetToRobot(units::angle::degree_t camYaw, units::length::inch_t xTargetDistance, units::length::inch_t camYOffset, units::length::inch_t camXOffset, units::angle::degree_t tX);
 
     // limelight specific helper functions
-    void SetLEDMode(DragonLimelight::LED_MODE mode);
-    void SetCamMode(DragonLimelight::CAM_MODE mode);
-    void SetPipeline(DragonLimelight::LL_PIPELINE pipeline);
+    void SetLEDMode(DRAGON_LIMELIGHT_LED_MODE mode);
+    void SetCamMode(DRAGON_LIMELIGHT_CAM_MODE mode);
+    void SetPipeline(DRAGON_LIMELIGHT_PIPELINE pipeline);
     void SetPriorityTagID(int id);
     void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
+    DRAGON_LIMELIGHT_PIPELINE GetPipeline() const { return m_pipeline; }
     units::angle::degree_t GetCameraPitch() const { return m_cameraPose.Rotation().Y(); }
     units::angle::degree_t GetCameraYaw() const { return m_cameraPose.Rotation().Z(); }
     units::angle::degree_t GetCameraRoll() const { return m_cameraPose.Rotation().X(); } // rotates around x-axis
@@ -179,6 +188,7 @@ public:
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
+    DRAGON_LIMELIGHT_CAMERA_IDENTIFIER m_identifier;
     std::shared_ptr<nt::NetworkTable> m_networktable;
 
     // cached elements
@@ -195,7 +205,7 @@ protected:
     const double MAX_HB = 2000000000;
     double m_lastHeartbeat = START_HB;
     frc::Timer *m_healthTimer;
-    LL_PIPELINE m_pipeline;
+    DRAGON_LIMELIGHT_PIPELINE m_pipeline;
 
     // from old dragon camera
     std::string m_cameraName;

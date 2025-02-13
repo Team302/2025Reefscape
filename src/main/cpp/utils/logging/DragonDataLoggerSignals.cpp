@@ -52,14 +52,17 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_driveState = wpi::log::StringLogEntry(log, "/Chassis/DriveState");
     m_driveState.Append(m_currDriveState);
 
-    m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Chassis/Pose2d");
+    m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/Pose2d");
     m_pose2d.Append(m_currPose2D);
 
-    m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose3dLimelight");
-    m_pose3dLimelight.Append(m_currPose3D);
+    m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight");
+    m_pose3dLimelight.Append(m_currPose3DLimelight);
 
-    m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose3dQuest");
-    m_pose3dQuest.Append(m_currPose3D);
+    m_pose3dLimelight2 = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight2");
+    m_pose3dLimelight2.Append(m_currPose3DLimelight2);
+
+    m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dQuest");
+    m_pose3dQuest.Append(m_currPose3DQuest);
 
     m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/TargetState");
     m_frontLeftTarget.Append(m_currFrontLeftTarget);

@@ -39,14 +39,6 @@ public:
 
     enum BoolSignals
     {
-        // NOTE_MANAGER_HAS_VISION, // TODO: should this be more generic; should this be part of a vision logging?
-        // NOTE_MANAGER_FRONT_SENSOR,
-        // NOTE_MANAGER_BACK_SENSOR,
-        // NOTE_MANAGER_FEEDER_SENSOR,
-        // NOTE_MANAGER_LAUNCHER_SENSOR,
-        // NOTE_MANAGER_PLACER_IN_SENSOR,
-        // NOTE_MANAGER_PLACER_MID_SENSOR,
-        // NOTE_MANAGER_PLACER_OUT_SENSOR,
         FRONT_LEFT_SWERVE_MODULE_SPLIPING,
         FRONT_RIGHT_SWERVE_MODULE_SPLIPING,
         BACK_LEFT_SWERVE_MODULE_SPLIPING,
@@ -78,6 +70,7 @@ public:
     {
         CURRENT_CHASSIS_POSE2D,
         CURRENT_CHASSIS_LIMELIGHT_POSE3D,
+        CURRENT_CHASSIS_LIMELIGHT2_POSE3D,
         CURRENT_CHASSIS_QUEST_POSE3D
     };
 
@@ -198,10 +191,13 @@ private:
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
 
     frc::Pose2d m_currPose2D{};
-    frc::Pose3d m_currPose3D{};
+    frc::Pose3d m_currPose3DLimelight{};
+    frc::Pose3d m_currPose3DLimelight2{};
+    frc::Pose3d m_currPose3DQuest{};
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
     frc::SwerveModuleState m_currFrontLeftTarget{};
