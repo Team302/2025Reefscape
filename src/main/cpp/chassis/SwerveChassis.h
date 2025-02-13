@@ -128,7 +128,6 @@ public:
 
     bool IsRotating() const { return m_isRotating; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
-    units::velocity::meters_per_second_t GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput);
     void LogInformation() override;
     void DataLog() override;
 

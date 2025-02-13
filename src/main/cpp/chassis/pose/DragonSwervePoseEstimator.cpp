@@ -37,9 +37,7 @@ DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<
                                                                                        m_poseEstimator(kinematics, gyroAngle, positions, initialPose),
                                                                                        m_visionPoseEstimators()
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
         m_frontLeft = chassis->GetFrontLeft();
@@ -57,13 +55,9 @@ void DragonSwervePoseEstimator::RegisterVisionPoseEstimator(DragonVisionPoseEsti
 void DragonSwervePoseEstimator::Update()
 {
 
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    if (chassis != nullptr)
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+    if (chassis == nullptr)
     {
-        frc::Rotation2d rot2d{chassis->GetYaw()};
-
         if (m_frontLeft == nullptr)
         {
             m_frontLeft = chassis->GetFrontLeft();
@@ -71,6 +65,7 @@ void DragonSwervePoseEstimator::Update()
             m_backLeft = chassis->GetBackLeft();
             m_backRight = chassis->GetBackRight();
         }
+        frc::Rotation2d rot2d{chassis->GetYaw()};
 
         m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
                                                                                m_frontRight->GetPosition(),
@@ -103,10 +98,8 @@ void DragonSwervePoseEstimator::AddVisionMeasurements()
 
 void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    if (chassis != nullptr)
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+    if (chassis != nullptr && m_frontLeft != nullptr && m_frontRight != nullptr && m_backLeft != nullptr && m_backRight != nullptr)
     {
         auto yaw = chassis->GetYaw();
 

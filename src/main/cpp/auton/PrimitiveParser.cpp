@@ -358,6 +358,7 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Path Name"), param->GetPathName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
+        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Dragon Tale State"), param->GetTaleState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));

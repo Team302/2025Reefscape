@@ -266,39 +266,41 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		2,												  // double proportional
-		0.2,											  // double integral
+		2.5,											  // double proportional
+		0.35,											  // double integral
 		0,												  // double derivative
 		0.3,											  // double feedforward
-	    0.3,  //double velocityGain
-	    0.05,  //double accelartionGain
-	    0, //double staticFrictionGain,
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		true											  // bool enableFOC
+		0.3,											  // double velocityGain
+		0.05,											  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		true									// bool enableFOC
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
 		57,												  // double proportional
-		20,												  // double integral
-		7,												  // double derivative
+		25,												  // double integral
+		5,												  // double derivative
 		1.8,											  // double feedforward
-	    0.75,  //double velocityGain
-	    0.25,  //double accelartionGain
-	    0, //double staticFrictionGain,
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		true											  // bool enableFOC
+		0.75,											  // double velocityGain
+		0.25,											  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		true									// bool enableFOC
 	);
 	m_PercentOutput = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -308,16 +310,17 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
-	    0,  //double velocityGain
-	    0,  //double accelartionGain
-	    0, //double staticFrictionGain,
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		false											  // bool enableFOC
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
 	);
 
 	ReadConstants("DragonTale.xml", 9999);
@@ -376,7 +379,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = 50_tps;
+	configs.MotionMagic.MotionMagicCruiseVelocity = 75_tps;
 	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -616,8 +619,8 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValueAsDouble());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -681,37 +684,37 @@ void DragonTale::CheckForTuningEnabled()
 void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
-	m_PositionInch->SetS ( m_table.get()->GetNumber ( "PositionInch_sGain", 0 ) );
-	m_PositionInch->SetV ( m_table.get()->GetNumber ( "PositionInch_vGain", 0.3 ) );
-	m_PositionInch->SetA ( m_table.get()->GetNumber ( "PositionInch_aGain", 0.05 ) );
+	m_PositionInch->SetS(m_table.get()->GetNumber("PositionInch_sGain", 0));
+	m_PositionInch->SetV(m_table.get()->GetNumber("PositionInch_vGain", 0.3));
+	m_PositionInch->SetA(m_table.get()->GetNumber("PositionInch_aGain", 0.05));
 	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0.3));
-	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
-	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
+	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2.5));
+	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.35));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS ( m_table.get()->GetNumber ( "PositionDegree_sGain", 0 ) );
-	m_PositionDegree->SetV ( m_table.get()->GetNumber ( "PositionDegree_vGain", 0.75 ) );
-	m_PositionDegree->SetA ( m_table.get()->GetNumber ( "PositionDegree_aGain", 0.25 ) );
+	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
+	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0.75));
+	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0.25));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 57));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 20));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 7));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 25));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 5));
 }
 
 void DragonTale::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionInch_iZone", m_PositionInch->GetIZone());
-	m_table.get()->PutNumber ( "PositionInch_sGain", m_PositionInch->GetS() );
-	m_table.get()->PutNumber ( "PositionInch_vGain", m_PositionInch->GetV() );
-	m_table.get()->PutNumber ( "PositionInch_aGain", m_PositionInch->GetA() );
+	m_table.get()->PutNumber("PositionInch_sGain", m_PositionInch->GetS());
+	m_table.get()->PutNumber("PositionInch_vGain", m_PositionInch->GetV());
+	m_table.get()->PutNumber("PositionInch_aGain", m_PositionInch->GetA());
 	m_table.get()->PutNumber("PositionInch_fGain", m_PositionInch->GetF());
 	m_table.get()->PutNumber("PositionInch_pGain", m_PositionInch->GetP());
 	m_table.get()->PutNumber("PositionInch_iGain", m_PositionInch->GetI());
 	m_table.get()->PutNumber("PositionInch_dGain", m_PositionInch->GetD());
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber ( "PositionDegree_sGain", m_PositionDegree->GetS() );
-	m_table.get()->PutNumber ( "PositionDegree_vGain", m_PositionDegree->GetV() );
-	m_table.get()->PutNumber ( "PositionDegree_aGain", m_PositionDegree->GetA() );
+	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
+	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
+	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
