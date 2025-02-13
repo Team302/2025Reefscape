@@ -28,10 +28,11 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
         fieldConstantsPoseMap[key] = fieldConstantsPoseMap[m_transformConstantsMap[key].referencePose] + m_transformConstantsMap[key].transform;
     }
 
-    #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
+#ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
     FieldConstantsPoseLogger fpl;
     fpl.LogFieldElementPoses(fieldConstantsPoseMap);
-    #endif
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("PoseLogger"), std::string("Logging"), std::string(""));
+#endif
 }
 
 void FieldElementCalculator::InitializeTransforms()
