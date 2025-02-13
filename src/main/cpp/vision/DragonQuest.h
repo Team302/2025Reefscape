@@ -13,31 +13,37 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <networktables/NetworkTableInstance.h>
-#include <networktables/NetworkTable.h>
-#include <networktables/NetworkTableEntry.h>
-#include "networktables/DoubleArrayTopic.h"
-#include "utils/logging/DragonDataLogger.h"
 #include <string>
 #include <vector>
+
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
+#include <networktables/NetworkTableInstance.h>
+
+#include "chassis/pose/DragonVisionPoseEstimator.h"
+#include "chassis/SwerveChassis.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Rotation3d.h"
-
+#include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
+#include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/Logger.h"
+#include "vision/DragonVisionStructs.h"
 
 using namespace std;
 
-class DragonQuest : public DragonDataLogger
+class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 
 {
 public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog() override;
+
+    DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
 
 private:
     DragonQuest();
@@ -77,4 +83,7 @@ private:
 
     bool m_hasreset = false;
     int m_loopcounter = 0;
+
+    const double m_stdxy = 0.5;
+    const double m_stddeg = 6.0;
 };

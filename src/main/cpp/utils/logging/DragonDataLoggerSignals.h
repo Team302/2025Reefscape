@@ -21,10 +21,8 @@
 
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
-
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveModuleState.h"
-
 #include "wpi/DataLog.h"
 
 class DragonDataLoggerSignals
@@ -67,13 +65,6 @@ public:
         LIMELIGHT_TX_1,
         LIMELIGHT_TY_1,
         LIMELIGHT_FIDUCIAL_ID_1
-        // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
-        // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
-        // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_TARGET_BOTTOM_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_BOTTOM_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_DISTANCE_FROM_SPEAKER_METERS // TODO: should this be more generic - the whole robot is a certain distance; do we need angle too?
     };
 
     enum StringSignals
@@ -81,7 +72,6 @@ public:
         CHASSIS_HEADING_STATE,
         CHASSIS_DRIVE_STATE,
         AUTON_PATH_NAME
-        // NOTE_MANAGER_STATE
     };
 
     enum PoseSingals
@@ -205,9 +195,6 @@ private:
 
     wpi::log::StringLogEntry m_driveState;
     std::string m_currDriveState{""};
-
-    // wpi::log::StringLogEntry m_noteMgrState;
-    // std::string m_currNoteMgrState{""};
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
