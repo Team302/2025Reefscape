@@ -17,6 +17,10 @@
 #include <feedback/LEDStates.h>
 #include <span>
 
+#ifndef __FRC_ROBORIO__
+#define DESKTOP_SIM
+#endif
+
 void LEDStates::BlinkingPattern(DragonLeds::Colors c)
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
@@ -154,7 +158,12 @@ void LEDStates::BreathingPattern(DragonLeds::Colors c)
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
         // brightness follows sin wave shifted to range [0, 254] with period of m_breathePatternPeriod ticks
-        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;
+#ifdef DESKTOP_SIM
+        constexpr double pi = 3.14159265358979323846;
+        int brightness = (std::sin(m_timer * 2 * pi / m_breathePatternPeriod) + 1) * 127;
+#else
+        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;    
+#endif
         m_LEDstring->setBufferAllLEDsColorBrightness(c, brightness);
         m_LEDstring->commitLedData();
         m_timer++;

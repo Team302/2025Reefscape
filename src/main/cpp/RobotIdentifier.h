@@ -22,6 +22,7 @@ enum class RobotIdentifier
     CHASSIS_BOT_9997 = 9997,
 	PRACTICE_BOT_9999 = 9999,
 	COMP_BOT_302 = 302,
+    SIM_BOT_0 = 0,
 
     MAX_ROBOT_IDENTIFIERS
 };
