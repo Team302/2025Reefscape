@@ -42,17 +42,23 @@ void CameraConfigMgr::InitCameras(RobotIdentifier id)
     {
 
     case RobotIdentifier::CHASSIS_BOT_9997:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
+        m_config = new CameraConfig_9997();
+        break;
+
+    case RobotIdentifier::SIM_BOT_0:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
         m_config = new CameraConfig_9997();
         break;
 
     default:
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Skipping camera initialization because of unknown robot id "), string(""), static_cast<int>(id));
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Skipping camera initialization because of unknown robot id "), static_cast<int>(id));
         break;
     }
 
     if (m_config != nullptr)
     {
         m_config->BuildCameraConfig();
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Initialization completed for robot cameras "), string(""), static_cast<int>(id));
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT_ONCE, string("Camera Init"), string("Initialization completed for robot cameras "), static_cast<int>(id));
     }
 }
