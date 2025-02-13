@@ -31,6 +31,7 @@
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/HoldDrive.h"
 #include "chassis/states/RobotDrive.h"
+#include "chassis/states/PolarDrive.h"
 #include "chassis/states/StopDrive.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/states/IgnoreHeading.h"
@@ -38,6 +39,9 @@
 #include "chassis/states/MaintainHeading.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "chassis/states/FaceGamePiece.h"
+#include "chassis/states/FaceReefCenter.h"
+#include "chassis/states/FaceNearestReefFace.h"
+#include "chassis/states/FaceNearestCoralStation.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
@@ -45,6 +49,7 @@
 
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
+#include <ctre/phoenix6/StatusSignal.hpp>
 
 using std::map;
 using std::string;
@@ -99,8 +104,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     ResetPose(frc::Pose2d());
     SetStoredHeading(units::angle::degree_t(0.0));
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
-    m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
+
+    ctre::phoenix6::BaseStatusSignal::SetUpdateFrequencyForAll(100_Hz, m_pigeon->GetYaw(), m_pigeon->GetPitch(), m_pigeon->GetRoll(), m_pigeon->GetAccelerationX(), m_pigeon->GetAccelerationY());
 
     m_swervePoseEstimator = new DragonSwervePoseEstimator(m_kinematics,
                                                           Rotation2d(),
@@ -130,6 +136,7 @@ void SwerveChassis::InitStates()
     auto trajectoryDrivePathPlanner = new TrajectoryDrivePathPlanner(m_robotDrive);
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::POLAR_DRIVE] = new PolarDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::HOLD_DRIVE] = new HoldDrive();
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
@@ -139,6 +146,9 @@ void SwerveChassis::InitStates()
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE] = new FaceGamePiece();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER] = new FaceReefCenter();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_FACE] = new FaceNearestReefFace();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION] = new FaceNearestCoralStation();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::IGNORE] = new IgnoreHeading();
 }
 
@@ -159,9 +169,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
-
-    LogInformation();
-
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
@@ -179,7 +186,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), m_currentOrientationState->GetHeadingOption());
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
     }
     else
@@ -191,11 +197,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     if (m_currentDriveState != nullptr)
     {
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
-
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
     }
     else
     {
@@ -283,7 +284,7 @@ Pose2d SwerveChassis::GetPose() const
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
 {
-    return m_pigeon->GetYaw().WaitForUpdate(100_ms).Refresh().GetValue();
+    return m_pigeon->GetYaw().Refresh().GetValue();
 }
 
 //==================================================================================
@@ -403,39 +404,6 @@ units::angular_velocity::radians_per_second_t SwerveChassis::GetMaxAngularSpeed(
     auto angSpeed = units::angular_velocity::turns_per_second_t(GetMaxSpeed().to<double>() / circumference.to<double>());
     units::angular_velocity::radians_per_second_t retval = angSpeed;
     return retval;
-}
-
-//==================================================================================
-units::velocity::meters_per_second_t SwerveChassis::GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput)
-{
-    units::acceleration::meters_per_second_squared_t accelerationX = m_pigeon->GetAccelerationX().GetValue();
-    units::acceleration::meters_per_second_squared_t accelerationY = m_pigeon->GetAccelerationY().GetValue();
-
-    units::time::second_t deltaTime = m_velocityTimer.Get();
-
-    m_velocityTimer.Reset();
-    m_velocityTimer.Start();
-
-    bool noInput = (units::math::abs(xVelocityInput) < m_velocityThresold) && (units::math::abs(yVelocityInput) < m_velocityThresold);
-
-    // If both accelerations are below the threshold, set velocity to 0
-    if (((units::math::abs(accelerationX) < m_accelerationThreshold) ||
-         (units::math::abs(accelerationY) < m_accelerationThreshold)) &&
-        noInput)
-    {
-        m_currVelocity = {0_mps, 0_mps};
-    }
-    else
-    {
-        m_currVelocity.x += accelerationX * deltaTime;
-        m_currVelocity.y += accelerationY * deltaTime;
-    }
-
-    // Calculate the magnitude of the accumulated velocity vector
-    units::velocity::meters_per_second_t velocityMagnitude = units::velocity::meters_per_second_t{std::sqrt(std::pow(m_currVelocity.x.to<double>(), 2) + std::pow(m_currVelocity.y.to<double>(), 2))};
-
-    // Return the magnitude of the velocity
-    return velocityMagnitude;
 }
 
 //==================================================================================

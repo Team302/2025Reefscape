@@ -3,54 +3,79 @@
 <auton>
 
 <primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueRightOutside_C.traj"/>
+choreoname = "BlueRightOutside_C"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightOutside_C.traj"
-time = "3.0"/>
+choreoname = "BlueRightOutside_C"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename= "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--add in a placer mech-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_C2.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_C2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
-<!--add in an intake mech if any-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_D1.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_D1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename= "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--add in a placer mech-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_D2.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_D2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
-<!--add in an intake mech if any-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_E1.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_E1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename= "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--add in a placer mech-->
-
-<primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_E2.traj"
-time = "3.0"/>
-
-<!--add in an intake mech if needed-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_F1.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_E2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
-<!--add in a placer mech-->
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightCSA_F2.traj"
-time = "3.0"/>
+choreoname = "BlueRightCSA_F1"
+taleOption = "STATE_L1SCORING_POSITION"
+time = "3.0">
+<zone filename= "BlueReefPlacerZones.xml"/>
+</primitive>
 
-<!--add in an intake mech if needed-->
+<primitive id = "DRIVE_STOP_MECH"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueRightCSA_F2"
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+time = "1.0"/>
 
 </auton>

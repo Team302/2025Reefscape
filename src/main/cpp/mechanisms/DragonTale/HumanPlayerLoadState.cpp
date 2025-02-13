@@ -80,6 +80,7 @@ bool HumanPlayerLoadState::IsTransitionCondition(bool considerGamepadTransitions
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 	return ((((m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_REEF) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR)) && m_mechanism->IsCoralMode()) ||
-			(m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetCoralOutSensorState() && !m_mechanism->GetManualMode()));
+			(m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetCoralOutSensorState() && !m_mechanism->GetManualMode()) ||
+			(m_mechanism->IsCoralMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && (m_mechanism->GetCurrentState() == m_mechanism->STATE_READY)));
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

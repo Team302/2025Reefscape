@@ -19,9 +19,9 @@
 #include "auton/drivePrimitives/DrivePathPlanner.h"
 #include "auton/drivePrimitives/DriveStop.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
+#include "auton/drivePrimitives/DriveStopMech.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionPathPlanner.h"
-#include "auton/drivePrimitives/ResetPositionPathPlannerNoVision.h"
 #include "auton/drivePrimitives/VisionDrivePrimitive.h"
 #include "auton/PrimitiveEnums.h"
 #include "auton/PrimitiveFactory.h"
@@ -40,9 +40,9 @@ PrimitiveFactory *PrimitiveFactory::GetInstance()
 
 PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
                                        m_DriveStopDelay(nullptr),
+                                       m_driveStopMech(nullptr),
                                        m_DriveHoldPosition(nullptr),
                                        m_resetPositionPathPlanner(nullptr),
-                                       m_resetPositionPathPlannerNoVision(nullptr),
                                        m_drivePathPlanner(nullptr)
 {
 }
@@ -71,6 +71,13 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
         }
         primitive = m_DriveStopDelay;
         break;
+    case DO_NOTHING_MECHANISMS:
+        if (m_driveStopMech == nullptr)
+        {
+            m_driveStopMech = new DriveStopMech();
+        }
+        primitive = m_driveStopMech;
+        break;
 
     case HOLD_POSITION:
         if (m_DriveHoldPosition == nullptr)
@@ -86,14 +93,6 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
             m_resetPositionPathPlanner = new ResetPositionPathPlanner();
         }
         primitive = m_resetPositionPathPlanner;
-        break;
-
-    case RESET_POSITION_PATH_PLANNER_NO_VISION:
-        if (m_resetPositionPathPlannerNoVision == nullptr)
-        {
-            m_resetPositionPathPlannerNoVision = new ResetPositionPathPlannerNoVision();
-        }
-        primitive = m_resetPositionPathPlannerNoVision;
         break;
 
     case DRIVE_PATH_PLANNER:

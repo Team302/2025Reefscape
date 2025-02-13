@@ -373,20 +373,20 @@ std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT 
 	{
 		// TODO: JW need to handle multiple tags
 	case VISION_ELEMENT::REEF:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)}; /*load blue reef*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;																																																											   // should be red 6-11, blue 17-22
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)}; /*load blue reef*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;																																																													   // should be red 6-11, blue 17-22
 		break;
 	case VISION_ELEMENT::PROCESSOR:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR)} /*load red processor*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR)}; /*load blue processor*/
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR)} /*load red processor*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR)}; /*load blue processor*/
 		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;
 		break;
 	case VISION_ELEMENT::CORAL_STATION:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL)} /*load red coral station*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL)}; /*load blue coral station*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																																						// should be red 1 or 2, blue 12 or 13
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL)} /*load red coral station*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL)}; /*load blue coral station*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																																								// should be red 1 or 2, blue 12 or 13
 		break;
 	case VISION_ELEMENT::BARGE:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT)} /*load red barge*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElement(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT)}; /*load blue barge*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																												// should be red 5 or 15, blue 4 or 14
+		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT)} /*load red barge*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT)}; /*load blue barge*/
+		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																														// should be red 5 or 15, blue 4 or 14
 		break;
 	default:
 		return std::nullopt;

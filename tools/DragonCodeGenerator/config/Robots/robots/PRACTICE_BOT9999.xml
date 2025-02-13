@@ -74,6 +74,7 @@
               <type>UInt32</type>
               <value>7</value>
             </canID>
+            <canBusName>canivore</canBusName>
             <pdpID>
               <unitsFamily>none</unitsFamily>
               <name>uintParameter</name>
@@ -324,6 +325,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>
@@ -609,14 +631,14 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </enableStatorCurrentLimit>
               <statorCurrentLimit>
                 <unitsFamily>current</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>120</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -815,6 +837,7 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
+              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
@@ -827,7 +850,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.1273239545</value>
+                <value>0.108878152421</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
@@ -993,7 +1016,6 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
-              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -1685,6 +1707,7 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
+              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -1807,7 +1830,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.030518</value>
+              <value>-0.15673828125</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -1828,14 +1851,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>2</value>
+                <value>2.5</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.2</value>
+                <value>0.35</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
@@ -1858,6 +1881,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.3</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.05</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>
@@ -1912,14 +1956,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>20</value>
+                <value>25</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>7</value>
+                <value>5</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
@@ -1935,6 +1979,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.75</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.25</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>
@@ -2012,6 +2077,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>
@@ -2308,7 +2394,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>80.25</value>
+                  <value>90</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3821,7 +3907,7 @@
                   <name>boolParameter</name>
                   <__units__ />
                   <type>Boolean</type>
-                  <value>true</value>
+                  <value>false</value>
                 </Enabled>
                 <controlDataName>PercentOutput</controlDataName>
               </motorTarget>
@@ -3866,6 +3952,13 @@
           <state>
             <name>ManualCoralLoad</name>
             <transitionsTo>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
                 <unitsFamily>none</unitsFamily>
                 <name>stringParameterConstInMechInstance</name>
@@ -4004,6 +4097,13 @@
                 <name>stringParameterConstInMechInstance</name>
                 <__units__ />
                 <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
                 <value>Process</value>
               </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
@@ -4125,6 +4225,13 @@
           <state>
             <name>ManualGrabAlgaeFloor</name>
             <transitionsTo>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>Ready</value>
+              </stringParameterConstInMechInstance>
               <stringParameterConstInMechInstance>
                 <unitsFamily>none</unitsFamily>
                 <name>stringParameterConstInMechInstance</name>
@@ -4848,6 +4955,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>
@@ -4924,6 +5052,27 @@
                 <type>Double</type>
                 <value>0</value>
               </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </aGain>
             </PID>
             <peakValue>
               <unitsFamily>none</unitsFamily>

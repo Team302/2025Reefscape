@@ -20,6 +20,7 @@
 
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "state/State.h"
+#include "frc/Timer.h"
 
 using namespace std;
 
@@ -48,5 +49,7 @@ namespace DragonTaleStates
 		const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t(0);
 		const double m_CoralTarget = double(0);
 		const double m_AlgaeTarget = double(0);
+
+		frc::Timer *m_scoringTimer;
 	};
 }

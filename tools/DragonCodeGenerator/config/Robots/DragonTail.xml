@@ -343,6 +343,7 @@
         <value>false</value>
       </enableFollowID>
       <remoteSensor>
+        <Source>CANCoder</Source>
         <CanID>
           <unitsFamily>none</unitsFamily>
           <name>uintParameter</name>
@@ -1387,6 +1388,27 @@
           <type>Double</type>
           <value>0</value>
         </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
       </PID>
       <peakValue>
         <unitsFamily>none</unitsFamily>
@@ -1464,6 +1486,27 @@
           <type>Double</type>
           <value>0</value>
         </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
       </PID>
       <peakValue>
         <unitsFamily>none</unitsFamily>
@@ -1541,6 +1584,27 @@
           <type>Double</type>
           <value>0</value>
         </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
       </PID>
       <peakValue>
         <unitsFamily>none</unitsFamily>
@@ -3323,7 +3387,7 @@
             <name>boolParameter</name>
             <__units__ />
             <type>Boolean</type>
-            <value>true</value>
+            <value>false</value>
           </Enabled>
           <controlDataName>PercentOutput</controlDataName>
         </motorTarget>
@@ -3368,6 +3432,13 @@
     <state>
       <name>ManualCoralLoad</name>
       <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Ready</value>
+        </stringParameterConstInMechInstance>
         <stringParameterConstInMechInstance>
           <unitsFamily>none</unitsFamily>
           <name>stringParameterConstInMechInstance</name>
@@ -3505,6 +3576,13 @@
           <name>stringParameterConstInMechInstance</name>
           <__units__ />
           <type>String</type>
+          <value>Ready</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
           <value>Process</value>
         </stringParameterConstInMechInstance>
         <stringParameterConstInMechInstance>
@@ -3625,6 +3703,13 @@
     <state>
       <name>ManualGrabAlgaeFloor</name>
       <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Ready</value>
+        </stringParameterConstInMechInstance>
         <stringParameterConstInMechInstance>
           <unitsFamily>none</unitsFamily>
           <name>stringParameterConstInMechInstance</name>

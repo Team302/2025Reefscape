@@ -7,35 +7,74 @@ choreoname = "BlueLeftOutside_L.traj"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftOutside_L.traj"
-time = "4.0"/>
+taleOption = "STATE_L1SCORING_POSITION"
+time = "4.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2.traj"
-time = "4.0"/>
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "4.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K1"
-time = "4.0"
-/>
+taleOption = "STATE_L1SCORING_POSITION"
+time = "4.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
-time = "4.0"/>
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "4.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J1"
-time = "4.0"/>
+taleOption = "STATE_L1SCORING_POSITION"
+time = "4.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J2"
-time = "4.0"/>
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "4.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I1"
-time = "4.0"/>
+taleOption = "STATE_L1SCORING_POSITION"
+time = "4.0">
+<zone filename = "BlueReefPlacerZones.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I2"
-time = "4.0"/>
+taleOption = "STATE_HUMAN_PLAYER_LOAD"
+time = "4.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
+<primitive id = "DRIVE_STOP_MECH"
+time = "1.0"/>
 </auton>
