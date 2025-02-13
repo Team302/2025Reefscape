@@ -20,6 +20,7 @@
 #include <vector>
 
 // FRC includes
+
 #include "frc/Timer.h"
 #include "networktables/NetworkTable.h"
 #include "units/angle.h"
@@ -28,16 +29,18 @@
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/DriverStation.h"
-#include "vision/DragonVisionStructs.h"
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
 #include "utils/logging/DragonDataLogger.h"
+#include "vision/DragonVisionStructs.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
+#include "chassis/SwerveChassis.h"
 
 // Third Party Includes
 
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public SensorData
+class DragonLimelight : public SensorData, public DragonVisionPoseEstimator
 {
 public:
     enum CAMERA_TYPE
@@ -170,6 +173,8 @@ public:
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
+    DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
+
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
@@ -195,4 +200,11 @@ protected:
     std::string m_cameraName;
     frc::Pose3d m_cameraPose;
     const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);
+    SwerveChassis *m_chassis;
+    const double m_maxRotationRateDegreesPerSec = 720.0;
+    const double m_yawRate = 0.0;
+    const double m_pitch = 0.0;
+    const double m_pitchRate = 0.0;
+    const double m_roll = 0.0;
+    const double m_rollRate = 0.0;
 };

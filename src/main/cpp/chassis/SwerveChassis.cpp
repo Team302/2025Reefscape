@@ -94,8 +94,7 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_swervePoseEstimator(nullptr),
                                                                             m_storedYaw(units::angle::degree_t(0.0)),
                                                                             m_targetHeading(units::angle::degree_t(0.0)),
-                                                                            m_networkTableName(networkTableName),
-                                                                            m_vision(DragonVision::GetDragonVision())
+                                                                            m_networkTableName(networkTableName)
 {
     InitStates();
     ZeroAlignSwerveModules();

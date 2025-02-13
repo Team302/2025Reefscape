@@ -32,6 +32,8 @@
 #include "units/time.h"
 
 // Team 302 includes
+#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 #include "vision/DragonLimelight.h"
 #include "utils/logging/Logger.h"
 #include "vision/DragonVision.h"
@@ -61,7 +63,9 @@ DragonLimelight::DragonLimelight(
     LL_PIPELINE initialPipeline,           /// <I> enum for pipeline
     LED_MODE ledMode,
     CAM_MODE camMode) : SensorData(),
-                        m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName)))
+                        DragonVisionPoseEstimator(),
+                        m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
+                        m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis())
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
@@ -553,4 +557,31 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
     }
 
     return std::nullopt;
+}
+
+DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
+{
+    if (m_chassis != nullptr && m_chassis->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
+    {
+        LimelightHelpers::SetRobotOrientation(GetCameraName(),
+                                              m_chassis->GetYaw().value(),
+                                              m_yawRate,
+                                              m_pitch,
+                                              m_pitchRate,
+                                              m_roll,
+                                              m_rollRate);
+
+        std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
+
+        if (megaTag2Pose.has_value())
+        {
+            DragonVisionPoseEstimatorStruct str;
+            str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+            str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
+            str.m_timeStamp = megaTag2Pose.value().timeStamp;
+            str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
+            return str;
+        }
+    }
+    return DragonVisionPoseEstimatorStruct();
 }

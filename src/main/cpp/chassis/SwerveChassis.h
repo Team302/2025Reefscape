@@ -41,7 +41,6 @@
 #include "units/velocity.h"
 #include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/LoggableItem.h"
-#include "vision/DragonVision.h"
 #include "wpi/DataLog.h"
 
 class RobotDrive;
@@ -188,7 +187,6 @@ private:
     bool m_rotatingLatch = false;
     bool m_initDataLog = false;
     double m_coseAngle = 0.707;
-    DragonVision *m_vision;
     std::array<frc::SwerveModuleState, 4U> m_targetStates;
     units::mass::kilogram_t m_mass = units::mass::kilogram_t(52.0);                                                                // TODO put a real value in
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
