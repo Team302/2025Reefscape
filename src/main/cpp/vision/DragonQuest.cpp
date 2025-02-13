@@ -12,6 +12,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
+#include "units/time.h"
 #include "vision/DragonQuest.h"
 
 DragonQuest *DragonQuest::m_dragonquest = nullptr;
@@ -100,8 +101,6 @@ void DragonQuest::ZeroPosition()
 void DragonQuest::DataLog()
 {
     Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
-    std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
-    Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, frc::Pose3d{units::length::meter_t(limelightpose[0]), units::length::meter_t(limelightpose[1]), units::length::meter_t(limelightpose[2]), frc::Rotation3d{units::angle::degree_t(limelightpose[3]), units::angle::degree_t(limelightpose[4]), units::angle::degree_t(limelightpose[5])}});
 }
 
 void DragonQuest::DoStuff()
@@ -128,4 +127,14 @@ void DragonQuest::ResetWithLimelightData()
             m_yawOffset += limelightpose[5];
         }
     }
+}
+
+DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
+{
+    DragonVisionPoseEstimatorStruct str;
+    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+    str.m_visionPose = GetEstimatedPose().ToPose2d();
+    str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+    str.m_timeStamp = units::time::second_t(GetTimeStamp());
+    return str;
 }
