@@ -105,6 +105,7 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
                                                       GoalEndState(0.0_mps, targetPose.Rotation().Degrees(), true));
 
     return csapath->getTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation());*/
+    return pathplanner::PathPlannerTrajectory();
 }
 
 bool DriveToCoralStation::IsDone()

@@ -18,6 +18,7 @@
 
 // Includes
 #include <string>
+#include <filesystem>
 #include <vector>
 #include <sys/stat.h>
 #include <fstream>
@@ -52,7 +53,7 @@ AutonSelector::AutonSelector()
 string AutonSelector::GetSelectedAutoFile()
 {
 	std::string autonfile(frc::filesystem::GetDeployDirectory());
-	autonfile += std::string("/auton/");
+	autonfile += std::filesystem::path("/auton/").string();
 	autonfile += GetAlianceColor();
 	autonfile += GetStartPos();
 	autonfile += GetTargetFace();
@@ -75,7 +76,7 @@ string AutonSelector::GetSelectedAutoFile()
 	if (!fileExists || !fileValid)
 	{
 		autonfile = frc::filesystem::GetDeployDirectory();
-		autonfile += std::string("/auton/");
+		autonfile += std::filesystem::path("/auton/").string();
 		autonfile += GetAlianceColor();
 		autonfile += ("DefaultFile.xml");
 	}

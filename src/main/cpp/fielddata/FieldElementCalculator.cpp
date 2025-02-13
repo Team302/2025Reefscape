@@ -22,10 +22,16 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
     InitializeTransforms();
     CalculateCenters(fieldConstantsPoseMap);
 
-    // Iterate and update values
-    for (auto &[key, translatedPose] : fieldConstantsPoseMap)
+    // update all of the calculated values only
+    for (auto &[key, translatedPose] : m_transformCalculatedMap)
     {
-        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[m_transformConstantsMap[key].referencePose] + m_transformConstantsMap[key].transform;
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[m_transformCalculatedMap[key].referencePose] + m_transformCalculatedMap[key].transform + m_halfRobotTransform;
+    }
+
+    // after transform the tags, if the tags are transformed first it doubly transforms the calculated values
+    for (auto &[key, unusedValue] : m_transformTagsMap)
+    {
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[key] + m_halfRobotTransform;
     }
 
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
@@ -38,137 +44,113 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
 void FieldElementCalculator::InitializeTransforms()
 {
 
-    // no transforms for april tags on blue side
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT] =
-        TransformToPose{FieldConstants::BLUE_CORAL_STATION_LEFT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT] =
-        TransformToPose{FieldConstants::BLUE_CORAL_STATION_RIGHT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_PROCESSOR] =
-        TransformToPose{FieldConstants::BLUE_PROCESSOR, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_BARGE_FRONT] =
-        TransformToPose{FieldConstants::BLUE_BARGE_FRONT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_BARGE_BACK] =
-        TransformToPose{FieldConstants::BLUE_BARGE_BACK, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_AB] =
-        TransformToPose{FieldConstants::BLUE_REEF_AB, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_CD] =
-        TransformToPose{FieldConstants::BLUE_REEF_CD, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_EF] =
-        TransformToPose{FieldConstants::BLUE_REEF_EF, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_GH] =
-        TransformToPose{FieldConstants::BLUE_REEF_GH, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_IJ] =
-        TransformToPose{FieldConstants::BLUE_REEF_IJ, m_noTransform};
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_KL] =
-        TransformToPose{FieldConstants::BLUE_REEF_KL, m_noTransform};
+    // no transforms for april tags on blue side 
+    // TODO: can these all be null and then not use the values in the 2nd formula?
+    m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_LEFT];
+    m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT];
+    m_transformTagsMap[FieldConstants::BLUE_PROCESSOR];
+    m_transformTagsMap[FieldConstants::BLUE_BARGE_FRONT];
+    m_transformTagsMap[FieldConstants::BLUE_BARGE_BACK];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_AB];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_CD];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_EF];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_GH];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_IJ];
+    m_transformTagsMap[FieldConstants::BLUE_REEF_KL];
 
     // Blue Calculated Positions
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT_ALLIANCE] =
+    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_LEFT_ALLIANCE] =
         TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_LEFT_SIDEWALL] =
+    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_LEFT_SIDEWALL] =
         TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_ALLIANCE] =
+    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_ALLIANCE] =
         TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
-    m_transformConstantsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_SIDEWALL] =
+    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_SIDEWALL] =
         TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
-    m_transformConstantsMap[FieldConstants::BLUE_LEFT_CAGE] =
+    m_transformCalculatedMap[FieldConstants::BLUE_LEFT_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_calcCageLeft);
-    m_transformConstantsMap[FieldConstants::BLUE_RIGHT_CAGE] =
+    m_transformCalculatedMap[FieldConstants::BLUE_RIGHT_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_calcCageRight);
-    m_transformConstantsMap[FieldConstants::BLUE_CENTER_CAGE] =
+    m_transformCalculatedMap[FieldConstants::BLUE_CENTER_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_noTransform);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_A] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_A] =
         TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_B] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_B] =
         TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_C] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_C] =
         TransformToPose(FieldConstants::BLUE_REEF_CD, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_D] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_D] =
         TransformToPose(FieldConstants::BLUE_REEF_CD, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_E] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_E] =
         TransformToPose(FieldConstants::BLUE_REEF_EF, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_F] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_F] =
         TransformToPose(FieldConstants::BLUE_REEF_EF, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_G] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_G] =
         TransformToPose(FieldConstants::BLUE_REEF_GH, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_H] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_H] =
         TransformToPose(FieldConstants::BLUE_REEF_GH, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_I] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_I] =
         TransformToPose(FieldConstants::BLUE_REEF_IJ, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_J] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_J] =
         TransformToPose(FieldConstants::BLUE_REEF_IJ, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_K] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_K] =
         TransformToPose(FieldConstants::BLUE_REEF_KL, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_L] =
+    m_transformCalculatedMap[FieldConstants::BLUE_REEF_L] =
         TransformToPose(FieldConstants::BLUE_REEF_KL, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::BLUE_REEF_CENTER] =
-        TransformToPose(FieldConstants::BLUE_REEF_CENTER, m_noTransform);
+
 
     // no transforms for april tags on red side
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_LEFT] =
-        TransformToPose{FieldConstants::RED_CORAL_STATION_LEFT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_RIGHT] =
-        TransformToPose{FieldConstants::RED_CORAL_STATION_RIGHT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_PROCESSOR] =
-        TransformToPose{FieldConstants::RED_PROCESSOR, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_BARGE_FRONT] =
-        TransformToPose{FieldConstants::RED_BARGE_FRONT, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_BARGE_BACK] =
-        TransformToPose{FieldConstants::RED_BARGE_BACK, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_AB] =
-        TransformToPose{FieldConstants::RED_REEF_AB, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_CD] =
-        TransformToPose{FieldConstants::RED_REEF_CD, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_EF] =
-        TransformToPose{FieldConstants::RED_REEF_EF, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_GH] =
-        TransformToPose{FieldConstants::RED_REEF_GH, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_IJ] =
-        TransformToPose{FieldConstants::RED_REEF_IJ, m_noTransform};
-    m_transformConstantsMap[FieldConstants::RED_REEF_KL] =
-        TransformToPose{FieldConstants::RED_REEF_KL, m_noTransform};
+    m_transformTagsMap[FieldConstants::RED_CORAL_STATION_LEFT];
+    m_transformTagsMap[FieldConstants::RED_CORAL_STATION_RIGHT];
+    m_transformTagsMap[FieldConstants::RED_BARGE_FRONT];
+    m_transformTagsMap[FieldConstants::RED_BARGE_BACK];
+    m_transformTagsMap[FieldConstants::RED_REEF_AB];
+    m_transformTagsMap[FieldConstants::RED_REEF_CD];
+    m_transformTagsMap[FieldConstants::RED_REEF_EF];
+    m_transformTagsMap[FieldConstants::RED_REEF_GH];
+    m_transformTagsMap[FieldConstants::RED_REEF_IJ];
+    m_transformTagsMap[FieldConstants::RED_REEF_KL];
 
     // Red Calculated Positions
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_LEFT_ALLIANCE] =
+    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_LEFT_ALLIANCE] =
         TransformToPose(FieldConstants::RED_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_LEFT_SIDEWALL] =
+    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_LEFT_SIDEWALL] =
         TransformToPose(FieldConstants::RED_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_RIGHT_ALLIANCE] =
+    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_RIGHT_ALLIANCE] =
         TransformToPose(FieldConstants::RED_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
-    m_transformConstantsMap[FieldConstants::RED_CORAL_STATION_RIGHT_SIDEWALL] =
+    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_RIGHT_SIDEWALL] =
         TransformToPose(FieldConstants::RED_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
-    m_transformConstantsMap[FieldConstants::RED_LEFT_CAGE] =
+    m_transformCalculatedMap[FieldConstants::RED_LEFT_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_calcCageLeft);
-    m_transformConstantsMap[FieldConstants::RED_RIGHT_CAGE] =
+    m_transformCalculatedMap[FieldConstants::RED_RIGHT_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_calcCageRight);
-    m_transformConstantsMap[FieldConstants::RED_CENTER_CAGE] =
+    m_transformCalculatedMap[FieldConstants::RED_CENTER_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_noTransform);
-    m_transformConstantsMap[FieldConstants::RED_REEF_A] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_A] =
         TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_B] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_B] =
         TransformToPose(FieldConstants::RED_REEF_AB, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_C] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_C] =
         TransformToPose(FieldConstants::RED_REEF_CD, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_D] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_D] =
         TransformToPose(FieldConstants::RED_REEF_CD, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_E] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_E] =
         TransformToPose(FieldConstants::RED_REEF_EF, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_F] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_F] =
         TransformToPose(FieldConstants::RED_REEF_EF, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_G] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_G] =
         TransformToPose(FieldConstants::RED_REEF_GH, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_H] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_H] =
         TransformToPose(FieldConstants::RED_REEF_GH, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_I] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_I] =
         TransformToPose(FieldConstants::RED_REEF_IJ, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_J] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_J] =
         TransformToPose(FieldConstants::RED_REEF_IJ, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_K] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_K] =
         TransformToPose(FieldConstants::RED_REEF_KL, m_calcLeftStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_L] =
+    m_transformCalculatedMap[FieldConstants::RED_REEF_L] =
         TransformToPose(FieldConstants::RED_REEF_KL, m_calcRightStick);
-    m_transformConstantsMap[FieldConstants::RED_REEF_CENTER] =
-        TransformToPose(FieldConstants::RED_REEF_CENTER, m_noTransform);
+
 }
 
 void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
