@@ -226,6 +226,7 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 	{
 		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
 		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
+
 		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
 		{
 			intakeMgr->SetCurrentState(params->GetIntakeState(), true);
@@ -247,6 +248,7 @@ void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
 	{
 		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
 		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
+
 		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
 		{
 			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);

@@ -33,6 +33,7 @@
 <!ELEMENT zone EMPTY >
 <!ATTLIST zone
 		filename CDATA #REQUIRED
+		
 >
 
 

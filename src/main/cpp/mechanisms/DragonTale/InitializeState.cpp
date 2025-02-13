@@ -42,8 +42,8 @@ InitializeState::InitializeState(std::string stateName,
 
 void InitializeState::Init()
 {
+	m_mechanism->GetElevatorHeightSensor()->SetPosition(0_tr);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitializeState"), string("Init"));
-
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 }
