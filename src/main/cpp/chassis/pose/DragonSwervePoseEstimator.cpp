@@ -15,8 +15,8 @@
 
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/DragonSwervePoseEstimator.h"
-#include "chassis/DragonVisionPoseEstimator.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
@@ -37,7 +37,11 @@ DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<
                                                                                        m_poseEstimator(kinematics, gyroAngle, positions, initialPose),
                                                                                        m_visionPoseEstimators()
 {
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+    SetServeModules(ChassisConfigMgr::GetInstance()->GetCurrentChassis());
+}
+
+void DragonSwervePoseEstimator::SetServeModules(SwerveChassis *chassis)
+{
     if (chassis != nullptr)
     {
         m_frontLeft = chassis->GetFrontLeft();
@@ -58,12 +62,9 @@ void DragonSwervePoseEstimator::Update()
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
-        if (m_frontLeft == nullptr)
+        if (m_frontLeft == nullptr) // Ensure there isn't a timing issue
         {
-            m_frontLeft = chassis->GetFrontLeft();
-            m_frontRight = chassis->GetFrontRight();
-            m_backLeft = chassis->GetBackLeft();
-            m_backRight = chassis->GetBackRight();
+            SetServeModules(chassis);
         }
         frc::Rotation2d rot2d{chassis->GetYaw()};
 

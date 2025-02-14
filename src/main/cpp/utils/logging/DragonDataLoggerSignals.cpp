@@ -14,8 +14,8 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/logging/DragonDataLoggerSignals.h"
 #include "frc/DataLogManager.h"
+#include "utils/logging/DragonDataLoggerSignals.h"
 #include "wpi/DataLog.h"
 
 DragonDataLoggerSignals *DragonDataLoggerSignals::m_instance = nullptr;
@@ -32,37 +32,12 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
 {
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
-    /**
-    m_hasVision = wpi::log::BooleanLogEntry(log, "/NoteManager/HasVision");
-    m_hasVision.Append(m_currHasVision);
-
-    m_frontSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/FrontSensor");
-    m_frontSensor.Append(m_currFrontSensor);
-
-    m_backSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/BackSensor");
-    m_backSensor.Append(m_currBackSensor);
-
-    m_feederSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/FeederSensor");
-    m_feederSensor.Append(m_currFeederSensor);
-
-    m_launcherSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/LauncherSensor");
-    m_launcherSensor.Append(m_currLauncherSensor);
-
-    m_placerInSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/PlacerInSensor");
-    m_placerInSensor.Append(m_currPlacerInSensor);
-
-    m_placerMidSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/PlacerMidSensor");
-    m_placerMidSensor.Append(m_currPlacerMidSensor);
-
-    m_placerOutSensor = wpi::log::BooleanLogEntry(log, "/NoteManager/PlacerOutSensor");
-    m_placerOutSensor.Append(m_currPlacerOutSensor);
-    **/
-
     m_storedHeading = wpi::log::DoubleLogEntry(log, "/Chassis/StoredHeading(Degrees)");
     m_storedHeading.Append(m_currStoredHeading);
     m_chassisYaw = wpi::log::DoubleLogEntry(log, "/Chassis/Yaw(Degrees)");
     m_chassisYaw.Append(m_currChassisYaw);
-    //electrical signals
+
+    // electrical signals
     m_electricalVoltage = wpi::log::DoubleLogEntry(log, "/Electrical/Voltage(Volts)");
     m_electricalVoltage.Append(m_currElectricalVoltage);
     m_electricalCurrent = wpi::log::DoubleLogEntry(log, "/Electrical/Current(Amps)");
@@ -72,39 +47,22 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_electricalEnergy = wpi::log::DoubleLogEntry(log, "/Electrical/Energy(Joules)");
     m_electricalEnergy.Append(m_currElectricalEnergy);
 
-
-    /**
-    m_nmTargetAngle = wpi::log::DoubleLogEntry(log, "/NoteManager/TargetAngle(Degrees)");
-    m_nmTargetAngle.Append(m_currNmTargetAngle);
-    m_nmActualAngle = wpi::log::DoubleLogEntry(log, "/NoteManager/ActualAngle(Degrees)");
-    m_nmActualAngle.Append(m_currNmActualAngle);
-    m_nmTopTarget = wpi::log::DoubleLogEntry(log, "/NoteManager/TargetTopWheelSpeed(RPM)");
-    m_nmTopTarget.Append(m_currNmTopTarget);
-    m_nmBottomTarget = wpi::log::DoubleLogEntry(log, "/NoteManager/TargetBottomWheelSpeed(RPM)");
-    m_nmBottomTarget.Append(m_currNmBottomTarget);
-    m_nmTopActual = wpi::log::DoubleLogEntry(log, "/NoteManager/ActualTopWheelSpeed(RPM)");
-    m_nmTopActual.Append(m_currNmTopActual);
-    m_nmBottomActual = wpi::log::DoubleLogEntry(log, "/NoteManager/ActualBottomWheelSpeed(RPM)");
-    m_nmBottomActual.Append(m_currNmBottomActual);
-    m_distFromSpeaker = wpi::log::DoubleLogEntry(log, "/NoteManager/DistanceFromSpeaker(Meters)");
-    m_distFromSpeaker.Append(m_currDistFromSpeaker);
-    **/
-
     m_headingState = wpi::log::StringLogEntry(log, "/Chassis/HeadingState");
     m_headingState.Append(m_currHeadingState);
     m_driveState = wpi::log::StringLogEntry(log, "/Chassis/DriveState");
     m_driveState.Append(m_currDriveState);
-    // m_noteMgrState = wpi::log::StringLogEntry(log, "/NoteManager/State");
-    // m_noteMgrState.Append(m_currNoteMgrState);
 
-    m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Chassis/Pose2d");
+    m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/Pose2d");
     m_pose2d.Append(m_currPose2D);
 
-    m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose3dLimelight");
-    m_pose3dLimelight.Append(m_currPose3D);
+    m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight");
+    m_pose3dLimelight.Append(m_currPose3DLimelight);
 
-    m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Chassis/Pose3dQuest");
-    m_pose3dQuest.Append(m_currPose3D);
+    m_pose3dLimelight2 = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight2");
+    m_pose3dLimelight2.Append(m_currPose3DLimelight2);
+
+    m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dQuest");
+    m_pose3dQuest.Append(m_currPose3DQuest);
 
     m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/TargetState");
     m_frontLeftTarget.Append(m_currFrontLeftTarget);
