@@ -9,7 +9,7 @@
                               DRIVE_PATH_PLANNER | RESET_POSITION_PATH_PLANNER | RESET_POSITION_PATH_PLANNER_NO_VISION | DO_NOTHING_DELAY | DRIVE_STOP_MECH) "DO_NOTHING"
 		  time				CDATA #IMPLIED
 		  delayOption		(START | PLACED_CORAL | REEF) "START"
-          headingOption     CDATA "MAINTAIN"
+          headingOption     CDATA "IGNORE"
           heading           CDATA "0.0"
           pathname          CDATA #IMPLIED
 		  choreoname		CDATA #IMPLIED

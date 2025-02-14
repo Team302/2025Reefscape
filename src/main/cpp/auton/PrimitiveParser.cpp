@@ -53,6 +53,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     map<string, ChassisOptionEnums::HeadingOption>
         headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
+    headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
 
@@ -139,7 +140,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                 {
                     auto primitiveType = UNKNOWN_PRIMITIVE;
                     units::time::second_t time = units::time::second_t(15.0);
-                    auto headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+                    auto headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
