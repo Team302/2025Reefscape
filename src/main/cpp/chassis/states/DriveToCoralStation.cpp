@@ -66,11 +66,6 @@ void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, p
         chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
         TrajectoryDrivePathPlanner::Init(chassisMovement);
     }
-    else if (frc::DriverStation::IsTeleopEnabled())
-    {
-        chassisMovement.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
-        chassisMovement.headingOption = ChassisOptionEnums::MAINTAIN;
-    }
 }
 
 pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
@@ -82,8 +77,8 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
         std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
         if (info) {
 
-            frc::Pose2d endPose = std::get<frc::Pose2d>(info.value()); 
-            trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), endPose);
+            m_endPose = std::get<frc::Pose2d>(info.value()); 
+            trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), m_endPose);
         }
     }
     return trajectory;
@@ -111,25 +106,13 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
 
 bool DriveToCoralStation::IsDone()
 {
-    /**
-    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-    if (config != nullptr)
+    if (m_chassis != nullptr)
     {
-        auto noteStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-        if (noteStateMgr != nullptr)
-        {
-            if (TrajectoryDrivePathPlanner::IsDone())
-            {
-                IntakeNoteTimerIncrement();
+        frc::Pose2d currentPose(m_chassis->GetPose());
 
-                return dynamic_cast<noteManager *>(noteStateMgr)->HasNote() || m_intakeNoteTimer >= m_finishTime;
-            }
-            else
-            {
-                return dynamic_cast<noteManager *>(noteStateMgr)->HasNote();
-            }
-        }
+        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < units::inch_t(6))
+            return true;
+
     }
-    **/
     return false;
 }

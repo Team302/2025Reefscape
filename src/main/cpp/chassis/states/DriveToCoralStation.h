@@ -39,7 +39,7 @@ public:
     std::string GetDriveStateName() const override;
 
     pathplanner::PathPlannerTrajectory CreateDriveToCoralStation();
-    pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d notePose);
+    
     void Init(ChassisMovement &chassisMovement) override;
     void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
     pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
@@ -47,6 +47,8 @@ public:
     bool IsDone();
 
 private:
+    pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
 
     pathplanner::PathPlannerTrajectory m_trajectory;
+    frc::Pose2d m_endPose;
 };
