@@ -14,7 +14,7 @@
 //====================================================================================================================================================
 #pragma once
 
-#define INCLUDE_FIELD_ELEMENT_POSE_LOGGER
+//#define INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 
 #include <frc/geometry/Pose3d.h>
