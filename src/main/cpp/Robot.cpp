@@ -227,13 +227,16 @@ void Robot::DisabledPeriodic()
                                                                      units::angle::degree_t(0.0),
                                                                      units::angular_velocity::degrees_per_second_t(0.0));
 
-            if (megaTag2Position.has_value())
+            if (megaTag2Position.has_value()) // may want to use reset Position instead of reset pose here?
             {
                 chassis->SetYaw(initialRot);
+                chassis->SetStoredHeading(initialRot);
                 chassis->ResetPose(megaTag2Position.value().estimatedPose.ToPose2d());
             }
             else if (hasVisionPose)
             {
+                chassis->SetYaw(initialRot);
+                chassis->SetStoredHeading(initialRot);
                 chassis->ResetPose(visionPosition.value().estimatedPose.ToPose2d());
             }
         }
