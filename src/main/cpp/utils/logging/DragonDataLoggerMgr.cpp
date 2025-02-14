@@ -67,9 +67,11 @@ std::string DragonDataLoggerMgr::GetLoggingDir()
     {
         return "/media/sda1/logs/";
     }
-    else
+    else if (std::filesystem::exists("/home/lvuser/logs/"))
     {
         return "/home/lvuser/logs/";
+    } else {
+        return "";
     }
 }
 

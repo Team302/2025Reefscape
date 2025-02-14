@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,14 +14,18 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "vision/definitions/CameraConfig.h"
 
-enum class RobotIdentifier
+#include "units/length.h"
+
+class CameraConfig_9999 : public CameraConfig
 {
-    CHASSIS_BOT_9998 = 9998,
-    CHASSIS_BOT_9997 = 9997,
-	PRACTICE_BOT_9999 = 9999,
-	COMP_BOT_302 = 302,
-    SIM_BOT_0 = 0,
+public:
+    CameraConfig_9999() = default;
+    ~CameraConfig_9999() = default;
 
-    MAX_ROBOT_IDENTIFIERS
+    void BuildCameraConfig() override;
+
+private:
+
 };
