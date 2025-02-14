@@ -37,6 +37,9 @@
 #include "utils/logging/LoggerData.h"
 #include "utils/logging/LoggerEnums.h"
 
+using namespace pathplanner;
+
+
 DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)
 {
@@ -73,11 +76,8 @@ void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, p
 pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
 {
     pathplanner::PathPlannerTrajectory trajectory;
-    
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
-    if (chassis != nullptr)
+    if (m_chassis != nullptr)
     {
         std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
         if (info) {
@@ -95,17 +95,18 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    pathplanner::PathPoint startPoint(currentPose2d.Translation());
-    pathplanner::PathPoint endPoint(targetPose.Translation());
-    //TODO: fix to generate the path
-    //return pathplanner::PathPlanner::generatePath(constraints, {startPoint, endPoint}); 
-    //std::vector<Waypoint> csawaypoints = PathPlannerPath::waypointsFromPoses(poses);
-    /*auto csapath = std::make_shared<PathPlannerPath>(notebezierPoints,
-                                                      PathConstraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel),
-                                                      GoalEndState(0.0_mps, targetPose.Rotation().Degrees(), true));
+    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
+    std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
 
-    return csapath->getTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation());*/
-    return pathplanner::PathPlannerTrajectory();
+    auto path = std::make_shared<PathPlannerPath>(
+        waypoints,
+        constraints,
+        std::nullopt,
+        GoalEndState(0.0_mps, frc::Rotation2d(targetPose.Rotation()))
+    );
+
+    path->preventFlipping = true;
+    return path->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
 }
 
 bool DriveToCoralStation::IsDone()

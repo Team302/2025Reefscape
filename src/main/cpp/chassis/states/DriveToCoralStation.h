@@ -48,17 +48,5 @@ public:
 
 private:
 
-    int m_driveTimer = 0;
-    int m_finishTime = 25; // 0.50 seconds
-
-    void ResetIntakeNoteTimer() { m_driveTimer = 0; };
-    void IntakeNoteTimerIncrement() { m_driveTimer++; };
-
-    DragonTargetFinder *m_DragonTargetFinder;
-    TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-
-    frc::Pose2d m_targetPose;
-    frc::Pose2d m_oldTargetPose;
-
     pathplanner::PathPlannerTrajectory m_trajectory;
 };
