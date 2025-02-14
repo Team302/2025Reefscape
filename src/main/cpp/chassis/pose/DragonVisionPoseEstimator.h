@@ -14,7 +14,7 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "chassis/DragonVisionPoseEstimatorStruct.h"
+#include "chassis/pose/DragonVisionPoseEstimatorStruct.h"
 
 class DragonVisionPoseEstimator
 {

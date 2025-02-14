@@ -14,10 +14,9 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
-
+#include "networktables/NetworkTableInstance.h"
 #include "utils/logging/DragonDataLogger.h"
 #include "utils/logging/DragonDataLoggerMgr.h"
 
@@ -176,6 +175,10 @@ void DragonDataLogger::Log3DPoseData(DragonDataLoggerSignals::PoseSingals signal
         {
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
             signals->m_pose3dLimelight.Append(value); // always do this as the Pose2d isn't easy to set
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
+            signals->m_pose3dLimelight2.Append(value); // always do this as the Pose2d isn't easy to set
             break;
 
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:

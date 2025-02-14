@@ -21,10 +21,8 @@
 
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
-
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveModuleState.h"
-
 #include "wpi/DataLog.h"
 
 class DragonDataLoggerSignals
@@ -41,14 +39,6 @@ public:
 
     enum BoolSignals
     {
-        // NOTE_MANAGER_HAS_VISION, // TODO: should this be more generic; should this be part of a vision logging?
-        // NOTE_MANAGER_FRONT_SENSOR,
-        // NOTE_MANAGER_BACK_SENSOR,
-        // NOTE_MANAGER_FEEDER_SENSOR,
-        // NOTE_MANAGER_LAUNCHER_SENSOR,
-        // NOTE_MANAGER_PLACER_IN_SENSOR,
-        // NOTE_MANAGER_PLACER_MID_SENSOR,
-        // NOTE_MANAGER_PLACER_OUT_SENSOR,
         FRONT_LEFT_SWERVE_MODULE_SPLIPING,
         FRONT_RIGHT_SWERVE_MODULE_SPLIPING,
         BACK_LEFT_SWERVE_MODULE_SPLIPING,
@@ -67,13 +57,6 @@ public:
         LIMELIGHT_TX_1,
         LIMELIGHT_TY_1,
         LIMELIGHT_FIDUCIAL_ID_1
-        // NOTE_MANAGER_TARGET_ANGLE_DEGREES,
-        // NOTE_MANAGER_ACTUAL_ANGLE_DEGREES,
-        // NOTE_MANAGER_TARGET_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_TARGET_BOTTOM_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_TOP_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_ACTUAL_BOTTOM_WHEEL_SPEED_RPM,
-        // NOTE_MANAGER_DISTANCE_FROM_SPEAKER_METERS // TODO: should this be more generic - the whole robot is a certain distance; do we need angle too?
     };
 
     enum StringSignals
@@ -81,13 +64,13 @@ public:
         CHASSIS_HEADING_STATE,
         CHASSIS_DRIVE_STATE,
         AUTON_PATH_NAME
-        // NOTE_MANAGER_STATE
     };
 
     enum PoseSingals
     {
         CURRENT_CHASSIS_POSE2D,
         CURRENT_CHASSIS_LIMELIGHT_POSE3D,
+        CURRENT_CHASSIS_LIMELIGHT2_POSE3D,
         CURRENT_CHASSIS_QUEST_POSE3D
     };
 
@@ -206,15 +189,15 @@ private:
     wpi::log::StringLogEntry m_driveState;
     std::string m_currDriveState{""};
 
-    // wpi::log::StringLogEntry m_noteMgrState;
-    // std::string m_currNoteMgrState{""};
-
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
+    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
 
     frc::Pose2d m_currPose2D{};
-    frc::Pose3d m_currPose3D{};
+    frc::Pose3d m_currPose3DLimelight{};
+    frc::Pose3d m_currPose3DLimelight2{};
+    frc::Pose3d m_currPose3DQuest{};
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
     frc::SwerveModuleState m_currFrontLeftTarget{};
