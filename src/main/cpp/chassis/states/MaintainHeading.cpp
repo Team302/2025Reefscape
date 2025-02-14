@@ -44,20 +44,34 @@ void MaintainHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
     if (chassis != nullptr)
     {
-        auto correction = units::angular_velocity::degrees_per_second_t(0.0);
+        bool wasRotating = false;
 
-        auto currentAngle = units::angle::radian_t(AngleUtils::GetEquivAngle(chassis->GetPose().Rotation().Degrees()));
-        auto targetAngle = units::angle::radian_t(AngleUtils::GetEquivAngle(chassis->GetStoredHeading()));
+        bool isRotating = chassis->IsRotating();
 
-        auto radianCorrection = m_controller.Calculate(currentAngle.value(), targetAngle.value());
+        if (wasRotating && !isRotating) // Gets the transistion from rotating to not rotating
+        {
+            chassis->SetStoredHeading(chassis->GetYaw()); // Or currentAngle.Degrees() if you prefer
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("Stored Heading"), chassis->GetStoredHeading().value());
+        }
+        else if (!isRotating)
+        {
+            auto correction = units::angular_velocity::degrees_per_second_t(0.0);
 
-        correction = abs(radianCorrection) > m_correctionThreshold ? units::angular_velocity::radians_per_second_t(radianCorrection) : units::angular_velocity::radians_per_second_t(0.0);
-        chassisMovement.chassisSpeeds.omega += correction;
+            auto currentAngle = units::angle::radian_t(AngleUtils::GetEquivAngle(chassis->GetPose().Rotation().Degrees()));
+            auto targetAngle = units::angle::radian_t(AngleUtils::GetEquivAngle(chassis->GetStoredHeading()));
 
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("currentAngle"), units::angle::degree_t(currentAngle).value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("targetAngle"), units::angle::degree_t(targetAngle).value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("Error"), units::angle::degree_t(targetAngle - currentAngle).value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("correction"), radianCorrection);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("omega"), chassisMovement.chassisSpeeds.omega.value());
+            auto radianCorrection = m_controller.Calculate(currentAngle.value(), targetAngle.value());
+
+            correction = abs(radianCorrection) > m_correctionThreshold ? units::angular_velocity::radians_per_second_t(radianCorrection) : units::angular_velocity::radians_per_second_t(0.0);
+            chassisMovement.chassisSpeeds.omega += correction;
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("currentAngle"), units::angle::degree_t(currentAngle).value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("targetAngle"), units::angle::degree_t(targetAngle).value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("Error"), units::angle::degree_t(targetAngle - currentAngle).value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("correction"), radianCorrection);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("omega"), chassisMovement.chassisSpeeds.omega.value());
+        }
+
+        wasRotating = isRotating; // Update the previous state for the next iteration
     }
 }

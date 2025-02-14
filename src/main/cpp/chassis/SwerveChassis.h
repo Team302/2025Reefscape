@@ -109,6 +109,8 @@ public:
     SwerveModule *GetBackRight() const { return m_backRight; }
     frc::Pose2d GetPose() const;
     units::angle::degree_t GetYaw() const override;
+    units::angle::degree_t GetRawYaw() const;
+
     units::angle::degree_t GetPitch() const;
     units::angle::degree_t GetRoll() const;
 

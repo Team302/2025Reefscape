@@ -178,11 +178,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         m_rotatingLatch = false;
     }
 
-    if (m_rotatingLatch)
-    {
-        SetStoredHeading(GetYaw());
-    }
-
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
@@ -212,7 +207,7 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
 
-    m_rotate = moveInfo.chassisSpeeds.omega;
+    // m_rotate = moveInfo.chassisSpeeds.omega TO DO this is in place for Data Logging, need to create dataLog method where we pass moveInfo to it and it handels the data logging variables
     UpdateOdometry();
 }
 
@@ -293,6 +288,12 @@ Pose2d SwerveChassis::GetPose() const
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
 {
+    return m_swervePoseEstimator->GetPose().Rotation().Degrees();
+}
+
+//==================================================================================
+units::angle::degree_t SwerveChassis::GetRawYaw() const
+{
     return m_pigeon->GetYaw().Refresh().GetValue();
 }
 
@@ -359,7 +360,6 @@ void SwerveChassis::LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES swerveMod
 void SwerveChassis::ResetPose(const Pose2d &pose)
 {
     ZeroAlignSwerveModules();
-    // Rotation2d rot2d{pose.Rotation().Degrees()};
     SetStoredHeading(pose.Rotation().Degrees());
 
     if (m_swervePoseEstimator != nullptr)
