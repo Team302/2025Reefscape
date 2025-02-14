@@ -83,14 +83,18 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
     }
     return trajectory;
 }
+
 pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
+    //create a midpoint perpendicular to the coral station
+    frc::Pose2d midpointPose((currentPose2d.Translation() + targetPose.Translation()) / 2.0, targetPose.Rotation());
 
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
+    DragonVisionStructLogger::logPose2d("midpoint pose", midpointPose);
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
+    std::vector<frc::Pose2d> poses{currentPose2d, midpointPose, targetPose};
     std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
 
     auto path = std::make_shared<PathPlannerPath>(

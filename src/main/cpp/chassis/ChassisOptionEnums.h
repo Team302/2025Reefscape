@@ -37,6 +37,7 @@ public:
         HOLD_DRIVE,
         POLAR_DRIVE,
         DRIVE_TO_NOTE,
+        DRIVE_TO_CORAL_STATION,
         STOP_DRIVE
     };
 
