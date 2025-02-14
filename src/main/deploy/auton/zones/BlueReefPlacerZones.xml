@@ -5,5 +5,8 @@
     <zone 
         circlex="4.467"
         circley="4.038"
-        radius="2.127" />
+        radius="2.127" 
+        taleOption="STATE_L4SCORING_POSITION"/>
+
+
 </auton>
