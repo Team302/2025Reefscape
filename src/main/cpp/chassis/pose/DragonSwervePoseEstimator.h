@@ -17,12 +17,13 @@
 
 #include <vector>
 
-#include "chassis/DragonVisionPoseEstimator.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveModule.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/kinematics/SwerveDriveKinematics.h"
-#include "frc/kinematics/SwerveDriveOdometry.h"
+
+class SwerveChassis;
 
 class DragonSwervePoseEstimator
 {
@@ -46,6 +47,8 @@ private:
 
     DragonSwervePoseEstimator(const DragonSwervePoseEstimator &) = delete;
     DragonSwervePoseEstimator &operator=(const DragonSwervePoseEstimator &) = delete;
+
+    void SetServeModules(SwerveChassis *chassis);
 
     SwerveModule *m_frontLeft;
     SwerveModule *m_frontRight;

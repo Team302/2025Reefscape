@@ -14,17 +14,41 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "chassis/DragonVisionPoseEstimatorStruct.h"
 
-class DragonVisionPoseEstimator
+// C++ Includes
+#include <vector>
+
+// FRC Includes
+#include <frc/geometry/Rotation3d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Pose2d.h>
+
+// Team302 Includes
+#include "chassis/states/RobotDrive.h"
+#include "vision/DragonVision.h"
+#include "fielddata/DragonTargetFinder.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "utils/FMSData.h"
+#include "chassis/SwerveChassis.h"
+
+class DriveToCoralStation : public TrajectoryDrivePathPlanner
 {
 public:
-    DragonVisionPoseEstimator();
-    ~DragonVisionPoseEstimator() = default;
+    DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    std::string GetDriveStateName() const override;
 
-    virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
+    pathplanner::PathPlannerTrajectory CreateDriveToCoralStation();
+    
+    void Init(ChassisMovement &chassisMovement) override;
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
+
+    bool IsDone();
 
 private:
-    DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;
-    DragonVisionPoseEstimator &operator=(const DragonVisionPoseEstimator &) = delete;
+    pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
+
+    pathplanner::PathPlannerTrajectory m_trajectory;
+    frc::Pose2d m_endPose;
 };

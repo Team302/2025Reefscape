@@ -65,14 +65,15 @@ std::string DragonDataLoggerMgr::GetLoggingDir()
     // check if usb log directory exists
     if (std::filesystem::exists("/media/sda1/logs/"))
     {
-        return "/media/sda1/logs/";
+        return std::filesystem::path("/media/sda1/logs/").string();
     }
     else if (std::filesystem::exists("/home/lvuser/logs/"))
     {
-        return "/home/lvuser/logs/";
-    } else {
-        return "";
+        return std::filesystem::path("/home/lvuser/logs/").string();
     }
+    
+    return std::string("");
+    
 }
 
 void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
