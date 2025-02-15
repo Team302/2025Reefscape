@@ -129,7 +129,7 @@ public:
     ISwerveDriveState *GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType driveOption);
 
     bool IsRotating() const { return m_rotatingLatch; }
-    double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; } // check with true and false, might help with CAN bus load and pigeon is running faster than 20ms that we don't need a refreshed signal most likley
+    double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation() override;
     void DataLog() override;
 
