@@ -768,7 +768,8 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 		units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
 
-		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg + allianceAdjustment;
+		// units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg + allianceAdjustment;
+		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg;
 
 		int multipleNumber = closestMultiple.value() / 60.0;
 
