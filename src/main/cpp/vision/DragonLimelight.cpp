@@ -83,11 +83,12 @@ DragonLimelight::DragonLimelight(
 
 void DragonLimelight::PeriodicCacheData()
 {
+    m_megatag1PosBool = false;
+    m_megatag2PosBool = false;
+
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
-        m_megatag1PosBool = false;
-        m_megatag2PosBool = false;
         m_tv = LimelightHelpers::getTV(m_cameraName);
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
@@ -95,8 +96,6 @@ void DragonLimelight::PeriodicCacheData()
     }
     else
     {
-        m_megatag1PosBool = false;
-        m_megatag2PosBool = false;
         m_tv = false;
         m_tx = units::angle::degree_t(0.0);
         m_ty = units::angle::degree_t(0.0);
