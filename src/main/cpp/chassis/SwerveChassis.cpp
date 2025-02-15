@@ -180,7 +180,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     else if (abs(GetRotationRateDegreesPerSecond()) < 5.0) // degrees per second
     {
         m_rotatingLatch = false;
-        SetStoredHeading(GetYaw());
     }
 
     m_currentOrientationState = GetHeadingState(moveInfo);

@@ -63,5 +63,7 @@ void MaintainHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("correction"), radianCorrection);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("omega"), chassisMovement.chassisSpeeds.omega.value());
         }
+        else
+            chassis->SetStoredHeading(chassis->GetYaw());
     }
 }
