@@ -56,6 +56,33 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
+std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
+{
+	std::optional<VisionPose> visionPosition = GetRobotPosition();
+	auto hasVisionPose = visionPosition.has_value();
+	if (hasVisionPose)
+	{
+		auto initialRot = visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees();
+
+		// use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
+		std::optional<VisionPose> megaTag2Position = GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
+																			  units::angular_velocity::degrees_per_second_t(0.0),
+																			  units::angle::degree_t(0.0),
+																			  units::angular_velocity::degrees_per_second_t(0.0),
+																			  units::angle::degree_t(0.0),
+																			  units::angular_velocity::degrees_per_second_t(0.0));
+		if (megaTag2Position.has_value())
+		{
+
+			std::optional<frc::Pose2d> megaTag2Posed = megaTag2Position.value().estimatedPose.ToPose2d();
+			return megaTag2Posed;
+		}
+
+		return visionPosition.value().estimatedPose.ToPose2d();
+	}
+
+	return std::nullopt;
+}
 frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
 frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 {
