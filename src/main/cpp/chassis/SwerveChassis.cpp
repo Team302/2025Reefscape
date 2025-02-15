@@ -207,7 +207,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     }
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
-
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
 
