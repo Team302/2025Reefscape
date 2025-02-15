@@ -17,42 +17,38 @@
 
 // C++ Includes
 #include <vector>
-#include <cmath>
 
 // FRC Includes
-#include "units/angle.h"
-#include "units/angular_velocity.h"
-#include "units/length.h"
-#include "units/velocity.h"
-#include "units/time.h"
-#include "frc/filter/Debouncer.h"
+#include <frc/geometry/Rotation3d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Pose2d.h>
 
-// Team 302 Includes
+// Team302 Includes
+#include "chassis/states/RobotDrive.h"
+#include "vision/DragonVision.h"
+#include "fielddata/DragonTargetFinder.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "utils/FMSData.h"
+#include "chassis/SwerveChassis.h"
 
-class TractionControlController
+class DriveToLeftReefBranch : public TrajectoryDrivePathPlanner
 {
 public:
-    TractionControlController(double staticCoF, double dynamicCoF, double optimalSlipRatio, double mass, units::velocity::meters_per_second_t maxLinearSpeed);
+    DriveToLeftReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    std::string GetDriveStateName() const override;
 
-    units::velocity::meters_per_second_t calculate(units::velocity::meters_per_second_t velocityRequest, units::velocity::meters_per_second_t inertialVelocity, units::velocity::meters_per_second_t wheelSpeed);
-    bool isSlipping() const;
+    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranch();
+
+    void Init(ChassisMovement &chassisMovement) override;
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
+
+    bool IsDone();
 
 private:
-    static constexpr double VELOCITY_CORRECTION_SCALAR = 0.7;
-    static constexpr double MIN_SLIP_RATIO = 0.01;
-    static constexpr double MAX_SLIP_RATIO = 0.40;
-    static constexpr int SIGMOID_K = 10;
-    static constexpr units::velocity::meters_per_second_t INERTIAL_VELOCITY_THRESHOLD{0.25};
-    static constexpr double m_robotLoopRate_Hz = 50.0;
+    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
 
-    units::second_t MIN_SLIPPING_TIME{1.1};
-
-    double m_staticCoF;
-    double m_dynamicCoF;
-    double m_optimalSlipRatio;
-    double m_mass;
-    units::velocity::meters_per_second_t m_maxLinearSpeed;
-    double m_maxPredictedSlipRatio;
-    bool m_isSlipping;
-    frc::Debouncer m_slippingDebouncer;
+    pathplanner::PathPlannerTrajectory m_trajectory;
+    frc::Pose2d m_endPose;
 };
