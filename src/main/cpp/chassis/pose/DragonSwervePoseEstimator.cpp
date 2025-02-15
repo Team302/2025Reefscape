@@ -66,7 +66,7 @@ void DragonSwervePoseEstimator::Update()
         {
             SetServeModules(chassis);
         }
-        frc::Rotation2d rot2d{chassis->GetYaw()};
+        frc::Rotation2d rot2d{chassis->GetRawYaw()};
 
         m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
                                                                                m_frontRight->GetPosition(),

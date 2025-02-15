@@ -55,14 +55,15 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
             auto initialPose = path.get()->getStartingHolonomicPose();
             if (initialPose)
             {
+                // debugging
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "X", initialPose.value().X().value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Y", initialPose.value().Y().value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Theta", initialPose.value().Rotation().Degrees().value());
 
                 // Check to see if current pose is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
-                const units::length::meter_t poseDiff = actualPose.X() - m_centerline;
-                bool poseNeedsUpdating = poseDiff > m_distanceThreshold || poseDiff < m_distanceThreshold * -1;
+                const units::length::meter_t poseDiff = units::math::abs(actualPose.X() - m_centerline);
+                bool poseNeedsUpdating = poseDiff > m_distanceThreshold;
 
                 if (poseNeedsUpdating)
                 {
@@ -80,7 +81,6 @@ void ResetPositionPathPlanner::ResetPose(Pose2d pose)
 
     if (chassis != nullptr)
     {
-        // chassis->SetYaw(pose.Rotation().Degrees());
         chassis->ResetPose(pose);
     }
 }
