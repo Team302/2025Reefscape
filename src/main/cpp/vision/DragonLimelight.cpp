@@ -296,8 +296,6 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             {
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
                 
-
-                DragonVisionStructLogger::logLLPoseEstimation(std::string("DragonLimelightPose"), poseEstimate);
                 // multiple targets detected
                 if (poseEstimate.tagCount == 0)
                 {
