@@ -44,16 +44,8 @@ void MaintainHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
     if (chassis != nullptr)
     {
-        bool wasRotating = false;
-
-        bool isRotating = chassis->IsRotating();
-
-        if (wasRotating && !isRotating) // Gets the transistion from rotating to not rotating
-        {
-            chassis->SetStoredHeading(chassis->GetYaw()); // Or currentAngle.Degrees() if you prefer
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("Stored Heading"), chassis->GetStoredHeading().value());
-        }
-        else if (!isRotating)
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("Stored Heading"), chassis->GetStoredHeading().value());
+        if (!chassis->IsRotating())
         {
             auto correction = units::angular_velocity::degrees_per_second_t(0.0);
 
@@ -71,7 +63,5 @@ void MaintainHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("correction"), radianCorrection);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("maintain"), string("omega"), chassisMovement.chassisSpeeds.omega.value());
         }
-
-        wasRotating = isRotating; // Update the previous state for the next iteration
     }
 }
