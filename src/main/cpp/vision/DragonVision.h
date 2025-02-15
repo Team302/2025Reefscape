@@ -68,6 +68,10 @@ public:
     /// @param position the physical position of the camera
     void AddLimelight(DragonLimelight *camera, DRAGON_LIMELIGHT_CAMERA_USAGE usage);
 
+    /// @brief calculates the pose from other methods of vision
+    /// @return std::optional<frc::Pose2d>
+    std::optional<frc::Pose2d> CalcVisionPose();
+
     // raw data methods
 
     std::optional<units::angle::degree_t> GetTargetYaw(DRAGON_LIMELIGHT_CAMERA_USAGE position);
@@ -106,6 +110,5 @@ private:
     std::optional<VisionData> SingleTagToElement(frc::Pose3d elementPose, int idToSearch);
 
     static DragonVision *m_dragonVision;
-
     std::multimap<DRAGON_LIMELIGHT_CAMERA_USAGE, DragonLimelight *> m_dragonLimelightMap;
 };
