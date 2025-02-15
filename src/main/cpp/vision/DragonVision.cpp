@@ -571,7 +571,8 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 			units::angle::degree_t robotRelativeAngle = visdata.value().rotationToTarget.Z(); // value is robot to target
 
 			units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
-			return frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
+			auto pose = frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
+			return frc::Pose3d(pose);
 		}
 	}
 
