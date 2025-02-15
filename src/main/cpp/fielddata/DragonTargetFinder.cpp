@@ -67,23 +67,20 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         {
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag).ToPose2d()};
+            auto vistagpose{m_vision->GetAprilTagPose(tag)};
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
-                auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::REEF);
-                if (visiondata.has_value())
+                if (vistagpose.has_value())
                 {
-                    auto visiontagpose = GetVisonPose(visiondata.value());
-                    if (visiontagpose.Translation().Distance(tagpose.Translation()) < 1_m)
-                    {
-                        return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose);
-                    }
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, vistagpose.value().ToPose2d());
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
                 // TODO:  implement vision when we have reef machine learning
+                // TODO:  once calculator has convenience methods, we can calculate this from the tag pose
                 auto leftbranch = ReefHelper::GetInstance()->GetNearestLeftReefBranch(tag);
                 if (leftbranch.has_value())
                 {
@@ -94,6 +91,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             else // right branch
             {
                 // TODO:  implement vision when we have reef machine learning
+                // TODO:  once calculator has convenience methods, we can calculate this from the tag pose
                 auto rightbranch = ReefHelper::GetInstance()->GetNearestRightReefBranch(tag);
                 if (rightbranch.has_value())
                 {
@@ -209,7 +207,7 @@ std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(Drago
     }
     else if (item == DragonVision::VISION_ELEMENT::ALGAE)
     {
-        return std::nullopt; // TODO JW come back to this one
+        return std::nullopt; // TODO JW come back to this one when we have machine learning
     }
     else if (item == DragonVision::VISION_ELEMENT::BARGE)
     {
