@@ -37,6 +37,7 @@
 #include "vision/DragonLimelight.h"
 #include "utils/logging/Logger.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonVisionStructLogger.h"
 
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
@@ -74,6 +75,7 @@ DragonLimelight::DragonLimelight(
     SetCamMode(camMode);
     SetPipeline(initialPipeline);
     SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
+    m_cameraName = networkTableName;
     m_healthTimer = new frc::Timer();
     for (int port = 5800; port <= 5809; port++)
     {
@@ -290,27 +292,28 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         // Megatag 2
         else
         {
-            LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-            double xyStds;
-            double degStds;
-            // multiple targets detected
-            if (poseEstimate.tagCount == 0)
+            if (!m_megatag2PosBool)
             {
-                return std::nullopt;
-            }
-            // conditions don't match to add a vision measurement
-            else
-            {
-                if (!m_megatag2PosBool)
+                LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
+                
+
+                DragonVisionStructLogger::logLLPoseEstimation(std::string("DragonLimelightPose"), poseEstimate);
+                // multiple targets detected
+                if (poseEstimate.tagCount == 0)
                 {
-                    xyStds = .7;
-                    degStds = 9999999;
+                    return std::nullopt;
+                }
+                // conditions don't match to add a vision measurement
+                else
+                {
+                    double xyStds = .7;
+                    double degStds = 9999999;
                     m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
+                    
                 }
-
-                return m_megatag2Pos;
             }
+            return m_megatag2Pos;
         }
     }
     return std::nullopt;
