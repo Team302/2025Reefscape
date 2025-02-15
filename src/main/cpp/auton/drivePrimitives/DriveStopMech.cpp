@@ -22,7 +22,7 @@
 #include "auton/PrimitiveParams.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
-#include "utils/logging/Logger.h"
+// #include "utils/logging/Logger.h"
 
 // Third Party Includes
 
@@ -51,6 +51,4 @@ void DriveStopMech::Init(PrimitiveParams *params)
 bool DriveStopMech::IsDone()
 {
     return m_dragonTaleMgr->GetCurrentState() == m_switchState || DriveStop::IsDone();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveStopMech", "Current State", m_dragonTaleMgr->GetCurrentState());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveStopMech", "Switch State", m_switchState);
 }
