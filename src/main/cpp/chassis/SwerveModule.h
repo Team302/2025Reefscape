@@ -35,7 +35,6 @@
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
-#include "chassis/modifiers/TractionControlController.h"
 
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
@@ -84,11 +83,9 @@ public:
     /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
     /// @param [in] SwerveModuleState& referenceState:   state to set the module to
     /// @returns void
-    void SetDesiredState(frc::SwerveModuleState &state, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius);
+    void SetDesiredState(frc::SwerveModuleState &state);
 
     void RunCurrentState();
-
-    bool IsSlipping();
 
     /// @brief Calculate the real speed of the module incorporating the inertial velocity and rotate rate
     /// * @param inertialVelocity Inertial velocity of robot (m/s)
@@ -136,8 +133,6 @@ private:
 
     frc::SwerveModuleState m_activeState;
     frc::SwerveModuleState m_optimizedState;
-
-    std::unique_ptr<TractionControlController> m_tractionController;
 
     ctre::phoenix6::controls::PositionTorqueCurrentFOC m_positionTorque = ctre::phoenix6::controls::PositionTorqueCurrentFOC{0_tr}.WithSlot(0);
     ctre::phoenix6::controls::PositionVoltage m_positionVoltage = ctre::phoenix6::controls::PositionVoltage{0_tr}.WithSlot(0);

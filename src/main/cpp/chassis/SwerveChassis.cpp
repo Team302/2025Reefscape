@@ -43,10 +43,12 @@
 #include "chassis/states/FaceNearestReefFace.h"
 #include "chassis/states/FaceNearestCoralStation.h"
 #include "chassis/states/DriveToCoralStation.h"
+#include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
 #include "utils/logging/Logger.h"
 #include "utils/AngleUtils.h"
+#include "chassis/states/DriveToLeftReefBranch.h"
 
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
@@ -142,6 +144,8 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER] = new TrajectoryDrivePathPlanner(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
@@ -166,6 +170,8 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
+    UpdateOdometry();
+
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
@@ -178,19 +184,14 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         m_rotatingLatch = false;
     }
 
-    if (m_rotatingLatch)
-    {
-        SetStoredHeading(GetYaw());
-    }
-
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT]);
+        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT]);
+        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK]);
+        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK]);
     }
     else
     {
@@ -208,12 +209,10 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     }
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
-
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
 
-    m_rotate = moveInfo.chassisSpeeds.omega;
-    UpdateOdometry();
+    // m_rotate = moveInfo.chassisSpeeds.omega TO DO this is in place for Data Logging, need to create dataLog method where we pass moveInfo to it and it handels the data logging variables
 }
 
 //==================================================================================
@@ -293,6 +292,12 @@ Pose2d SwerveChassis::GetPose() const
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
 {
+    return m_swervePoseEstimator->GetPose().Rotation().Degrees();
+}
+
+//==================================================================================
+units::angle::degree_t SwerveChassis::GetRawYaw() const
+{
     return m_pigeon->GetYaw().Refresh().GetValue();
 }
 
@@ -359,7 +364,6 @@ void SwerveChassis::LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES swerveMod
 void SwerveChassis::ResetPose(const Pose2d &pose)
 {
     ZeroAlignSwerveModules();
-    // Rotation2d rot2d{pose.Rotation().Degrees()};
     SetStoredHeading(pose.Rotation().Degrees());
 
     if (m_swervePoseEstimator != nullptr)
