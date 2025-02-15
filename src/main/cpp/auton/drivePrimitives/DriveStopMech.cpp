@@ -22,6 +22,7 @@
 #include "auton/PrimitiveParams.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
+// #include "utils/logging/Logger.h"
 
 // Third Party Includes
 
@@ -36,10 +37,6 @@ using namespace frc;
 /// @brief constructor that creates/initializes the object
 DriveStopMech::DriveStopMech() : DriveStop()
 {
-
-    // get reference to notemanager in drivestop to check for state
-    // StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-    // m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
     auto dragonTale = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
     m_dragonTaleMgr = dragonTale != nullptr ? dynamic_cast<DragonTale *>(dragonTale) : nullptr;
 }
