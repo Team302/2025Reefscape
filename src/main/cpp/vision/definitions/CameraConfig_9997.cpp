@@ -23,9 +23,9 @@
 void CameraConfig_9997::BuildCameraConfig()
 {
 
-    DragonLimelight *placer = new DragonLimelight(std::string("limelight-placer"), // networkTableName
+    DragonLimelight *placer = new DragonLimelight(std::string("limelight-front"), // networkTableName
                                                   DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
-                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT3,       // PIPELINE initialPipeline,
+                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,       // PIPELINE initialPipeline,
                                                   DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS,      // PIPELINE initialPipeline,
                                                   units::length::inch_t(0),                       // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
                                                   units::length::inch_t(0),                       // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
