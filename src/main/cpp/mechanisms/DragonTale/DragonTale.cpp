@@ -624,7 +624,6 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "height", GetAlgaeHeight().value());
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
