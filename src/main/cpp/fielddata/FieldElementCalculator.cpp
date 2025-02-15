@@ -41,6 +41,16 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
 #endif
 }
 
+frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset)
+{
+    frc::Transform3d transformToApply = m_calcLeftStick;
+    if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
+    {
+        transformToApply = m_calcRightStick;
+    }
+    return poseOfFaceTag + transformToApply + m_halfRobotTransform;
+}
+
 void FieldElementCalculator::InitializeTransforms()
 {
 
