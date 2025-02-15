@@ -761,17 +761,6 @@ void DragonTale::SetSensorFailSafe()
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	/*	frc::Pose2d chassisPose = m_robotPose;								  // TODO: get current chassis pose from visdrive later :)
-		units::length::meter_t xDiff = GetReefCenter().X() - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
-		units::length::meter_t yDiff = GetReefCenter().Y() - chassisPose.Y();
-		units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
-
-		// Adjust angleToReefCenter to be between -180 and 180 degrees
-		angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
-
-		// Calculate the angle relative to the closest 60-degree increment
-		units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);*/
-
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
