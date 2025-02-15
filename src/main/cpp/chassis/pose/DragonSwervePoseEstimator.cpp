@@ -73,7 +73,7 @@ void DragonSwervePoseEstimator::Update()
                                                                                m_backLeft->GetPosition(),
                                                                                m_backRight->GetPosition()});
     }
-    AddVisionMeasurements();
+    // AddVisionMeasurements();
 
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::ChassisPose_Pose2D, GetPose());
 }

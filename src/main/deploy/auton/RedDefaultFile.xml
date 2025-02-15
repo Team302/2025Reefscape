@@ -7,7 +7,7 @@ choreoname = "Square1"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "Square1"
-time = "2.0"/>
+time = "2.5"/>
 
 <primitive id= "DO_NOTHING"
 headingOption = "IGNORE"
