@@ -104,7 +104,6 @@ SwerveModule::SwerveModule(std::string canbusname,
     // ReadConstants(configfilename);
     InitDriveMotor(driveInverted);
     InitSteerMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
-    m_tractionController = std::make_unique<TractionControlController>(1.2, 1.0, 0.4, 145.0, m_maxSpeed);
 
     m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
     m_moduleConfig.maxDriveVelocityMPS = GetMaxSpeed();
@@ -166,7 +165,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition() const
 /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
 /// @param [in] const SwerveModuleState& targetState:   state to set the module to
 /// @returns void
-void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::angular_velocity::degrees_per_second_t rotateRate, units::length::meter_t radius)
+void SwerveModule::SetDesiredState(SwerveModuleState &targetState)
 {
     // Update targets so the angle turned is less than 90 degrees
     // If the desired angle is less than 90 degrees from the target angle (e.g., -90 to 90 is the amount of turn), just use the angle and speed values
@@ -183,8 +182,6 @@ void SwerveModule::SetDesiredState(SwerveModuleState &targetState, units::angula
     // Set Drive Target
     SetDriveSpeed(targetState.speed);
 }
-
-bool SwerveModule::IsSlipping() { return m_tractionController->isSlipping(); }
 
 //==================================================================================
 /// @brief Run the swerve module at the same speed and angle
