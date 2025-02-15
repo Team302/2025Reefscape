@@ -56,7 +56,7 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
-frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout(); 
+frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
 frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 {
 	if (DragonVision::m_aprilTagLayout != frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded))
@@ -388,70 +388,123 @@ void DragonVision::testAndLogVisionData()
 std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	std::optional<double> maxArea = std::nullopt;
 	for (auto cam : cameras)
 	{
-		return cam->GetTargetArea();
+		auto thisArea = cam->GetTargetArea();
+		if (thisArea.has_value())
+		{
+			if (!maxArea.has_value() || thisArea.value() > maxArea.value())
+			{
+				maxArea = thisArea;
+			}
+		}
 	}
-	return std::nullopt;
+	return maxArea;
 }
 units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	units::angle::degree_t minTx = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
-		return cam->GetTx();
+		auto thisTx = cam->GetTx();
+		if (thisTx < minTx)
+		{
+			minTx = thisTx;
+		}
 	}
-	return units::angle::degree_t(720);
+	return minTx;
 }
 
 units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	units::angle::degree_t minTy = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
-		return cam->GetTy();
+		auto thisTy = cam->GetTy();
+		if (thisTy < minTy)
+		{
+			minTy = thisTy;
+		}
 	}
-	return units::angle::degree_t(720);
+	return minTy;
 }
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	std::optional<units::angle::degree_t> minYaw = std::nullopt;
 	for (auto cam : cameras)
 	{
-		return cam->GetTargetYaw();
+		auto thisYaw = cam->GetTargetYaw();
+		if (thisYaw.has_value())
+		{
+			if (!minYaw.has_value() || thisYaw.value() < minYaw.value())
+			{
+				minYaw = thisYaw;
+			}
+		}
 	}
-	return std::nullopt;
+	return minYaw;
 }
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	std::optional<units::angle::degree_t> minSkew = std::nullopt;
 	for (auto cam : cameras)
 	{
-		return cam->GetTargetSkew();
+		auto thisSkew = cam->GetTargetSkew();
+		if (thisSkew.has_value())
+		{
+			if (!minSkew.has_value() || thisSkew.value() < minSkew.value())
+			{
+				minSkew = thisSkew;
+			}
+		}
 	}
-	return std::nullopt;
+	return minSkew;
 }
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	std::optional<units::angle::degree_t> minPitch = std::nullopt;
 	for (auto cam : cameras)
 	{
-		return cam->GetTargetPitch();
+		auto thisPitch = cam->GetTargetPitch();
+		if (thisPitch.has_value())
+		{
+			if (!minPitch.has_value() || thisPitch.value() < minPitch.value())
+			{
+				minPitch = thisPitch;
+			}
+		}
 	}
-	return std::nullopt;
+	return minPitch;
 }
 
 std::optional<int> DragonVision::GetAprilTagID(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCammeras(usage);
+	std::optional<int> targetAprilTag = std::nullopt;
+	std::optional<double> minArea = std::nullopt;
 	for (auto cam : cameras)
 	{
-		return cam->GetAprilTagID();
+		auto thisTag = cam->GetAprilTagID();
+		if (thisTag.has_value())
+		{
+			auto thisArea = cam->GetTargetArea();
+			if (!minArea.has_value() || thisArea.value() < minArea.value())
+			{
+				minArea = thisArea;
+				targetAprilTag = thisTag;
+			}
+		}
 	}
-	return std::nullopt;
+	return targetAprilTag;
 }
 
 bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
@@ -459,7 +512,11 @@ bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	auto cameras = GetCammeras(usage);
 	for (auto cam : cameras)
 	{
-		return cam->HasTarget();
+		auto hasTarget = cam->HasTarget();
+		if (hasTarget)
+		{
+			return hasTarget;
+		}
 	}
 	return false;
 }
