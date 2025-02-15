@@ -18,6 +18,7 @@
 #include <map>
 #include <string>
 
+#include "frc/geometry/Pose3d.h"
 #include "units/angular_velocity.h"
 
 // FRC Includes
@@ -49,6 +50,8 @@ public:
         REEF,
         NEAREST_APRILTAG
     };
+
+    std::optional<frc::Pose3d> GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const;
 
     /// @brief gets the field position of the robot (right blue driverstation origin)
     /// @return std::optional<VisionPose> - the estimated position, timestamp of estimation, and confidence as array of std devs

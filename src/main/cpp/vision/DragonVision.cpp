@@ -20,14 +20,15 @@
 #include "frc/Timer.h"
 
 // Team 302 includes
-
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/definitions/ChassisConfig.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonLimelight.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "utils/logging/Logger.h"
 #include "utils/DragonField.h"
-#include <string>
+
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
 
@@ -580,4 +581,27 @@ std::vector<DragonLimelight *> DragonVision::GetCammeras(DRAGON_LIMELIGHT_CAMERA
 		}
 	}
 	return validCameras;
+}
+
+std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const
+{
+	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	for (auto cam : cameras)
+	{
+		auto visdata = cam->GetDataToSpecifiedTag(static_cast<int>(tagId));
+		if (visdata.has_value())
+		{
+			auto currentPose{frc::Pose3d(ChassisConfigMgr::GetInstance()->GetCurrentChassis()->GetPose())};
+
+			auto trans3d = visdata.value().transformToTarget;
+			auto targetPose = currentPose + trans3d;
+			units::angle::degree_t robotRelativeAngle = visdata.value().rotationToTarget.Z(); // value is robot to target
+
+			units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
+			auto pose = frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
+			return frc::Pose3d(pose);
+		}
+	}
+
+	return std::nullopt;
 }
