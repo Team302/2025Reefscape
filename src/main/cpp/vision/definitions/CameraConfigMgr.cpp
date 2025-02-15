@@ -47,6 +47,11 @@ void CameraConfigMgr::InitCameras(RobotIdentifier id)
         m_config = new CameraConfig_9997();
         break;
 
+    case RobotIdentifier::CHASSIS_BOT_9998:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
+        m_config = new CameraConfig_9997();
+        break;
+
     case RobotIdentifier::PRACTICE_BOT_9999:
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
         m_config = new CameraConfig_9999();
