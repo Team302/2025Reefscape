@@ -56,12 +56,12 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
-frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
+frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout(); 
 frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 {
-	if (DragonVision::m_aprilTagLayout != frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025Reefscape))
+	if (DragonVision::m_aprilTagLayout != frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded))
 	{
-		DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025Reefscape);
+		DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded);
 	}
 	return DragonVision::m_aprilTagLayout;
 }

@@ -94,6 +94,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     // Start timeout timer for path
 
     InitMoveInfo();
+    m_moveInfo.headingOption = params->GetHeadingOption();
 
     m_timer.get()->Reset();
     m_timer.get()->Start();
@@ -108,6 +109,7 @@ void DrivePathPlanner::InitMoveInfo()
 {
     m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER;
+
     m_moveInfo.pathnamegains = m_pathGainsType;
 
     auto pose = m_chassis->GetPose();

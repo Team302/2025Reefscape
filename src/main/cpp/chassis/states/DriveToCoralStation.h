@@ -13,21 +13,42 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
+// C++ Includes
+#include <vector>
+
+// FRC Includes
+#include <frc/geometry/Rotation3d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Pose2d.h>
+
 // Team302 Includes
-#include "chassis/ChassisOptionEnums.h"
-#include "chassis/states/IgnoreHeading.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/states/RobotDrive.h"
+#include "vision/DragonVision.h"
+#include "fielddata/DragonTargetFinder.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "utils/FMSData.h"
+#include "chassis/SwerveChassis.h"
 
-IgnoreHeading::IgnoreHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::IGNORE)
+class DriveToCoralStation : public TrajectoryDrivePathPlanner
 {
-}
+public:
+    DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    std::string GetDriveStateName() const override;
 
-std::string IgnoreHeading::GetHeadingStateName() const
-{
-    return std::string("IgnoreHeading");
-}
+    pathplanner::PathPlannerTrajectory CreateDriveToCoralStation();
+    
+    void Init(ChassisMovement &chassisMovement) override;
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
 
-void IgnoreHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
-{
-}
+    bool IsDone();
+
+private:
+    pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
+
+    pathplanner::PathPlannerTrajectory m_trajectory;
+    frc::Pose2d m_endPose;
+};
