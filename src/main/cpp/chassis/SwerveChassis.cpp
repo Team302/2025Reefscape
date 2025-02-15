@@ -180,17 +180,16 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     else if (abs(GetRotationRateDegreesPerSecond()) < 5.0) // degrees per second
     {
         m_rotatingLatch = false;
-        SetStoredHeading(GetYaw());
     }
 
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
+        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT]);
+        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT]);
+        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK]);
+        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK]);
     }
     else
     {
@@ -208,7 +207,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     }
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
-
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
 
