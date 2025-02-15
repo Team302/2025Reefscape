@@ -15,71 +15,40 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// C++ Includes
+#include <vector>
+
+// FRC Includes
+#include <frc/geometry/Rotation3d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Pose2d.h>
+
+// Team302 Includes
+#include "chassis/states/RobotDrive.h"
+#include "vision/DragonVision.h"
+#include "fielddata/DragonTargetFinder.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "utils/FMSData.h"
+#include "chassis/SwerveChassis.h"
+
+class DriveToLeftReefBranch : public TrajectoryDrivePathPlanner
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        IGNORE
-    };
+    DriveToLeftReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    std::string GetDriveStateName() const override;
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_NOTE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        STOP_DRIVE
-    };
+    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranch();
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
+    void Init(ChassisMovement &chassisMovement) override;
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
 
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
+    bool IsDone();
 
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_NOTE,
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
+private:
+    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
 
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NOTE,
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+    pathplanner::PathPlannerTrajectory m_trajectory;
+    frc::Pose2d m_endPose;
 };
