@@ -507,7 +507,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>240</value>
+                <value>180</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -767,7 +767,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>3</value>
+                <value>12</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -1459,7 +1459,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>12</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -4374,7 +4374,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>4</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -4633,7 +4633,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1</value>
+                <value>405</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
