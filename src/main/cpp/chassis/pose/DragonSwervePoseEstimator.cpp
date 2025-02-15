@@ -112,8 +112,7 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 }
 void DragonSwervePoseEstimator::CalculateInitialPose()
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
         auto vision = DragonVision::GetDragonVision();

@@ -73,11 +73,14 @@ std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
 																			  units::angular_velocity::degrees_per_second_t(0.0));
 		if (megaTag2Position.has_value())
 		{
+
 			std::optional<frc::Pose2d> megaTag2Posed = megaTag2Position.value().estimatedPose.ToPose2d();
 			return megaTag2Posed;
 		}
+
 		return visionPosition.value().estimatedPose.ToPose2d();
 	}
+
 	return std::nullopt;
 }
 frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
