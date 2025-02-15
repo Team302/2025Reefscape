@@ -52,12 +52,14 @@
 #include "mechanisms/DragonTale/ManualCoralLoadState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeReefState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeFloorState.h"
+#include "fielddata/DragonTargetFinder.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
+#include "tuple"
 
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;
@@ -71,6 +73,7 @@ using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
 
 using std::string;
+using std::tuple;
 using namespace DragonTaleStates;
 
 void DragonTale::CreateAndRegisterStates()
@@ -758,28 +761,33 @@ void DragonTale::SetSensorFailSafe()
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
 	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose = m_robotPose;								  // TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = GetReefCenter().X() - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
-	units::length::meter_t yDiff = GetReefCenter().Y() - chassisPose.Y();
-	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
+	/*	frc::Pose2d chassisPose = m_robotPose;								  // TODO: get current chassis pose from visdrive later :)
+		units::length::meter_t xDiff = GetReefCenter().X() - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
+		units::length::meter_t yDiff = GetReefCenter().Y() - chassisPose.Y();
+		units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
 
-	// Adjust angleToReefCenter to be between -180 and 180 degrees
-	angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
+		// Adjust angleToReefCenter to be between -180 and 180 degrees
+		angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
 
-	// Calculate the angle relative to the closest 60-degree increment
-	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
+		// Calculate the angle relative to the closest 60-degree increment
+		units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);*/
 
 	// Adjust the angle to the nearest 60-degree increment
-	units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
+	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
+	if (info)
+	{
+		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
+		units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
 
-	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
+		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg + allianceAdjustment;
 
-	int multipleNumber = closestMultiple.value() / 60.0;
+		int multipleNumber = closestMultiple.value() / 60.0;
 
-	if (multipleNumber % 2 == 0)
-		return m_grabAlgaeHigh;
-	else
-		return m_grabAlgaeLow;
+		if (multipleNumber % 2 == 0)
+			return m_grabAlgaeHigh;
+		else
+			return m_grabAlgaeLow;
+	}
 }
 
 void DragonTale::ManualControl()
