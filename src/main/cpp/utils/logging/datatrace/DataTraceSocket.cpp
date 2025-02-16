@@ -16,8 +16,8 @@
 // FRC includes
 
 // Team 302 includes
-#include "utils/logging/DataTrace.h"
-#include <utils/logging/DataTraceSocket.h>
+#include "utils/logging/datatrace/DataTrace.h"
+#include "utils/logging/datatrace/DataTraceSocket.h"
 
 // Third Party Includes
 

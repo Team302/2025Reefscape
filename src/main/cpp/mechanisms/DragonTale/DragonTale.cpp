@@ -760,7 +760,6 @@ void DragonTale::SetSensorFailSafe()
 
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
@@ -776,6 +775,7 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		else
 			return m_grabAlgaeLow;
 	}
+	return m_grabAlgaeLow;
 }
 
 void DragonTale::ManualControl()

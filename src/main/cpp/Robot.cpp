@@ -15,6 +15,7 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "chassis/SwerveChassis.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
@@ -25,8 +26,7 @@
 #include "utils/DragonField.h"
 #include "utils/DragonPower.h"
 #include "utils/DragonPower.h"
-#include "utils/logging/DataTrace.h"
-#include "utils/logging/DataTrace.h"
+#include "utils/logging/datatrace/DataTrace.h"
 #include "utils/logging/DragonDataLoggerMgr.h"
 #include "utils/logging/LoggableItemMgr.h"
 #include "utils/logging/Logger.h"
@@ -41,7 +41,7 @@
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonQuest.h"
 #include "vision/DragonVision.h"
-#include "chassis/pose/DragonSwervePoseEstimator.h"
+
 using std::string;
 
 void Robot::RobotInit()
