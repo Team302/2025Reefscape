@@ -3,10 +3,10 @@
 <auton>
 
 <primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueLeftOutside_L.traj"/>
+choreoname = "BlueLeftOutside_L"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftOutside_L.traj"
+choreoname = "BlueLeftOutside_L"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
 <zone filename = "BlueReefPlacerZones.xml"/>
@@ -15,7 +15,7 @@ time = "4.0">
 <primitive id = "DRIVE_STOP_MECH"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueLeftCSA_L2.traj"
+choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "4.0">
 <zone filename = "BlueLeftHumanPlayerStation.xml"/>

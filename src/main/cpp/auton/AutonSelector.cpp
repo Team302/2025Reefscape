@@ -54,6 +54,7 @@ string AutonSelector::GetSelectedAutoFile()
 {
 	std::string autonfile(frc::filesystem::GetDeployDirectory());
 	autonfile += std::filesystem::path("/auton/").string();
+	autonfile += GetDesiredScoringLevel() + "/";
 	autonfile += GetAlianceColor();
 	autonfile += GetStartPos();
 	autonfile += GetTargetFace();
