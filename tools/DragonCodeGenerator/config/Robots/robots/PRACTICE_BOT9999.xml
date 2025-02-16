@@ -1191,7 +1191,7 @@
             <feedbackSensorConfig />
             <remoteFeedbackSensorConfig />
           </MotorController>
-          <MotorController xsi:type="TalonFX">
+          <MotorController xsi:type="TalonFXS">
             <name>Algae</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>
@@ -4365,7 +4365,7 @@
         <GUID>178a8a32-a228-43f0-81f4-be4dc9132beb</GUID>
         <name>Intake</name>
         <MotorControllers>
-          <MotorController xsi:type="TalonFX">
+          <MotorController xsi:type="TalonFXS">
             <name>Intake</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>
@@ -4624,7 +4624,7 @@
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
-          <MotorController xsi:type="TalonFX">
+          <MotorController xsi:type="TalonFXS">
             <name>Extender</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>

@@ -1019,7 +1019,7 @@
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
-          <MotorController xsi:type="TalonSRX">
+          <MotorController xsi:type="TalonFXS">
             <name>Coral</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>
@@ -1191,7 +1191,7 @@
             <feedbackSensorConfig />
             <remoteFeedbackSensorConfig />
           </MotorController>
-          <MotorController xsi:type="TalonFX">
+          <MotorController xsi:type="TalonFXS">
             <name>Algae</name>
             <ControllerEnabled>Yes</ControllerEnabled>
             <theDistanceAngleCalcInfo>

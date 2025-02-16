@@ -4,7 +4,7 @@
   <name>Intake</name>
   <MotorControllers>
     <MotorController
-      xsi:type="TalonFX">
+      xsi:type="TalonFXS">
       <name>Intake</name>
       <ControllerEnabled>Yes</ControllerEnabled>
       <theDistanceAngleCalcInfo>
@@ -264,7 +264,7 @@
       </theConfigMotorSettings>
     </MotorController>
     <MotorController
-      xsi:type="TalonFX">
+      xsi:type="TalonFXS">
       <name>Extender</name>
       <ControllerEnabled>Yes</ControllerEnabled>
       <theDistanceAngleCalcInfo>
