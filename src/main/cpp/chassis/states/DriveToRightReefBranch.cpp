@@ -75,9 +75,8 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
     if (m_chassis != nullptr)
     {
         std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
-        if (info)
+        if (info && !IsDone())
         {
-
             m_endPose = std::get<frc::Pose2d>(info.value());
             trajectory = CreateDriveToRightReefBranchTrajectory(m_chassis->GetPose(), m_endPose);
         }
@@ -87,7 +86,6 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
 
 pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
-    // create a midpoint between the current pose and the right reef branch
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 

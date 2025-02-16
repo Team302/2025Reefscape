@@ -75,9 +75,8 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
     if (m_chassis != nullptr)
     {
         std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
-        if (info)
+        if (info && !IsDone())
         {
-
             m_endPose = std::get<frc::Pose2d>(info.value());
             trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), m_endPose);
         }
@@ -87,7 +86,6 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
 
 pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
-    // create a midpoint perpendicular to the coral station
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 
