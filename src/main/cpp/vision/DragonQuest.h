@@ -41,7 +41,7 @@ class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
-    void DataLog() override;
+    void DataLog(units::time::second_t timestamp) override;
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
 

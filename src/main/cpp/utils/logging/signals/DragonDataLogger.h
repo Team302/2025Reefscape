@@ -20,6 +20,7 @@
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
+#include "units/time.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
 
 class DragonDataLogger
@@ -28,17 +29,17 @@ public:
     DragonDataLogger();
     virtual ~DragonDataLogger() = default;
 
-    virtual void DataLog() = 0;
+    virtual void DataLog(units::time::second_t timestamp) = 0;
 
 protected:
-    void LogBoolData(DragonDataLoggerSignals::BoolSignals signalID, bool value);
-    void LogDoubleData(DragonDataLoggerSignals::DoubleSignals signalID, double value);
-    void LogStringData(DragonDataLoggerSignals::StringSignals signalID, std::string value);
-    void Log2DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value);
-    void Log3DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value);
+    void LogBoolData(units::time::second_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value);
+    void LogDoubleData(units::time::second_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value);
+    void LogStringData(units::time::second_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value);
+    void Log2DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value);
+    void Log3DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value);
 
-    void LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value);
-    void LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
+    void LogSwerveModuleStateData(units::time::second_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value);
+    void LogChassisSpeedsData(units::time::second_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
 
     const double m_doubleTolerance = 0.001;
 };

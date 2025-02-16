@@ -25,7 +25,7 @@ DragonDataLogger::DragonDataLogger()
     DragonDataLoggerMgr::GetInstance()->RegisterItem(this);
 }
 
-void DragonDataLogger::LogBoolData(DragonDataLoggerSignals::BoolSignals signalID, bool value)
+void DragonDataLogger::LogBoolData(units::time::second_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -33,7 +33,7 @@ void DragonDataLogger::LogBoolData(DragonDataLoggerSignals::BoolSignals signalID
     }
 }
 
-void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals signalID, double value)
+void DragonDataLogger::LogDoubleData(units::time::second_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -121,7 +121,7 @@ void DragonDataLogger::LogDoubleData(DragonDataLoggerSignals::DoubleSignals sign
     }
 }
 
-void DragonDataLogger::LogStringData(DragonDataLoggerSignals::StringSignals signalID, std::string value)
+void DragonDataLogger::LogStringData(units::time::second_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -149,7 +149,7 @@ void DragonDataLogger::LogStringData(DragonDataLoggerSignals::StringSignals sign
         }
     }
 }
-void DragonDataLogger::Log2DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value)
+void DragonDataLogger::Log2DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -166,7 +166,7 @@ void DragonDataLogger::Log2DPoseData(DragonDataLoggerSignals::PoseSingals signal
     }
 }
 
-void DragonDataLogger::Log3DPoseData(DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value)
+void DragonDataLogger::Log3DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -191,7 +191,7 @@ void DragonDataLogger::Log3DPoseData(DragonDataLoggerSignals::PoseSingals signal
     }
 }
 
-void DragonDataLogger::LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value)
+void DragonDataLogger::LogSwerveModuleStateData(units::time::second_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
@@ -276,7 +276,7 @@ void DragonDataLogger::LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveS
     }
 }
 
-void DragonDataLogger::LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value)
+void DragonDataLogger::LogChassisSpeedsData(units::time::second_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)

@@ -18,6 +18,7 @@
 
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
+#include "frc/Timer.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
 #include "wpi/DataLog.h"
@@ -83,9 +84,11 @@ void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
 
 void DragonDataLoggerMgr::PeriodicDataLog() const
 {
+    units::time::second_t timestamp = frc::Timer::GetFPGATimestamp();
+
     for (auto item : m_items)
     {
-        item->DataLog();
+        item->DataLog(timestamp);
     }
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
     log.Flush();

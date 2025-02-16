@@ -588,18 +588,18 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
     return DragonVisionPoseEstimatorStruct();
 }
 
-void DragonLimelight::DataLog()
+void DragonLimelight::DataLog(units::time::second_t timestamp)
 {
     auto vispose = EstimatePoseOdometryLimelight(true);
     if (vispose.has_value())
     {
         if (m_identifier == DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA)
         {
-            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
         }
         else
         {
-            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
         }
     }
 }

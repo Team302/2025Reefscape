@@ -25,7 +25,7 @@ class DragonPower : public LoggableItem, public DragonDataLogger
 {
 public:
     static DragonPower *GetInstance();
-    void DataLog() override;
+    void DataLog(units::time::second_t timestamp) override;
     void LogInformation() override;
 
 private:

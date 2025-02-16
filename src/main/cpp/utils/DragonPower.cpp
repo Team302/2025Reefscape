@@ -69,13 +69,13 @@ void DragonPower::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
 }
 
-void DragonPower::DataLog()
+void DragonPower::DataLog(units::time::second_t timestamp)
 {
     if (calculateInLogger)
         CalculatePowerData();
 
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
 }

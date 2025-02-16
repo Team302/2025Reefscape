@@ -131,7 +131,7 @@ public:
     bool IsRotating() const { return m_rotatingLatch; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation() override;
-    void DataLog() override;
+    void DataLog(units::time::second_t timestamp) override;
 
     units::mass::kilogram_t GetMass() const { return m_mass; }
     units::moment_of_inertia::kilogram_square_meter_t GetMomenOfInertia() const { return m_momentOfInertia; }

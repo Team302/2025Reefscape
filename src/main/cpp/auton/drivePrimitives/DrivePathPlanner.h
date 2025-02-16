@@ -43,7 +43,7 @@ public:
     void Init(PrimitiveParams *params) override;
     void Run() override;
     bool IsDone() override;
-    void DataLog() override;
+    void DataLog(units::time::second_t timestamp) override;
 
 private:
     void InitMoveInfo();
