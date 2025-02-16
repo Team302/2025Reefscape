@@ -18,6 +18,7 @@
 #include <map>
 #include <string>
 
+#include "frc/geometry/Pose3d.h"
 #include "units/angular_velocity.h"
 
 // FRC Includes
@@ -50,6 +51,8 @@ public:
         NEAREST_APRILTAG
     };
 
+    std::optional<frc::Pose3d> GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const;
+
     /// @brief gets the field position of the robot (right blue driverstation origin)
     /// @return std::optional<VisionPose> - the estimated position, timestamp of estimation, and confidence as array of std devs
     std::optional<VisionPose> GetRobotPosition();
@@ -67,6 +70,10 @@ public:
     /// @param camera pointer to the camera object that should be added
     /// @param position the physical position of the camera
     void AddLimelight(DragonLimelight *camera, DRAGON_LIMELIGHT_CAMERA_USAGE usage);
+
+    /// @brief calculates the pose from other methods of vision
+    /// @return std::optional<frc::Pose2d>
+    std::optional<frc::Pose2d> CalcVisionPose();
 
     // raw data methods
 
@@ -106,6 +113,5 @@ private:
     std::optional<VisionData> SingleTagToElement(frc::Pose3d elementPose, int idToSearch);
 
     static DragonVision *m_dragonVision;
-
     std::multimap<DRAGON_LIMELIGHT_CAMERA_USAGE, DragonLimelight *> m_dragonLimelightMap;
 };
