@@ -15,12 +15,13 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "frc/Timer.h"
 #include <frc/PowerDistribution.h>
-#include "utils/logging/LoggableItem.h"
-#include "utils/logging/DragonDataLogger.h"
 
-class DragonPower: public LoggableItem, public DragonDataLogger
+#include "frc/Timer.h"
+#include "utils/logging/LoggableItem.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+
+class DragonPower : public LoggableItem, public DragonDataLogger
 {
 public:
     static DragonPower *GetInstance();

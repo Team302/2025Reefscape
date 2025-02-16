@@ -32,7 +32,7 @@
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
-#include "utils/logging/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"

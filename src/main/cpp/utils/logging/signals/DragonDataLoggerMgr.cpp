@@ -14,12 +14,13 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/logging/DragonDataLoggerSignals.h"
-#include "utils/logging/DragonDataLoggerMgr.h"
+#include <filesystem>
+
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
+#include "utils/logging/signals/DragonDataLoggerMgr.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
 #include "wpi/DataLog.h"
-#include <filesystem>
 
 using namespace std;
 
@@ -71,9 +72,8 @@ std::string DragonDataLoggerMgr::GetLoggingDir()
     {
         return std::filesystem::path("/home/lvuser/logs/").string();
     }
-    
+
     return std::string("");
-    
 }
 
 void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)

@@ -16,11 +16,11 @@
 
 #pragma once
 #include <string>
-#include "frc/kinematics/ChassisSpeeds.h"
+
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Pose3d.h"
-
-#include "utils/logging/DragonDataLoggerSignals.h"
+#include "frc/kinematics/ChassisSpeeds.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
 
 class DragonDataLogger
 {

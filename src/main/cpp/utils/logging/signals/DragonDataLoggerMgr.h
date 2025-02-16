@@ -17,7 +17,8 @@
 #pragma once
 #include <array>
 #include <vector>
-#include "utils/logging/DragonDataLogger.h"
+
+#include "utils/logging/signals/DragonDataLogger.h"
 
 class DragonDataLoggerMgr
 {

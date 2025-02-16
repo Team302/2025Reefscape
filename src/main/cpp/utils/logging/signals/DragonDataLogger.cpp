@@ -17,8 +17,8 @@
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
-#include "utils/logging/DragonDataLogger.h"
-#include "utils/logging/DragonDataLoggerMgr.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLoggerMgr.h"
 
 DragonDataLogger::DragonDataLogger()
 {

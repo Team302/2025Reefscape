@@ -23,7 +23,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/states/DriveToNote.h"
-#include "utils/logging/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"

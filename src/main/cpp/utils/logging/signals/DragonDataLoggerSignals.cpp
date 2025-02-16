@@ -15,7 +15,7 @@
 //====================================================================================================================================================
 
 #include "frc/DataLogManager.h"
-#include "utils/logging/DragonDataLoggerSignals.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
 #include "wpi/DataLog.h"
 
 DragonDataLoggerSignals *DragonDataLoggerSignals::m_instance = nullptr;
