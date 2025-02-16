@@ -40,7 +40,9 @@ DriveStopMech::DriveStopMech() : DriveStop()
     // get reference to notemanager in drivestop to check for state
     // StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
     // m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
-    auto dragonTale = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+    auto dragonTale = config != nullptr ? config->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
+
     m_dragonTaleMgr = dragonTale != nullptr ? dynamic_cast<DragonTale *>(dragonTale) : nullptr;
 }
 void DriveStopMech::Init(PrimitiveParams *params)
@@ -53,5 +55,8 @@ void DriveStopMech::Init(PrimitiveParams *params)
 /// @return bool true means the end condition was reached, false means it hasn't
 bool DriveStopMech::IsDone()
 {
-    return m_dragonTaleMgr->GetCurrentState() == m_switchState || DriveStop::IsDone();
+    if (m_dragonTaleMgr != nullptr)
+        return m_dragonTaleMgr->GetCurrentState() == m_switchState || DriveStop::IsDone();
+
+    return DriveStop::IsDone();
 }
