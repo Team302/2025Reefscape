@@ -46,7 +46,7 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
 

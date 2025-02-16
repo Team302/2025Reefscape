@@ -29,7 +29,7 @@
 #include "frc/geometry/Rotation3d.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
 

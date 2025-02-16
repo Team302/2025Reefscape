@@ -18,7 +18,7 @@
 #include <frc/PowerDistribution.h>
 
 #include "frc/Timer.h"
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 class DragonPower : public LoggableItem, public DragonDataLogger

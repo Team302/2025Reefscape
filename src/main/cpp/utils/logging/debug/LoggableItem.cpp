@@ -12,39 +12,17 @@
 /// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 /// OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include <vector>
 
 // FRC includes
 
 // Team 302 includes
-#include <utils/logging/LoggableItemMgr.h>
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
+#include "utils/logging/debug/LoggableItemMgr.h"
 
 // Third Party Includes
 
-LoggableItemMgr *LoggableItemMgr::m_instance = nullptr;
-LoggableItemMgr *LoggableItemMgr::GetInstance()
-{
-    if (LoggableItemMgr::m_instance == nullptr)
-    {
-        LoggableItemMgr::m_instance = new LoggableItemMgr();
-    }
-    return LoggableItemMgr::m_instance;
-}
-
 /// @brief    initialize the state manager, parse the configuration file and create the states.
-LoggableItemMgr::LoggableItemMgr() : m_loggableItems()
+LoggableItem::LoggableItem()
 {
-}
-void LoggableItemMgr::RegisterLoggableItem(
-    LoggableItem *item)
-{
-    m_loggableItems.emplace_back(item);
-}
-void LoggableItemMgr::LogData() const
-{
-    for (auto item : m_loggableItems)
-    {
-        item->LogInformation();
-    }
+    LoggableItemMgr::GetInstance()->RegisterLoggableItem(this);
 }

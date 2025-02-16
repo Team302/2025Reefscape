@@ -16,6 +16,8 @@
 // Generated on Saturday, February 1, 2025 10:12:09 AM
 
 #pragma once
+#include <unordered_map>
+
 #include "configs/MechanismConfig.h"
 #include "mechanisms/MechanismTypes.h"
 #include "state/StateMgr.h"

@@ -17,12 +17,13 @@
 // FRC includesssss
 
 // Team 302 includes
-#include "auton/drivePrimitives/DriveStopMech.h"
 #include "auton/drivePrimitives/DriveStop.h"
+#include "auton/drivePrimitives/DriveStopMech.h"
 #include "auton/PrimitiveParams.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
-// #include "utils/logging/Logger.h"
+
+// #include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

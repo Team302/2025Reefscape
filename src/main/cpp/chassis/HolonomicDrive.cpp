@@ -34,7 +34,7 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVision.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "states/FaceNearestReefFace.h"
 
 using std::string;

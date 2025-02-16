@@ -14,12 +14,13 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/DragonPower.h"
-#include "utils/logging/Logger.h"
 #include <string>
 
+#include "utils/DragonPower.h"
+#include "utils/logging/debug/Logger.h"
+
 DragonPower *DragonPower::m_dragonPowerInstance = nullptr;
-bool calculateInLogger = true; //set this to false to calculate power data via LoggableItem instead of signel
+bool calculateInLogger = true; // set this to false to calculate power data via LoggableItem instead of signel
 
 DragonPower *DragonPower::GetInstance()
 {
@@ -31,7 +32,7 @@ DragonPower *DragonPower::GetInstance()
 }
 
 DragonPower::DragonPower()
-{    
+{
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
     m_calcTimer = new frc::Timer();
@@ -53,8 +54,6 @@ void DragonPower::CalculatePowerData()
         m_calcTimer->Reset();
         m_calcTimer->Start();
     }
-
-    
 }
 
 void DragonPower::LogInformation()
@@ -73,12 +72,10 @@ void DragonPower::LogInformation()
 void DragonPower::DataLog()
 {
     if (calculateInLogger)
-        CalculatePowerData();    
+        CalculatePowerData();
 
     LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
     LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
     LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
     LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
 }
-
-

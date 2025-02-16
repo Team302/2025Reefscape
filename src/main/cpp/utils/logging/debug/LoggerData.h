@@ -15,22 +15,26 @@
 //====================================================================================================================================================
 
 #pragma once
+
+// standard C++ includes
+#include <string>
+#include <utility>
 #include <vector>
 
-#include "utils/logging/LoggableItem.h"
+// Team 302 includs
+#include "utils/logging/debug/LoggerEnums.h"
 
-class LoggableItemMgr
+typedef std::pair<std::string, bool> LoggerBoolValue;
+typedef std::pair<std::string, double> LoggerDoubleValue;
+typedef std::pair<std::string, int> LoggerIntValue;
+typedef std::pair<std::string, std::string> LoggerStringValue;
+
+struct LoggerData
 {
-public:
-    static LoggableItemMgr *GetInstance();
-    void RegisterLoggableItem(LoggableItem *item);
-    void LogData() const;
-
-private:
-    LoggableItemMgr();
-    ~LoggableItemMgr() = default;
-
-    std::vector<LoggableItem *> m_loggableItems;
-
-    static LoggableItemMgr *m_instance;
+    LOGGER_LEVEL level;
+    const std::string &group;
+    std::vector<LoggerBoolValue> bools;
+    std::vector<LoggerDoubleValue> doubles;
+    std::vector<LoggerIntValue> ints;
+    std::vector<LoggerStringValue> strings;
 };

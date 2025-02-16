@@ -35,7 +35,7 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "vision/DragonLimelight.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructLogger.h"
 
@@ -295,7 +295,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             if (!m_megatag2PosBool)
             {
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-                
+
                 // multiple targets detected
                 if (poseEstimate.tagCount == 0)
                 {
@@ -308,7 +308,6 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                     double degStds = 9999999;
                     m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-                    
                 }
             }
             return m_megatag2Pos;

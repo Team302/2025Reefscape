@@ -15,11 +15,10 @@
 
 // Team302 Includes
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/states/SpecifiedHeading.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-
-#include "utils/logging/Logger.h"
+#include "chassis/states/SpecifiedHeading.h"
+#include "utils/logging/debug/Logger.h"
 
 SpecifiedHeading::SpecifiedHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE),
                                        m_targetAngle(units::angle::degree_t(0.0))
