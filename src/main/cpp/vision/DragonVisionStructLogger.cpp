@@ -145,3 +145,17 @@ void DragonVisionStructLogger::logPose2d(const std::string &loggerName, const fr
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("Y"), std::to_string(pose2d.Y().to<double>()));
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("Rotation"), std::to_string(pose2d.Rotation().Degrees().to<double>()));
 }
+
+void DragonVisionStructLogger::logLLPoseEstimation(const std::string &loggerName, const LimelightHelpers::PoseEstimate llPoseEstimate)
+{
+
+
+    logPose2d(loggerName, llPoseEstimate.pose);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("TimeStamp"), std::to_string(llPoseEstimate.timestampSeconds.to<double>()));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("TagCount"), std::to_string(llPoseEstimate.tagCount));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("TagSpan"), std::to_string(llPoseEstimate.tagSpan));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("AvgTagDist"), std::to_string(llPoseEstimate.avgTagDist));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("AvgTagArea"), std::to_string(llPoseEstimate.avgTagArea));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, loggerName, std::string("Latency"), std::to_string(llPoseEstimate.latency));
+    
+}
