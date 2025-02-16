@@ -46,6 +46,8 @@ void ManualClimbState::Init()
 	m_manualTarget = m_ClimberTarget;
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
+	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+		InitCOMP_BOT302();
 }
 
 void ManualClimbState::InitPRACTICE_BOT9999()

@@ -46,6 +46,8 @@ void ExpelState::Init()
 
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
+	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+		InitCOMP_BOT302();
 }
 
 void ExpelState::InitPRACTICE_BOT9999()
