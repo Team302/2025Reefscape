@@ -56,6 +56,12 @@ void AutoClimbState::InitPRACTICE_BOT9999()
 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
+void AutoClimbState::InitCOMP_BOT302()
+{
+	m_mechanism->SetPIDClimberPositionDegree();
+	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+}
+
 void AutoClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutoClimbState"), string("Run"));
