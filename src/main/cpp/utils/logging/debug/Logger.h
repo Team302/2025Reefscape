@@ -17,15 +17,15 @@
 #pragma once
 
 // C++ Includes
-#include <string>
 #include <set>
+#include <string>
 
 // FRC includes
 #include <frc/smartdashboard/SendableChooser.h>
 
 // Team 302 includes
-#include <utils/logging/LoggerData.h>
-#include <utils/logging/LoggerEnums.h>
+#include "utils/logging/debug/LoggerData.h"
+#include "utils/logging/debug/LoggerEnums.h"
 
 class Logger
 {

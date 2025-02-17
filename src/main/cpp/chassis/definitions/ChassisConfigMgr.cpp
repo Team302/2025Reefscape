@@ -21,7 +21,7 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "RobotIdentifier.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 

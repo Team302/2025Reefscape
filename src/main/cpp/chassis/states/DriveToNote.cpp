@@ -32,9 +32,9 @@
 #include "fielddata/DragonTargetFinder.h" // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 #include "chassis/SwerveChassis.h"
 
-#include "utils/logging/Logger.h"
-#include "utils/logging/LoggerData.h"
-#include "utils/logging/LoggerEnums.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/LoggerData.h"
+#include "utils/logging/debug/LoggerEnums.h"
 
 DriveToNote::DriveToNote(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)

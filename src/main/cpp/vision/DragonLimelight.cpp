@@ -35,7 +35,7 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "vision/DragonLimelight.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructLogger.h"
 
@@ -295,7 +295,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             if (!m_megatag2PosBool)
             {
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-                
+
                 // multiple targets detected
                 if (poseEstimate.tagCount == 0)
                 {
@@ -308,7 +308,6 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                     double degStds = 9999999;
                     m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-                    
                 }
             }
             return m_megatag2Pos;
@@ -589,18 +588,18 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
     return DragonVisionPoseEstimatorStruct();
 }
 
-void DragonLimelight::DataLog()
+void DragonLimelight::DataLog(uint64_t timestamp)
 {
     auto vispose = EstimatePoseOdometryLimelight(true);
     if (vispose.has_value())
     {
         if (m_identifier == DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA)
         {
-            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
         }
         else
         {
-            Log3DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
         }
     }
 }

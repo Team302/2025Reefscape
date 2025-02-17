@@ -21,7 +21,7 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "ClimberManager.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 

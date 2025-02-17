@@ -17,11 +17,11 @@
 
 #include <string>
 
-#include "utils/logging/Logger.h"
-#include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfig.h"
-#include "configs/MechanismConfigPRACTICE_BOT_9999.h"
 #include "configs/MechanismConfigCOMP_BOT_302.h"
+#include "configs/MechanismConfigMgr.h"
+#include "configs/MechanismConfigPRACTICE_BOT_9999.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 

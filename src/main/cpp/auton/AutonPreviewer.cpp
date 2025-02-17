@@ -33,7 +33,7 @@
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/drivePrimitives/AutonUtils.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/SwerveModule.h"

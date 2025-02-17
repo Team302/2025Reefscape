@@ -37,7 +37,7 @@
 #include <networktables/NetworkTableEntry.h>
 
 // Team 302 includes
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

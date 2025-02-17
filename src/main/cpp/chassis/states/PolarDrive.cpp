@@ -15,13 +15,13 @@
 
 #include <string>
 
-#include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Rotation2d.h"
 
 // Team302 Includes
 #include "chassis/states/PolarDrive.h"
 #include "utils/FMSData.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "fielddata/DragonTargetFinder.h"
 
 using frc::ChassisSpeeds;

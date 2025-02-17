@@ -14,12 +14,13 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/logging/DragonDataLoggerSignals.h"
-#include "utils/logging/DragonDataLoggerMgr.h"
+#include <filesystem>
+
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
-#include "wpi/DataLog.h"
-#include <filesystem>
+#include "frc/RobotController.h"
+#include "utils/logging/signals/DragonDataLoggerMgr.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
 
 using namespace std;
 
@@ -71,9 +72,8 @@ std::string DragonDataLoggerMgr::GetLoggingDir()
     {
         return std::filesystem::path("/home/lvuser/logs/").string();
     }
-    
+
     return std::string("");
-    
 }
 
 void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
@@ -83,9 +83,11 @@ void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
 
 void DragonDataLoggerMgr::PeriodicDataLog() const
 {
+    uint64_t timestamp = frc::RobotController::GetFPGATime();
+
     for (auto item : m_items)
     {
-        item->DataLog();
+        item->DataLog(timestamp);
     }
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
     log.Flush();

@@ -40,7 +40,7 @@
 #include "state/StateMgr.h"
 // #include "mechanisms/MechanismTypes.h"
 #include "utils/FMSData.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/states/RobotDrive.h"
 
 // third party includes
@@ -100,9 +100,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_timer.get()->Start();
 }
 
-void DrivePathPlanner::DataLog()
+void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
-    LogStringData(DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
+    LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
 }
 
 void DrivePathPlanner::InitMoveInfo()
