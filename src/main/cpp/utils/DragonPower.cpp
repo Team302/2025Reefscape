@@ -33,6 +33,7 @@ DragonPower *DragonPower::GetInstance()
 
 DragonPower::DragonPower()
 {
+    return; // temporarily remove DragonPower
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
     m_calcTimer = new frc::Timer();
@@ -40,6 +41,7 @@ DragonPower::DragonPower()
 
 void DragonPower::CalculatePowerData()
 {
+    return; // temporarily remove DragonPower
     // TODO get some of this data from RoboRio + methods on motors
     // need to determine if we met the calcFrequency threshold
     if (m_pdp != nullptr)
@@ -58,6 +60,7 @@ void DragonPower::CalculatePowerData()
 
 void DragonPower::LogInformation()
 {
+    return; // temporarily remove DragonPower
     if (!calculateInLogger)
         CalculatePowerData();
 
@@ -71,6 +74,7 @@ void DragonPower::LogInformation()
 
 void DragonPower::DataLog(uint64_t timestamp)
 {
+    return; // temporarily remove DragonPower
     if (calculateInLogger)
         CalculatePowerData();
 
