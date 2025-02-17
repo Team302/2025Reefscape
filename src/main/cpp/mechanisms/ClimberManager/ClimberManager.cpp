@@ -103,6 +103,26 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double nominalValue
 		true									// bool enableFOC
 	);
+	m_PercentOut = new ControlData(
+		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PercentOut",									  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
+	);
 
 	ReadConstants("ClimberManager.xml", 9999);
 
@@ -135,6 +155,26 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double peakValue
 		0,										// double nominalValue
 		true									// bool enableFOC
+	);
+	m_PercentOut = new ControlData(
+		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PercentOut",									  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
 	);
 
 	ReadConstants("ClimberManager.xml", 302);
@@ -363,6 +403,8 @@ ControlData *ClimberManager::GetControlData(string name)
 {
 	if (name.compare("PositionDegree") == 0)
 		return m_PositionDegree;
+	if (name.compare("PercentOut") == 0)
+		return m_PercentOut;
 
 	return nullptr;
 }

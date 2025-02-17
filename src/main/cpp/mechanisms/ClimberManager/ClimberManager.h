@@ -66,6 +66,17 @@ public:
 	/// @brief update the output to the mechanism using the current controller and target value(s)
 	virtual void Update();
 
+	void UpdateTargetClimberPercentOut(double percentOut)
+	{
+		m_ClimberPercentOut.Output = percentOut;
+		m_ClimberActiveTarget = &m_ClimberPercentOut;
+	}
+	void UpdateTargetClimberPercentOut(double percentOut, bool enableFOC)
+	{
+		m_ClimberPercentOut.Output = percentOut;
+		m_ClimberPercentOut.EnableFOC = enableFOC;
+		m_ClimberActiveTarget = &m_ClimberPercentOut;
+	}
 	void UpdateTargetClimberPositionDegree(units::angle::turn_t position)
 	{
 		m_ClimberPositionDegree.Position = position;
@@ -88,6 +99,7 @@ public:
 
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
+	ControlData *GetPercentOut() const { return m_PercentOut; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -107,6 +119,7 @@ private:
 
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
 	ControlData *m_PositionDegree;
+	ControlData *m_PercentOut;
 
 	RobotStateChanges::ClimbMode m_climbMode;
 
@@ -117,6 +130,7 @@ private:
 	void InitializeTalonFXClimberPRACTICE_BOT9999();
 	void InitializeTalonFXClimberCOMP_BOT302();
 
+	ctre::phoenix6::controls::DutyCycleOut m_ClimberPercentOut{0.0};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 };
