@@ -40,7 +40,7 @@ DragonPower::DragonPower()
 
 void DragonPower::CalculatePowerData()
 {
-
+    // TODO get some of this data from RoboRio + methods on motors
     // need to determine if we met the calcFrequency threshold
     if (m_pdp != nullptr)
     {
