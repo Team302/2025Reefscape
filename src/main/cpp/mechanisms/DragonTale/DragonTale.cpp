@@ -1096,7 +1096,7 @@ void DragonTale::SetSensorFailSafe()
 
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	units::length::inch_t algeHeight = m_grabAlgaeLow;
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
@@ -1108,10 +1108,9 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		int multipleNumber = closestMultiple.value() / 60.0;
 
 		if (multipleNumber % 2 == 0)
-			return m_grabAlgaeHigh;
-		else
-			return m_grabAlgaeLow;
+			algeHeight = m_grabAlgaeHigh;
 	}
+	return algeHeight;
 }
 
 void DragonTale::ManualControl()
@@ -1146,14 +1145,6 @@ void DragonTale::UpdateTarget()
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
-}
-
-frc::Pose3d DragonTale::GetReefCenter()
-{
-	frc::Pose3d fieldElementPose = frc::Pose3d{};
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
-	return fieldElementPose;
 }
 
 void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)

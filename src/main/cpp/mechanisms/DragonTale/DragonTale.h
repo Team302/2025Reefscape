@@ -182,8 +182,6 @@ public:
 
 	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
-	frc::Pose3d GetReefCenter();
-
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 	void SetCurrentState(int state, bool run) override;
