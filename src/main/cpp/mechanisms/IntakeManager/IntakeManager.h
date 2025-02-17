@@ -106,6 +106,8 @@ public:
 	ControlData *GetPercentOutput() const { return m_PercentOutput; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 
+	bool GetFailedSensor() const { return m_failedSensorLatch; }
+
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 	void SetCurrentState(int state, bool run) override;
@@ -138,7 +140,7 @@ private:
 	void InitializeTalonFXSExtenderCOMP_BOT302();
 
 	ctre::phoenix6::controls::DutyCycleOut m_IntakePercentOutput{0.0};
-	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::PositionVoltage m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
 

@@ -117,32 +117,14 @@ public:
 		m_CoralPercentOutput.Output = percentOut;
 		m_CoralTalonFXSActiveTarget = &m_CoralPercentOutput;
 	}
-	void UpdateTargetCoralTalonFXSPercentOutput(double percentOut, bool enableFOC)
-	{
-		m_CoralPercentOutput.Output = percentOut;
-		m_CoralPercentOutput.EnableFOC = enableFOC;
-		m_CoralTalonFXSActiveTarget = &m_CoralPercentOutput;
-	}
 	void UpdateTargetAlgaeTalonFXPercentOutput(double percentOut)
 	{
 		m_AlgaePercentOutput.Output = percentOut;
 		m_AlgaeTalonFXActiveTarget = &m_AlgaePercentOutput;
 	}
-	void UpdateTargetAlgaeTalonFXPercentOutput(double percentOut, bool enableFOC)
-	{
-		m_AlgaePercentOutput.Output = percentOut;
-		m_AlgaePercentOutput.EnableFOC = enableFOC;
-		m_AlgaeTalonFXActiveTarget = &m_AlgaePercentOutput;
-	}
 	void UpdateTargetAlgaeTalonFXSPercentOutput(double percentOut)
 	{
 		m_AlgaePercentOutput.Output = percentOut;
-		m_AlgaeTalonFXSActiveTarget = &m_AlgaePercentOutput;
-	}
-	void UpdateTargetAlgaeTalonFXSPercentOutput(double percentOut, bool enableFOC)
-	{
-		m_AlgaePercentOutput.Output = percentOut;
-		m_AlgaePercentOutput.EnableFOC = enableFOC;
 		m_AlgaeTalonFXSActiveTarget = &m_AlgaePercentOutput;
 	}
 

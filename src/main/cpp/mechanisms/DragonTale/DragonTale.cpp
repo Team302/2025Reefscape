@@ -966,8 +966,17 @@ void DragonTale::Update()
 {
 	m_Arm->SetControl(*m_ArmActiveTarget);
 	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
-	m_CoralTalonSRX->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_CoralTalonSRXActiveTarget);
-	m_AlgaeTalonFX->SetControl(*m_AlgaeTalonFXActiveTarget);
+
+	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	{
+		m_CoralTalonSRX->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_CoralTalonSRXActiveTarget);
+		m_AlgaeTalonFX->SetControl(*m_AlgaeTalonFXActiveTarget);
+	}
+	else
+	{
+		m_CoralTalonFXS->SetControl(*m_CoralTalonFXSActiveTarget);
+		m_AlgaeTalonFXS->SetControl(*m_AlgaeTalonFXSActiveTarget);
+	}
 }
 
 bool DragonTale::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const

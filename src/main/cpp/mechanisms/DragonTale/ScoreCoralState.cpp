@@ -66,7 +66,10 @@ void ScoreCoralState::Run()
 {
 	if (m_mechanism->AtTarget())
 	{
-		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+			m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(m_CoralTarget);
+		else
+			m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(m_CoralTarget);
 	}
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }

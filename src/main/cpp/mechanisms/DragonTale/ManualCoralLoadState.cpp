@@ -62,8 +62,17 @@ void ManualCoralLoadState::InitCOMP_BOT302()
 
 void ManualCoralLoadState::Run()
 {
-	m_mechanism->UpdateTargetCoralPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-	m_mechanism->UpdateTargetCoralPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
+	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	{
+		m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
+		m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
+	}
+	else
+	{
+		m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
+		m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
+	}
+
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualCoralLoadState"), string("Run"));
 }
 

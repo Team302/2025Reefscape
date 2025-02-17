@@ -68,7 +68,12 @@ void L4ScoringPositionState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Run"));
 	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
-		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
+	{
+		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+			m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(0.05);
+		else
+			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.05);
+	}
 }
 
 void L4ScoringPositionState::Exit()

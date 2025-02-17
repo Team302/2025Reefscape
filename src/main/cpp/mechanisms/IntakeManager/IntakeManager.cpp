@@ -24,6 +24,7 @@
 #include "utils/logging/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
+#include "teleopcontrol/TeleopControl.h"
 
 #include "ctre/phoenix6/TalonFXS.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -109,8 +110,8 @@ std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_N
 void IntakeManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "IntakeManager";
-	m_Intake = new ctre::phoenix6::hardware::TalonFXS(50, "canivore");
-	m_Extender = new ctre::phoenix6::hardware::TalonFXS(51, "canivore");
+	m_Intake = new ctre::phoenix6::hardware::TalonFXS(50, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(51, "rio");
 
 	m_IntakeSensor = new frc::DigitalInput(3);
 
@@ -166,7 +167,7 @@ void IntakeManager::CreateCOMP_BOT302()
 {
 	m_ntName = "IntakeManager";
 	m_Intake = new ctre::phoenix6::hardware::TalonFXS(15, "canivore");
-	m_Extender = new ctre::phoenix6::hardware::TalonFXS(51, "canivore");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(6, "canivore");
 
 	m_IntakeSensor = new frc::DigitalInput(3);
 
@@ -232,12 +233,12 @@ void IntakeManager::InitializeCOMP_BOT302()
 void IntakeManager::InitializeTalonFXSIntakePRACTICE_BOT9999()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -263,6 +264,9 @@ void IntakeManager::InitializeTalonFXSIntakePRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 4;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -277,12 +281,12 @@ void IntakeManager::InitializeTalonFXSIntakePRACTICE_BOT9999()
 void IntakeManager::InitializeTalonFXSExtenderPRACTICE_BOT9999()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -308,6 +312,8 @@ void IntakeManager::InitializeTalonFXSExtenderPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 405;
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -354,6 +360,9 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 4;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -368,12 +377,12 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -399,8 +408,10 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.Feedback.SensorToMechanismRatio = 1;
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 405;
+
+	m_ExtenderPositionDegree.EnableFOC = true;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
