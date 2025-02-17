@@ -51,5 +51,9 @@ namespace ClimberManagerStates
 		units::angle::degree_t m_manualTarget;
 		units::angle::degree_t m_minClimberAngle{-10.0};
 		units::angle::degree_t m_maxClimberAngle{180.0};
+		units::angle::degree_t m_positionThreshold;
+
+		int m_counter = 0;
+		bool m_directionVerified = false;
 	};
 }

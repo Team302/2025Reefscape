@@ -44,10 +44,12 @@ void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Init"));
 	m_manualTarget = m_ClimberTarget;
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
-		InitCOMP_BOT302();
+	// 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	// 		InitPRACTICE_BOT9999();
+	// 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
+	// 		InitCOMP_BOT302();
+	m_mechanism->UpdateTargetClimberPercentOut(-0.05); // also change this one for testing :(
+	m_positionThreshold = m_mechanism->GetClimber()->GetPosition().GetValue() - units::angle::degree_t(2.0);
 }
 
 void ManualClimbState::InitPRACTICE_BOT9999()
@@ -65,10 +67,38 @@ void ManualClimbState::InitCOMP_BOT302()
 void ManualClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
-	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
-	m_manualTarget += TargetChange;
+	if (!m_directionVerified)
+	{
+		m_counter++;
+		units::current::ampere_t current = m_mechanism->GetClimber()->GetStatorCurrent().GetValue();
 
-	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+		if (current > units::current::ampere_t(1.0)) // number subject to change :)
+		{
+			m_directionVerified = true;
+		}
+		else if (m_counter > 50) // this one too (maybe dont even need it hopefully :thumbs_up:)
+		{
+			m_mechanism->GetClimber()->SetInverted(true);
+			m_directionVerified = true;
+		}
+		if (m_directionVerified)
+		{
+			m_mechanism->UpdateTargetClimberPercentOut(0);
+
+			// if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+			// 	InitPRACTICE_BOT9999();
+			// else if (m_RobotId == RobotIdentifier::COMP_BOT_302)     this is what will realy run when done testing
+			// 	InitCOMP_BOT302();
+		}
+	}
+
+	else
+	{
+		units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
+		m_manualTarget += TargetChange;
+
+		m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+	}
 }
 
 void ManualClimbState::Exit()
