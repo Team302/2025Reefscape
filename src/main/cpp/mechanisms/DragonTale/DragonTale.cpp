@@ -697,6 +697,9 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 180;
 
+	configs.MotionMagic.MotionMagicCruiseVelocity = 75_tps;
+	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -706,6 +709,8 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
+
+	SetPIDArmPositionDegree();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()

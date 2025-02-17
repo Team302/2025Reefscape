@@ -229,7 +229,7 @@ private:
 
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
-	const units::angle::degree_t m_armProtectionAngle{80.0};
+	const units::angle::degree_t m_armProtectionAngle{10.0};
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();
