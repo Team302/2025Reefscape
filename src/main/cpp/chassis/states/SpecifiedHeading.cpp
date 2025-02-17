@@ -19,6 +19,9 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "utils/logging/debug/Logger.h"
+#include "utils/AngleUtils.h"
+
+#include "utils/logging/Logger.h"
 
 SpecifiedHeading::SpecifiedHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE),
                                        m_targetAngle(units::angle::degree_t(0.0))
@@ -45,7 +48,8 @@ void SpecifiedHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
     {
         auto correction = CalcHeadingCorrection(m_targetAngle, kPSpecifiedHeading);
         chassisMovement.chassisSpeeds.omega += correction;
-        chassis->SetStoredHeading(m_targetAngle);
+
+        chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_targetAngle));
     }
 }
 

@@ -191,12 +191,4 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
-
-    struct Velocity2D
-    {
-        units::velocity::meters_per_second_t x;
-        units::velocity::meters_per_second_t y;
-    };
-
-    Velocity2D m_currVelocity{0_mps, 0_mps}; // Store x and y components separately
 };

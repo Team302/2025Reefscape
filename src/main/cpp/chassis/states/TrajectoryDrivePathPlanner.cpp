@@ -28,7 +28,8 @@
 #include "utils/logging/debug/Logger.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "chassis/states/DriveToNote.h"
+#include "vision/DragonVisionStructs.h"
+#include "vision/DragonVisionStructLogger.h"
 
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
@@ -92,7 +93,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
     {
         Init(chassisMovement);
     }
-    if (!m_trajectoryStates.empty()) // If we have a path parsed / have states to run
+    if (!m_trajectoryStates.empty() && !states.empty()) // If we have a path parsed / have states to run
     {
         if (m_trajectory.getInitialPose() != chassisMovement.pathplannerTrajectory.getInitialPose())
         {

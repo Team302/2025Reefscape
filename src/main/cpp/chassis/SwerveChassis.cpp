@@ -86,10 +86,10 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_track(wheelTrack),
                                                                             m_maxSpeed(maxSpeed),
                                                                             m_wheelDiameter(wheelDiameter),
-                                                                            m_frontLeftLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_frontRightLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
-                                                                            m_backLeftLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_backRightLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
+                                                                            m_frontLeftLocation(wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_frontRightLocation(wheelBase / 2.0, -wheelTrack / 2.0),
+                                                                            m_backLeftLocation(-wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_backRightLocation(-wheelBase / 2.0, -wheelTrack / 2.0),
                                                                             m_kinematics(m_frontLeftLocation,
                                                                                          m_frontRightLocation,
                                                                                          m_backLeftLocation,
@@ -117,9 +117,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                            SwerveModulePosition()},
                                                           Pose2d());
 
-    m_robotConfig.mass = GetMass();
-    m_robotConfig.MOI = GetMomenOfInertia();
-    m_robotConfig.moduleConfig = frontLeft->GetModuleConfig();
+    m_robotConfig = pathplanner::RobotConfig(GetMass(), GetMomenOfInertia(),
+                                             frontLeft->GetModuleConfig(), GetTrack());
+
     std::vector<frc::Translation2d> moduleLocs;
     moduleLocs.emplace_back(GetFrontLeftOffset());
     moduleLocs.emplace_back(GetFrontRightOffset());
@@ -128,6 +128,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_robotConfig.numModules = moduleLocs.size();
     m_robotConfig.moduleLocations = moduleLocs;
     m_robotConfig.isHolonomic = true;
+    // TO DO Understand if we need these
+    // m_robotConfig.maxTorqueFriction = 50_Nm;
+    // m_robotConfig.wheelFrictionForce = 20_N;
 }
 
 //==================================================================================
@@ -428,6 +431,7 @@ void SwerveChassis::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current x position"), pose.X().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current y position"), pose.Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current rotation position"), pose.Rotation().Degrees().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
 }
 
 void SwerveChassis::DataLog(uint64_t timestamp)
