@@ -60,6 +60,7 @@
         <type>UInt32</type>
         <value>0</value>
       </canID>
+      <canBusName>canivore</canBusName>
       <pdpID>
         <unitsFamily>none</unitsFamily>
         <name>uintParameter</name>
@@ -320,6 +321,7 @@
         <type>UInt32</type>
         <value>0</value>
       </canID>
+      <canBusName>canivore</canBusName>
       <pdpID>
         <unitsFamily>none</unitsFamily>
         <name>uintParameter</name>
