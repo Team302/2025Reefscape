@@ -671,19 +671,19 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
-	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 2;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = m_maxAngle;
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::RemoteCANdiS1; // Verify S1/S2
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
 	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
-	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
-	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
-	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 2;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = m_minAngle;
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::RemoteCANdiS2; // Verify S1/S2
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
 	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
@@ -721,19 +721,19 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
-	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
 
-	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 1;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::RemoteCANdiS1;				  // Verify S1/S2
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
 	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
-	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 1;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::RemoteCANdiS2; // Verify S1/S2
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
 	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
@@ -770,19 +770,19 @@ void DragonTale::InitializeTalonFXElevatorFollowerCOMP_BOT302()
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
+
 	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
-	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 1;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value()); //(m_maxHeight / (units::length::inch_t(0.75))).value() * 3 / std::numbers::pi
-
-	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::RemoteCANdiS1;				  // Verify S1/S2
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
 	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
-	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 1;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
-	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::RemoteCANdiS2; // Verify S1/S2
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
 	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
@@ -817,11 +817,11 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.2);
+
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
-
 	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
