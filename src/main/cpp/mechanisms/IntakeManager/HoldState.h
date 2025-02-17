@@ -45,7 +45,7 @@ namespace IntakeManagerStates
 		void InitPRACTICE_BOT9999();
 		void InitCOMP_BOT302();
 		RobotIdentifier m_RobotId;
-		const double m_IntakeTarget = double(0);
+		const double m_IntakeTarget = double(0.2);
 		const units::angle::degree_t m_ExtenderTarget = units::angle::degree_t(60);
 	};
 }

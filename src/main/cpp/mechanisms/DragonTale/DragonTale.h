@@ -148,7 +148,7 @@ public:
 	ctre::phoenix6::hardware::TalonFXS *GetCoralTalonFXS() const { return m_CoralTalonFXS; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
 	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
-	bool GetCoralOutSensorState() const { return m_CoralOutSensor->Get(); }
+	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }

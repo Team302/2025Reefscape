@@ -102,7 +102,7 @@ public:
 
 	ctre::phoenix6::hardware::TalonFXS *GetIntake() const { return m_Intake; }
 	ctre::phoenix6::hardware::TalonFXS *GetExtender() const { return m_Extender; }
-	bool GetIntakeSensorState() const { return m_IntakeSensor->Get(); }
+	bool GetIntakeSensorState() const { return !m_IntakeSensor->Get(); }
 	ControlData *GetPercentOutput() const { return m_PercentOutput; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 

@@ -167,8 +167,8 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 void IntakeManager::CreateCOMP_BOT302()
 {
 	m_ntName = "IntakeManager";
-	m_Intake = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
-	m_Extender = new ctre::phoenix6::hardware::TalonFXS(6, "rio");
+	m_Intake = new ctre::phoenix6::hardware::TalonFXS(6, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
 
 	m_IntakeSensor = new frc::DigitalInput(3);
 
