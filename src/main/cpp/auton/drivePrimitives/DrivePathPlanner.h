@@ -22,7 +22,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
-#include "chassis/states/DriveToNote.h"
+#include "chassis/states/DriveToRightReefBranch.h"
 #include "utils/logging/DragonDataLogger.h"
 
 // FRC,WPI Includes
@@ -47,12 +47,14 @@ public:
 
 private:
     void InitMoveInfo();
+
+    void CheckForDriveToReefBranch();
     // void CheckForDriveToNote();
     // bool ShouldConsiderNote(units::length::meter_t xposition);
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-    DriveToNote *m_driveToNote;
+    DriveToRightReefBranch *m_driveToRightReefBranch;
     std::unique_ptr<frc::Timer> m_timer;
     pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
@@ -67,9 +69,9 @@ private:
     units::length::meter_t m_offset = units::length::meter_t(1.0);
     units::length::meter_t m_chassisOffset = units::length::meter_t(0.5);
 
-    bool m_checkDriveToNote = false;
-    const double m_percentageCompleteThreshold = 0.75;
-    const units::length::meter_t m_distanceThreshold = units::length::meter_t(0.5);
+    bool m_checkForDriveToReef = false;
+    // const double m_percentageCompleteThreshold = 0.75;
+    const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
 };

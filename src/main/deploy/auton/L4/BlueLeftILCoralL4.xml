@@ -5,7 +5,14 @@
 <primitive id= "RESET_POSITION_PATH_PLANNER"
 choreoname = "BlueLeftOutside_L"/>
 
+
 <primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueLeftOutside_L"
+pathUpdateOption="RIGHT_REEF_BRANCH"
+time="10.0"
+/>
+
+<!-- <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftOutside_L"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
@@ -76,5 +83,5 @@ time = "4.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-time = "1.0"/>
+time = "1.0"/> -->
 </auton>

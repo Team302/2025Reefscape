@@ -205,21 +205,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
-                        {
-                            /** TODO come back to this
-                            auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
-                            if (updateHeadingItr != pathUpdateOptionsMap.end())
-                            {
-                                updateHeadingOption = updateHeadingItr->second;
-                            }
-                            else
-                            {
-                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
-                                hasError = true;
-                            }
-                            **/
-                        }
                         else if (strcmp(attr.name(), "delayOption") == 0)
                         {
                             auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
@@ -233,7 +218,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        else if (strcmp(attr.name(), "pathUpdateOption"))
+                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                         {
                             auto updateOptionItr = updateOptionMap.find(attr.value());
                             if (updateOptionItr != updateOptionMap.end())

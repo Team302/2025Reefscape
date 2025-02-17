@@ -68,7 +68,7 @@ public:
 
     // Some getters
     PRIMITIVE_IDENTIFIER GetID() const { return m_id; };
-    UPDATE_OPTION GetDriveToType() const { return m_updateOption; }
+    UPDATE_OPTION GetUpdateOption() const { return m_updateOption; }
 
     units::time::second_t GetTime() const { return m_time; };
     ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; };
