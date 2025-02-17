@@ -18,10 +18,9 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/SpecifiedHeading.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
-
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 SpecifiedHeading::SpecifiedHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE),
                                        m_targetAngle(units::angle::degree_t(0.0))
