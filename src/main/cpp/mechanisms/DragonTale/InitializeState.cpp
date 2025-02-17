@@ -46,13 +46,13 @@ void InitializeState::Init()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitializeState"), string("Init"));
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 	m_mechanism->SetPIDArmPositionDegree();
 	m_mechanism->SetPIDElevatorLeaderPositionInch();
-	}
+}
 
 void InitializeState::InitPRACTICE_BOT9999()
 {

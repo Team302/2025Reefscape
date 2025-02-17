@@ -46,11 +46,10 @@ void GrabAlgaeReefState::Init()
 
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
-
 }
 
 void GrabAlgaeReefState::InitPRACTICE_BOT9999()

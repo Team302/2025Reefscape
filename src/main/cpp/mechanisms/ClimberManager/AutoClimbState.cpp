@@ -46,7 +46,7 @@ void AutoClimbState::Init()
 
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
 }
 

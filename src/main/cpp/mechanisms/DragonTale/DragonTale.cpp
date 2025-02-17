@@ -70,6 +70,7 @@ using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
+using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
@@ -843,6 +844,8 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -887,6 +890,8 @@ void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)

@@ -46,6 +46,7 @@ using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
+using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
@@ -166,8 +167,8 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 void IntakeManager::CreateCOMP_BOT302()
 {
 	m_ntName = "IntakeManager";
-	m_Intake = new ctre::phoenix6::hardware::TalonFXS(15, "canivore");
-	m_Extender = new ctre::phoenix6::hardware::TalonFXS(6, "canivore");
+	m_Intake = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(6, "rio");
 
 	m_IntakeSensor = new frc::DigitalInput(3);
 
@@ -264,6 +265,8 @@ void IntakeManager::InitializeTalonFXSIntakePRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 4;
 
@@ -312,6 +315,8 @@ void IntakeManager::InitializeTalonFXSExtenderPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 405;
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -354,6 +359,8 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
 	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
@@ -387,18 +394,18 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
-	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(95);
 
 	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
-	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
 	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
-	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(90);
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
@@ -407,6 +414,8 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 405;
