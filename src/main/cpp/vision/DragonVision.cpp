@@ -26,7 +26,7 @@
 #include "vision/DragonLimelight.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/DragonField.h"
 
 // Third Party Includes

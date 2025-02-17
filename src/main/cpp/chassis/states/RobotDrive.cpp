@@ -27,7 +27,7 @@
 #include "chassis/modifiers/AntiTip.h"
 #include "chassis/states/RobotDrive.h"
 #include "utils/FMSData.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using std::string;
 
