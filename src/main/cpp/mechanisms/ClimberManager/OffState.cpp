@@ -44,6 +44,8 @@ void OffState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
 
+	m_mechanism->GetClimber()->SetPosition(m_ClimberTarget);
+
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)

@@ -466,6 +466,8 @@ void IntakeManager::RunCommonTasks()
 			m_failedSensorLatch = !m_failedSensorLatch;
 	}
 	m_manualModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::FAILED_INTAKE_SENSOR);
+
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Intake", "IntakeSensor", GetIntakeSensorState());
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).

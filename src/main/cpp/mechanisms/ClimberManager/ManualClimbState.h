@@ -45,11 +45,11 @@ namespace ClimberManagerStates
 		double m_manualClimbRate = 0.02;
 		void InitPRACTICE_BOT9999();
 		void InitCOMP_BOT302();
-		
+
 		RobotIdentifier m_RobotId;
 		const units::angle::degree_t m_ClimberTarget = units::angle::degree_t(0);
 		units::angle::degree_t m_manualTarget;
 		units::angle::degree_t m_minClimberAngle{-10.0};
-		units::angle::degree_t m_maxClimberAngle{95.0};
+		units::angle::degree_t m_maxClimberAngle{180.0};
 	};
 }
