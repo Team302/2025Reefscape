@@ -183,7 +183,7 @@ public:
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
-    void DataLog(units::time::second_t timestamp) override;
+    void DataLog(uint64_t timestamp) override;
 
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);

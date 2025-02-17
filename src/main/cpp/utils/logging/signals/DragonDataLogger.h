@@ -29,17 +29,17 @@ public:
     DragonDataLogger();
     virtual ~DragonDataLogger() = default;
 
-    virtual void DataLog(units::time::second_t timestamp) = 0;
+    virtual void DataLog(uint64_t timestamp) = 0;
 
 protected:
-    void LogBoolData(units::time::second_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value);
-    void LogDoubleData(units::time::second_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value);
-    void LogStringData(units::time::second_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value);
-    void Log2DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value);
-    void Log3DPoseData(units::time::second_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value);
+    void LogBoolData(uint64_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value);
+    void LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value);
+    void LogStringData(uint64_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value);
+    void Log2DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value);
+    void Log3DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value);
 
-    void LogSwerveModuleStateData(units::time::second_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value);
-    void LogChassisSpeedsData(units::time::second_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
+    void LogSwerveModuleStateData(uint64_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value);
+    void LogChassisSpeedsData(uint64_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
 
     const double m_doubleTolerance = 0.001;
 };

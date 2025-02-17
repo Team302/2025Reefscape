@@ -18,7 +18,7 @@
 
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
-#include "frc/Timer.h"
+#include "frc/RobotController.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
 
@@ -83,7 +83,7 @@ void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
 
 void DragonDataLoggerMgr::PeriodicDataLog() const
 {
-    units::time::second_t timestamp = frc::Timer::GetFPGATimestamp();
+    uint64_t timestamp = frc::RobotController::GetFPGATime();
 
     for (auto item : m_items)
     {

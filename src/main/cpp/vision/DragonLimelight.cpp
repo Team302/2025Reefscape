@@ -588,7 +588,7 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
     return DragonVisionPoseEstimatorStruct();
 }
 
-void DragonLimelight::DataLog(units::time::second_t timestamp)
+void DragonLimelight::DataLog(uint64_t timestamp)
 {
     auto vispose = EstimatePoseOdometryLimelight(true);
     if (vispose.has_value())

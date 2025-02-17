@@ -430,7 +430,7 @@ void SwerveChassis::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current rotation position"), pose.Rotation().Degrees().to<double>());
 }
 
-void SwerveChassis::DataLog(units::time::second_t timestamp)
+void SwerveChassis::DataLog(uint64_t timestamp)
 {
     Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 

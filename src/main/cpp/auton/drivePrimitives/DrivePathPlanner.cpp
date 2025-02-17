@@ -100,7 +100,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_timer.get()->Start();
 }
 
-void DrivePathPlanner::DataLog(units::time::second_t timestamp)
+void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
     LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
 }

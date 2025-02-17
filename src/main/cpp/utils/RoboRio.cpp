@@ -14,35 +14,19 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-#include <frc/PowerDistribution.h>
+#include "frc/RobotController.h"
+#include "utils/RoboRio.h"
 
-#include "frc/Timer.h"
-#include "utils/logging/debug/LoggableItem.h"
-#include "utils/logging/signals/DragonDataLogger.h"
-
-class DragonPower : public LoggableItem, public DragonDataLogger
+RoboRio *RoboRio::m_instance = nullptr;
+RoboRio *RoboRio::GetInstance()
 {
-public:
-    static DragonPower *GetInstance();
-    void DataLog(uint64_t timestamp) override;
-    void LogInformation() override;
+    if (RoboRio::m_instance == nullptr)
+    {
+        RoboRio::m_instance = new RoboRio();
+    }
+    return RoboRio::m_instance;
+}
 
-private:
-    DragonPower();
-    ~DragonPower() = default;
-
-    void CalculatePowerData();
-
-    static DragonPower *m_dragonPowerInstance;
-    int m_calcFrequency = 1000;
-    int m_logFrequency = 5000;
-    double m_currentCurrent = 0.0;
-    double m_currentVoltage = 0.0;
-    double m_currentPower = 0.0;
-    double m_currentEnergy = 0.0;
-    double m_matchWattHours = 0.0;
-    double m_matchEnergy = 0.0;
-    frc::PowerDistribution *m_pdp;
-    frc::Timer *m_calcTimer;
-};
+void RoboRio::DataLog(uint64_t timestamp)
+{
+}

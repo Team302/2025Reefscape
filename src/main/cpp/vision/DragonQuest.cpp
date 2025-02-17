@@ -98,7 +98,7 @@ void DragonQuest::ZeroPosition()
     }
 }
 
-void DragonQuest::DataLog(units::time::second_t timestamp)
+void DragonQuest::DataLog(uint64_t timestamp)
 {
     Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
 }

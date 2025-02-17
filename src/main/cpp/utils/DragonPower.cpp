@@ -69,7 +69,7 @@ void DragonPower::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
 }
 
-void DragonPower::DataLog(units::time::second_t timestamp)
+void DragonPower::DataLog(uint64_t timestamp)
 {
     if (calculateInLogger)
         CalculatePowerData();
