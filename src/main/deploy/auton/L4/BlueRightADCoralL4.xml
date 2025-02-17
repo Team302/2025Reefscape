@@ -3,11 +3,11 @@
 <auton>
 
 <primitive id = "RESET_POSITION_PATH_PLANNER"
-choreoname= "BlueRightOutside_A.traj"
+choreoname= "BlueRightOutside_A"
 />
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueRightOutside_A.traj"
+choreoname= "BlueRightOutside_A"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "3.0">
 <zone filename = "BlueReefPlacerZones.xml"/>
