@@ -5681,6 +5681,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Extender</motorName>
                 <Enabled>
@@ -5746,6 +5747,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>60</value>
                 </target>
                 <motorName>Extender</motorName>
                 <Enabled>
@@ -5810,6 +5812,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>60</value>
                 </target>
                 <motorName>Extender</motorName>
                 <Enabled>
@@ -5961,6 +5964,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Extender</motorName>
                 <Enabled>
@@ -6012,6 +6016,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
+                  <value>90</value>
                 </target>
                 <motorName>Extender</motorName>
                 <Enabled>
