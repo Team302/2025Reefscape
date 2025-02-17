@@ -18,6 +18,7 @@
 #include "chassis/states/SpecifiedHeading.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "utils/AngleUtils.h"
 
 #include "utils/logging/Logger.h"
 
@@ -46,7 +47,8 @@ void SpecifiedHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
     {
         auto correction = CalcHeadingCorrection(m_targetAngle, kPSpecifiedHeading);
         chassisMovement.chassisSpeeds.omega += correction;
-        chassis->SetStoredHeading(m_targetAngle);
+
+        chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_targetAngle));
     }
 }
 
