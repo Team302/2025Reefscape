@@ -41,7 +41,6 @@
 #include "units/velocity.h"
 #include "utils/logging/debug/LoggableItem.h"
 #include "utils/logging/signals/DragonDataLogger.h"
-#include "wpi/DataLog.h"
 
 class RobotDrive;
 

@@ -86,10 +86,10 @@ void Robot::RobotPeriodic()
         Logger::GetLogger()->PeriodicLog();
     }
 
-    // if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
-    // {
-    //     m_datalogger->PeriodicDataLog();
-    // }
+    if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
+    {
+        m_datalogger->PeriodicDataLog();
+    }
 
     if (m_robotState != nullptr)
     {
@@ -97,8 +97,6 @@ void Robot::RobotPeriodic()
     }
 
     UpdateDriveTeamFeedback();
-    // LogDiagnosticData();
-    // DragonQuest::GetDragonQuest()->DataLog();
 }
 
 /**
@@ -215,67 +213,6 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-}
-
-void Robot::LogDiagnosticData()
-{
-    const unsigned int loggingEveyNloops = 20;
-    static unsigned int loopCounter = 0;
-
-    unsigned int step = loopCounter % loggingEveyNloops;
-
-    if (step == 0)
-        LogSensorData();
-    else if (step == 1)
-        LogMotorData();
-    else if (step == 4)
-    {
-        if (m_chassis != nullptr)
-        {
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
-        }
-    }
-    loopCounter++;
-}
-
-void Robot::LogSensorData()
-{
-    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-
-    if (config != nullptr)
-    {
-        /**
-        auto stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-        auto noteMgr = stateMgr != nullptr ? dynamic_cast<noteManagerGen *>(stateMgr) : nullptr;
-        if (noteMgr != nullptr)
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ("SensorsIntake"), string("Front Intake"), noteMgr->getfrontIntakeSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsIntake"), string("Back Intake"), noteMgr->getbackIntakeSensor()->Get());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("Feeder"), noteMgr->getfeederSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("Launcher"), noteMgr->getlauncherSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("LauncherAngleHomeSwitch"), noteMgr->getlauncherAngle()->IsReverseLimitSwitchClosed());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerIn"), noteMgr->getplacerInSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerMid"), noteMgr->getplacerMidSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerOut"), noteMgr->getplacerOutSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerHomeSwitch"), noteMgr->getPlacer()->IsReverseLimitSwitchClosed());
-        }
-        **/
-    }
-}
-
-void Robot::LogMotorData()
-{
-    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-
-    if (config != nullptr)
-    {
-        // TODO implement mechanism states logging
-    }
 }
 
 void Robot::SimulationInit()

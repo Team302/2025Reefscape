@@ -33,7 +33,6 @@ public:
     // when adding a signal:
     // - Add to the appropriate enum
     // - Add a signal variable below
-    // - Add a current value for the signal below
     // - Construct the signal in DragonDataLoggerSignals::DragonDataLoggerSignals()
     // - Add Case statement in the appropriate helper method in DragonDataLogger
 
@@ -96,138 +95,39 @@ public:
 
 private:
     // initialize these signals in the constructor
-    wpi::log::BooleanLogEntry m_hasVision;
-    bool m_currHasVision = false;
-
-    wpi::log::BooleanLogEntry m_frontSensor;
-    bool m_currFrontSensor = false;
-
-    wpi::log::BooleanLogEntry m_backSensor;
-    bool m_currBackSensor = false;
-
-    wpi::log::BooleanLogEntry m_launcherSensor;
-    bool m_currLauncherSensor = false;
-
-    wpi::log::BooleanLogEntry m_feederSensor;
-    bool m_currFeederSensor = false;
-
-    wpi::log::BooleanLogEntry m_placerInSensor;
-    bool m_currPlacerInSensor = false;
-
-    wpi::log::BooleanLogEntry m_placerMidSensor;
-    bool m_currPlacerMidSensor = false;
-
-    wpi::log::BooleanLogEntry m_placerOutSensor;
-    bool m_currPlacerOutSensor = false;
-
-    wpi::log::BooleanLogEntry m_frontLeftSwerveModuleslip;
-    bool m_currFrontLeftSwerveModuleslip = false;
-
-    wpi::log::BooleanLogEntry m_frontRightSwerveModuleslip;
-    bool m_currFrontRightSwerveModuleslip = false;
-
-    wpi::log::BooleanLogEntry m_backLeftSwerveModuleslip;
-    bool m_currBackLeftSwerveModuleslip = false;
-
-    wpi::log::BooleanLogEntry m_backRightSwerveModuleslip;
-    bool m_currBackRightSwerveModuleslip = false;
-
     wpi::log::DoubleLogEntry m_storedHeading;
-    double m_currStoredHeading{0.0};
-
     wpi::log::DoubleLogEntry m_chassisYaw;
-    double m_currChassisYaw{0.0};
-
-    wpi::log::DoubleLogEntry m_nmTargetAngle;
-    double m_currNmTargetAngle{0.0};
-
-    wpi::log::DoubleLogEntry m_nmActualAngle;
-    double m_currNmActualAngle{0.0};
-
-    wpi::log::DoubleLogEntry m_nmTopTarget;
-    double m_currNmTopTarget{0.0};
-
-    wpi::log::DoubleLogEntry m_nmBottomTarget;
-    double m_currNmBottomTarget{0.0};
-
-    wpi::log::DoubleLogEntry m_nmTopActual;
-    double m_currNmTopActual{0.0};
-
-    wpi::log::DoubleLogEntry m_nmBottomActual;
-    double m_currNmBottomActual{0.0};
-
-    wpi::log::DoubleLogEntry m_distFromSpeaker;
-    double m_currDistFromSpeaker{0.0};
 
     wpi::log::DoubleLogEntry m_electricalVoltage;
-    double m_currElectricalVoltage{0.0};
-
     wpi::log::DoubleLogEntry m_electricalCurrent;
-    double m_currElectricalCurrent{0.0};
-
     wpi::log::DoubleLogEntry m_electricalEnergy;
-    double m_currElectricalEnergy{0.0};
-
     wpi::log::DoubleLogEntry m_electricalPower;
-    double m_currElectricalPower{0.0};
 
     wpi::log::DoubleLogEntry m_tx;
-    double m_currTx{0.0};
-
     wpi::log::DoubleLogEntry m_ty;
-    double m_currTy{0.0};
-
     wpi::log::DoubleLogEntry m_tv;
-    double m_currTv{0.0};
-
     wpi::log::DoubleLogEntry m_Fiducial;
-    double m_currFiducial{0.0};
 
     wpi::log::StringLogEntry m_headingState;
-    std::string m_currHeadingState{""};
-
     wpi::log::StringLogEntry m_driveState;
-    std::string m_currDriveState{""};
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
 
-    frc::Pose2d m_currPose2D{};
-    frc::Pose3d m_currPose3DLimelight{};
-    frc::Pose3d m_currPose3DLimelight2{};
-    frc::Pose3d m_currPose3DQuest{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
-    frc::SwerveModuleState m_currFrontLeftTarget{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightTarget;
-    frc::SwerveModuleState m_currFrontRightTarget{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftTarget;
-    frc::SwerveModuleState m_currBackLeftTarget{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightTarget;
-    frc::SwerveModuleState m_currBackRightTarget{};
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftActual;
-    frc::SwerveModuleState m_currFrontLeftActual{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightActual;
-    frc::SwerveModuleState m_currFrontRightActual{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftActual;
-    frc::SwerveModuleState m_currBackLeftActual{};
-
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightActual;
-    frc::SwerveModuleState m_currBackRightActual{};
 
     wpi::log::StructLogEntry<frc::ChassisSpeeds> m_targetSpeeds;
-    frc::ChassisSpeeds m_currTargetSpeeds{};
-
     wpi::log::StructLogEntry<frc::ChassisSpeeds> m_actualSpeeds;
-    frc::ChassisSpeeds m_currActualSpeeds{};
 
     DragonDataLoggerSignals();
     virtual ~DragonDataLoggerSignals() = delete;

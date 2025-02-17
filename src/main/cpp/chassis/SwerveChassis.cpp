@@ -24,7 +24,6 @@
 #include "units/angular_acceleration.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/DataLogManager.h"
-// #include "wpi/DataLog.h"
 
 // Team 302 includes
 #include "chassis/states/DriveToNote.h"

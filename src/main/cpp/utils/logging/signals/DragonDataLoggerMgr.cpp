@@ -21,7 +21,6 @@
 #include "frc/Timer.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
-#include "wpi/DataLog.h"
 
 using namespace std;
 

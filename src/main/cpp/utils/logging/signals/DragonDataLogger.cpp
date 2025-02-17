@@ -41,78 +41,38 @@ void DragonDataLogger::LogDoubleData(units::time::second_t timestamp, DragonData
         switch (signalID)
         {
         case DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES:
-            if (std::abs(value - signals->m_currStoredHeading) > m_doubleTolerance)
-            {
-                signals->m_storedHeading.Append(value);
-                signals->m_currStoredHeading = value;
-            }
+            signals->m_storedHeading.Update(value, timestamp.value());
             break;
         case DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES:
-            if (std::abs(value - signals->m_currChassisYaw) > m_doubleTolerance)
-            {
-                signals->m_chassisYaw.Append(value);
-                signals->m_currChassisYaw = value;
-            }
+            signals->m_chassisYaw.Update(value, timestamp.value());
             break;
         case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_VOLTAGE:
-            if (std::abs(value - signals->m_currElectricalVoltage) > m_doubleTolerance)
-            {
-                signals->m_electricalVoltage.Append(value);
-                signals->m_currElectricalVoltage = value;
-            }
+            signals->m_electricalVoltage.Update(value, timestamp.value());
             break;
         case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_CURRENT:
-            if (std::abs(value - signals->m_currElectricalCurrent) > m_doubleTolerance)
-            {
-                signals->m_electricalCurrent.Append(value);
-                signals->m_currElectricalCurrent = value;
-            }
+            signals->m_electricalCurrent.Update(value, timestamp.value());
             break;
         case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_ENERGY:
-            if (std::abs(value - signals->m_currElectricalEnergy) > m_doubleTolerance)
-            {
-                signals->m_electricalEnergy.Append(value);
-                signals->m_currElectricalEnergy = value;
-            }
+            signals->m_electricalEnergy.Update(value, timestamp.value());
             break;
         case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_POWER:
-            if (std::abs(value - signals->m_currElectricalPower) > m_doubleTolerance)
-            {
-                signals->m_electricalPower.Append(value);
-                signals->m_currElectricalPower = value;
-            }
+            signals->m_electricalPower.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TV_1:
-            if (std::abs(value - signals->m_currTv) > m_doubleTolerance)
-            {
-                signals->m_tv.Append(value);
-                signals->m_currTv = value;
-            }
+            signals->m_tv.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX_1:
-            if (std::abs(value - signals->m_currTx) > m_doubleTolerance)
-            {
-                signals->m_tx.Append(value);
-                signals->m_currTx = value;
-            }
+            signals->m_tx.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY_1:
-            if (std::abs(value - signals->m_currTy) > m_doubleTolerance)
-            {
-                signals->m_ty.Append(value);
-                signals->m_currTy = value;
-            }
+            signals->m_ty.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
-            if (std::abs(value - signals->m_currFiducial) > m_doubleTolerance)
-            {
-                signals->m_Fiducial.Append(value);
-                signals->m_currFiducial = value;
-            }
+            signals->m_Fiducial.Update(value, timestamp.value());
             break;
 
         default:
@@ -129,19 +89,11 @@ void DragonDataLogger::LogStringData(units::time::second_t timestamp, DragonData
         switch (signalID)
         {
         case DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE:
-            if (signals->m_currDriveState != value)
-            {
-                signals->m_driveState.Append(value);
-                signals->m_currDriveState = value;
-            }
+            signals->m_driveState.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE:
-            if (signals->m_currHeadingState != value)
-            {
-                signals->m_headingState.Append(value);
-                signals->m_currHeadingState = value;
-            }
+            signals->m_headingState.Update(value, timestamp.value());
             break;
 
         default:
@@ -157,7 +109,7 @@ void DragonDataLogger::Log2DPoseData(units::time::second_t timestamp, DragonData
         switch (signalID)
         {
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D:
-            signals->m_pose2d.Append(value); // always do this as the Pose2d isn't easy to set
+            signals->m_pose2d.Update(value, timestamp.value());
             break;
 
         default:
@@ -174,15 +126,15 @@ void DragonDataLogger::Log3DPoseData(units::time::second_t timestamp, DragonData
         switch (signalID)
         {
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
-            signals->m_pose3dLimelight.Append(value); // always do this as the Pose2d isn't easy to set
+            signals->m_pose3dLimelight.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
-            signals->m_pose3dLimelight2.Append(value); // always do this as the Pose2d isn't easy to set
+            signals->m_pose3dLimelight2.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
-            signals->m_pose3dQuest.Append(value); // always do this as the Pose2d isn't easy to set
+            signals->m_pose3dQuest.Update(value, timestamp.value());
             break;
 
         default:
@@ -199,75 +151,35 @@ void DragonDataLogger::LogSwerveModuleStateData(units::time::second_t timestamp,
         switch (signalID)
         {
         case DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
-            if (signals->m_currFrontLeftTarget != value)
-            {
-                signals->m_frontLeftTarget.Append(value);
-                signals->m_currFrontLeftTarget.angle = value.angle;
-                signals->m_currFrontLeftTarget.speed = value.speed;
-            }
+            signals->m_frontLeftTarget.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
-            if (signals->m_currBackLeftTarget != value)
-            {
-                signals->m_backLeftTarget.Append(value);
-                signals->m_currBackLeftTarget.angle = value.angle;
-                signals->m_currBackLeftTarget.speed = value.speed;
-            }
+            signals->m_backLeftTarget.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
-            if (signals->m_currFrontRightTarget != value)
-            {
-                signals->m_frontRightTarget.Append(value);
-                signals->m_currFrontRightTarget.angle = value.angle;
-                signals->m_currFrontRightTarget.speed = value.speed;
-            }
+            signals->m_frontRightTarget.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
-            if (signals->m_currBackRightTarget != value)
-            {
-                signals->m_backRightTarget.Append(value);
-                signals->m_currBackRightTarget.angle = value.angle;
-                signals->m_currBackRightTarget.speed = value.speed;
-            }
+            signals->m_backRightTarget.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
-            if (signals->m_currFrontLeftActual != value)
-            {
-                signals->m_frontLeftActual.Append(value);
-                signals->m_currFrontLeftActual.angle = value.angle;
-                signals->m_currFrontLeftActual.speed = value.speed;
-            }
+            signals->m_frontLeftActual.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
-            if (signals->m_currBackLeftActual != value)
-            {
-                signals->m_backLeftActual.Append(value);
-                signals->m_currBackLeftActual.angle = value.angle;
-                signals->m_currBackLeftActual.speed = value.speed;
-            }
+            signals->m_backLeftActual.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
-            if (signals->m_currFrontRightActual != value)
-            {
-                signals->m_frontRightActual.Append(value);
-                signals->m_currFrontRightActual.angle = value.angle;
-                signals->m_currFrontRightActual.speed = value.speed;
-            }
+            signals->m_frontRightActual.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
-            if (signals->m_currBackRightActual != value)
-            {
-                signals->m_backRightActual.Append(value);
-                signals->m_currBackRightActual.angle = value.angle;
-                signals->m_currBackRightActual.speed = value.speed;
-            }
+            signals->m_backRightActual.Update(value, timestamp.value());
             break;
 
         default:
@@ -285,11 +197,11 @@ void DragonDataLogger::LogChassisSpeedsData(units::time::second_t timestamp, Dra
         switch (signalID)
         {
         case DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS:
-            signals->m_actualSpeeds.Append(value);
+            signals->m_actualSpeeds.Update(value, timestamp.value());
             break;
 
         case DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS:
-            signals->m_targetSpeeds.Append(value);
+            signals->m_targetSpeeds.Update(value, timestamp.value());
             break;
 
         default:
