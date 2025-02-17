@@ -33,6 +33,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 								 bool taleStateChanged,
 								 DragonTale::STATE_NAMES taleState,
 								 ChassisOptionEnums::PathUpdateOption updatePathOption,
+								 UPDATE_OPTION updateOption,
 								 DriveStopDelay::DelayOption delayOption) : m_id(id), // Primitive ID
 																			m_time(time),
 																			m_headingOption(headingOpt),
@@ -46,6 +47,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																			m_changeTaleState(taleStateChanged),
 																			m_intakeState(intakeState),
 																			m_taleState(taleState),
+																			m_updateOption(updateOption),
 																			m_zones(zones),
 																			m_pathUpdateOption(updatePathOption)
 
