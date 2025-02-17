@@ -44,7 +44,7 @@ std::optional<FieldConstants::AprilTagIDs> CoralStationHelper::GetNearestCoralSt
         if (m_allianceColor == frc::DriverStation::Alliance::kRed)
         {
             if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_CORAL_STATION_LEFT_TAG, pose) <
-                CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_CORAL_STATION_RIGHT_TAG, pose))
+                CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_CORAL_STATION_RIGHT_TAG, pose))
             {
                 return FieldConstants::AprilTagIDs::RED_CORAL_STATION_LEFT_TAG;
             }

@@ -108,35 +108,37 @@ void CyclePrimitives::Run()
 				for (auto zone : m_zones)
 				{
 					bool isInZone = false;
-
-					if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
+					if (zone != nullptr)
 					{
-						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
-																		  zone->GetXGrid2(),
-																		  zone->GetYGrid1(),
-																		  zone->GetYGrid2(),
-																		  m_chassis->GetPose());
-					}
-					else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
-					{
-						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
-																		  zone->getRadius(),
-																		  m_chassis->GetPose());
-					}
-
-					if (isInZone)
-					{
-
-						SetMechanismStatesFromZone(zone);
-
-						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+						if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
 						{
-							// TODO:  plug in vision drive options
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
+																			  zone->GetXGrid2(),
+																			  zone->GetYGrid1(),
+																			  zone->GetYGrid2(),
+																			  m_chassis->GetPose());
+						}
+						else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
+						{
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
+																			  zone->getRadius(),
+																			  m_chassis->GetPose());
 						}
 
-						if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+						if (isInZone)
 						{
-							// TODO:  plug in avoid options
+
+							SetMechanismStatesFromZone(zone);
+
+							if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+							{
+								// TODO:  plug in vision drive options
+							}
+
+							if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+							{
+								// TODO:  plug in avoid options
+							}
 						}
 					}
 				}
