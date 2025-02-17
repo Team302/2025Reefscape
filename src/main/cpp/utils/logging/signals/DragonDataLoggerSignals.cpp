@@ -31,6 +31,13 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
 {
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
+    m_isBrownOut = wpi::log::BooleanLogEntry(log, "/RoboRio/IsBrownOut");
+    m_batteryVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/BatteryVoltage");
+    m_brownoutVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/BrownoutVoltage");
+    m_inputVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/InputVoltage");
+    m_inputCurrent = wpi::log::DoubleLogEntry(log, "/RoboRio/InputCurrent");
+    m_cpuTemp = wpi::log::DoubleLogEntry(log, "/RoboRio/CPUTemp");
+
     m_storedHeading = wpi::log::DoubleLogEntry(log, "/Chassis/StoredHeading(Degrees)");
     m_storedHeading.Append(0.0);
     m_chassisYaw = wpi::log::DoubleLogEntry(log, "/Chassis/Yaw(Degrees)");

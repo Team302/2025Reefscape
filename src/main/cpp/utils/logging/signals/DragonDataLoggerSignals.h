@@ -38,10 +38,7 @@ public:
 
     enum BoolSignals
     {
-        FRONT_LEFT_SWERVE_MODULE_SPLIPING,
-        FRONT_RIGHT_SWERVE_MODULE_SPLIPING,
-        BACK_LEFT_SWERVE_MODULE_SPLIPING,
-        BACK_RIGHT_SWERVE_MODULE_SPLIPING
+        IS_BROWNOUT
     };
 
     enum DoubleSignals
@@ -55,7 +52,12 @@ public:
         LIMELIGHT_TV_1,
         LIMELIGHT_TX_1,
         LIMELIGHT_TY_1,
-        LIMELIGHT_FIDUCIAL_ID_1
+        LIMELIGHT_FIDUCIAL_ID_1,
+        BATTERY_VOLTAGE,
+        BROWNOUT_VOLTAGE,
+        INPUT_VOLTAGE,
+        INPUT_CURRENT,
+        CPU_TEMP
     };
 
     enum StringSignals
@@ -95,6 +97,8 @@ public:
 
 private:
     // initialize these signals in the constructor
+    wpi::log::BooleanLogEntry m_isBrownOut;
+
     wpi::log::DoubleLogEntry m_storedHeading;
     wpi::log::DoubleLogEntry m_chassisYaw;
 
@@ -106,7 +110,13 @@ private:
     wpi::log::DoubleLogEntry m_tx;
     wpi::log::DoubleLogEntry m_ty;
     wpi::log::DoubleLogEntry m_tv;
-    wpi::log::DoubleLogEntry m_Fiducial;
+    wpi::log::DoubleLogEntry m_fiducial;
+
+    wpi::log::DoubleLogEntry m_batteryVoltage;
+    wpi::log::DoubleLogEntry m_brownoutVoltage;
+    wpi::log::DoubleLogEntry m_inputVoltage;
+    wpi::log::DoubleLogEntry m_inputCurrent;
+    wpi::log::DoubleLogEntry m_cpuTemp;
 
     wpi::log::StringLogEntry m_headingState;
     wpi::log::StringLogEntry m_driveState;

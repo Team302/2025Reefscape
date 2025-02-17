@@ -30,6 +30,14 @@ void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLoggerSignals::
     auto signals = DragonDataLoggerSignals::GetInstance();
     if (signals != nullptr)
     {
+        switch (signalID)
+        {
+        case DragonDataLoggerSignals::BoolSignals::IS_BROWNOUT:
+            signals->m_isBrownOut.Update(value, timestamp);
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -72,7 +80,27 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals
             break;
 
         case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
-            signals->m_Fiducial.Update(value, timestamp);
+            signals->m_fiducial.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::BATTERY_VOLTAGE:
+            signals->m_batteryVoltage.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::BROWNOUT_VOLTAGE:
+            signals->m_brownoutVoltage.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::INPUT_VOLTAGE:
+            signals->m_inputVoltage.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::INPUT_CURRENT:
+            signals->m_inputCurrent.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::CPU_TEMP:
+            signals->m_cpuTemp.Update(value, timestamp);
             break;
 
         default:
