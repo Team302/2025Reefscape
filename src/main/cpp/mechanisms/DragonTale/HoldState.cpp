@@ -24,7 +24,7 @@
 #include "mechanisms/DragonTale/HoldState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 
@@ -59,7 +59,7 @@ void HoldState::InitPRACTICE_BOT9999()
 void HoldState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HoldState"), string("Run"));
-	if (m_mechanism->GetAlgaeSensorState())
+	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
 		m_mechanism->UpdateTargetAlgaePercentOutput(0.05);
 }
 
@@ -79,7 +79,7 @@ bool HoldState::AtTarget()
 bool HoldState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return ((m_mechanism->GetCoralOutSensorState() && !m_mechanism->GetCoralInSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) ||
+	return ((m_mechanism->GetCoralOutSensorState() && m_mechanism->GetCoralInSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) ||
 			(m_mechanism->GetAlgaeSensorState() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_REEF))) ||
 			(m_mechanism->IsCoralMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_PROCESS) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_NET))) ||
 			(m_mechanism->IsAlgaeMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_L1SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L2SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L3SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L4SCORING_POSITION))) ||

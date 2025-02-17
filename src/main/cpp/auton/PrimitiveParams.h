@@ -29,6 +29,8 @@
 #include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
 
@@ -38,8 +40,10 @@ public:
     enum VISION_ALIGNMENT
     {
         UNKNOWN = -1,
-        NOTE = DragonVision::VISION_ELEMENT::NOTE,
-        SPEAKER = DragonVision::VISION_ELEMENT::SPEAKER
+        ALGAE = DragonVision::VISION_ELEMENT::ALGAE,
+        CORAL_STATION = DragonVision::VISION_ELEMENT::CORAL_STATION,
+        REEF = DragonVision::VISION_ELEMENT::REEF,
+        PROCESSOR = DragonVision::VISION_ELEMENT::PROCESSOR
     };
     // @ADDMECH add parameter for your mechanism state
     PrimitiveParams(PRIMITIVE_IDENTIFIER id,
@@ -51,10 +55,10 @@ public:
                     ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
                     VISION_ALIGNMENT visionAlignment,
-                    // bool changeNoteState,
-                    // noteManagerGen::STATE_NAMES noteState,
-                    // bool changeClimberState,
-                    // ClimberManagerGen::STATE_NAMES climberState,
+                    bool changeIntakeState,
+                    IntakeManager::STATE_NAMES intakeState,
+                    bool changeTaleState,
+                    DragonTale::STATE_NAMES taleState,
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption,
                     DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
 
@@ -81,12 +85,10 @@ public:
     units::time::second_t GetReefDelay() const { return m_reefDelay; }
     units::time::second_t GetCoralStationDelay() const { return m_coralStationDelay; }
 
-    // bool IsNoteStateChanging() const { return m_changeNoteState; }
-    // noteManagerGen::STATE_NAMES GetNoteState() const { return m_noteState; }
-
-    // bool IsClimberStateChanging() const { return m_changeClimberState; }
-    // ClimberManagerGen::STATE_NAMES GetClimberState() const { return m_climberState; }
-
+    bool IsIntakeStateChanging() const { return m_changeIntakeState; }
+    IntakeManager::STATE_NAMES GetIntakeState() const { return m_intakeState; }
+    bool IsTaleStateChanging() const { return m_changeTaleState; }
+    DragonTale::STATE_NAMES GetTaleState() const { return m_taleState; }
     // Setters
     void SetPathName(std::string path)
     {
@@ -98,7 +100,7 @@ private:
     // Primitive Parameters
     PRIMITIVE_IDENTIFIER m_id; // Primitive ID
     units::time::second_t m_time;
-    ChassisOptionEnums::HeadingOption m_headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+    ChassisOptionEnums::HeadingOption m_headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
     float m_heading;
 
     DriveStopDelay::DelayOption m_delayOption;
@@ -111,10 +113,13 @@ private:
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
-    // bool m_changeNoteState;
-    // noteManagerGen::STATE_NAMES m_noteState;
-    // bool m_changeClimberState;
-    // ClimberManagerGen::STATE_NAMES m_climberState;
+
+    bool m_changeIntakeState;
+    bool m_changeTaleState;
+
+    IntakeManager::STATE_NAMES m_intakeState;
+    DragonTale::STATE_NAMES m_taleState;
+
     ZoneParamsVector m_zones;
     ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
 };

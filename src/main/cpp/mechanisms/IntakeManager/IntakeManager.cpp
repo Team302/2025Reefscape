@@ -21,8 +21,9 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "IntakeManager.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -40,12 +41,8 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/logging/DragonDataLoggerSignals.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
@@ -128,6 +125,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -144,6 +144,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -168,7 +171,6 @@ void IntakeManager::InitializePRACTICE_BOT9999()
 void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 {
 	TalonFXConfiguration configs{};
-
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
@@ -176,8 +178,9 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
 
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
-
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -198,6 +201,9 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -207,15 +213,12 @@ void IntakeManager::InitializeTalonFXIntakePRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Intake", "m_Intake Status", status.GetName());
 }
 
 void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 {
 	TalonFXConfiguration configs{};
-
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
@@ -223,8 +226,9 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
 
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
-
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -246,6 +250,9 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.Feedback.SensorToMechanismRatio = 1;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -254,11 +261,8 @@ void IntakeManager::InitializeTalonFXExtenderPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Extender", "m_Extender Status", status.GetName());
 }
-
 // IntakeSensor : Digital inputs do not have initialization needs
 
 void IntakeManager::SetPIDExtenderPositionDegree()
@@ -267,6 +271,10 @@ void IntakeManager::SetPIDExtenderPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
+	slot0Configs.kG = m_PositionDegree->GetF();
+	slot0Configs.kS = m_PositionDegree->GetS();
+	slot0Configs.kV = m_PositionDegree->GetV();
+	slot0Configs.kA = m_PositionDegree->GetA();
 	m_Extender->GetConfigurator().Apply(slot0Configs);
 }
 
@@ -349,6 +357,9 @@ void IntakeManager::CheckForTuningEnabled()
 void IntakeManager::ReadTuningParamsFromNT()
 {
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
+	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
+	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
+	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
@@ -358,6 +369,9 @@ void IntakeManager::ReadTuningParamsFromNT()
 void IntakeManager::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
+	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
+	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());

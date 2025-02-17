@@ -17,11 +17,11 @@
 
 #include <string>
 
-#include "utils/logging/Logger.h"
-#include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfig.h"
-#include "configs/MechanismConfigPRACTICE_BOT_9999.h"
 #include "configs/MechanismConfigCOMP_BOT_302.h"
+#include "configs/MechanismConfigMgr.h"
+#include "configs/MechanismConfigPRACTICE_BOT_9999.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 
@@ -50,6 +50,10 @@ void MechanismConfigMgr::InitRobot(RobotIdentifier id)
 	case RobotIdentifier::COMP_BOT_302:
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing robot "), string("COMP_BOT_302"), string(""));
 		m_config = new MechanismConfigCOMP_BOT_302();
+		break;
+	case RobotIdentifier::SIM_BOT_0:
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing robot "), string("SIM_BOT_0"), string(""));
+		m_config = new MechanismConfigPRACTICE_BOT_9999();
 		break;
 
 	default:

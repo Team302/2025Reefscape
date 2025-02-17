@@ -24,7 +24,7 @@
 #include "mechanisms/DragonTale/ReadyState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 
@@ -36,7 +36,7 @@ using namespace DragonTaleStates;
 ReadyState::ReadyState(std::string stateName,
 					   int stateId,
 					   DragonTale *mech,
-					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId)
+					   RobotIdentifier activeRobotId) : State(stateName, stateId), m_mechanism(mech), m_RobotId(activeRobotId), m_scoringTimer(new frc::Timer())
 {
 }
 
@@ -55,7 +55,6 @@ void ReadyState::InitPRACTICE_BOT9999()
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 	m_mechanism->SetPIDElevatorLeaderPositionInch();
-	m_mechanism->SetPIDArmPositionDegree();
 }
 
 void ReadyState::Run()
@@ -79,8 +78,20 @@ bool ReadyState::AtTarget()
 bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-
+	bool transition = false;
+	int currentState = m_mechanism->GetCurrentState();
+	if ((m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (currentState == DragonTale::STATE_NAMES::STATE_HOLD || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))))
+	{
+		m_scoringTimer->Start(); // This works becuase IsTransitionCondition is called every loop and it is the the first state to check the transition condition
+		if (m_scoringTimer->Get() > units::time::second_t(0.25))
+			transition = true;
+	}
+	else
+	{
+		m_scoringTimer->Stop();
+		m_scoringTimer->Reset();
+	}
 	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) ||
-			(m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD)) ||
-			(m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_INITIALIZE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (m_mechanism->GetCurrentState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL));
+			transition ||
+			(currentState == DragonTale::STATE_NAMES::STATE_INITIALIZE));
 }

@@ -31,11 +31,13 @@
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveModule.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "mechanisms/IntakeManager/IntakeManager.h"
 // #include "mechanisms/MechanismTypes.h"
 
 // Third Party Includes
@@ -98,40 +100,45 @@ void CyclePrimitives::Run()
 
 			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("CurrentPrimSlot "), m_currentPrimSlot);
 			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("Prim Size "), (int)m_primParams.size());
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("zone size "), (int)m_zones.size());
 
 			if (!m_zones.empty())
 			{
 
 				for (auto zone : m_zones)
 				{
-					auto isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
-																		   zone->GetXGrid2(),
-																		   zone->GetYGrid1(),
-																		   zone->GetYGrid2(),
-																		   m_chassis->GetPose());
-
-					if (isInZone)
+					bool isInZone = false;
+					if (zone != nullptr)
 					{
-						/**
-					auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-					if (config != nullptr && zone->IsNoteStateChanging())
-					{
-						auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-						if (noteMgr != nullptr)
+						if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
 						{
-							noteMgr->SetCurrentState(zone->GetNoteOption(), true);
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
+																			  zone->GetXGrid2(),
+																			  zone->GetYGrid1(),
+																			  zone->GetYGrid2(),
+																			  m_chassis->GetPose());
 						}
-					}
-						**/
-
-						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+						else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
 						{
-							// TODO:  plug in vision drive options
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
+																			  zone->getRadius(),
+																			  m_chassis->GetPose());
 						}
 
-						if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+						if (isInZone)
 						{
-							// TODO:  plug in avoid options
+
+							SetMechanismStatesFromZone(zone);
+
+							if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+							{
+								// TODO:  plug in vision drive options
+							}
+
+							if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+							{
+								// TODO:  plug in avoid options
+							}
 						}
 					}
 				}
@@ -201,6 +208,10 @@ void CyclePrimitives::RunDriveStop()
 										  ChassisOptionEnums::PathGainsType::LONG,
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
+										  false,
+										  IntakeManager::STATE_NAMES::STATE_OFF,
+										  false,
+										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::PathUpdateOption::NONE,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
@@ -211,23 +222,48 @@ void CyclePrimitives::RunDriveStop()
 
 void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 {
-	/**
+
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-	auto noteMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-	if (noteMgr != nullptr && params->IsNoteStateChanging())
-	{
-		noteMgr->SetCurrentState(params->GetNoteState(), true);
-	}
+		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
+		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
 
-	auto climbMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER);
-	if (climbMgr != nullptr && params->IsClimberStateChanging())
+		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
+		{
+			intakeMgr->SetCurrentState(params->GetIntakeState(), true);
+		}
+
+		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
+
+		if (taleMgr != nullptr && params->IsTaleStateChanging())
+		{
+			taleMgr->SetCurrentState(params->GetTaleState(), true);
+		}
+	}
+}
+void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
+{
+	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+	if (params != nullptr && config != nullptr)
 	{
-		noteMgr->SetCurrentState(params->GetClimberState(), true);
+		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
+		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
+
+		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
+		{
+			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);
+		}
+
+		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
+
+		if (taleMgr != nullptr && params->IsTaleStateChanging())
+		{
+			taleMgr->SetCurrentState(params->GetTaleOption(), true);
+		}
 	}
-	}
-	**/
 }
 void CyclePrimitives::InitDriveStopDelayTimes()
 {

@@ -33,7 +33,6 @@ public:
     void UpdateChassisSpeeds(ChassisMovement &chassisMovement) override;
 
 private:
-    bool m_prevTranslatinOrStrafing = false;
     double m_correctionThreshold = 0.1;
     frc::PIDController m_controller{4.0, 0.5, 0.0};
 };

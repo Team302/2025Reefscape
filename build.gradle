@@ -1,7 +1,7 @@
 plugins {
     id "cpp"
     id "google-test-test-suite"
-    id "edu.wpi.first.GradleRIO" version "2025.2.1"
+    id "edu.wpi.first.GradleRIO" version "2025.3.1"
     id "org.ysb33r.doxygen" version "1.0.3"
 }
 
@@ -70,6 +70,10 @@ model {
                 }
             }
 
+            //binaries.all {
+            //    cppCompiler.args << ''
+            //}
+
             // Set deploy task to deploy this component
             deployArtifact.component = it
 
@@ -102,4 +106,8 @@ model {
             wpi.cpp.deps.googleTest(it)
         }
     }
+}
+
+doxygen {
+    template 'tools/doxygen/Doxyfile'
 }

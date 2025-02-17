@@ -15,6 +15,7 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "chassis/SwerveChassis.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
@@ -24,23 +25,22 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
 #include "utils/DragonPower.h"
-#include "utils/logging/DataTrace.h"
-#include "utils/logging/DragonDataLoggerMgr.h"
-#include "utils/logging/LoggableItemMgr.h"
-#include "utils/logging/Logger.h"
-#include "utils/logging/LoggerData.h"
-#include "utils/logging/LoggerEnums.h"
+#include "utils/DragonPower.h"
+#include "utils/logging/debug/LoggableItemMgr.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/LoggerData.h"
+#include "utils/logging/debug/LoggerEnums.h"
+#include "utils/logging/signals/DragonDataLoggerMgr.h"
+#include "utils/logging/trace/DataTrace.h"
 #include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
-#include "vision/DragonVision.h"
-#include "utils/logging/DataTrace.h"
 #include "vision/DragonQuest.h"
-#include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorDataMgr.h"
-#include "utils/DragonPower.h"
+#include "vision/DragonVision.h"
 
 using std::string;
 
@@ -97,8 +97,6 @@ void Robot::RobotPeriodic()
     }
 
     UpdateDriveTeamFeedback();
-    LogDiagnosticData();
-    DragonQuest::GetDragonQuest()->DataLog();
 }
 
 /**
@@ -205,43 +203,9 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-    // TODO Make method in DragonVision for next year
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    if (chassis != nullptr)
-    {
-        auto vision = DragonVision::GetDragonVision();
-
-        auto visionPosition = vision->GetRobotPosition();
-        auto hasVisionPose = visionPosition.has_value();
-        if (hasVisionPose)
-        {
-            auto initialRot = visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees();
-
-            // use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
-            auto megaTag2Position = vision->GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0),
-                                                                     units::angle::degree_t(0.0),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0),
-                                                                     units::angle::degree_t(0.0),
-                                                                     units::angular_velocity::degrees_per_second_t(0.0));
-
-            if (megaTag2Position.has_value())
-            {
-                chassis->SetYaw(initialRot);
-                chassis->SetStoredHeading(initialRot);
-                chassis->ResetPose(megaTag2Position.value().estimatedPose.ToPose2d());
-            }
-            else if (hasVisionPose)
-            {
-                chassis->SetYaw(initialRot);
-                chassis->SetStoredHeading(initialRot);
-                chassis->ResetPose(visionPosition.value().estimatedPose.ToPose2d());
-            }
-        }
-    }
+    m_dragonswerveposeestimator->CalculateInitialPose();
 }
+
 void Robot::TestInit()
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
@@ -249,67 +213,6 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-}
-
-void Robot::LogDiagnosticData()
-{
-    const unsigned int loggingEveyNloops = 20;
-    static unsigned int loopCounter = 0;
-
-    unsigned int step = loopCounter % loggingEveyNloops;
-
-    if (step == 0)
-        LogSensorData();
-    else if (step == 1)
-        LogMotorData();
-    else if (step == 4)
-    {
-        if (m_chassis != nullptr)
-        {
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_BACK);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_BACK);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::LEFT_FRONT);
-            m_chassis->LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES::RIGHT_FRONT);
-        }
-    }
-    loopCounter++;
-}
-
-void Robot::LogSensorData()
-{
-    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-
-    if (config != nullptr)
-    {
-        /**
-        auto stateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::NOTE_MANAGER);
-        auto noteMgr = stateMgr != nullptr ? dynamic_cast<noteManagerGen *>(stateMgr) : nullptr;
-        if (noteMgr != nullptr)
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, ("SensorsIntake"), string("Front Intake"), noteMgr->getfrontIntakeSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsIntake"), string("Back Intake"), noteMgr->getbackIntakeSensor()->Get());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("Feeder"), noteMgr->getfeederSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("Launcher"), noteMgr->getlauncherSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsLauncher"), string("LauncherAngleHomeSwitch"), noteMgr->getlauncherAngle()->IsReverseLimitSwitchClosed());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerIn"), noteMgr->getplacerInSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerMid"), noteMgr->getplacerMidSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerOut"), noteMgr->getplacerOutSensor()->Get());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("SensorsPlacer"), string("PlacerHomeSwitch"), noteMgr->getPlacer()->IsReverseLimitSwitchClosed());
-        }
-        **/
-    }
-}
-
-void Robot::LogMotorData()
-{
-    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
-
-    if (config != nullptr)
-    {
-        // TODO implement mechanism states logging
-    }
 }
 
 void Robot::SimulationInit()
@@ -338,7 +241,7 @@ void Robot::InitializeRobot()
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
-    auto vision = DragonVision::GetDragonVision();
+    // auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();

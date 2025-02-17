@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+<primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "Square1"/>
+
+<primitive id= "DRIVE_PATH_PLANNER"
+choreoname = "Square1"
+time = "2.0"/>
+
+<primitive id= "DO_NOTHING"
+headingOption = "IGNORE"
+time = "10.0"/>
+
+<!-- <primitive id= "DRIVE_PATH_PLANNER"
+choreoname = "Square2"
+time = "2.0"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "Square3"
+time = "2.0"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "Square4"
+time = "2.0"/> -->
+
+</auton>

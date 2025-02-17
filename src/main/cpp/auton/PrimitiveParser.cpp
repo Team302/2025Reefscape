@@ -16,17 +16,17 @@
 #include <map>
 #include <string>
 
-#include "frc/Filesystem.h"
-
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/ZoneParams.h"
 #include "auton/ZoneParser.h"
 #include "chassis/ChassisOptionEnums.h"
+#include "frc/Filesystem.h"
+
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 #include <pugixml/pugixml.hpp>
 
@@ -45,13 +45,15 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["HOLD_POSITION"] = HOLD_POSITION;
     primStringToEnumMap["DRIVE_PATH_PLANNER"] = DRIVE_PATH_PLANNER;
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER"] = RESET_POSITION_PATH_PLANNER;
-    primStringToEnumMap["RESET_POSITION_PATH_PLANNER_NO_VISION"] = RESET_POSITION_PATH_PLANNER_NO_VISION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
+    primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
 
-    map<string, ChassisOptionEnums::HeadingOption> headingOptionMap;
+    map<string, ChassisOptionEnums::HeadingOption>
+        headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
+    headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
 
@@ -61,16 +63,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     pathGainsMap["LongPath"] = ChassisOptionEnums::PathGainsType::LONG;
     pathGainsMap["ShortPath"] = ChassisOptionEnums::PathGainsType::SHORT;
 
-    map<string, PrimitiveParams::VISION_ALIGNMENT> xmlStringToVisionAlignmentEnumMap{
-        {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
-        {"NOTE", PrimitiveParams::VISION_ALIGNMENT::NOTE},
-        {"SPEAKER", PrimitiveParams::VISION_ALIGNMENT::SPEAKER},
-    };
+    map<string, PrimitiveParams::VISION_ALIGNMENT>
+        xmlStringToVisionAlignmentEnumMap{
+            {"UNKNOWN", PrimitiveParams::VISION_ALIGNMENT::UNKNOWN},
+            {"ALGAE", PrimitiveParams::VISION_ALIGNMENT::ALGAE},
+            {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
+            {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
 
+    /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
         {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
         {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
     };
+    **/
 
     map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
         {"START", DriveStopDelay::DelayOption::START},
@@ -135,15 +140,16 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                 {
                     auto primitiveType = UNKNOWN_PRIMITIVE;
                     units::time::second_t time = units::time::second_t(15.0);
-                    auto headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+                    auto headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
-                    // auto noteStates = noteManagerGen::STATE_OFF;
-                    // bool changeNoteState = false;
-                    // auto climberState = ClimberManagerGen::STATE_OFF;
-                    // bool changeClimberState = false;
-                    // auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+                    auto intakeStates = IntakeManager::STATE_OFF;
+                    bool changeIntakeState = false;
+                    auto taleState = DragonTale::STATE_READY;
+                    bool changeTaleState = false;
+                    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
@@ -191,6 +197,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                         }
                         else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                         {
+                            /** TODO come back to this
                             auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
                             if (updateHeadingItr != pathUpdateOptionsMap.end())
                             {
@@ -201,6 +208,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
                                 hasError = true;
                             }
+                            **/
                         }
                         else if (strcmp(attr.name(), "delayOption") == 0)
                         {
@@ -240,34 +248,35 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        /**
-                        else if (strcmp(attr.name(), "noteOption") == 0)
+
+                        else if (strcmp(attr.name(), "taleOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::NOTE_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
                             {
-                                auto noteStateItr = noteManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (noteStateItr != noteManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto taleStateItr = DragonTale::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (taleStateItr != DragonTale::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    noteStates = noteStateItr->second;
-                                    changeNoteState = true;
+                                    taleState = taleStateItr->second;
+                                    changeTaleState = true;
                                 }
                             }
                         }
-                        else if (strcmp(attr.name(), "climberOption") == 0)
+                        else if (strcmp(attr.name(), "intakeOption") == 0)
                         {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::CLIMBER_MANAGER) != nullptr)
+                            if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
                             {
-                                auto climberStateItr = ClimberManagerGen::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (climberStateItr != ClimberManagerGen::stringToSTATE_NAMESEnumMap.end())
+                                auto intakeStateItr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
+                                if (intakeStateItr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
                                 {
-                                    climberState = climberStateItr->second;
-                                    changeClimberState = true;
+                                    intakeStates = intakeStateItr->second;
+                                    changeIntakeState = true;
                                 }
                             }
                         }
-                        **/
+
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
+                            /** TODO come back to this
                             auto visionAlignmentItr = xmlStringToVisionAlignmentEnumMap.find(attr.value());
                             if (visionAlignmentItr != xmlStringToVisionAlignmentEnumMap.end())
                             {
@@ -278,6 +287,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid attribute"), attr.name());
                                 hasError = true;
                             }
+                            **/
                         }
                     }
 
@@ -290,6 +300,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             {
                                 if (strcmp(attr.name(), "filename") == 0)
                                 {
+                                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone filename", "name", std::string(attr.value()));
                                     auto zone = ZoneParser::ParseXML(attr.value());
                                     zones.emplace_back(zone);
                                 }
@@ -309,10 +320,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      zones, // vector of all zones included as part of the path
                                                                             // can have multiple zones as part of a complex path
                                                                      visionAlignment,
-                                                                     // changeNoteState,
-                                                                     // noteStates,
-                                                                     // changeClimberState,
-                                                                     // climberState,
+                                                                     changeIntakeState,
+                                                                     intakeStates,
+                                                                     changeTaleState,
+                                                                     taleState,
                                                                      updateHeadingOption,
                                                                      pathDelayOption));
                     }
@@ -348,6 +359,7 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Path Name"), param->GetPathName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
+        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Dragon Tale State"), param->GetTaleState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));

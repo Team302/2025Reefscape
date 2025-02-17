@@ -17,12 +17,12 @@
 
 #include <string>
 
-#include "utils/PeriodicLooper.h"
-#include "utils/logging/Logger.h"
 #include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfigPRACTICE_BOT_9999.h"
 #include "configs/RobotElementNames.h"
 #include "feedback/DragonLeds.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/PeriodicLooper.h"
 
 using std::string;
 
@@ -66,5 +66,5 @@ StateMgr *MechanismConfigPRACTICE_BOT_9999::GetMechanism(MechanismTypes::MECHANI
 
 void MechanismConfigPRACTICE_BOT_9999::DefineLEDs()
 {
-	DragonLeds::GetInstance()->Initialize(9, 6);
+	DragonLeds::GetInstance()->Initialize(9, 15);
 }

@@ -23,7 +23,9 @@ public:
         MAINTAIN,
         SPECIFIED_ANGLE,
         FACE_GAME_PIECE,
-        FACE_REEF,
+        FACE_REEF_CENTER,
+        FACE_REEF_FACE,
+        FACE_CORAL_STATION,
         IGNORE
     };
 
@@ -35,6 +37,9 @@ public:
         HOLD_DRIVE,
         POLAR_DRIVE,
         DRIVE_TO_NOTE,
+        DRIVE_TO_CORAL_STATION,
+        DRIVE_TO_LEFT_REEF_BRANCH,
+        DRIVE_TO_RIGHT_REEF_BRANCH,
         STOP_DRIVE
     };
 

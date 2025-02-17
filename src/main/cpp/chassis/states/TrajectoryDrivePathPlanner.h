@@ -45,8 +45,8 @@ public:
     units::angular_velocity::degrees_per_second_t CalcHeadingCorrection(units::angle::degree_t targetAngle, double kPFine, double kPCoarse);
 
 protected:
-    const units::meters_per_second_t m_maxVel = 4.65_mps;
-    const units::meters_per_second_squared_t m_maxAccel = 5.0_mps_sq;
+    const units::meters_per_second_t m_maxVel = 3.0_mps;
+    const units::meters_per_second_squared_t m_maxAccel = 3.0_mps_sq;
     const units::radians_per_second_t m_maxAngularVel = 540_deg_per_s;
     const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
 

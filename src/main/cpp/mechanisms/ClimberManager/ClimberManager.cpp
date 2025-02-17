@@ -21,8 +21,9 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "ClimberManager.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -33,14 +34,9 @@
 #include "state/RobotState.h"
 #include "utils/logging/DragonDataLoggerSignals.h"
 
-using ctre::phoenix6::configs::ClosedLoopRampsConfigs;
-using ctre::phoenix6::configs::CurrentLimitsConfigs;
-using ctre::phoenix6::configs::HardwareLimitSwitchConfigs;
-using ctre::phoenix6::configs::MotorOutputConfigs;
-using ctre::phoenix6::configs::OpenLoopRampsConfigs;
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
-using ctre::phoenix6::configs::VoltageConfigs;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -48,7 +44,6 @@ using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
-
 using std::string;
 using namespace ClimberManagerStates;
 
@@ -87,7 +82,7 @@ std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE
 void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
-	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "rio");
+	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "canivore");
 
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -97,6 +92,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -166,9 +164,7 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
 }
 
 void ClimberManager::SetPIDClimberPositionDegree()
@@ -177,6 +173,10 @@ void ClimberManager::SetPIDClimberPositionDegree()
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
+	slot0Configs.kG = m_PositionDegree->GetF();
+	slot0Configs.kS = m_PositionDegree->GetS();
+	slot0Configs.kV = m_PositionDegree->GetV();
+	slot0Configs.kA = m_PositionDegree->GetA();
 	m_Climber->GetConfigurator().Apply(slot0Configs);
 }
 
@@ -250,6 +250,9 @@ void ClimberManager::CheckForTuningEnabled()
 void ClimberManager::ReadTuningParamsFromNT()
 {
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
+	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
+	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
+	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
@@ -259,6 +262,9 @@ void ClimberManager::ReadTuningParamsFromNT()
 void ClimberManager::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
+	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
+	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());

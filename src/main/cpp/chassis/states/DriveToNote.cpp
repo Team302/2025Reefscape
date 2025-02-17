@@ -14,8 +14,8 @@
 //=====================================================================================================================================================
 
 // C++ Includes
-#include <tuple>
 #include <string>
+#include <tuple>
 
 // FRC Includes
 #include <frc/geometry/Rotation2d.h>
@@ -29,13 +29,12 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructs.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "chassis/DragonDriveTargetFinder.h"
-// #include "mechanisms/noteManager/decoratormods/noteManager.h"
+#include "fielddata/DragonTargetFinder.h" // #include "mechanisms/noteManager/decoratormods/noteManager.h"
 #include "chassis/SwerveChassis.h"
 
-#include "utils/logging/Logger.h"
-#include "utils/logging/LoggerData.h"
-#include "utils/logging/LoggerEnums.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/LoggerData.h"
+#include "utils/logging/debug/LoggerEnums.h"
 
 DriveToNote::DriveToNote(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)
@@ -80,10 +79,10 @@ pathplanner::PathPlannerTrajectory DriveToNote::CreateDriveToNote()
 
     if (chassis != nullptr)
     {
-        auto info = DragonDriveTargetFinder::GetInstance()->GetPose(DragonVision::VISION_ELEMENT::NOTE);
+        auto info = DragonTargetFinder::GetInstance()->GetPose(DragonVision::VISION_ELEMENT::NOTE);
         auto type = get<0>(info);
         auto data = get<1>(info);
-        if (type == DragonDriveTargetFinder::TARGET_INFO::VISION_BASED)
+        if (type == DragonTargetFinder::TARGET_INFO::VISION_BASED)
         {
             trajectory = CreateDriveToNoteTrajectory(m_chassis->GetPose(), data);
         }

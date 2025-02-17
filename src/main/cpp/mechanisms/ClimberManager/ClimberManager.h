@@ -92,6 +92,7 @@ public:
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
+	void SetCurrentState ( int state, bool run ) override;
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
@@ -99,7 +100,6 @@ protected:
 	bool m_tuning = false;
 	std::shared_ptr<nt::NetworkTable> m_table;
 
-	void SetCurrentState(int state, bool run) override;
 	ControlData *GetControlData(std::string name) override;
 
 private:

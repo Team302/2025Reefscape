@@ -48,7 +48,7 @@ RobotState::RobotState() : m_chassis(nullptr),
                            m_scoringModeButtonReleased(true)
 {
     m_brokers.reserve(RobotStateChanges::LoopCounterStart);
-    auto start = static_cast<int>(RobotStateChanges::DesiredScoringMode_Int);
+    auto start = static_cast<int>(RobotStateChanges::LoopCounterStart);
     auto end = static_cast<int>(RobotStateChanges::LoopCounterEnd);
     for (auto i = start; i < end; ++i)
     {
@@ -102,6 +102,7 @@ void RobotState::PublishStateChange(RobotStateChanges::StateChange change, int n
         m_brokers[slot]->Notify(newValue);
     }
 }
+
 void RobotState::PublishStateChange(RobotStateChanges::StateChange change, double newValue)
 {
     auto slot = static_cast<unsigned int>(change);
@@ -150,6 +151,7 @@ void RobotState::PublishStateChange(RobotStateChanges::StateChange change, frc::
         m_brokers[slot]->Notify(newValue);
     }
 }
+
 void RobotState::PublishGameStateChanges()
 {
     auto gameState = m_gamePhase;
@@ -182,7 +184,7 @@ void RobotState::PublishScoringMode(TeleopControl *controller)
         if (m_scoringModeButtonReleased)
         {
             m_scoringMode = (m_scoringMode == RobotStateChanges::ScoringMode::Coral) ? RobotStateChanges::ScoringMode::Algae : RobotStateChanges::ScoringMode::Coral;
-            PublishStateChange(RobotStateChanges::DesiredScoringMode_Int, m_scoringMode);
+            PublishStateChange(RobotStateChanges::StateChange::DesiredScoringMode_Int, m_scoringMode);
         }
     }
     else if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)

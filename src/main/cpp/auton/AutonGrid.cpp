@@ -14,11 +14,13 @@
 //====================================================================================================================================================
 
 // FRC Includes
-#include <frc/geometry/Pose2d.h>
 #include <math.h>
+
+#include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
 #include "auton/AutonGrid.h"
+#include "utils/logging/debug/Logger.h"
 
 // Thirdparty includes
 
@@ -46,4 +48,11 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
     // then it is determined wether or not the robotPose is in the zone defined by the 2 grids.
     return ((robotPose.X().value() >= units::length::meter_t(x1 * m_gridRes).value()) && (robotPose.X().value() <= units::length::meter_t(x2 * m_gridRes).value()) &&
             (robotPose.Y().value() >= units::length::meter_t(y1 * m_gridRes).value()) && (robotPose.Y().value() <= units::length::meter_t(y2 * m_gridRes).value()));
+}
+bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
+{
+    auto translationToCenter = circleZonePose.Translation().Distance(robotPose.Translation());
+    bool inZone = translationToCenter <= radius;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "circle zones", "in zone", inZone);
+    return inZone;
 }

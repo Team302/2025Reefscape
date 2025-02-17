@@ -16,16 +16,13 @@
 #include <tuple>
 
 // Team302 Includes
-#include "chassis/DragonDriveTargetFinder.h"
+#include "fielddata/DragonTargetFinder.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/FaceTarget.h"
 #include "frc/geometry/Pose2d.h"
-#include "utils/FMSData.h"
 #include "utils/AngleUtils.h"
 
-#include "utils/logging/Logger.h"
-
-FaceTarget::FaceTarget(ChassisOptionEnums::HeadingOption headingOption) : SpecifiedHeading(headingOption)
+FaceTarget::FaceTarget(ChassisOptionEnums::HeadingOption headingOption) : SpecifiedHeading(headingOption), m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis())
 {
 }
 
@@ -36,53 +33,30 @@ std::string FaceTarget::GetHeadingStateName() const
 
 units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMovement) const
 {
-    auto finder = DragonDriveTargetFinder::GetInstance();
-    if (finder != nullptr)
+    if (m_chassis != nullptr)
     {
-        auto info = finder->GetPose(GetVisionElement());
-        if (get<0>(info) != DragonDriveTargetFinder::TARGET_INFO::NOT_FOUND)
+        auto chassispose = m_chassis->GetPose();
+        auto currentangle = m_chassis->GetStoredHeading();
+
+        auto finder = DragonTargetFinder::GetInstance();
+        if (finder != nullptr)
         {
-            auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-            auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-            frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-
-            if (chassis != nullptr)
+            auto info = finder->GetPose(GetTarget());
+            if (info.has_value())
             {
-                auto targetPose = get<1>(info);
+                auto targetpose = get<1>(info.value());
 
-                units::angle::degree_t fieldRelativeAngle = (allianceColor == frc::DriverStation::Alliance::kBlue && GetVisionElement() == DragonVision::VISION_ELEMENT::SPEAKER) ? (units::angle::degree_t(180) + targetPose.Rotation().Degrees()) : targetPose.Rotation().Degrees();
+                units::length::meter_t xDiff = targetpose.X() - chassispose.X();
+                units::length::meter_t yDiff = targetpose.Y() - chassispose.Y();
+                units::angle::degree_t angletotarget = units::math::atan2(yDiff, xDiff);
 
-                if (GetVisionElement() == DragonVision::VISION_ELEMENT::REEF)
-                {
-                    frc::Pose2d currentPose = chassis->GetPose();
-
-                    units::length::meter_t xDiff = targetPose.X() - currentPose.X();
-                    units::length::meter_t yDiff = targetPose.Y() - currentPose.Y();
-                    units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
-
-                    // Adjust angleToReefCenter to be between -180 and 180 degrees
-                    angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
-
-                    // Calculate the angle relative to the closest 60-degree increment
-                    units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
-
-                    // Adjust the angle to the nearest 60-degree increment
-                    units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace;
-
-                    fieldRelativeAngle = AngleUtils::GetEquivAngle(closestMultiple);
-                }
-                chassisMovement.yawAngle = fieldRelativeAngle;
-                return fieldRelativeAngle;
+                // Adjust angleToReefCenter to be between -180 and 180 degrees
+                angletotarget = AngleUtils::GetEquivAngle(angletotarget);
+                chassisMovement.yawAngle = angletotarget;
+                return angletotarget;
             }
         }
+        return currentangle;
     }
-
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    if (chassis != nullptr)
-    {
-        return chassis->GetStoredHeading();
-    }
-
-    return chassisMovement.yawAngle;
+    return units::angle::degree_t(0.0);
 }

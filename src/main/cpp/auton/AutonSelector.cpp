@@ -17,10 +17,12 @@
 // co-Author: notcharlie, creator of dumb code / copy paster of better code
 
 // Includes
+#include <filesystem>
+#include <fstream>
 #include <string>
 #include <vector>
+
 #include <sys/stat.h>
-#include <fstream>
 
 #ifdef __linux
 #include <dirent.h>
@@ -32,7 +34,7 @@
 
 // Team302 includes
 #include "auton/AutonSelector.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/FMSData.h"
 
 #include <pugixml/pugixml.hpp>
@@ -52,7 +54,8 @@ AutonSelector::AutonSelector()
 string AutonSelector::GetSelectedAutoFile()
 {
 	std::string autonfile(frc::filesystem::GetDeployDirectory());
-	autonfile += std::string("/auton/");
+	autonfile += std::filesystem::path("/auton/").string();
+	autonfile += GetDesiredScoringLevel() + "/";
 	autonfile += GetAlianceColor();
 	autonfile += GetStartPos();
 	autonfile += GetTargetFace();
@@ -75,7 +78,7 @@ string AutonSelector::GetSelectedAutoFile()
 	if (!fileExists || !fileValid)
 	{
 		autonfile = frc::filesystem::GetDeployDirectory();
-		autonfile += std::string("/auton/");
+		autonfile += std::filesystem::path("/auton/").string();
 		autonfile += GetAlianceColor();
 		autonfile += ("DefaultFile.xml");
 	}
@@ -100,8 +103,8 @@ bool AutonSelector::FileValid(const std::string &name)
 	{
 		return true;
 	}
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("AutonSelector"), string("FileInvalid: Description ") + name, result.description());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("AutonSelector"), string("FileInvalid: Offset ") + name, result.offset);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("AutonSelector"), string("FileInvalid: Description ") + name, string(result.description()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("AutonSelector"), string("FileInvalid: Offset ") + name, static_cast<int>(result.offset));
 	return false;
 }
 

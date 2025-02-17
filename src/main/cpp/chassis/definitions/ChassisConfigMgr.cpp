@@ -17,10 +17,11 @@
 
 #include "chassis/definitions/chassis9997/ChassisConfigChassis_9997.h"
 #include "chassis/definitions/chassis9998/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/chassis9999/ChassisConfigChassis_9999.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "RobotIdentifier.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 
@@ -47,9 +48,6 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 		m_config = new ChassisConfigCompBot_302();
 		break;
 
-	case RobotIdentifier::PRACTICE_BOT_9999:
-		m_config = new ChassisConfigChassis_9999();
-		break;
 	**/
 	case RobotIdentifier::CHASSIS_BOT_9998:
 		m_config = new ChassisConfigChassis_9998();
@@ -57,6 +55,12 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 
 	case RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
+		break;
+	case RobotIdentifier::PRACTICE_BOT_9999:
+		m_config = new ChassisConfigChassis_9999();
+		break;
+	case RobotIdentifier::SIM_BOT_0:
+		m_config = new ChassisConfigChassis_9999();
 		break;
 
 	default:

@@ -17,6 +17,10 @@
 #include <feedback/LEDStates.h>
 #include <span>
 
+#ifndef __FRC_ROBORIO__
+#define DESKTOP_SIM
+#endif
+
 void LEDStates::BlinkingPattern(DragonLeds::Colors c)
 {
     if (m_LEDstring->m_ledBuffer.size() > 0)
@@ -79,8 +83,9 @@ void LEDStates::ClosingInChaserPattern(DragonLeds::Colors c)
             int loopout = (m_LEDstring->m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
             auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(m_LEDstring->BLACK);
             m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
-            m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
-            m_LEDstring->m_ledBuffer[loopout].SetRGB(color[0], color[1], color[2]);
+            std::array<int, 3U> colorarray = {color[0], color[1], color[2]};
+            m_LEDstring->setSpecificLED(m_loopThroughIndividualLEDs, colorarray);
+            m_LEDstring->setSpecificLED(loopout, colorarray);
 
             m_LEDstring->commitLedData();
             m_timer = 0;
@@ -98,12 +103,9 @@ void LEDStates::ChaserPattern(DragonLeds::Colors c)
         {
             color = color == m_LEDstring->getColorValues(c) ? m_LEDstring->getColorValues(DragonLeds::BLACK) : m_LEDstring->getColorValues(c);
         }
-        // auto color = m_colorLoop >= 0 ? m_LEDstring->getColorValues(c) : m_LEDstring->getColorValues(DragonLeds::BLACK);
-
-        // m_colorLoop += m_colorLoop < m_LEDstring->m_ledBuffer.size() - 1 ? 1 : -((m_colorLoop * 2) + 1);
         m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_LEDstring->m_ledBuffer.size()) - 1;
-
-        m_LEDstring->m_ledBuffer[m_loopThroughIndividualLEDs].SetRGB(color[0], color[1], color[2]);
+        std::array<int, 3U> colorarray = {color[0], color[1], color[2]};
+        m_LEDstring->setSpecificLED(m_loopThroughIndividualLEDs, colorarray);
         m_LEDstring->commitLedData();
     }
 }
@@ -117,31 +119,31 @@ void LEDStates::RainbowPattern()
 void LEDStates::DiagnosticPattern(frc::DriverStation::Alliance alliancecolor, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
     auto alliancecolorcolor = alliancecolor ? DragonLeds::BLUE : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(0, m_LEDstring->getColorValues(alliancecolorcolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED0, m_LEDstring->getColorValues(alliancecolorcolor));
 
     auto coralInSensorcolor = coralInSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(1, m_LEDstring->getColorValues(coralInSensorcolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED1, m_LEDstring->getColorValues(coralInSensorcolor));
 
     auto coralOutSensorcolor = coralOutSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(2, m_LEDstring->getColorValues(coralOutSensorcolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED2, m_LEDstring->getColorValues(coralOutSensorcolor));
 
     auto algaeSensorcolor = algaeSensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(3, m_LEDstring->getColorValues(algaeSensorcolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED3, m_LEDstring->getColorValues(algaeSensorcolor));
 
     auto intakesensorcolor = intakesensor ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(4, m_LEDstring->getColorValues(intakesensorcolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED4, m_LEDstring->getColorValues(intakesensorcolor));
 
     auto questStatuscolor = questStatus ? DragonLeds::GREEN : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(5, m_LEDstring->getColorValues(questStatuscolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED5, m_LEDstring->getColorValues(questStatuscolor));
 
     auto ll1Statuscolor = ll1Status ? DragonLeds::GREEN : DragonLeds::RED;
-    m_LEDstring->setSpecificLED(6, m_LEDstring->getColorValues(ll1Statuscolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED6, m_LEDstring->getColorValues(ll1Statuscolor));
 
     auto ll2Statuscolor = ll2Status ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(7, m_LEDstring->getColorValues(ll2Statuscolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED7, m_LEDstring->getColorValues(ll2Statuscolor));
 
     auto pigeonfaultscolor = pigeonfaults ? DragonLeds::YELLOW : DragonLeds::BLACK;
-    m_LEDstring->setSpecificLED(8, m_LEDstring->getColorValues(pigeonfaultscolor));
+    m_LEDstring->setDiagnosticLED(m_diagnosticLED8, m_LEDstring->getColorValues(pigeonfaultscolor));
 
     m_LEDstring->commitLedData();
 }
@@ -156,7 +158,12 @@ void LEDStates::BreathingPattern(DragonLeds::Colors c)
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
         // brightness follows sin wave shifted to range [0, 254] with period of m_breathePatternPeriod ticks
-        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;
+#ifdef DESKTOP_SIM
+        constexpr double pi = 3.14159265358979323846;
+        int brightness = (std::sin(m_timer * 2 * pi / m_breathePatternPeriod) + 1) * 127;
+#else
+        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;    
+#endif
         m_LEDstring->setBufferAllLEDsColorBrightness(c, brightness);
         m_LEDstring->commitLedData();
         m_timer++;

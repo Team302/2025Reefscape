@@ -21,8 +21,9 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "DragonTale.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
+#include "state/RobotState.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -51,19 +52,20 @@
 #include "mechanisms/DragonTale/ManualCoralLoadState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeReefState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeFloorState.h"
+#include "fielddata/DragonTargetFinder.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 
-#include "state/RobotState.h"
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
+#include "tuple"
 
 #include "frc/DataLogManager.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
+using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
-using ctre::phoenix6::configs::VoltageConfigs;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
@@ -73,6 +75,7 @@ using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
 
 using std::string;
+using std::tuple;
 using namespace DragonTaleStates;
 
 void DragonTale::CreateAndRegisterStates()
@@ -189,15 +192,18 @@ void DragonTale::CreateAndRegisterStates()
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
+	ManualCoralLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	ManualCoralLoadStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
 	ManualGrabAlgaeReefStateInst->RegisterTransitionState(ManualGrabAlgaeFloorStateInst);
+	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ProcessStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
@@ -213,6 +219,7 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -288,7 +295,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "rio");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.030518);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(-0.15673828125);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
@@ -297,33 +304,41 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionInch",								  // std::string indentifier
-		2,												  // double proportional
-		0.2,											  // double integral
+		2.5,											  // double proportional
+		0.35,											  // double integral
 		0,												  // double derivative
 		0.3,											  // double feedforward
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		true											  // bool enableFOC
+		0.3,											  // double velocityGain
+		0.05,											  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		true									// bool enableFOC
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		20,												  // double proportional
-		2,												  // double integral
-		0,												  // double derivative
-		0,												  // double feedforward
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		true											  // bool enableFOC
+		57,												  // double proportional
+		25,												  // double integral
+		5,												  // double derivative
+		1.8,											  // double feedforward
+		0.75,											  // double velocityGain
+		0.25,											  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		true									// bool enableFOC
 	);
 	m_PercentOutput = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -333,13 +348,17 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
-		0,												  // double integralZone
-		0,												  // double maxAcceleration
-		0,												  // double cruiseVelocity
-		0,												  // double peakValue
-		0,												  // double nominalValue
-		false											  // bool enableFOC
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
 	);
 
 	ReadConstants("DragonTale.xml", 9999);
@@ -370,7 +389,6 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-
 	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
 
 	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
@@ -399,7 +417,9 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
-	/* Retry config apply up to 5 times, report if failure */
+	configs.MotionMagic.MotionMagicCruiseVelocity = 75_tps;
+	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -408,9 +428,9 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
+
+	SetPIDArmPositionDegree();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
@@ -453,9 +473,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	configs.Feedback.SensorToMechanismRatio = 0.1273239545; // 1 / 7.853981634;
+	configs.Feedback.SensorToMechanismRatio = 0.108878152421;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -464,9 +483,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
@@ -498,8 +515,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-
-	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0);
+	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
 
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
@@ -525,7 +541,6 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 1;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -534,9 +549,7 @@ void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Algae", "m_Algae Status", status.GetName());
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
@@ -576,7 +589,6 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	/* Retry config apply up to 5 times, report if failure */
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -585,9 +597,8 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 			break;
 	}
 	if (!status.IsOK())
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DragonTale", "Arm Motor Status", status.GetName());
-	}
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorFollower", "m_ElevatorFollower Status", status.GetName());
+
 	m_ElevatorFollower->SetControl(ctre::phoenix6::controls::StrictFollower{4});
 }
 
@@ -598,12 +609,13 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
 	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = 2.05;
-	slot0Configs.kV = 0.25;
-	slot0Configs.kA = 0.05;
+	slot0Configs.kS = m_PositionDegree->GetS();
+	slot0Configs.kV = m_PositionDegree->GetV();
+	slot0Configs.kA = m_PositionDegree->GetA();
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
-	m_Arm->GetConfigurator().Apply(slot0Configs);
+	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
+	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {
@@ -612,11 +624,13 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kI = m_PositionInch->GetI();
 	slot0Configs.kD = m_PositionInch->GetD();
 	slot0Configs.kG = m_PositionInch->GetF();
-	slot0Configs.kV = 0.3;
-	slot0Configs.kA = 0.05;
+	slot0Configs.kS = m_PositionInch->GetS();
+	slot0Configs.kV = m_PositionInch->GetV();
+	slot0Configs.kA = m_PositionInch->GetA();
 	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::SetCurrentState(int state, bool run)
@@ -634,16 +648,18 @@ void DragonTale::RunCommonTasks()
 	Cyclic();
 	DataLog();
 
+	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
-
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState()); // Ask how to get state enum map
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -707,25 +723,37 @@ void DragonTale::CheckForTuningEnabled()
 void DragonTale::ReadTuningParamsFromNT()
 {
 	m_PositionInch->SetIZone(m_table.get()->GetNumber("PositionInch_iZone", 0));
+	m_PositionInch->SetS(m_table.get()->GetNumber("PositionInch_sGain", 0));
+	m_PositionInch->SetV(m_table.get()->GetNumber("PositionInch_vGain", 0.3));
+	m_PositionInch->SetA(m_table.get()->GetNumber("PositionInch_aGain", 0.05));
 	m_PositionInch->SetF(m_table.get()->GetNumber("PositionInch_fGain", 0.3));
-	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2));
-	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.2));
+	m_PositionInch->SetP(m_table.get()->GetNumber("PositionInch_pGain", 2.5));
+	m_PositionInch->SetI(m_table.get()->GetNumber("PositionInch_iGain", 0.35));
 	m_PositionInch->SetD(m_table.get()->GetNumber("PositionInch_dGain", 0));
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 20));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 2));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
+	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0.75));
+	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0.25));
+	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 1.8));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 57));
+	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 25));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 5));
 }
 
 void DragonTale::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionInch_iZone", m_PositionInch->GetIZone());
+	m_table.get()->PutNumber("PositionInch_sGain", m_PositionInch->GetS());
+	m_table.get()->PutNumber("PositionInch_vGain", m_PositionInch->GetV());
+	m_table.get()->PutNumber("PositionInch_aGain", m_PositionInch->GetA());
 	m_table.get()->PutNumber("PositionInch_fGain", m_PositionInch->GetF());
 	m_table.get()->PutNumber("PositionInch_pGain", m_PositionInch->GetP());
 	m_table.get()->PutNumber("PositionInch_iGain", m_PositionInch->GetI());
 	m_table.get()->PutNumber("PositionInch_dGain", m_PositionInch->GetD());
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
+	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
+	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
+	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
@@ -750,7 +778,7 @@ Hand-Coded Things are here :)
 ===================================================================================================================*/
 void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
 {
-	if (change == RobotStateChanges::StateChange::DesiredScoringMode_Int)
+	if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 }
 
@@ -768,29 +796,21 @@ void DragonTale::SetSensorFailSafe()
 
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
-	frc::Pose2d chassisPose{};													  // TODO: get current chassis pose from visdrive later :)
-	units::length::meter_t xDiff = units::length::meter_t(4.5) - chassisPose.X(); // TODO: get reef pose values from visdrive *thumbs up*
-	units::length::meter_t yDiff = units::length::meter_t(4.0) - chassisPose.Y();
-	units::angle::degree_t angleToReefCenter = units::math::atan2(yDiff, xDiff);
-
-	// Adjust angleToReefCenter to be between -180 and 180 degrees
-	angleToReefCenter = AngleUtils::GetEquivAngle(angleToReefCenter);
-
-	// Calculate the angle relative to the closest 60-degree increment
-	units::angle::degree_t angleRelativeToFace = units::angle::degree_t(units::math::fmod(angleToReefCenter + 30.0_deg, 60.0_deg) - 30.0_deg);
-
+	units::length::inch_t algeHeight = m_grabAlgaeLow;
 	// Adjust the angle to the nearest 60-degree increment
-	units::angle::degree_t allianceAdjustment = allianceColor == frc::DriverStation::Alliance::kBlue ? units::angle::degree_t(180) : units::angle::degree_t(0);
+	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
+	if (info)
+	{
+		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-	units::angle::degree_t closestMultiple = angleToReefCenter - angleRelativeToFace + allianceAdjustment;
+		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg;
 
-	int multipleNumber = closestMultiple.value() / 60.0;
+		int multipleNumber = closestMultiple.value() / 60.0;
 
-	if (multipleNumber % 2 == 0)
-		return m_grabAlgaeHigh;
-	else
-		return m_grabAlgaeLow;
+		if (multipleNumber % 2 == 0)
+			algeHeight = m_grabAlgaeHigh;
+	}
+	return algeHeight;
 }
 
 void DragonTale::ManualControl()
@@ -820,10 +840,25 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetAngle = m_armProtectionAngle;
 	}
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
 	UpdateTargetArmPositionDegree(actualTargetAngle);
 	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+}
+
+frc::Pose3d DragonTale::GetReefCenter()
+{
+	frc::Pose3d fieldElementPose = frc::Pose3d{};
+	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)};
+	return fieldElementPose;
+}
+
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
+{
+	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
+		m_robotPose = value;
 }
 
 bool DragonTale::AtTarget()
