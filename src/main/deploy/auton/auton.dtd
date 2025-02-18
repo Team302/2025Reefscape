@@ -7,6 +7,7 @@
 <!ATTLIST primitive 
           id                ( DO_NOTHING | HOLD_POSITION | 
                               DRIVE_PATH_PLANNER | RESET_POSITION_PATH_PLANNER | RESET_POSITION_PATH_PLANNER_NO_VISION | DO_NOTHING_DELAY | DRIVE_STOP_MECH) "DO_NOTHING"
+		  pathUpdateOption 	(RIGHT_REEF_BRANCH | LEFT_REEF_BRANCH | REEF_ALGAE | FLOOR_ALGAE | CORAL_STATION | PROCESSOR | NOTHING) "NOTHING"
 		  time				CDATA #IMPLIED
 		  delayOption		(START | PLACED_CORAL | REEF) "START"
           headingOption     CDATA "IGNORE"
@@ -26,7 +27,6 @@
 		                    STATE_TRANSFER_IN | STATE_TRANSFER_OUT | STATE_PROCESS | 
 		                    STATE_EXPEL ) "STATE_OFF"
 		  visionAligment    ( UNKNOWN | NOTE | SPEAKER ) "UNKNOWN"
-		  pathUpdateOption    (NOTE | NONE) "NONE"
 >
 
 
