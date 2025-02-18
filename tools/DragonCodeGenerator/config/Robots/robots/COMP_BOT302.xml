@@ -676,19 +676,20 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
+              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
                 <__units__ />
                 <type>UInt32</type>
-                <value>0</value>
+                <value>17</value>
               </CanID>
               <sensorToMechanismRatio>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>1</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
@@ -697,7 +698,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>true</value>
+                <value>false</value>
               </enable>
               <fusedCANcoder>
                 <name>ArmAngleSensor</name>
@@ -716,7 +717,7 @@
                 <type>Double</type>
                 <value>180</value>
               </rotorToSensorRatio>
-              <fusedSyncChoice>FUSED</fusedSyncChoice>
+              <fusedSyncChoice>SYNC</fusedSyncChoice>
             </fusedSyncCANcoder>
             <sensorIsInverted>
               <unitsFamily>none</unitsFamily>
@@ -2068,7 +2069,6 @@
                 <type>Double</type>
                 <value>-1</value>
               </peakReverseDutyCycle>
-              <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
           </MotorController>
@@ -2346,7 +2346,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>2</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2370,7 +2370,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>2</value>
+              <value>0</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2428,7 +2428,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.26220715625</value>
+              <value>0.273438</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -2495,7 +2495,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.3</value>
+                <value>0</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>
@@ -2586,7 +2586,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>5</value>
+                <value>0</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
@@ -2898,7 +2898,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>90</value>
+                  <value>87</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3017,7 +3017,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>90</value>
+                  <value>83</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3054,7 +3054,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -3199,7 +3199,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>0.5</value>
+                  <value>1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -3433,7 +3433,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>-30</value>
+                  <value>-20</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3489,7 +3489,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>0.5</value>
+                  <value>1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -3561,7 +3561,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>-30</value>
+                  <value>-20</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4084,7 +4084,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>40</value>
+                  <value>45</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4103,7 +4103,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
-                  <value>9.2</value>
+                  <value>12</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4225,7 +4225,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>40</value>
+                  <value>61</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4244,7 +4244,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
-                  <value>17.2</value>
+                  <value>16</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4366,7 +4366,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>40</value>
+                  <value>53</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4385,7 +4385,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
-                  <value>29.7</value>
+                  <value>29</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4892,7 +4892,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>-30</value>
+                  <value>-20</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -5647,14 +5647,14 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>140</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>35</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
@@ -5682,7 +5682,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.5</value>
               </sGain>
               <vGain>
                 <unitsFamily>none</unitsFamily>

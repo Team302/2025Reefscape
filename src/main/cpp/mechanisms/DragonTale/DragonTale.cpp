@@ -344,12 +344,12 @@ void DragonTale::CreateCOMP_BOT302()
 	m_CoralTalonFXS = new ctre::phoenix6::hardware::TalonFXS(18, "canivore");
 	m_AlgaeTalonFXS = new ctre::phoenix6::hardware::TalonFXS(19, "canivore");
 
-	m_CoralInSensor = new frc::DigitalInput(0);
-	m_CoralOutSensor = new frc::DigitalInput(2);
+	m_CoralInSensor = new frc::DigitalInput(2);
+	m_CoralOutSensor = new frc::DigitalInput(0);
 	m_AlgaeSensor = new frc::DigitalInput(1);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.26220715625);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.2556155);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -479,7 +479,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackRemoteSensorID = 17;
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
@@ -695,11 +695,10 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackRemoteSensorID = 17;
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
-	configs.Feedback.RotorToSensorRatio = 180;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = 75_tps;
+	configs.MotionMagic.MotionMagicCruiseVelocity = 150_tps;
 	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -839,7 +838,7 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
@@ -1145,7 +1144,7 @@ void DragonTale::UpdateTarget()
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = units::angle::degree_t(70);
+		actualTargetAngle = units::angle::degree_t(86.0);
 	}
 	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
 	{
