@@ -15,6 +15,7 @@
 
 #include <string>
 
+#include "chassis/definitions/chassis302/ChassisConfigCompBot_302.h"
 #include "chassis/definitions/chassis9997/ChassisConfigChassis_9997.h"
 #include "chassis/definitions/chassis9998/ChassisConfigChassis_9998.h"
 #include "chassis/definitions/chassis9999/ChassisConfigChassis_9999.h"
@@ -43,12 +44,10 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 {
 	switch (id)
 	{
-	/**
 	case RobotIdentifier::COMP_BOT_302:
 		m_config = new ChassisConfigCompBot_302();
 		break;
 
-	**/
 	case RobotIdentifier::CHASSIS_BOT_9998:
 		m_config = new ChassisConfigChassis_9998();
 		break;
@@ -56,9 +55,11 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 	case RobotIdentifier::CHASSIS_BOT_9997:
 		m_config = new ChassisConfigChassis_9997();
 		break;
+
 	case RobotIdentifier::PRACTICE_BOT_9999:
 		m_config = new ChassisConfigChassis_9999();
 		break;
+
 	case RobotIdentifier::SIM_BOT_0:
 		m_config = new ChassisConfigChassis_9999();
 		break;
