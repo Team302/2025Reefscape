@@ -15,7 +15,7 @@
 
 #include <string>
 
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/definitions/CameraConfig_9997.h"
 #include "vision/DragonLimelight.h"
 #include "vision/DragonVision.h"

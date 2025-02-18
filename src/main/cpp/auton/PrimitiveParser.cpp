@@ -26,7 +26,7 @@
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 #include <pugixml/pugixml.hpp>
 

@@ -15,26 +15,18 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "units/time.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
-// standard C++ includes
-#include <string>
-#include <utility>
-#include <vector>
-
-// Team 302 includs
-#include <utils/logging/LoggerEnums.h>
-
-typedef std::pair<std::string, bool> LoggerBoolValue;
-typedef std::pair<std::string, double> LoggerDoubleValue;
-typedef std::pair<std::string, int> LoggerIntValue;
-typedef std::pair<std::string, std::string> LoggerStringValue;
-
-struct LoggerData
+class RoboRio : public DragonDataLogger
 {
-    LOGGER_LEVEL level;
-    const std::string &group;
-    std::vector<LoggerBoolValue> bools;
-    std::vector<LoggerDoubleValue> doubles;
-    std::vector<LoggerIntValue> ints;
-    std::vector<LoggerStringValue> strings;
+public:
+    static RoboRio *GetInstance();
+    void DataLog(uint64_t timestamp) override;
+
+private:
+    RoboRio() = default;
+    ~RoboRio() = default;
+
+    static RoboRio *m_instance;
 };

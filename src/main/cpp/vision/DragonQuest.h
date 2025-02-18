@@ -29,8 +29,8 @@
 #include "frc/geometry/Rotation3d.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
-#include "utils/logging/DragonDataLogger.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
 
 using namespace std;
@@ -41,7 +41,7 @@ class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
-    void DataLog() override;
+    void DataLog(uint64_t timestamp) override;
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
 

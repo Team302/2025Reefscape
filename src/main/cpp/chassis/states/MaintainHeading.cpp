@@ -12,8 +12,8 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#include <string>
 #include <cmath>
+#include <string>
 
 // Team302 Includes
 #include "chassis/definitions/ChassisConfig.h"
@@ -23,7 +23,7 @@
 #include "utils/AngleUtils.h"
 
 /// DEBUGGING
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using std::string;
 

@@ -18,6 +18,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+
 // #include <vector>
 
 // FRC includes
@@ -34,7 +35,7 @@
 #include <teleopcontrol/TeleopControlFunctions.h>
 #include <teleopcontrol/TeleopControlMap.h>
 #include <frc/DriverStation.h>
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using frc::DriverStation;
 using frc::GenericHID;

@@ -13,9 +13,10 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "FieldElementCalculator.h"
+
 #include "FieldConstantsPoseLogger.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "utils/logging/Logger.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
@@ -54,7 +55,7 @@ frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &po
 void FieldElementCalculator::InitializeTransforms()
 {
 
-    // no transforms for april tags on blue side 
+    // no transforms for april tags on blue side
     // TODO: can these all be null and then not use the values in the 2nd formula?
     m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_LEFT];
     m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT];
@@ -108,7 +109,6 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_L] =
         TransformToPose(FieldConstants::BLUE_REEF_KL, m_calcRightStick);
 
-
     // no transforms for april tags on red side
     m_transformTagsMap[FieldConstants::RED_CORAL_STATION_LEFT];
     m_transformTagsMap[FieldConstants::RED_CORAL_STATION_RIGHT];
@@ -160,7 +160,6 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::RED_REEF_KL, m_calcLeftStick);
     m_transformCalculatedMap[FieldConstants::RED_REEF_L] =
         TransformToPose(FieldConstants::RED_REEF_KL, m_calcRightStick);
-
 }
 
 void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
@@ -185,7 +184,6 @@ void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELE
 frc::Pose3d FieldElementCalculator::AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6)
 {
 
-    
     units::length::meter_t averageX = (pose1.X() + pose2.X() + pose3.X() + pose4.X() + pose5.X() + pose6.X()) / 6;
     units::length::meter_t averageY = (pose1.Y() + pose2.Y() + pose3.Y() + pose4.Y() + pose5.Y() + pose6.Y()) / 6;
     units::length::meter_t averageZ = (pose1.Z() + pose2.Z() + pose3.Z() + pose4.Z() + pose5.Z() + pose6.Z()) / 6;

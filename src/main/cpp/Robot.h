@@ -17,6 +17,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+
 #include "frc/geometry/Pose2d.h"
 
 class CyclePrimitives;
@@ -57,9 +58,6 @@ private:
     void InitializeDriveteamFeedback();
     void InitializeDataTracing();
     void UpdateDriveTeamFeedback();
-    void LogDiagnosticData();
-    void LogSensorData();
-    void LogMotorData();
 
     TeleopControl *m_controller;
     SwerveChassis *m_chassis;

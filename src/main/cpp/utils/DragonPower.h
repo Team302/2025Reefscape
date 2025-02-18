@@ -15,16 +15,17 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "frc/Timer.h"
 #include <frc/PowerDistribution.h>
-#include "utils/logging/LoggableItem.h"
-#include "utils/logging/DragonDataLogger.h"
 
-class DragonPower: public LoggableItem, public DragonDataLogger
+#include "frc/Timer.h"
+#include "utils/logging/debug/LoggableItem.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+
+class DragonPower : public LoggableItem, public DragonDataLogger
 {
 public:
     static DragonPower *GetInstance();
-    void DataLog() override;
+    void DataLog(uint64_t timestamp) override;
     void LogInformation() override;
 
 private:
