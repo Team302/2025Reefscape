@@ -7,8 +7,11 @@ choreoname = "BlueLeftOutside_J"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftOutside_J"
-time="2.5">
+time="2.5"
+
+>
 <zone filename="RedReefPlacerZones.xml"/>
+
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"

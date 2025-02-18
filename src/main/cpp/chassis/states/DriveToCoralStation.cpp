@@ -48,7 +48,7 @@ DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrive
 void DriveToCoralStation::Init(ChassisMovement &chassisMovement)
 {
 
-    m_trajectory = CreateDriveToCoralStation();
+    m_trajectory = CreateTrajectory();
     InitFromTrajectory(chassisMovement, m_trajectory);
 }
 
@@ -68,7 +68,7 @@ void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, p
     }
 }
 
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
+pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateTrajectory()
 {
     pathplanner::PathPlannerTrajectory trajectory;
 

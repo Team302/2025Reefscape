@@ -14,40 +14,36 @@
 //====================================================================================================================================================
 
 #pragma once
+// FRC includes
+#include "units/length.h"
 
-// C++ Includes
-#include <vector>
-
-// FRC Includes
-#include <frc/geometry/Rotation3d.h>
-#include <frc/geometry/Rotation2d.h>
-#include <frc/geometry/Pose2d.h>
-
-// Team302 Includes
-#include "chassis/states/RobotDrive.h"
-#include "vision/DragonVision.h"
-#include "fielddata/DragonTargetFinder.h"
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+// Team 302 includes
+#include "auton/PrimitiveEnums.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
-#include "utils/FMSData.h"
-#include "chassis/SwerveChassis.h"
+#include "auton/PrimitiveParams.h"
 
-class DriveToRightReefBranch : public TrajectoryDrivePathPlanner
+class DriveToHelper
 {
 public:
-    DriveToRightReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
-    std::string GetDriveStateName() const override;
+    DriveToHelper(SwerveChassis *m_chassis, ChassisMovement m_moveInfo);
+    ~DriveToHelper() = default;
 
-    pathplanner::PathPlannerTrajectory CreateTrajectory() override;
+    void Init(UPDATE_OPTION pathUpdateOption);
+    void Run();
+    bool IsDone();
 
-    void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
-    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
+    void CheckForDrive();
 
-    bool IsDone() override;
+    bool GetIsVisionDrive() const { return m_isVisionDrive; }
 
 private:
-    pathplanner::PathPlannerTrajectory CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
-    pathplanner::PathPlannerTrajectory m_trajectory;
-    frc::Pose2d m_endPose;
+    TrajectoryDrivePathPlanner *m_driveTo;
+    SwerveChassis *m_chassis;
+    const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
+    bool m_isVisionDrive = false;
+
+    ChassisMovement m_moveInfo;
+    UPDATE_OPTION m_pathUpdateOption;
+
+    PrimitiveParams::VISION_ALIGNMENT m_visionAlignment;
 };

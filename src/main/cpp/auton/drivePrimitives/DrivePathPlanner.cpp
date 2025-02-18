@@ -32,7 +32,6 @@
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "chassis/states/DriveToNote.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
@@ -75,20 +74,35 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+
     // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 }
+void DrivePathPlanner::InitMap()
+{
+    if (m_chassis != nullptr)
+    {
+        auto leftReefBranchTuple = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH)),
+                                              ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH,
+                                              DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
+        m_updateOptionToTrajMap[UPDATE_OPTION::LEFT_REEF_BRANCH] = leftReefBranchTuple;
 
+        m_updateOptionToTrajMap[UPDATE_OPTION::RIGHT_REEF_BRANCH] = dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH));
+        m_updateOptionToTrajMap[UPDATE_OPTION::CORAL_STATION] = dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION));
+    }
+}
 void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
     m_pathGainsType = params->GetPathGainsType();
 
+    m_updateOption = params->GetUpdateOption();
+
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
     m_isVisionDrive = (m_pathname == "RIGHT_REEF_BRANCH");
     m_visionAlignment = params->GetVisionAlignment();
-    m_checkForDriveToReef = params->GetUpdateOption() == UPDATE_OPTION::RIGHT_REEF_BRANCH;
+    m_checkForDriveToReef = params->GetUpdateOption() != UPDATE_OPTION::NOTHING;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
     // Start timeout timer for path
@@ -120,8 +134,7 @@ void DrivePathPlanner::InitMoveInfo()
     if (m_isVisionDrive)
     {
         // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
-        m_driveToRightReefBranch = dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH));
-        trajectory = m_driveToRightReefBranch->CreateDriveToRightReefBranch();
+        trajectory = std::get<TrajectoryDrivePathPlanner *>(m_updateOptionToTrajMap[m_updateOption])->CreateTrajectory();
 
         m_moveInfo.driveOption = ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH;
 

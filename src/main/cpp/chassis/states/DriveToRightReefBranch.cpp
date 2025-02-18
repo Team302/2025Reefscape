@@ -48,7 +48,7 @@ DriveToRightReefBranch::DriveToRightReefBranch(RobotDrive *robotDrive, Trajector
 void DriveToRightReefBranch::Init(ChassisMovement &chassisMovement)
 {
 
-    m_trajectory = CreateDriveToRightReefBranch();
+    m_trajectory = CreateTrajectory();
     InitFromTrajectory(chassisMovement, m_trajectory);
 }
 
@@ -68,7 +68,7 @@ void DriveToRightReefBranch::InitFromTrajectory(ChassisMovement &chassisMovement
     }
 }
 
-pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightReefBranch()
+pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateTrajectory()
 {
     pathplanner::PathPlannerTrajectory trajectory;
 

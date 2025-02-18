@@ -16,6 +16,8 @@
 
 // C++ Includes
 #include <memory>
+#include <map>
+#include <tuple>
 
 // Team302 Includes
 #include "auton/PrimitiveParams.h"
@@ -23,7 +25,10 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/states/DriveToRightReefBranch.h"
+#include "chassis/states/DriveToLeftReefBranch.h"
+#include "chassis/states/TrajectoryDrivePathplanner.h"
 #include "utils/logging/DragonDataLogger.h"
+#include "auton/drivePrimitives/DriveToHelper.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
@@ -47,6 +52,7 @@ public:
 
 private:
     void InitMoveInfo();
+    void InitMap();
 
     void CheckForDriveToReefBranch();
     // void CheckForDriveToNote();
@@ -54,7 +60,7 @@ private:
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-    DriveToRightReefBranch *m_driveToRightReefBranch;
+    TrajectoryDrivePathPlanner *m_driveToRightReefBranch;
     std::unique_ptr<frc::Timer> m_timer;
     pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
@@ -74,4 +80,7 @@ private:
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
+    DriveToHelper *m_driveToHelper;
+    UPDATE_OPTION m_updateOption;
+    std::map<UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums, DragonTargetFinderTarget>> m_updateOptionToTrajMap;
 };
