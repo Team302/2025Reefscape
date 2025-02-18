@@ -34,8 +34,6 @@
 #include "utils/logging/trace/DataTrace.h"
 #include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorDataMgr.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
