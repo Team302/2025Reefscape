@@ -36,7 +36,7 @@
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
-#include "utils/logging/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 #include "RobotIdentifier.h"
 
@@ -92,7 +92,8 @@ public:
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
-	void SetCurrentState ( int state, bool run ) override;
+	void SetCurrentState(int state, bool run) override;
+
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;

@@ -41,7 +41,7 @@
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
-#include "utils/logging/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 #include "RobotIdentifier.h"
 
@@ -124,7 +124,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
-	void DataLog() override;
+	void DataLog(uint64_t timestamp) override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -265,7 +265,7 @@ private:
 	void LogElevatorPosition(double value);
 	void LogCoralInSensor(bool value);
 	void LogCoralOutSensor(bool value);
-	void LogAlgaeSensor(bool value);
+	void LogAlgaeSensor(uint64_t timestamp, bool value);
 	void LogScoringMode(int value);
 	frc::Pose2d m_robotPose;
 };

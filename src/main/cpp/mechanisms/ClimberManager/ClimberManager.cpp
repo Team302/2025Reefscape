@@ -32,7 +32,6 @@
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
 #include "state/RobotState.h"
-#include "utils/logging/DragonDataLoggerSignals.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;

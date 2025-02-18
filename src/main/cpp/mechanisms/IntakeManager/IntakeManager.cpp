@@ -39,7 +39,6 @@
 #include "mechanisms/IntakeManager/ExpelState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
-#include "utils/logging/DragonDataLoggerSignals.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;

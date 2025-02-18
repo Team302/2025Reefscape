@@ -646,7 +646,7 @@ void DragonTale::RunCommonTasks()
 	ManualControl();
 	UpdateTarget();
 	Cyclic();
-	DataLog();
+	// DataLog();
 
 	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral In Sensor", GetCoralInSensorState());
@@ -936,14 +936,9 @@ void DragonTale::LogCoralOutSensor(bool value)
 	}
 }
 
-void DragonTale::LogAlgaeSensor(bool value)
+void DragonTale::LogAlgaeSensor(uint64_t timestamp, bool value)
 {
-	static bool currentValue = 0;
-	if (currentValue != value)
-	{
-		currentValue = value;
-		m_LogAlgaeSensor.Append(value);
-	}
+	m_LogAlgaeSensor.Update(value);
 }
 
 void DragonTale::LogScoringMode(int value)
@@ -956,7 +951,7 @@ void DragonTale::LogScoringMode(int value)
 	}
 }
 
-void DragonTale::DataLog()
+void DragonTale::DataLog(uint64_t timestamp)
 {
 	LogState(GetCurrentState());
 	LogArmTargetAngle(m_armTarget.value());
@@ -965,7 +960,6 @@ void DragonTale::DataLog()
 	LogElevatorPosition(GetElevatorHeight().value());
 	LogCoralInSensor(GetCoralInSensorState());
 	LogCoralOutSensor(GetCoralOutSensorState());
-	LogAlgaeSensor(GetAlgaeSensorState());
+	LogAlgaeSensor(timestamp, GetAlgaeSensorState());
 	LogScoringMode(m_scoringMode);
-	// log more signals here
 }

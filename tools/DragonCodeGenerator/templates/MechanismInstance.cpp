@@ -171,3 +171,7 @@ ControlData *$$_MECHANISM_INSTANCE_NAME_$$::GetControlData(string name)
 
     return nullptr;
 }
+
+$$_LOGGING_METHOD_DEFINITIONS_$$
+
+$$_DATALOG_METHOD_$$
