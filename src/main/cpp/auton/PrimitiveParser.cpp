@@ -70,13 +70,13 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
             {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
             {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
 
-    map<string, UPDATE_OPTION> updateOptionMap{{"RIGHT_REEF_BRANCH", UPDATE_OPTION::RIGHT_REEF_BRANCH},
-                                               {"LEFT_REEF_BRANCH", UPDATE_OPTION::LEFT_REEF_BRANCH},
-                                               {"REEF_ALGAE", UPDATE_OPTION::REEF_ALGAE},
-                                               {"FLOOR_ALGAE", UPDATE_OPTION::FLOOR_ALGAE},
-                                               {"CORAL_STATION", UPDATE_OPTION::CORAL_STATION},
-                                               {"PROCESSOR", UPDATE_OPTION::PROCESSOR},
-                                               {"NOTHING", UPDATE_OPTION::NOTHING}};
+    map<string, PATH_UPDATE_OPTION> updateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                    {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                    {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                    {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                    {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
 
     /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
@@ -165,7 +165,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
                     DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
-                    UPDATE_OPTION updateOption = UPDATE_OPTION::NOTHING;
+                    PATH_UPDATE_OPTION updateOption = PATH_UPDATE_OPTION::NOTHING;
 
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());

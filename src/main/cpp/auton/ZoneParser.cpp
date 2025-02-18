@@ -132,13 +132,13 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"FACE_CORAL_STATION", ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION},
         {"IGNORE", ChassisOptionEnums::HeadingOption::IGNORE}};
 
-    static std::map<string, UPDATE_OPTION> xmlStringToUpdateOptionMap{{"RIGHT_REEF_BRANCH", UPDATE_OPTION::RIGHT_REEF_BRANCH},
-                                                                      {"LEFT_REEF_BRANCH", UPDATE_OPTION::LEFT_REEF_BRANCH},
-                                                                      {"REEF_ALGAE", UPDATE_OPTION::REEF_ALGAE},
-                                                                      {"FLOOR_ALGAE", UPDATE_OPTION::FLOOR_ALGAE},
-                                                                      {"CORAL_STATION", UPDATE_OPTION::CORAL_STATION},
-                                                                      {"PROCESSOR", UPDATE_OPTION::PROCESSOR},
-                                                                      {"NOTHING", UPDATE_OPTION::NOTHING}};
+    static std::map<string, PATH_UPDATE_OPTION> xmlStringToUpdateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                                           {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                                           {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                                           {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                                           {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                                           {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                           {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
 
     static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
         {"PODIUM", ChassisOptionEnums::AutonAvoidOptions::PODIUM},
@@ -179,7 +179,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             DragonTale::STATE_NAMES taleChosenOption = DragonTale::STATE_NAMES::STATE_READY;
             IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::HeadingOption chosenHeadingOption = ChassisOptionEnums::HeadingOption::IGNORE;
-            UPDATE_OPTION chosenUpdateOption = UPDATE_OPTION::NOTHING;
+            PATH_UPDATE_OPTION chosenUpdateOption = PATH_UPDATE_OPTION::NOTHING;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
             auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();

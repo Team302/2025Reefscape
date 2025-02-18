@@ -88,7 +88,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_maxTime = params->GetTime();
     m_isVisionDrive = (m_pathname == "RIGHT_REEF_BRANCH");
     m_visionAlignment = params->GetVisionAlignment();
-    m_checkForDriveToReef = params->GetUpdateOption() == UPDATE_OPTION::RIGHT_REEF_BRANCH;
+    m_checkForDriveToReef = params->GetUpdateOption() == PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
     // Start timeout timer for path
