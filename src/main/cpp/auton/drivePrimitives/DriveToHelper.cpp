@@ -18,7 +18,6 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
 #include "chassis/states/DriveToCoralStation.h"
-#include "utils/logging/Logger.h"
 #include "auton/PrimitiveParams.h"
 
 DriveToHelper::DriveToHelper(SwerveChassis *chassis, ChassisMovement moveInfo) : m_driveTo(nullptr),
@@ -41,49 +40,6 @@ void DriveToHelper::Init(UPDATE_OPTION pathUpdateOption)
             break;
         case CORAL_STATION:
             m_driveTo = dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION));
-        }
-    }
-}
-
-void DriveToHelper::CheckForDrive()
-{
-    // Need to check if there is a Reef Branch
-    DragonTargetFinder *dt = DragonTargetFinder::GetInstance();
-    auto reefBranch = dt->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
-
-    if (reefBranch.has_value())
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "X", get<1>(reefBranch.value()).X().value());
-        if (get<0>(reefBranch.value()) != DragonTargetFinderData::NOT_FOUND) // see a Reef Branch
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", true);
-            auto branchPose = get<1>(reefBranch.value());
-
-            // check if we see a Reef Branch is one we want to get
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Consider Reef Branch: ", true);
-
-            auto chassispose = m_chassis->GetPose();
-            auto distanceToBranch = chassispose.Translation().Distance(branchPose.Translation());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Distance: ", distanceToBranch.value());
-
-            if (distanceToBranch <= m_distanceThreshold) // switch to drive to Reef Branch
-            {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Branch", "Switch to Drive To Reef Branch: ", true);
-
-                m_isVisionDrive = true;
-                m_visionAlignment = m_pathUpdateOption == UPDATE_OPTION::CORAL_STATION ? PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION : PrimitiveParams::VISION_ALIGNMENT::REEF;
-                // InitMoveInfo();
-            }
-            else
-            {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
-            }
-        }
-        else
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", false);
         }
     }
 }

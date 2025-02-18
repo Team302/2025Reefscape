@@ -32,10 +32,6 @@ public:
     void Run();
     bool IsDone();
 
-    void CheckForDrive();
-
-    bool GetIsVisionDrive() const { return m_isVisionDrive; }
-
 private:
     TrajectoryDrivePathPlanner *m_driveTo;
     SwerveChassis *m_chassis;
