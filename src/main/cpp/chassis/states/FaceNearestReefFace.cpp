@@ -15,8 +15,8 @@
 
 // Team302 Includes
 #include "chassis/states/FaceNearestReefFace.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
-#include "utils/logging/Logger.h"
 
 FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
 {

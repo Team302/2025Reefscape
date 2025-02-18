@@ -39,9 +39,8 @@
 #include "units/mass.h"
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
-#include "utils/logging/DragonDataLogger.h"
-#include "utils/logging/LoggableItem.h"
-#include "wpi/DataLog.h"
+#include "utils/logging/debug/LoggableItem.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 class RobotDrive;
 
@@ -131,7 +130,7 @@ public:
     bool IsRotating() const { return m_rotatingLatch; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation() override;
-    void DataLog() override;
+    void DataLog(uint64_t timestamp) override;
 
     units::mass::kilogram_t GetMass() const { return m_mass; }
     units::moment_of_inertia::kilogram_square_meter_t GetMomenOfInertia() const { return m_momentOfInertia; }
@@ -192,12 +191,4 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
-
-    struct Velocity2D
-    {
-        units::velocity::meters_per_second_t x;
-        units::velocity::meters_per_second_t y;
-    };
-
-    Velocity2D m_currVelocity{0_mps, 0_mps}; // Store x and y components separately
 };

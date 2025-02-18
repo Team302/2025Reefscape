@@ -14,11 +14,11 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "feedback/DragonLeds.h"
-#include "utils/logging/Logger.h"
-
 #include <span>
 #include <string>
+
+#include "feedback/DragonLeds.h"
+#include "utils/logging/debug/Logger.h"
 
 void DragonLeds::Initialize(int PWMport, int numLeds)
 {

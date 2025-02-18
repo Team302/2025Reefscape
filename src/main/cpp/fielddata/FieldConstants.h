@@ -97,6 +97,12 @@ public:
         RED_REEF_L
     };
 
+    enum FIELD_ELEMENT_OFFSETS
+    {
+        LEFT_STICK,
+        RIGHT_STICK
+    };
+
     enum AprilTagIDs
     {
         // Blue

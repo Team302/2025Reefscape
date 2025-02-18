@@ -24,7 +24,6 @@
 #include "units/angular_acceleration.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/DataLogManager.h"
-// #include "wpi/DataLog.h"
 
 // Team 302 includes
 #include "chassis/states/DriveToNote.h"
@@ -46,7 +45,7 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
 
@@ -87,10 +86,10 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_track(wheelTrack),
                                                                             m_maxSpeed(maxSpeed),
                                                                             m_wheelDiameter(wheelDiameter),
-                                                                            m_frontLeftLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_frontRightLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
-                                                                            m_backLeftLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_backRightLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
+                                                                            m_frontLeftLocation(wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_frontRightLocation(wheelBase / 2.0, -wheelTrack / 2.0),
+                                                                            m_backLeftLocation(-wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_backRightLocation(-wheelBase / 2.0, -wheelTrack / 2.0),
                                                                             m_kinematics(m_frontLeftLocation,
                                                                                          m_frontRightLocation,
                                                                                          m_backLeftLocation,
@@ -118,9 +117,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                            SwerveModulePosition()},
                                                           Pose2d());
 
-    m_robotConfig.mass = GetMass();
-    m_robotConfig.MOI = GetMomenOfInertia();
-    m_robotConfig.moduleConfig = frontLeft->GetModuleConfig();
+    m_robotConfig = pathplanner::RobotConfig(GetMass(), GetMomenOfInertia(),
+                                             frontLeft->GetModuleConfig(), GetTrack());
+
     std::vector<frc::Translation2d> moduleLocs;
     moduleLocs.emplace_back(GetFrontLeftOffset());
     moduleLocs.emplace_back(GetFrontRightOffset());
@@ -129,6 +128,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_robotConfig.numModules = moduleLocs.size();
     m_robotConfig.moduleLocations = moduleLocs;
     m_robotConfig.isHolonomic = true;
+    // TO DO Understand if we need these
+    // m_robotConfig.maxTorqueFriction = 50_Nm;
+    // m_robotConfig.wheelFrictionForce = 20_N;
 }
 
 //==================================================================================
@@ -429,20 +431,21 @@ void SwerveChassis::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current x position"), pose.X().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current y position"), pose.Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current rotation position"), pose.Rotation().Degrees().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
 }
 
-void SwerveChassis::DataLog()
+void SwerveChassis::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
+    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
 
     frc::ChassisSpeeds targetSpeed;
     targetSpeed.vx = m_drive;
     targetSpeed.vy = m_steer;
     targetSpeed.omega = m_rotate;
-    LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS, targetSpeed);
+    LogChassisSpeedsData(timestamp, DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS, targetSpeed);
 
     auto currFrontLeftState = m_frontLeft->GetState();
     auto currFrontRightState = m_frontRight->GetState();
@@ -450,28 +453,28 @@ void SwerveChassis::DataLog()
     auto currBackRightState = m_backRight->GetState();
     wpi::array<frc::SwerveModuleState, 4> states = {currFrontLeftState, currFrontRightState, currBackLeftState, currBackRightState};
     auto currentSpeed = m_kinematics.ToChassisSpeeds(states);
-    LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS, currentSpeed);
+    LogChassisSpeedsData(timestamp, DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS, currentSpeed);
 
     auto optFrontLeftState = m_frontLeft->GetOptimizedState();
     auto optFrontRightState = m_frontRight->GetOptimizedState();
     auto optBackLeftState = m_backLeft->GetOptimizedState();
     auto optBackRightState = m_backRight->GetOptimizedState();
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE, optFrontLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE, optBackLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE, optFrontRightState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE, optBackRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE, optFrontLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE, optBackLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE, optFrontRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE, optBackRightState);
 
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE, currFrontLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE, currBackLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE, currFrontRightState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE, currBackRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE, currFrontLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE, currBackLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE, currFrontRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE, currBackRightState);
 
     if (m_currentDriveState != nullptr)
     {
-        LogStringData(DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE, m_currentDriveState->GetDriveStateName());
+        LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE, m_currentDriveState->GetDriveStateName());
     }
     if (m_currentOrientationState != nullptr)
     {
-        LogStringData(DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
+        LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
     }
 }

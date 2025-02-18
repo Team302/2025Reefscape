@@ -26,7 +26,7 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 
 /// DEBUGGING
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include <iostream>
 
 VisionDrivePrimitive::VisionDrivePrimitive() : IPrimitive(),
@@ -48,7 +48,6 @@ void VisionDrivePrimitive::Init(PrimitiveParams *params)
 
     m_timer->Reset();
     m_timer->Start();
-
 
     /*m_dragonVision = DragonVision::GetDragonVision();
     if (m_dragonVision != nullptr)

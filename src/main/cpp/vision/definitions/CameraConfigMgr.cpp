@@ -15,7 +15,7 @@
 
 #include <string>
 
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/definitions/CameraConfig_9997.h"
 #include "vision/definitions/CameraConfig_9999.h"
 #include "vision/definitions/CameraConfig.h"
@@ -43,6 +43,11 @@ void CameraConfigMgr::InitCameras(RobotIdentifier id)
     {
 
     case RobotIdentifier::CHASSIS_BOT_9997:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
+        m_config = new CameraConfig_9997();
+        break;
+
+    case RobotIdentifier::CHASSIS_BOT_9998:
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Camera Init"), string("Success"), static_cast<int>(id));
         m_config = new CameraConfig_9997();
         break;

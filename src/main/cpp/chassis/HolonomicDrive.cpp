@@ -34,7 +34,8 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVision.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
+#include "states/FaceNearestReefFace.h"
 
 using std::string;
 using namespace frc;
@@ -117,6 +118,9 @@ void HolonomicDrive::Run()
         auto isSlowMode = controller->IsButtonPressed(TeleopControlFunctions::SLOW_MODE);
         auto checkTipping = controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
         auto isPolarDriveSelected = controller->IsButtonPressed(TeleopControlFunctions::POLAR_DRIVE);
+        auto driveToRightReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
+        auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
+        auto driveToCoralStation = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
@@ -126,6 +130,18 @@ void HolonomicDrive::Run()
         else if (isPolarDriveSelected)
         {
             PolarDrive();
+        }
+        else if (driveToLeftReefBranch)
+        {
+            DriveToLeftReefBranch();
+        }
+        else if (driveToRightReefBranch)
+        {
+            DriveToRightReefBranch();
+        }
+        else if (driveToCoralStation)
+        {
+            DriveToCoralStation();
         }
         else
         {
@@ -338,4 +354,19 @@ void HolonomicDrive::Exit()
 bool HolonomicDrive::AtTarget()
 {
     return false;
+}
+void HolonomicDrive::DriveToLeftReefBranch()
+{
+    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+}
+void HolonomicDrive::DriveToRightReefBranch()
+{
+    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+}
+void HolonomicDrive::DriveToCoralStation()
+{
+    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION;
+    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
 }

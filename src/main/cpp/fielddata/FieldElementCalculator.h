@@ -28,6 +28,7 @@ class FieldElementCalculator
 
 public:
     void CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
+    frc::Pose3d CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset);
 
 private:
     void InitializeTransforms();

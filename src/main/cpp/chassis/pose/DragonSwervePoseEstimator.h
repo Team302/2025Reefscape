@@ -39,6 +39,7 @@ public:
     frc::Pose2d GetPose() const;
     void ResetPosition(const frc::Pose2d &pose);
     void ResetPose(const frc::Pose2d &pose);
+    void CalculateInitialPose();
 
 private:
     void AddVisionMeasurements();
