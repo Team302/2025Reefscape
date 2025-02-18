@@ -140,9 +140,9 @@ void ClimberManager::CreateCOMP_BOT302()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
+		1.0,											  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain

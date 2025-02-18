@@ -295,7 +295,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>1</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
@@ -309,7 +309,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.1</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
