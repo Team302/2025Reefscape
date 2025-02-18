@@ -40,8 +40,11 @@ units::angle::degree_t FaceNearestReefFace::GetTargetAngle(ChassisMovement &chas
         if (info.has_value())
         {
             auto targetpose = get<1>(info.value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Face Nearest Reef Face", "angle", targetpose.Rotation().Degrees().value());
-            return targetpose.Rotation().Degrees() - 180_deg;
+            DragonTargetFinderData type = get<0>(info.value());
+
+            chassisMovement.yawAngle = (type == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
+
+            return chassisMovement.yawAngle;
         }
     }
 

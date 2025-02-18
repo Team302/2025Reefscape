@@ -86,8 +86,10 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
 
 pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
+    targetPose = frc::Pose2d(targetPose.X(), targetPose.Y(), targetPose.Rotation().Degrees() - 180_deg);
+
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("coral pose", targetPose);
+    DragonVisionStructLogger::logPose2d("Right Branch pose", targetPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
     std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
@@ -98,7 +100,7 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
         waypoints,
         constraints,
         std::nullopt,
-        GoalEndState(0.0_mps, frc::Rotation2d(m_chassis->GetStoredHeading())), false);
+        GoalEndState(0.0_mps, targetPose.Rotation()), false);
 
     path->preventFlipping = true;
 
