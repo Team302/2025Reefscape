@@ -196,13 +196,13 @@ void IntakeManager::CreateCOMP_BOT302()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
-		0,												  // double integral
+		140,											  // double proportional
+		35,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
-		0,												  // double staticFrictionGain,
+		0.5,											  // double staticFrictionGain,
 
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
 		0,										// double integralZone

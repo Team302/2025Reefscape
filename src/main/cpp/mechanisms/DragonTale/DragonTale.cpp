@@ -366,7 +366,7 @@ void DragonTale::CreateCOMP_BOT302()
 		2.5,											  // double proportional
 		0.35,											  // double integral
 		0,												  // double derivative
-		0.3,											  // double feedforward
+		0,												  // double feedforward
 		0.3,											  // double velocityGain
 		0.05,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
@@ -385,7 +385,7 @@ void DragonTale::CreateCOMP_BOT302()
 		"m_PositionDegree",								  // std::string indentifier
 		57,												  // double proportional
 		25,												  // double integral
-		5,												  // double derivative
+		0,												  // double derivative
 		1.8,											  // double feedforward
 		0.75,											  // double velocityGain
 		0.25,											  // double accelartionGain
@@ -517,7 +517,6 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::turn_t(m_maxHeight.value());
-
 	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
