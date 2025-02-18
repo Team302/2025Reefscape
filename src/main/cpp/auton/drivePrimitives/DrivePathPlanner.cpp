@@ -60,7 +60,7 @@ using namespace wpi::math;
 
 DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
                                        m_chassis(nullptr),
-                                       m_driveToNote(nullptr),
+                                       m_driveToRightReefBranch(nullptr),
                                        m_timer(make_unique<Timer>()),
                                        m_trajectory(),
                                        m_pathname(),
@@ -86,9 +86,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
-    // m_isVisionDrive = (m_pathname == "DRIVE_TO_NOTE");
+    m_isVisionDrive = (m_pathname == "RIGHT_REEF_BRANCH");
     m_visionAlignment = params->GetVisionAlignment();
-    // m_checkDriveToNote = params->GetPathUpdateOption() == ChassisOptionEnums::PathUpdateOption::NOTE;
+    m_checkForDriveToReef = params->GetUpdateOption() == PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
     // Start timeout timer for path
@@ -114,13 +114,18 @@ void DrivePathPlanner::InitMoveInfo()
 
     auto pose = m_chassis->GetPose();
     auto speed = m_chassis->GetChassisSpeeds();
+
+    pathplanner::PathPlannerTrajectory trajectory;
+
     if (m_isVisionDrive)
     {
         // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
+        m_driveToRightReefBranch = dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH));
+        trajectory = m_driveToRightReefBranch->CreateDriveToRightReefBranch();
 
-        // m_driveToNote->InitFromTrajectory(m_moveInfo, m_trajectory);
-        // m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE;
+        m_moveInfo.driveOption = ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH;
 
+        m_driveToRightReefBranch->InitFromTrajectory(m_moveInfo, trajectory);
         m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Total time", "Total time", m_maxTime.value());
@@ -135,7 +140,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
-            m_trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
+            trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
         }
         else
         {
@@ -143,10 +148,10 @@ void DrivePathPlanner::InitMoveInfo()
         }
     }
 
-    auto endstate = m_trajectory.getEndState();
+    auto endstate = trajectory.getEndState();
     m_finalPose = endstate.pose;
-    m_moveInfo.pathplannerTrajectory = m_trajectory;
-    m_totalTrajectoryTime = m_trajectory.getTotalTime();
+    m_moveInfo.pathplannerTrajectory = trajectory;
+    m_totalTrajectoryTime = trajectory.getTotalTime();
 }
 void DrivePathPlanner::Run()
 {
@@ -164,79 +169,65 @@ bool DrivePathPlanner::IsDone()
         return true;
     }
 
-    if (m_checkDriveToNote && !m_isVisionDrive)
+    if (m_checkForDriveToReef && !m_isVisionDrive)
     {
-        // CheckForDriveToNote();
+        CheckForDriveToReefBranch();
     }
 
     if (m_isVisionDrive)
     {
-        // return m_driveToNote->IsDone();
+        return m_driveToRightReefBranch->IsDone();
     }
     auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
 
     return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
 }
 
-/** TODO rework for REEF, CORAL_STATION and later PROCESSOR and ALGAE
-void DrivePathPlanner::CheckForDriveToNote()
+// TODO rework for REEF, CORAL_STATION and later PROCESSOR and ALGAE
+void DrivePathPlanner::CheckForDriveToReefBranch()
 {
-    // Need to check if there is a note
+    // Need to check if there is a Reef Branch
     DragonTargetFinder *dt = DragonTargetFinder::GetInstance();
-    auto noteInfo = dt->GetPose(DragonVision::NOTE);
-    if (get<0>(noteInfo) != DragonTargetFinder::NOT_FOUND) // see a note
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Note Found: ", true);
-        auto notePose = get<1>(noteInfo);
+    auto reefBranch = dt->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
 
-        // check if we see a note is one we want to get
-        if (ShouldConsiderNote(notePose.X())) // chase this note: need to check if we should switch to drive to note or not
+    if (reefBranch.has_value())
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "X", get<1>(reefBranch.value()).X().value());
+        if (get<0>(reefBranch.value()) != DragonTargetFinderData::NOT_FOUND) // see a Reef Branch
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Consider Note: ", true);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", true);
+            auto branchPose = get<1>(reefBranch.value());
+
+            // check if we see a Reef Branch is one we want to get
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Consider Reef Branch: ", true);
 
             auto chassispose = m_chassis->GetPose();
-            auto distanceToNote = chassispose.Translation().Distance(notePose.Translation());
+            auto distanceToBranch = chassispose.Translation().Distance(branchPose.Translation());
 
             auto currentTime = m_timer.get()->Get();
             auto percent = currentTime.value() / m_totalTrajectoryTime.value();
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "time:", currentTime.value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Done Percent:", static_cast<double>((currentTime.value()) / m_totalTrajectoryTime.value()));
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Distance: ", distanceToNote.value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "time:", currentTime.value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Done Percent:", static_cast<double>((currentTime.value()) / m_totalTrajectoryTime.value()));
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Distance: ", distanceToBranch.value());
 
-            if (percent >= m_percentageCompleteThreshold || distanceToNote <= m_distanceThreshold) // switch to drive to note
+            if (distanceToBranch <= m_distanceThreshold) // switch to drive to Reef Branch
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Switch to Drive To Note: ", true);
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Branch", "Switch to Drive To Reef Branch: ", true);
 
-                m_pathname = "DRIVE_TO_NOTE";
+                m_pathname = "RIGHT_REEF_BRANCH";
                 m_isVisionDrive = true;
-                m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::NOTE;
-                m_trajectory = m_driveToNote->CreateDriveToNoteTrajectory(chassispose, notePose);
+                m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::REEF;
                 InitMoveInfo();
             }
             else
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Switch to Drive To Note: ", false);
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
             }
         }
         else
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Consider Note: ", false);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", false);
         }
     }
-    else
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Note", "Note Found: ", false);
-    }
 }
-
-bool DrivePathPlanner::ShouldConsiderNote(units::length::meter_t xposition)
-{
-    // check if note is one we want to get
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::kBlue)
-    {
-        return ((xposition <= (m_centerLine + m_offset)));
-    }
-
-    return ((xposition >= (m_centerLine - m_offset)));
-}
-**/

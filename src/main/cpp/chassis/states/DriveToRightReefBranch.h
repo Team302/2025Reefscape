@@ -48,7 +48,6 @@ public:
 
 private:
     pathplanner::PathPlannerTrajectory CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
-
     pathplanner::PathPlannerTrajectory m_trajectory;
     frc::Pose2d m_endPose;
 };

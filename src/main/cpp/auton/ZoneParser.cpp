@@ -23,6 +23,7 @@
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "pugixml/pugixml.hpp"
+
 #include "utils/logging/debug/Logger.h"
 
 using namespace std;
@@ -121,6 +122,25 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
         {"NO_VISION", ChassisOptionEnums::AutonChassisOptions::NO_VISION},
     };
+
+    static std::map<std::string, ChassisOptionEnums::HeadingOption> xmlStringToHeadingOptionEnumMap{
+
+        {"MAINTAIN", ChassisOptionEnums::HeadingOption::MAINTAIN},
+        {"SPECIFIED_ANGLE", ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE},
+        {"FACE_GAME_PIECE", ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE},
+        {"FACE_REEF_CENTER", ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER},
+        {"FACE_REEF_FACE", ChassisOptionEnums::HeadingOption::FACE_REEF_FACE},
+        {"FACE_CORAL_STATION", ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION},
+        {"IGNORE", ChassisOptionEnums::HeadingOption::IGNORE}};
+
+    static std::map<string, PATH_UPDATE_OPTION> xmlStringToUpdateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                                           {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                                           {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                                           {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                                           {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                                           {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                           {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
+
     static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
         {"PODIUM", ChassisOptionEnums::AutonAvoidOptions::PODIUM},
         {"ROBOT_COLLISION", ChassisOptionEnums::AutonAvoidOptions::ROBOT_COLLISION},
@@ -159,6 +179,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             bool isIntakeStateChanging = false;
             DragonTale::STATE_NAMES taleChosenOption = DragonTale::STATE_NAMES::STATE_READY;
             IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
+            ChassisOptionEnums::HeadingOption chosenHeadingOption = ChassisOptionEnums::HeadingOption::IGNORE;
+            PATH_UPDATE_OPTION chosenUpdateOption = PATH_UPDATE_OPTION::NOTHING;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
             auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
@@ -280,6 +302,31 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
+
+                else if (strcmp(attr.name(), "headingOption") == 0)
+                {
+                    auto itr = xmlStringToHeadingOptionEnumMap.find(attr.value());
+                    if (itr != xmlStringToHeadingOptionEnumMap.end())
+                    {
+                        chosenHeadingOption = itr->second;
+                    }
+                    else
+                    {
+                        hasError = true;
+                    }
+                }
+                else if (strcmp(attr.name(), "updateOption") == 0)
+                {
+                    auto itr = xmlStringToUpdateOptionMap.find(attr.value());
+                    if (itr != xmlStringToUpdateOptionMap.end())
+                    {
+                        chosenUpdateOption = itr->second;
+                    }
+                    else
+                    {
+                        hasError = true;
+                    }
+                }
                 else if (strcmp(attr.name(), "avoidOption") == 0)
                 {
                     auto itr = xmlStringToAvoidOptionEnumMap.find(attr.value());
@@ -309,6 +356,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        intakeChosenOption,
                                        taleChosenOption,
                                        chassisChosenOption,
+                                       chosenHeadingOption,
+                                       chosenUpdateOption,
                                        avoidChosenOption,
                                        zoneMode));
             }

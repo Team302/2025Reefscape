@@ -37,6 +37,7 @@ struct ChassisMovement
     double rawY;
     double rawOmega;
     ChassisOptionEnums::DriveStateType driveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
+    ChassisOptionEnums::DriveStateType previousDriveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
     frc::ChassisSpeeds chassisSpeeds = frc::ChassisSpeeds();
     pathplanner::PathPlannerTrajectory pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     ChassisOptionEnums::PathGainsType pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
