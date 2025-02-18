@@ -70,6 +70,14 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
             {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
             {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
 
+    map<string, PATH_UPDATE_OPTION> updateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                    {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                    {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                    {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                    {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
+
     /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
         {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
@@ -157,6 +165,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
                     DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
+                    PATH_UPDATE_OPTION updateOption = PATH_UPDATE_OPTION::NOTHING;
+
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());
 
@@ -195,21 +205,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
-                        {
-                            /** TODO come back to this
-                            auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
-                            if (updateHeadingItr != pathUpdateOptionsMap.end())
-                            {
-                                updateHeadingOption = updateHeadingItr->second;
-                            }
-                            else
-                            {
-                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
-                                hasError = true;
-                            }
-                            **/
-                        }
                         else if (strcmp(attr.name(), "delayOption") == 0)
                         {
                             auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
@@ -220,6 +215,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             else
                             {
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
+                                hasError = true;
+                            }
+                        }
+                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
+                        {
+                            auto updateOptionItr = updateOptionMap.find(attr.value());
+                            if (updateOptionItr != updateOptionMap.end())
+                            {
+                                updateOption = updateOptionItr->second;
+                            }
+                            else
+                            {
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid path update option"), attr.value());
                                 hasError = true;
                             }
                         }
@@ -325,6 +333,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      changeTaleState,
                                                                      taleState,
                                                                      updateHeadingOption,
+                                                                     updateOption,
                                                                      pathDelayOption));
                     }
                     else

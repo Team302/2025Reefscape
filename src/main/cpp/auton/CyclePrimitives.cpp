@@ -213,6 +213,7 @@ void CyclePrimitives::RunDriveStop()
 										  false,
 										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::PathUpdateOption::NONE,
+										  PATH_UPDATE_OPTION::NOTHING,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
 		m_driveStop->Init(params);
