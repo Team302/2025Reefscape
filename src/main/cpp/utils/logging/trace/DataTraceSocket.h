@@ -19,8 +19,8 @@
 #include <frc/Timer.h>
 
 // Team 302 includes
-#include <utils/logging/LoggableItem.h>
-#include <utils/logging/LoggableItemMgr.h>
+#include "utils/logging/debug/LoggableItem.h"
+#include "utils/logging/debug/LoggableItemMgr.h"
 
 // Third Party Includes
 

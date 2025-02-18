@@ -23,7 +23,8 @@
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "pugixml/pugixml.hpp"
-#include "utils/logging/Logger.h"
+
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 using namespace pugi;

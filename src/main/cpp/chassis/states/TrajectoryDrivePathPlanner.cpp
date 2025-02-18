@@ -25,7 +25,7 @@
 // Team302 Includes
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/ChassisMovement.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "vision/DragonVisionStructs.h"

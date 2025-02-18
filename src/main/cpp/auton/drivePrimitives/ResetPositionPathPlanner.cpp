@@ -26,7 +26,7 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/SwerveChassis.h"
 #include "vision/DragonVision.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/FMSData.h"
 
 // Third Party Includes

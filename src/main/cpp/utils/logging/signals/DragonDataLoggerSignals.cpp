@@ -15,8 +15,7 @@
 //====================================================================================================================================================
 
 #include "frc/DataLogManager.h"
-#include "utils/logging/DragonDataLoggerSignals.h"
-#include "wpi/DataLog.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
 
 DragonDataLoggerSignals *DragonDataLoggerSignals::m_instance = nullptr;
 DragonDataLoggerSignals *DragonDataLoggerSignals::GetInstance()
@@ -32,57 +31,64 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
 {
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
+    m_isBrownOut = wpi::log::BooleanLogEntry(log, "/RoboRio/IsBrownOut");
+    m_batteryVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/BatteryVoltage");
+    m_brownoutVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/BrownoutVoltage");
+    m_inputVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/InputVoltage");
+    m_inputCurrent = wpi::log::DoubleLogEntry(log, "/RoboRio/InputCurrent");
+    m_cpuTemp = wpi::log::DoubleLogEntry(log, "/RoboRio/CPUTemp");
+
     m_storedHeading = wpi::log::DoubleLogEntry(log, "/Chassis/StoredHeading(Degrees)");
-    m_storedHeading.Append(m_currStoredHeading);
+    m_storedHeading.Append(0.0);
     m_chassisYaw = wpi::log::DoubleLogEntry(log, "/Chassis/Yaw(Degrees)");
-    m_chassisYaw.Append(m_currChassisYaw);
+    m_chassisYaw.Append(0.0);
 
     // electrical signals
     m_electricalVoltage = wpi::log::DoubleLogEntry(log, "/Electrical/Voltage(Volts)");
-    m_electricalVoltage.Append(m_currElectricalVoltage);
+    m_electricalVoltage.Append(0.0);
     m_electricalCurrent = wpi::log::DoubleLogEntry(log, "/Electrical/Current(Amps)");
-    m_electricalCurrent.Append(m_currElectricalCurrent);
+    m_electricalCurrent.Append(0.0);
     m_electricalPower = wpi::log::DoubleLogEntry(log, "/Electrical/Power(Watts)");
-    m_electricalPower.Append(m_currElectricalPower);
+    m_electricalPower.Append(0.0);
     m_electricalEnergy = wpi::log::DoubleLogEntry(log, "/Electrical/Energy(Joules)");
-    m_electricalEnergy.Append(m_currElectricalEnergy);
+    m_electricalEnergy.Append(0.0);
 
     m_headingState = wpi::log::StringLogEntry(log, "/Chassis/HeadingState");
-    m_headingState.Append(m_currHeadingState);
+    m_headingState.Append("NONE");
     m_driveState = wpi::log::StringLogEntry(log, "/Chassis/DriveState");
-    m_driveState.Append(m_currDriveState);
+    m_driveState.Append("NONE");
 
     m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/Pose2d");
-    m_pose2d.Append(m_currPose2D);
+    m_pose2d.Append(frc::Pose2d());
 
     m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight");
-    m_pose3dLimelight.Append(m_currPose3DLimelight);
+    m_pose3dLimelight.Append(frc::Pose3d());
 
     m_pose3dLimelight2 = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight2");
-    m_pose3dLimelight2.Append(m_currPose3DLimelight2);
+    m_pose3dLimelight2.Append(frc::Pose3d());
 
     m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dQuest");
-    m_pose3dQuest.Append(m_currPose3DQuest);
+    m_pose3dQuest.Append(frc::Pose3d());
 
     m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/TargetState");
-    m_frontLeftTarget.Append(m_currFrontLeftTarget);
+    m_frontLeftTarget.Append(frc::SwerveModuleState());
     m_frontRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontRighttModule/TargetState");
-    m_frontRightTarget.Append(m_currFrontRightTarget);
+    m_frontRightTarget.Append(frc::SwerveModuleState());
     m_backLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackLeftModule/TargetState");
-    m_backLeftTarget.Append(m_currBackLeftTarget);
+    m_backLeftTarget.Append(frc::SwerveModuleState());
     m_backRightTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackRightModule/TargetState");
-    m_backRightTarget.Append(m_currBackRightTarget);
+    m_backRightTarget.Append(frc::SwerveModuleState());
     m_frontLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/ActualState");
-    m_frontLeftActual.Append(m_currFrontLeftActual);
+    m_frontLeftActual.Append(frc::SwerveModuleState());
     m_frontRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontRighttModule/ActualState");
-    m_frontRightActual.Append(m_currFrontRightActual);
+    m_frontRightActual.Append(frc::SwerveModuleState());
     m_backLeftActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackLeftModule/ActualState");
-    m_backLeftActual.Append(m_currBackLeftActual);
+    m_backLeftActual.Append(frc::SwerveModuleState());
     m_backRightActual = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/BackRightModule/ActualState");
-    m_backRightActual.Append(m_currBackRightActual);
+    m_backRightActual.Append(frc::SwerveModuleState());
 
     m_actualSpeeds = wpi::log::StructLogEntry<frc::ChassisSpeeds>(log, "/Chassis/ActualSpeed");
-    m_actualSpeeds.Append(m_currActualSpeeds);
+    m_actualSpeeds.Append(frc::ChassisSpeeds());
     m_targetSpeeds = wpi::log::StructLogEntry<frc::ChassisSpeeds>(log, "/Chassis/TargetSpeed");
-    m_targetSpeeds.Append(m_currTargetSpeeds);
+    m_targetSpeeds.Append(frc::ChassisSpeeds());
 }

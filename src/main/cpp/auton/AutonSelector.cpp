@@ -17,11 +17,12 @@
 // co-Author: notcharlie, creator of dumb code / copy paster of better code
 
 // Includes
-#include <string>
 #include <filesystem>
-#include <vector>
-#include <sys/stat.h>
 #include <fstream>
+#include <string>
+#include <vector>
+
+#include <sys/stat.h>
 
 #ifdef __linux
 #include <dirent.h>
@@ -33,7 +34,7 @@
 
 // Team302 includes
 #include "auton/AutonSelector.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/FMSData.h"
 
 #include <pugixml/pugixml.hpp>

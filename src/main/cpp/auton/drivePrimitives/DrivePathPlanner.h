@@ -25,6 +25,9 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "utils/logging/DragonDataLogger.h"
 
+#include "utils/logging/signals/DragonDataLogger.h"
+
+
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
 #include "frc/Timer.h"
@@ -43,7 +46,7 @@ public:
     void Init(PrimitiveParams *params) override;
     void Run() override;
     bool IsDone() override;
-    void DataLog() override;
+    void DataLog(uint64_t timestamp) override;
 
 private:
     void InitMoveInfo();

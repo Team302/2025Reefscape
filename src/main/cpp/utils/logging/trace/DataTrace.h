@@ -19,7 +19,7 @@
 // #define INCLUDE_DATA_TRACE
 
 // Team 302 includes
-#include <utils/logging/DataTraceSocket.h>
+#include "utils/logging/trace/DataTraceSocket.h"
 
 // Third Party Includes
 

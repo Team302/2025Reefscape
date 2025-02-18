@@ -32,7 +32,7 @@
 
 // Team 302 includes
 #include "utils/sensors/SensorData.h"
-#include "utils/logging/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
@@ -183,7 +183,7 @@ public:
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
-    void DataLog() override;
+    void DataLog(uint64_t timestamp) override;
 
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);

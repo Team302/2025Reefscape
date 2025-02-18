@@ -31,7 +31,7 @@
 #include "units/angular_velocity.h"
 #include "units/dimensionless.h"
 #include "units/velocity.h"
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"

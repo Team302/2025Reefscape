@@ -26,7 +26,7 @@
 #include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/PrimitiveParams.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

@@ -10,7 +10,7 @@ $$_GEN_NOTICE_$$
 #include "mechanisms/$$_MECHANISM_INSTANCE_NAME_$$/$$_STATE_NAME_$$State.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

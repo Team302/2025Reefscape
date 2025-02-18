@@ -17,11 +17,11 @@
 
 #include <string>
 
-#include "utils/PeriodicLooper.h"
-#include "utils/logging/Logger.h"
-#include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfigCOMP_BOT_302.h"
+#include "configs/MechanismConfigMgr.h"
 #include "configs/RobotElementNames.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/PeriodicLooper.h"
 
 using std::string;
 

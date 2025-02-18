@@ -14,12 +14,13 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/DragonPower.h"
-#include "utils/logging/Logger.h"
 #include <string>
 
+#include "utils/DragonPower.h"
+#include "utils/logging/debug/Logger.h"
+
 DragonPower *DragonPower::m_dragonPowerInstance = nullptr;
-bool calculateInLogger = true; //set this to false to calculate power data via LoggableItem instead of signel
+bool calculateInLogger = true; // set this to false to calculate power data via LoggableItem instead of signel
 
 DragonPower *DragonPower::GetInstance()
 {
@@ -31,7 +32,8 @@ DragonPower *DragonPower::GetInstance()
 }
 
 DragonPower::DragonPower()
-{    
+{
+    return; // temporarily remove DragonPower
     int pdpCanID = 0;
     m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
     m_calcTimer = new frc::Timer();
@@ -39,7 +41,8 @@ DragonPower::DragonPower()
 
 void DragonPower::CalculatePowerData()
 {
-
+    return; // temporarily remove DragonPower
+    // TODO get some of this data from RoboRio + methods on motors
     // need to determine if we met the calcFrequency threshold
     if (m_pdp != nullptr)
     {
@@ -53,12 +56,11 @@ void DragonPower::CalculatePowerData()
         m_calcTimer->Reset();
         m_calcTimer->Start();
     }
-
-    
 }
 
 void DragonPower::LogInformation()
 {
+    return; // temporarily remove DragonPower
     if (!calculateInLogger)
         CalculatePowerData();
 
@@ -70,15 +72,14 @@ void DragonPower::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
 }
 
-void DragonPower::DataLog()
+void DragonPower::DataLog(uint64_t timestamp)
 {
+    return; // temporarily remove DragonPower
     if (calculateInLogger)
-        CalculatePowerData();    
+        CalculatePowerData();
 
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
 }
-
-

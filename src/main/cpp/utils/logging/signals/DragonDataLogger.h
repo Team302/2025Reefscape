@@ -15,24 +15,31 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <array>
-#include <vector>
-#include "utils/logging/DragonDataLogger.h"
+#include <string>
 
-class DragonDataLoggerMgr
+#include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/kinematics/ChassisSpeeds.h"
+#include "units/time.h"
+#include "utils/logging/signals/DragonDataLoggerSignals.h"
+
+class DragonDataLogger
 {
 public:
-    static DragonDataLoggerMgr *GetInstance();
-    void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    DragonDataLogger();
+    virtual ~DragonDataLogger() = default;
 
-private:
-    DragonDataLoggerMgr();
-    ~DragonDataLoggerMgr();
-    std::string CreateLogFileName();
-    std::string GetLoggingDir();
+    virtual void DataLog(uint64_t timestamp) = 0;
 
-    std::vector<DragonDataLogger *> m_items;
+protected:
+    void LogBoolData(uint64_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value);
+    void LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value);
+    void LogStringData(uint64_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value);
+    void Log2DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value);
+    void Log3DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value);
 
-    static DragonDataLoggerMgr *m_instance;
+    void LogSwerveModuleStateData(uint64_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value);
+    void LogChassisSpeedsData(uint64_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
+
+    const double m_doubleTolerance = 0.001;
 };

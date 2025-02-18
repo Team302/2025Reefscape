@@ -32,7 +32,7 @@
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
 #include "utils/AngleUtils.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 #include "ctre/phoenix6/CANcoder.hpp"

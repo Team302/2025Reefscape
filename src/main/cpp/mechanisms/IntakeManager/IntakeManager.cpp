@@ -21,7 +21,7 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "IntakeManager.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 
@@ -123,9 +123,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
-	    0,  //double velocityGain
-	    0,  //double accelartionGain
-	    0, //double staticFrictionGain,
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -142,9 +142,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double integral
 		0,												  // double derivative
 		0,												  // double feedforward
-	    0,  //double velocityGain
-	    0,  //double accelartionGain
-	    0, //double staticFrictionGain,
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
 		ControlData::FEEDFORWARD_TYPE::VOLTAGE,			  // FEEDFORWARD_TYPE feedforwadType
 		0,												  // double integralZone
 		0,												  // double maxAcceleration
@@ -355,9 +355,9 @@ void IntakeManager::CheckForTuningEnabled()
 void IntakeManager::ReadTuningParamsFromNT()
 {
 	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS ( m_table.get()->GetNumber ( "PositionDegree_sGain", 0 ) );
-	m_PositionDegree->SetV ( m_table.get()->GetNumber ( "PositionDegree_vGain", 0 ) );
-	m_PositionDegree->SetA ( m_table.get()->GetNumber ( "PositionDegree_aGain", 0 ) );
+	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
+	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
+	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
@@ -367,9 +367,9 @@ void IntakeManager::ReadTuningParamsFromNT()
 void IntakeManager::PushTuningParamsToNT()
 {
 	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber ( "PositionDegree_sGain", m_PositionDegree->GetS() );
-	m_table.get()->PutNumber ( "PositionDegree_vGain", m_PositionDegree->GetV() );
-	m_table.get()->PutNumber ( "PositionDegree_aGain", m_PositionDegree->GetA() );
+	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
+	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
+	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
 	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
