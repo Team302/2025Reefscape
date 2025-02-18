@@ -42,7 +42,7 @@ namespace ClimberManagerStates
 
 	private:
 		ClimberManager *m_mechanism;
-		double m_manualClimbRate = 0.02;
+		double m_manualClimbRate = 0.02 * 10; // 10 deg/sec
 		void InitPRACTICE_BOT9999();
 		void InitCOMP_BOT302();
 
