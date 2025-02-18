@@ -22,7 +22,7 @@
 #include "chassis/states/FieldDrive.h"
 
 /// DEBUGGING
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using frc::ChassisSpeeds;
 using frc::Rotation2d;

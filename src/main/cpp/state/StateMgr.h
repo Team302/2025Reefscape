@@ -21,7 +21,7 @@
 
 // Team 302 includes
 #include "state/State.h"
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
 
 // forward declare
 class PrimitiveParams;

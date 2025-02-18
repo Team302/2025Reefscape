@@ -22,7 +22,7 @@
 // Team 302 includes
 #include "state/State.h"
 #include "state/StateMgr.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 State *myState;
 

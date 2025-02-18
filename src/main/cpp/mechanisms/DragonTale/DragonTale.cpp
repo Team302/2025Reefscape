@@ -21,7 +21,7 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "DragonTale.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 
@@ -760,7 +760,7 @@ void DragonTale::SetSensorFailSafe()
 
 units::length::inch_t DragonTale::GetAlgaeHeight()
 {
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	units::length::inch_t algeHeight = m_grabAlgaeLow;
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
@@ -772,10 +772,9 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 		int multipleNumber = closestMultiple.value() / 60.0;
 
 		if (multipleNumber % 2 == 0)
-			return m_grabAlgaeHigh;
-		else
-			return m_grabAlgaeLow;
+			algeHeight = m_grabAlgaeHigh;
 	}
+	return algeHeight;
 }
 
 void DragonTale::ManualControl()

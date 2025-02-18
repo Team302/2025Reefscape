@@ -15,12 +15,11 @@
 
 // Team302 Includes
 #include "chassis/ChassisMovement.h"
-#include "chassis/states/RobotDrive.h"
-#include "chassis/states/StopDrive.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-
-#include "utils/logging/Logger.h"
+#include "chassis/states/RobotDrive.h"
+#include "chassis/states/StopDrive.h"
+#include "utils/logging/debug/Logger.h"
 
 StopDrive::StopDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                m_robotDrive(robotDrive)

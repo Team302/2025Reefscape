@@ -41,13 +41,11 @@ void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIE
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] = "RED_RIGHT_CAGE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE] = "RED_CENTER_CAGE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
-    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = "RED_CORAL_STATION_RIGHT_ALLIANCE"; 
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = "RED_CORAL_STATION_RIGHT_ALLIANCE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] = "RED_CORAL_STATION_RIGHT_SIDEWALL";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] = "RED_CORAL_STATION_LEFT_ALLIANCE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
-    
-    
-    
+
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR] = "BLUE_PROCESSOR";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT] = "BLUE_BARGE_FRONT";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK] = "BLUE_BARGE_BACK";
@@ -83,10 +81,9 @@ void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIE
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT] = "BLUE_CORAL_STATION_RIGHT";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = "BLUE_CORAL_STATION_RIGHT_SIDEWALL";
 
-
-        frc::DataLogManager::Start("", "field_poses.wpilog");
+    frc::DataLogManager::Start("", "field_poses.wpilog");
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
-    
+
     for (auto &[key, pose] : fieldConstantsPoseMap)
     {
         auto poseLog = wpi::log::StructLogEntry<frc::Pose3d>(log, m_fieldConstantsNameMap[key]);
@@ -94,7 +91,6 @@ void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIE
     }
 
     log.Flush();
-
 }
 
 #endif

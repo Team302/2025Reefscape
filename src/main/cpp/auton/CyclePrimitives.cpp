@@ -31,7 +31,7 @@
 #include "auton/PrimitiveParams.h"
 #include "auton/PrimitiveParser.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisOptionEnums.h"
@@ -108,35 +108,37 @@ void CyclePrimitives::Run()
 				for (auto zone : m_zones)
 				{
 					bool isInZone = false;
-
-					if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
+					if (zone != nullptr)
 					{
-						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
-																		  zone->GetXGrid2(),
-																		  zone->GetYGrid1(),
-																		  zone->GetYGrid2(),
-																		  m_chassis->GetPose());
-					}
-					else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
-					{
-						isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
-																		  zone->getRadius(),
-																		  m_chassis->GetPose());
-					}
-
-					if (isInZone)
-					{
-
-						SetMechanismStatesFromZone(zone);
-
-						if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+						if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
 						{
-							// TODO:  plug in vision drive options
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
+																			  zone->GetXGrid2(),
+																			  zone->GetYGrid1(),
+																			  zone->GetYGrid2(),
+																			  m_chassis->GetPose());
+						}
+						else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
+						{
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
+																			  zone->getRadius(),
+																			  m_chassis->GetPose());
 						}
 
-						if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+						if (isInZone)
 						{
-							// TODO:  plug in avoid options
+
+							SetMechanismStatesFromZone(zone);
+
+							if (zone->GetChassisOption() != ChassisOptionEnums::AutonChassisOptions::NO_VISION)
+							{
+								// TODO:  plug in vision drive options
+							}
+
+							if (zone->GetAvoidOption() != ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION)
+							{
+								// TODO:  plug in avoid options
+							}
 						}
 					}
 				}
@@ -211,6 +213,7 @@ void CyclePrimitives::RunDriveStop()
 										  false,
 										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::PathUpdateOption::NONE,
+										  PATH_UPDATE_OPTION::NOTHING,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
 		m_driveStop->Init(params);

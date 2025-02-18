@@ -33,11 +33,12 @@
 #include "fielddata/DragonTargetFinder.h"
 #include "chassis/SwerveChassis.h"
 
-#include "utils/logging/Logger.h"
-#include "utils/logging/LoggerData.h"
-#include "utils/logging/LoggerEnums.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/LoggerData.h"
+#include "utils/logging/debug/LoggerEnums.h"
 
 using namespace pathplanner;
+using namespace std;
 
 DriveToRightReefBranch::DriveToRightReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
     : TrajectoryDrivePathPlanner(robotDrive)
@@ -74,9 +75,8 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
     if (m_chassis != nullptr)
     {
         std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
-        if (info)
+        if (info && !IsDone())
         {
-
             m_endPose = std::get<frc::Pose2d>(info.value());
             trajectory = CreateDriveToRightReefBranchTrajectory(m_chassis->GetPose(), m_endPose);
         }
@@ -86,25 +86,23 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
 
 pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
-    // create a midpoint perpendicular to the coral station
-    frc::Pose2d midpointPose((currentPose2d.Translation() + targetPose.Translation()) / 2.0, targetPose.Rotation());
-
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("midpoint pose", midpointPose);
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, midpointPose, targetPose};
+    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
     std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
+    shared_ptr<PathPlannerPath> path;
 
-    auto path = std::make_shared<PathPlannerPath>(
+    path = std::make_shared<PathPlannerPath>(
         waypoints,
         constraints,
         std::nullopt,
-        GoalEndState(0.0_mps, frc::Rotation2d(targetPose.Rotation())));
+        GoalEndState(0.0_mps, frc::Rotation2d(m_chassis->GetStoredHeading())), false);
 
     path->preventFlipping = true;
-    return path->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+
+    return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
 }
 
 bool DriveToRightReefBranch::IsDone()
