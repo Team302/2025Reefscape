@@ -187,11 +187,13 @@ void ClimberManager::CreateCOMP_BOT302()
 void ClimberManager::InitializePRACTICE_BOT9999()
 {
 	InitializeTalonFXClimberPRACTICE_BOT9999();
+	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 
 void ClimberManager::InitializeCOMP_BOT302()
 {
 	InitializeTalonFXClimberCOMP_BOT302();
+	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 {
@@ -228,7 +230,7 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.Feedback.SensorToMechanismRatio = 9;
+	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -275,7 +277,7 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.Feedback.SensorToMechanismRatio = 9;
+	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -356,6 +358,8 @@ void ClimberManager::Cyclic()
 	{
 		ReadTuningParamsFromNT();
 	}
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target", (m_ClimberPositionDegree.Position.value()));
 }
 
 void ClimberManager::CheckForTuningEnabled()

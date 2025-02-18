@@ -64,7 +64,7 @@ void AutoClimbState::InitCOMP_BOT302()
 
 void AutoClimbState::Run()
 {
-	units::angle::degree_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
+	units::angle::turn_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
 	m_manualTarget += TargetChange;
 
 	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));

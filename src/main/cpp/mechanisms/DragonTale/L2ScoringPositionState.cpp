@@ -72,7 +72,7 @@ void L2ScoringPositionState::Run()
 		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.05);
+			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.1);
 	}
 }
 
