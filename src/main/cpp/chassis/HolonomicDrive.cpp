@@ -197,6 +197,8 @@ void HolonomicDrive::Run()
         }
 
         CheckTipping(checkTipping);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Drive State"), m_moveInfo.driveOption);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
 
         m_swerve->Drive(m_moveInfo);
     }
@@ -244,6 +246,8 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     {
         m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     }
+
+    m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 
 void HolonomicDrive::ResetPose()
