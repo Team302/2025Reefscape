@@ -27,9 +27,8 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
 #include "chassis/states/TrajectoryDrivePathplanner.h"
-#include "utils/logging/DragonDataLogger.h"
-#include "auton/drivePrimitives/DriveToHelper.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "auton/drivePrimitives/DriveToHelper.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
@@ -83,5 +82,7 @@ private:
     frc::Pose2d m_finalPose;
     DriveToHelper *m_driveToHelper;
     UPDATE_OPTION m_updateOption;
-    std::map<UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums, DragonTargetFinderTarget>> m_updateOptionToTrajMap;
+
+    std::map<UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType, DragonTargetFinderTarget>> m_updateOptionToTrajMap;
+    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType, DragonTargetFinderTarget> m_driveToInfo;
 };
