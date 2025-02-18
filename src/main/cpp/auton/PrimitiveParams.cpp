@@ -47,9 +47,9 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																			m_changeTaleState(taleStateChanged),
 																			m_intakeState(intakeState),
 																			m_taleState(taleState),
-																			m_updateOption(updateOption),
 																			m_zones(zones),
-																			m_pathUpdateOption(updatePathOption)
+																			m_pathUpdateOption(updatePathOption),
+																			m_updateOption(updateOption)
 
 // @ADDMECH initilize state mgr attribute
 {
