@@ -53,6 +53,8 @@ public:
     bool IsDone() override;
     void DataLog(uint64_t timestamp) override;
 
+    int FindDriveToZoneIndex(ZoneParamsVector zones);
+
 private:
     void InitMoveInfo();
     void InitMap();
@@ -83,8 +85,11 @@ private:
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
     DriveToHelper *m_driveToHelper;
-    UPDATE_OPTION m_updateOption;
+    PATH_UPDATE_OPTION m_updateOption;
 
-    std::map<UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType, DragonTargetFinderTarget>> m_updateOptionToTrajMap;
-    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType, DragonTargetFinderTarget> m_driveToInfo;
+    std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType>> m_updateOptionToTrajMap;
+    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
+
+    int m_zoneUpdateOptionIndex = -1;
+    ZoneParams *m_zone;
 };

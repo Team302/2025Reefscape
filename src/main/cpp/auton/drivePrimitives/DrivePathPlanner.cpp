@@ -82,21 +82,38 @@ void DrivePathPlanner::InitMap()
     if (m_chassis != nullptr)
     {
 
-        m_updateOptionToTrajMap[UPDATE_OPTION::LEFT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH)),
-                                                                              ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH,
-                                                                              DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
+        m_updateOptionToTrajMap[PATH_UPDATE_OPTION::LEFT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH)),
+                                                                                   ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
 
-        m_updateOptionToTrajMap[UPDATE_OPTION::RIGHT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH)),
-                                                                               ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH,
-                                                                               DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
+        m_updateOptionToTrajMap[PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH)),
+                                                                                    ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
 
-        m_updateOptionToTrajMap[UPDATE_OPTION::CORAL_STATION] = make_tuple(dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION)),
-                                                                           ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION,
-                                                                           DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE); // needs to probably be checked on...
+        m_updateOptionToTrajMap[PATH_UPDATE_OPTION::CORAL_STATION] = make_tuple(dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION)),
+                                                                                ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION); // needs to probably be checked on...
     }
+}
+int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
+{
+    for (auto i = 0; i < zones.size(); i++)
+    {
+        if (zones[i]->getPathUpdateOption() != NOTHING)
+        {
+            return i;
+        }
+    }
+    // if we don't have an update option
+    return -1;
 }
 void DrivePathPlanner::Init(PrimitiveParams *params)
 {
+    m_zone = nullptr;
+
+    auto index = FindDriveToZoneIndex(params->GetZones());
+    if (index != -1)
+    {
+        m_zone = params->GetZones()[FindDriveToZoneIndex(params->GetZones())];
+    }
+
     InitMap();
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
@@ -108,10 +125,12 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_maxTime = params->GetTime();
     m_isVisionDrive = (m_pathname == "RIGHT_REEF_BRANCH");
     m_visionAlignment = params->GetVisionAlignment();
-    m_checkForDriveToReef = params->GetUpdateOption() != UPDATE_OPTION::NOTHING;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
-    m_driveToInfo = m_updateOptionToTrajMap[params->GetUpdateOption()];
+    m_checkForDriveToReef = m_zone != nullptr;
+
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
+    if (m_zone != nullptr)
+        m_driveToInfo = m_updateOptionToTrajMap[params->GetZones()[m_zoneUpdateOptionIndex]->getPathUpdateOption()];
     // Start timeout timer for path
 
     InitMoveInfo();
@@ -207,51 +226,40 @@ bool DrivePathPlanner::IsDone()
 void DrivePathPlanner::CheckForDriveToReefBranch()
 {
     // Need to check if there is a Reef Branch
-    DragonTargetFinder *dt = DragonTargetFinder::GetInstance();
-    auto reefBranch = dt->GetPose(get<DragonTargetFinderTarget>(m_driveToInfo));
-
-    if (reefBranch.has_value())
+    bool isInZone = false;
+    if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "X", get<1>(reefBranch.value()).X().value());
-        if (get<0>(reefBranch.value()) != DragonTargetFinderData::NOT_FOUND) // see a Reef Branch
+        if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", true);
-            auto branchPose = get<1>(reefBranch.value());
-
-            // check if we see a Reef Branch is one we want to get
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Consider Reef Branch: ", true);
-
-            auto chassispose = m_chassis->GetPose();
-            auto distanceToBranch = chassispose.Translation().Distance(branchPose.Translation());
-
-            auto currentTime = m_timer.get()->Get();
-            auto percent = currentTime.value() / m_totalTrajectoryTime.value();
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "time:", currentTime.value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Done Percent:", static_cast<double>((currentTime.value()) / m_totalTrajectoryTime.value()));
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Distance: ", distanceToBranch.value());
-
-            if (distanceToBranch <= m_distanceThreshold) // switch to drive to Reef Branch
-            {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Branch", "Switch to Drive To Reef Branch: ", true);
-
-                m_isVisionDrive = true;
-
-                // Do we really need to change the pathname?
-                m_pathname = "RIGHT_REEF_BRANCH";
-
-                // will come back to later
-                m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::REEF;
-                InitMoveInfo();
-            }
-            else
-            {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
-            }
+            isInZone = AutonGrid::GetInstance()->IsPoseInZone(m_zone->getCircleZonePose(),
+                                                              m_zone->getRadius(),
+                                                              m_chassis->GetPose());
         }
-        else
+        else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Reef Branch Found: ", false);
+            isInZone = AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
+                                                              m_zone->GetXGrid2(),
+                                                              m_zone->GetYGrid1(),
+                                                              m_zone->GetYGrid2(),
+                                                              m_chassis->GetPose());
         }
+    }
+
+    if (isInZone) // switch to drive to Reef Branch
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Branch", "Switch to Drive To Reef Branch: ", true);
+
+        m_isVisionDrive = true;
+
+        // Do we really need to change the pathname?
+        m_pathname = "RIGHT_REEF_BRANCH";
+
+        // will come back to later
+        m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::REEF;
+        InitMoveInfo();
+    }
+    else
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
     }
 }

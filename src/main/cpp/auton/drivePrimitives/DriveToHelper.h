@@ -28,7 +28,7 @@ public:
     DriveToHelper(SwerveChassis *m_chassis, ChassisMovement m_moveInfo);
     ~DriveToHelper() = default;
 
-    void Init(UPDATE_OPTION pathUpdateOption);
+    void Init(PATH_UPDATE_OPTION pathUpdateOption);
     void Run();
     bool IsDone();
 
@@ -39,7 +39,7 @@ private:
     bool m_isVisionDrive = false;
 
     ChassisMovement m_moveInfo;
-    UPDATE_OPTION m_pathUpdateOption;
+    PATH_UPDATE_OPTION m_pathUpdateOption;
 
     PrimitiveParams::VISION_ALIGNMENT m_visionAlignment;
 };

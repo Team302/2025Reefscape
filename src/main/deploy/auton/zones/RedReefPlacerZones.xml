@@ -6,5 +6,6 @@
         circlex="13.036"
         circley="4.038"
         radius="83.7402" 
-        taleOption="STATE_L4SCORING_POSITION"/>
+        pathUpdateOption="LEFT_REEF_BRANCH"/>
+        <!-- taleOption="STATE_L4SCORING_POSITION" -->
 </auton>

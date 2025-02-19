@@ -26,9 +26,9 @@ DriveToHelper::DriveToHelper(SwerveChassis *chassis, ChassisMovement moveInfo) :
 {
 }
 
-void DriveToHelper::Init(UPDATE_OPTION pathUpdateOption)
+void DriveToHelper::Init(PATH_UPDATE_OPTION pathUpdateOption)
 {
-    if (m_chassis != nullptr && pathUpdateOption != UPDATE_OPTION::NOTHING)
+    if (m_chassis != nullptr && pathUpdateOption != PATH_UPDATE_OPTION::NOTHING)
     {
         switch (pathUpdateOption)
         {

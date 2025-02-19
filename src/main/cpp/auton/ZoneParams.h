@@ -44,7 +44,7 @@ public:
                DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::HeadingOption headingOption,
-               PATH_UPDATE_OPTION updateOption,
+               PATH_UPDATE_OPTION pathUpdateOption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
@@ -60,6 +60,8 @@ public:
 
     frc::Pose2d getCircleZonePose() const { return m_circlePose; }
     units::length::inch_t getRadius() const { return m_radius; }
+
+    PATH_UPDATE_OPTION getPathUpdateOption() const { return m_pathUpdateOption; }
 
     bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
     bool IsTaleStateChanging() const { return m_isTaleStateChanging; }
@@ -85,7 +87,7 @@ private:
     ChassisOptionEnums::HeadingOption m_headingOption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
 
-    PATH_UPDATE_OPTION m_updateOption;
+    PATH_UPDATE_OPTION m_pathUpdateOption;
 
     AutonGrid::ZoneMode m_zoneMode;
 
