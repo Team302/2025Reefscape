@@ -60,7 +60,7 @@ public:
                     bool changeTaleState,
                     DragonTale::STATE_NAMES taleState,
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption,
-                    UPDATE_OPTION updateOption,
+                    PATH_UPDATE_OPTION updateOption,
                     DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
 
     PrimitiveParams() = delete;
@@ -68,7 +68,7 @@ public:
 
     // Some getters
     PRIMITIVE_IDENTIFIER GetID() const { return m_id; };
-    UPDATE_OPTION GetUpdateOption() const { return m_updateOption; }
+    PATH_UPDATE_OPTION GetUpdateOption() const { return m_updateOption; }
 
     units::time::second_t GetTime() const { return m_time; };
     ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; };
@@ -125,7 +125,7 @@ private:
 
     ZoneParamsVector m_zones;
     ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
-    UPDATE_OPTION m_updateOption;
+    PATH_UPDATE_OPTION m_updateOption;
 };
 
 typedef std::vector<PrimitiveParams *> PrimitiveParamsVector;

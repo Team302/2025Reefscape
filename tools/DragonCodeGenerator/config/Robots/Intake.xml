@@ -4,7 +4,7 @@
   <name>Intake</name>
   <MotorControllers>
     <MotorController
-      xsi:type="TalonFX">
+      xsi:type="TalonFXS">
       <name>Intake</name>
       <ControllerEnabled>Yes</ControllerEnabled>
       <theDistanceAngleCalcInfo>
@@ -264,7 +264,7 @@
       </theConfigMotorSettings>
     </MotorController>
     <MotorController
-      xsi:type="TalonFX">
+      xsi:type="TalonFXS">
       <name>Extender</name>
       <ControllerEnabled>Yes</ControllerEnabled>
       <theDistanceAngleCalcInfo>
@@ -442,7 +442,7 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </enableForward>
         <remoteForwardSensorID>
           <unitsFamily>none</unitsFamily>
@@ -456,14 +456,14 @@
           <name>boolParameter</name>
           <__units__ />
           <type>Boolean</type>
-          <value>false</value>
+          <value>true</value>
         </forwardResetPosition>
         <forwardPosition>
           <unitsFamily>angle</unitsFamily>
           <name>doubleParameter</name>
           <__units__>deg</__units__>
           <type>Double</type>
-          <value>0</value>
+          <value>95</value>
         </forwardPosition>
         <forwardType>LimitSwitchPin</forwardType>
         <forwardOpenClose>NormallyOpen</forwardOpenClose>
@@ -543,7 +543,7 @@
         <name>boolParameter</name>
         <__units__ />
         <type>Boolean</type>
-        <value>false</value>
+        <value>true</value>
       </reversed>
       <debouncetime>
         <unitsFamily>time</unitsFamily>

@@ -35,7 +35,7 @@ private:
     void CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
-    //Robot is 34" from front to back
+    // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(17.0),
@@ -44,67 +44,67 @@ private:
         frc::Rotation3d());
 
     frc::Transform3d m_noTransform = frc::Transform3d(
-                                         frc::Translation3d(
-                                             units::length::inch_t(0.0),
-                                             units::length::inch_t(0.0),
-                                             units::length::inch_t(0.0)),
-                                         frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftAlliance = frc::Transform3d(
-                                                   frc::Translation3d(
-                                                       units::length::inch_t(0.0),
-                                                       units::length::inch_t(-30.0),
-                                                       units::length::inch_t(0.0)),
-                                                   frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftSidewall = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0.0),
-                                                        units::length::inch_t(30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightAlliance = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0.0),
-                                                        units::length::inch_t(30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightSidewall = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0),
-                                                        units::length::inch_t(-30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0),
+            units::length::inch_t(-30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCageLeft = frc::Transform3d(
-                                          frc::Translation3d(
-                                              units::length::inch_t(0.0),
-                                              units::length::inch_t(-42.5),
-                                              units::length::inch_t(0.0)),
-                                          frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-42.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCageRight = frc::Transform3d(
-                                           frc::Translation3d(
-                                               units::length::inch_t(0.0),
-                                               units::length::inch_t(42.5),
-                                               units::length::inch_t(0.0)),
-                                           frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(42.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
-                                           frc::Translation3d(
-                                               units::length::inch_t(0.0),
-                                               units::length::inch_t(-6.5),
-                                               units::length::inch_t(0.0)),
-                                           frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-16.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
-                                            frc::Translation3d(
-                                                units::length::inch_t(0.0),
-                                                units::length::inch_t(6.5),
-                                                units::length::inch_t(0.0)),
-                                            frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-3.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;

@@ -26,6 +26,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
+#include "auton/PrimitiveEnums.h"
 // Third Party Includes
 
 class ZoneParams
@@ -42,6 +43,8 @@ public:
                IntakeManager::STATE_NAMES intakeOption,
                DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
+               ChassisOptionEnums::HeadingOption headingOption,
+               PATH_UPDATE_OPTION updateOption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
@@ -79,7 +82,10 @@ private:
     DragonTale::STATE_NAMES m_taleOption;
 
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
+    ChassisOptionEnums::HeadingOption m_headingOption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
+
+    PATH_UPDATE_OPTION m_updateOption;
 
     AutonGrid::ZoneMode m_zoneMode;
 

@@ -29,6 +29,9 @@
 #include "chassis/states/TrajectoryDrivePathplanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "auton/drivePrimitives/DriveToHelper.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+
+#include "utils/logging/signals/DragonDataLogger.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
