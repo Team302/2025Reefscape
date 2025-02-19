@@ -694,7 +694,7 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackRemoteSensorID = 17;
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::SyncCANcoder;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 180;
 
