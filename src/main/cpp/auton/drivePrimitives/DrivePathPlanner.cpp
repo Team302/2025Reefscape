@@ -121,7 +121,10 @@ void DrivePathPlanner::InitMoveInfo()
     {
         // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
         m_driveToRightReefBranch = dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH));
-        trajectory = m_driveToRightReefBranch->CreateDriveToRightReefBranch();
+
+        // TODO: Need to talk to Aden and update his logic with the new call
+        std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
+        trajectory = m_driveToRightReefBranch->CreateDriveToRightReefBranch(info);
 
         m_moveInfo.driveOption = ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH;
 

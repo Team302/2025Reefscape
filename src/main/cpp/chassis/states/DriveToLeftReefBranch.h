@@ -54,4 +54,5 @@ private:
     pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     frc::Pose2d m_endPose;
+    units::inch_t m_distanceThreshold{3.0};
 };

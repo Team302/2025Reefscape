@@ -51,7 +51,7 @@ void DriveToLeftReefBranch::Init(ChassisMovement &chassisMovement)
 
     m_trajectory = CreateDriveToLeftReefBranch(info);
     InitFromTrajectory(chassisMovement, m_trajectory);
-    m_currentType = get<0>(info.value()); // should we update currentType here?
+    m_currentType = get<0>(info.value());
 }
 
 std::string DriveToLeftReefBranch::GetDriveStateName() const
@@ -114,7 +114,7 @@ bool DriveToLeftReefBranch::IsDone()
     {
         frc::Pose2d currentPose(m_chassis->GetPose());
 
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < units::inch_t(6))
+        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < m_distanceThreshold)
             return true;
     }
     return false;
@@ -123,8 +123,10 @@ bool DriveToLeftReefBranch::IsDone()
 std::array<frc::SwerveModuleState, 4> DriveToLeftReefBranch::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
+    frc::Pose2d newEndPose = get<1>(info.value());
+    bool regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
-    if (info && ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED))) // If we are in odometry but get vision based pose regenerate
+    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
     {
         m_trajectory = CreateDriveToLeftReefBranch(info);
         InitFromTrajectory(chassisMovement, m_trajectory);
