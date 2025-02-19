@@ -94,7 +94,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                         units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
                         frc::Pose2d visTarget = frc::Pose2d(pose3.X(), pose3.Y(), frc::Rotation2d(fieldRelativeAngle));
 
-                        return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                        return make_tuple(DragonTargetFinderData::VISION_BASED, visTarget);
                     }
                 }
 
