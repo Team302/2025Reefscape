@@ -125,8 +125,15 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             refChassisSpeeds = m_shortpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
         }
-
-        chassisMovement.chassisSpeeds = refChassisSpeeds;
+        if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
+        {
+            chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
+            chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
+        }
+        else
+        {
+            chassisMovement.chassisSpeeds = refChassisSpeeds;
+        }
     }
     else // If we don't have states to run, don't move the robot
     {
