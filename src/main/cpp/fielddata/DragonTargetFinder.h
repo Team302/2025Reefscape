@@ -72,6 +72,8 @@ private:
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
     frc::Pose2d GetVisonPose(VisionData data);
+    units::length::meter_t DistanceToTag(frc::Pose2d);
 
-    const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
+    const units::length::meter_t m_fuseTol{0.25};
+    const units::length::meter_t m_switchToVisionThreshold{1.0};
 };
