@@ -85,12 +85,15 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 // TODO:  Update when we have reef machine learning
                 // TODO: Reevaluate vision pose
                 // Have a vision pose of the tag, calculate the offset to the reef branch
-                // if (visTagPose.has_value())
-                // {
-                //     FieldElementCalculator fc;
-                //     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
-                //     return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
-                // }
+                if (visTagPose.has_value())
+                {
+                    FieldElementCalculator fc;
+                    auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
+                    units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
+                    frc::Pose2d visTarget = frc::Pose2d(pose3.X(), pose3.Y(), frc::Rotation2d(fieldRelativeAngle));
+
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                }
 
                 // If no vision, then just use odometry based pose
                 auto leftbranch = ReefHelper::GetInstance()->GetNearestLeftReefBranch(tag);
