@@ -33,6 +33,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "chassis/states/DriveToCoralStation.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
 #include "vision/DragonVision.h"
@@ -59,7 +60,6 @@ using namespace wpi::math;
 
 DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
                                        m_chassis(nullptr),
-                                       m_driveToRightReefBranch(nullptr),
                                        m_timer(make_unique<Timer>()),
                                        m_trajectory(),
                                        m_pathname(),
@@ -83,15 +83,15 @@ void DrivePathPlanner::InitMap()
     {
 
         m_updateOptionToTrajMap[UPDATE_OPTION::LEFT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH)),
-                                                                              ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH,
+                                                                              ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH,
                                                                               DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
 
-        m_updateOptionToTrajMap[UPDATE_OPTION::RIGHT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH)),
-                                                                               ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH,
+        m_updateOptionToTrajMap[UPDATE_OPTION::RIGHT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH)),
+                                                                               ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH,
                                                                                DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
 
-        m_updateOptionToTrajMap[UPDATE_OPTION::CORAL_STATION] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION)),
-                                                                           ChassisOptionEnums::DRIVE_TO_CORAL_STATION,
+        m_updateOptionToTrajMap[UPDATE_OPTION::CORAL_STATION] = make_tuple(dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION)),
+                                                                           ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION,
                                                                            DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE); // needs to probably be checked on...
     }
 }
@@ -145,7 +145,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         m_moveInfo.driveOption = std::get<ChassisOptionEnums::DriveStateType>(m_driveToInfo);
 
-        m_driveToRightReefBranch->InitFromTrajectory(m_moveInfo, trajectory);
+        std::get<TrajectoryDrivePathPlanner *>(m_driveToInfo)->InitFromTrajectory(m_moveInfo, trajectory);
         m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Total time", "Total time", m_maxTime.value());
@@ -196,7 +196,7 @@ bool DrivePathPlanner::IsDone()
 
     if (m_isVisionDrive)
     {
-        return m_driveToRightReefBranch->IsDone();
+        return std::get<TrajectoryDrivePathPlanner *>(m_driveToInfo)->IsDone();
     }
     auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
 
@@ -238,10 +238,10 @@ void DrivePathPlanner::CheckForDriveToReefBranch()
                 m_isVisionDrive = true;
 
                 // Do we really need to change the pathname?
-                //  m_pathname = "RIGHT_REEF_BRANCH";
+                m_pathname = "RIGHT_REEF_BRANCH";
 
                 // will come back to later
-                //  m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::;
+                m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::REEF;
                 InitMoveInfo();
             }
             else

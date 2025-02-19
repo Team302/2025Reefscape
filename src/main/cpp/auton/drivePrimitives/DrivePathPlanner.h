@@ -60,7 +60,6 @@ private:
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-    TrajectoryDrivePathPlanner *m_driveToRightReefBranch;
     std::unique_ptr<frc::Timer> m_timer;
     pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
