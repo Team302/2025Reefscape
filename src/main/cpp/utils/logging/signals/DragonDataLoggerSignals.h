@@ -57,7 +57,41 @@ public:
         BROWNOUT_VOLTAGE,
         INPUT_VOLTAGE,
         INPUT_CURRENT,
-        CPU_TEMP
+        CPU_TEMP,
+        LEFT_FRONT_SWERVE_STEER_POWER,
+        LEFT_FRONT_SWERVE_STEER_ENERGY,
+        LEFT_FRONT_SWERVE_STEER_TOTALPOWER,
+        LEFT_FRONT_SWERVE_STEER_WATT_HOURS,
+        LEFT_FRONT_SWERVE_DRIVE_POWER,
+        LEFT_FRONT_SWERVE_DRIVE_ENERGY,
+        LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER,
+        LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS,
+        RIGHT_FRONT_SWERVE_STEER_POWER,
+        RIGHT_FRONT_SWERVE_STEER_ENERGY,
+        RIGHT_FRONT_SWERVE_STEER_TOTALPOWER,
+        RIGHT_FRONT_SWERVE_STEER_WATT_HOURS,
+        RIGHT_FRONT_SWERVE_DRIVE_POWER,
+        RIGHT_FRONT_SWERVE_DRIVE_ENERGY,
+        RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER,
+        RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS,
+        LEFT_BACK_SWERVE_STEER_POWER,
+        LEFT_BACK_SWERVE_STEER_ENERGY,
+        LEFT_BACK_SWERVE_STEER_TOTALPOWER,
+        LEFT_BACK_SWERVE_STEER_WATT_HOURS,
+        LEFT_BACK_SWERVE_DRIVE_POWER,
+        LEFT_BACK_SWERVE_DRIVE_ENERGY,
+        LEFT_BACK_SWERVE_DRIVE_TOTALPOWER,
+        LEFT_BACK_SWERVE_DRIVE_WATT_HOURS,
+        RIGHT_BACK_SWERVE_STEER_POWER,
+        RIGHT_BACK_SWERVE_STEER_ENERGY,
+        RIGHT_BACK_SWERVE_STEER_TOTALPOWER,
+        RIGHT_BACK_SWERVE_STEER_WATT_HOURS,
+        RIGHT_BACK_SWERVE_DRIVE_POWER,
+        RIGHT_BACK_SWERVE_DRIVE_ENERGY,
+        RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
+        RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
+        SWERVE_CHASSIS_TOTAL_ENERGY,
+        SWERVE_CHASSIS_WATT_HOURS
     };
 
     enum StringSignals
@@ -117,6 +151,49 @@ private:
     wpi::log::DoubleLogEntry m_inputVoltage;
     wpi::log::DoubleLogEntry m_inputCurrent;
     wpi::log::DoubleLogEntry m_cpuTemp;
+
+    wpi::log::DoubleLogEntry m_lfSteerPower;
+    wpi::log::DoubleLogEntry m_lfSteerEnergy;
+    wpi::log::DoubleLogEntry m_lfSteerTotalPower;
+    wpi::log::DoubleLogEntry m_lfSteerWattHours;
+
+    wpi::log::DoubleLogEntry m_lfDrivePower;
+    wpi::log::DoubleLogEntry m_lfDriveEnergy;
+    wpi::log::DoubleLogEntry m_lfDriveTotalPower;
+    wpi::log::DoubleLogEntry m_lfDriveWattHours;
+
+    wpi::log::DoubleLogEntry m_rfSteerPower;
+    wpi::log::DoubleLogEntry m_rfSteerEnergy;
+    wpi::log::DoubleLogEntry m_rfSteerTotalPower;
+    wpi::log::DoubleLogEntry m_rfSteerWattHours;
+
+    wpi::log::DoubleLogEntry m_rfDrivePower;
+    wpi::log::DoubleLogEntry m_rfDriveEnergy;
+    wpi::log::DoubleLogEntry m_rfDriveTotalPower;
+    wpi::log::DoubleLogEntry m_rfDriveWattHours;
+
+    wpi::log::DoubleLogEntry m_lbSteerPower;
+    wpi::log::DoubleLogEntry m_lbSteerEnergy;
+    wpi::log::DoubleLogEntry m_lbSteerTotalPower;
+    wpi::log::DoubleLogEntry m_lbSteerWattHours;
+
+    wpi::log::DoubleLogEntry m_lbDrivePower;
+    wpi::log::DoubleLogEntry m_lbDriveEnergy;
+    wpi::log::DoubleLogEntry m_lbDriveTotalPower;
+    wpi::log::DoubleLogEntry m_lbDriveWattHours;
+
+    wpi::log::DoubleLogEntry m_rbSteerPower;
+    wpi::log::DoubleLogEntry m_rbSteerEnergy;
+    wpi::log::DoubleLogEntry m_rbSteerTotalPower;
+    wpi::log::DoubleLogEntry m_rbSteerWattHours;
+
+    wpi::log::DoubleLogEntry m_rbDrivePower;
+    wpi::log::DoubleLogEntry m_rbDriveEnergy;
+    wpi::log::DoubleLogEntry m_rbDriveTotalPower;
+    wpi::log::DoubleLogEntry m_rbDriveWattHours;
+
+    wpi::log::DoubleLogEntry m_swerveChassisTotalPower;
+    wpi::log::DoubleLogEntry m_swerveChassisWattHours;
 
     wpi::log::StringLogEntry m_headingState;
     wpi::log::StringLogEntry m_driveState;
