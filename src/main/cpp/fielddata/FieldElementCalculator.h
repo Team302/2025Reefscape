@@ -38,7 +38,7 @@ private:
     // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(17.0),
+            units::length::inch_t(16.0),
             units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
@@ -95,14 +95,14 @@ private:
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-16.5),
+            units::length::inch_t(-13.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-3.0),
+            units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 

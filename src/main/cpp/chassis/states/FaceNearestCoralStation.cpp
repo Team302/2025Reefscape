@@ -34,5 +34,20 @@ DragonTargetFinderTarget FaceNearestCoralStation::GetTarget() const
 
 units::angle::degree_t FaceNearestCoralStation::GetTargetAngle(ChassisMovement &chassisMovement) const
 {
-    return AngleUtils::GetEquivAngle(FaceTarget::GetTargetAngle(chassisMovement) + units::angle::degree_t(180.0));
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(GetTarget());
+        if (info.has_value())
+        {
+            auto targetpose = get<1>(info.value());
+            DragonTargetFinderData type = get<0>(info.value());
+
+            chassisMovement.yawAngle = targetpose.Rotation().Degrees();
+
+            return chassisMovement.yawAngle;
+        }
+    }
+
+    return units::angle::degree_t(0);
 }
