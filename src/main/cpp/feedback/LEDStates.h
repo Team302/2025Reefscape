@@ -43,6 +43,8 @@ private:
     LEDStates() = default;
     ~LEDStates() = default;
 
+    void SineWave(DragonLeds::Colors c, int period);
+
     int m_loopThroughIndividualLEDs = -1;
     int m_colorLoop = 0;
     int m_timer = 0;
@@ -52,7 +54,7 @@ private:
 
     const int m_blinkPatternPeriod = 10;
     const int m_altColorBlinkPatternPeriod = 10;
-    const int m_breathePatternPeriod = 10;
+    const int m_breathePatternPeriod = 50;
 
     const int m_diagnosticLED0 = 0;
     const int m_diagnosticLED1 = 1;

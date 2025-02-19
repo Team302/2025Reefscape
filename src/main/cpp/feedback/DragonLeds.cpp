@@ -97,6 +97,18 @@ std::array<int, 3> DragonLeds::getColorHSV(Colors c)
 {
     switch (c)
     {
+    case RED:
+        return {255, 0, 0};
+    case GREEN:
+        return {0, 255, 0};
+    case BLUE:
+        return {0, 0, 255};
+    case YELLOW:
+        return {255, 160, 0};
+    case PURPLE:
+        return {75, 0, 130};
+    case BLACK:
+        return {0, 0, 0};
     case AZUL:
         return {180, 255, 255};
     case WHITE:

@@ -49,7 +49,7 @@ void LEDStates::SolidColorPattern(DragonLeds::Colors c)
 
 void LEDStates::AlternatingColorBlinkingPattern(DragonLeds::Colors c)
 {
-    AlternatingColorBlinkingPattern(c, m_LEDstring->BLACK);
+    SineWave(c, m_blinkPatternPeriod);
 }
 
 void LEDStates::AlternatingColorBlinkingPattern(DragonLeds::Colors c1, DragonLeds::Colors c2)
@@ -155,14 +155,19 @@ void LEDStates::DisabledPattern()
 
 void LEDStates::BreathingPattern(DragonLeds::Colors c)
 {
+    SineWave(c, m_breathePatternPeriod);
+}
+
+void LEDStates::SineWave(DragonLeds::Colors c, int period)
+{
     if (m_LEDstring->m_ledBuffer.size() > 0)
     {
-        // brightness follows sin wave shifted to range [0, 254] with period of m_breathePatternPeriod ticks
+        // brightness follows sin wave shifted to range [0, 254] with period of period ticks
 #ifdef DESKTOP_SIM
         constexpr double pi = 3.14159265358979323846;
-        int brightness = (std::sin(m_timer * 2 * pi / m_breathePatternPeriod) + 1) * 127;
+        int brightness = (std::sin(m_timer * 2 * pi / period) + 1) * 127;
 #else
-        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / m_breathePatternPeriod) + 1) * 127;    
+        int brightness = (std::sin(m_timer * 2 * std::numbers::pi / period) + 1) * 127;
 #endif
         m_LEDstring->setBufferAllLEDsColorBrightness(c, brightness);
         m_LEDstring->commitLedData();

@@ -28,7 +28,7 @@
 #include "configs/MechanismConfigMgr.h"
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
-// #include "mechanisms/noteManager/decoratormods/noteManager.h"
+#include "utils/logging/debug/Logger.h"
 
 using frc::DriverStation;
 
@@ -92,12 +92,10 @@ void DriverFeedback::UpdateLEDStates()
             if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
             {
                 currentState = DragonLeds::WHITE;
-                m_LEDStates->SolidColorPattern(currentState);
             }
-            else if (m_scoringMode == RobotStateChanges::ScoringMode::Algae)
+            else
             {
                 currentState = DragonLeds::AZUL;
-                m_LEDStates->SolidColorPattern(currentState);
             }
             if (taleMgr != nullptr)
             {
@@ -128,6 +126,10 @@ void DriverFeedback::UpdateLEDStates()
                          taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
                 {
                     taleMgr->AtTarget() ? m_LEDStates->BlinkingPattern(currentState) : m_LEDStates->SolidColorPattern(currentState); // TODO: add vision alignment to this condition
+                }
+                else
+                {
+                    m_LEDStates->SolidColorPattern(currentState);
                 }
             }
         }
