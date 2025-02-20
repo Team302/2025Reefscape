@@ -15,27 +15,19 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <frc/AddressableLED.h>
+
 #include <vector>
 #include <array>
+#include <frc/AddressableLED.h>
+#include "frc/LEDPattern.h"
+
+#include <utils/FMSData.h>
 
 class DragonLeds
 {
 public:
-	enum Colors
-	{
-		RED,
-		GREEN,
-		BLUE,
-		PURPLE,
-		YELLOW,
-		AZUL,
-		BLACK,
-		WHITE,
-		MAX_STATE
-	};
-
 	std::vector<frc::AddressableLED::LEDData> m_ledBuffer;
+	std::vector<frc::AddressableLED::LEDData> m_diagnosticLEDBuffer;
 
 	void Initialize(int PWMport, int numLeds);
 	bool IsInitialized() const;
@@ -44,25 +36,46 @@ public:
 
 	void setOn();
 	void setOff();
+	void ResetVariables();
 
-	void setBufferAllLEDsColor(std::array<int, 3> color);
-	void setBufferAllLEDsAlternatingColor(std::array<int, 3> color1, std::array<int, 3> color2);
-	void setBufferAllLEDsBlack();
-	void setBufferAllLEDsRainbow();
-	void setSpecificLED(int id, std::array<int, 3> color);
-	void setDiagnosticLED(int id, std::array<int, 3> color);
-	void setBufferAllLEDsColorBrightness(Colors c, int brightness);
+	void SetSolidColor(frc::Color colar);
+	void SetAlternatingColor(frc::Color colar1, frc::Color colar2);
+	void SetBufferAllLEDsBlack();
+	void SetScorllingRainbow();
+	void SetSpecificLED(int id, frc::Color colar);
+	void SetDiagnosticLED(int id, frc::Color colar);
+	void SetBufferAllLEDsColorBrightness(frc::Color colar, double brightness);
+	void SetBreathingPattern(frc::Color colar, units::time::second_t period);
+	void SetBlinkingPattern(frc::Color colar, units::time::second_t cycleTime);
+	void SetAlternatingColorBlinkingPattern(frc::Color c1, frc::Color c2);
+	void SetChaserPattern(frc::Color c);
+	void SetClosingInChaserPattern(frc::Color c);
 
-	std::array<int, 3> getColorValues(Colors c);
+	void DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
 
 	static DragonLeds *GetInstance();
 
 private:
-	std::array<int, 3> getColorHSV(Colors c);
 	static DragonLeds *m_instance;
 	frc::AddressableLED *m_addressibleLeds;
-	int m_rainbowFirstPixelHue = 0;
 	int m_numberofDiagnosticLEDs = 8;
+
+	int m_loopThroughIndividualLEDs = -1;
+	int m_colorLoop = 0;
+	int m_timer = 0;
+	bool m_switchColor = false;
+	frc::Color m_lastColor = frc::Color::kBlack;
+
+	const int m_blinkPatternPeriod = 10;
+	const int m_diagnosticLED0 = 0;
+	const int m_diagnosticLED1 = 1;
+	const int m_diagnosticLED2 = 2;
+	const int m_diagnosticLED3 = 3;
+	const int m_diagnosticLED4 = 4;
+	const int m_diagnosticLED5 = 5;
+	const int m_diagnosticLED6 = 6;
+	const int m_diagnosticLED7 = 7;
+	const int m_diagnosticLED8 = 8;
 
 	DragonLeds();
 };
