@@ -974,11 +974,13 @@ void DragonTale::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE i
 void DragonTale::Update()
 {
 	m_Arm->SetControl(*m_ArmActiveTarget);
+	oldPosition = GetElevatorHeight();
 
 	if (m_elevatorRemedialAction)
 	{
 		// set talonfx control to sync encoders
-		m_ElevatorLeader->Set();
+		if (GetElevatorHeight() - oldPosition)
+			m_ElevatorLeader->Set(0.05);
 	}
 	else
 	{

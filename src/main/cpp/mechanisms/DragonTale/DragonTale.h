@@ -270,6 +270,8 @@ private:
 	frc::Pose2d m_robotPose;
 
 	// elevator diagnostics and remedial action variables
+	units::length::inch_t oldPosition;
+
 	const int m_elevatorMaxFails = 5;
 	int m_currElevatorFails;
 	bool m_elevatorRemedialAction;
