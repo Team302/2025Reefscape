@@ -8,6 +8,7 @@ choreoname = "BlueCenter_H"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenter_H"
 time = "3.0">
+<zone filename = "BlueReefDriveToRight.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -18,7 +19,9 @@ time= "3.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_H2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "2.0"/> 
@@ -26,6 +29,7 @@ time = "2.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueLeftCSA_G1"
 time = "3.0">
+<zone filename = "BlueReefDriveToLeft.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -37,7 +41,9 @@ time = "3.0"
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_G2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "2.0"/> 
@@ -45,6 +51,7 @@ time = "2.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_F1"
 time = "3.0">
+<zone filename = "BlueReefDriveToRight.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -55,7 +62,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_F2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
@@ -63,6 +72,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_E1"
 time = "3.0">
+<zone filename = "BlueReefDriveToLeft.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -73,7 +83,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_E2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>

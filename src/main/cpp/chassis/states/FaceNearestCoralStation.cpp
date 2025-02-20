@@ -41,8 +41,6 @@ units::angle::degree_t FaceNearestCoralStation::GetTargetAngle(ChassisMovement &
         if (info.has_value())
         {
             auto targetpose = get<1>(info.value());
-            DragonTargetFinderData type = get<0>(info.value());
-
             chassisMovement.yawAngle = targetpose.Rotation().Degrees();
 
             return chassisMovement.yawAngle;

@@ -5,5 +5,6 @@
     <zone 
         circlex="16.742"
         circley="0.602"
-        radius="2.311" />
+        radius="2.311" 
+        headingOption = "FACE_CORAL_STATION"/>
 </auton>
