@@ -2427,7 +2427,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.1369634</value>
+              <value>0.117432</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -3016,7 +3016,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>83</value>
+                  <value>87</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
