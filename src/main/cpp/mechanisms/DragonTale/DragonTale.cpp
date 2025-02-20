@@ -750,7 +750,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	configs.Feedback.SensorToMechanismRatio = 0.108878152421;
+	configs.Feedback.SensorToMechanismRatio = 0.1086833;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)

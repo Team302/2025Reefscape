@@ -950,7 +950,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.108878152421</value>
+                <value>0.1086833</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
