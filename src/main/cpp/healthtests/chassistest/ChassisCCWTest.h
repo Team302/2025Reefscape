@@ -10,53 +10,26 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
-// OR OTHER DEALINGS IN THE SOFTWARE.
+// OR OTER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
-
-// C++ Libraries
-
-#include "frc/geometry/Pose2d.h"
-
-// Team 302 includes
+#include "chassis/HolonomicDrive.h"
+#include "auton/drivePrimitives/DriveStop.h"
+#include "frc/Timer.h"
+#include "healthtests/DragonTestCase.h"
 #include "chassis/ChassisMovement.h"
-#include "state/State.h"
-
-class SwerveChassis;
-
-class HolonomicDrive : public State
+class ChassisCCWTest : public DragonTestCase
 {
-public:
-    HolonomicDrive();
-    ~HolonomicDrive() = default;
+    ChassisCCWTest();
+    ~ChassisCCWTest() = default;
 
-    void Init() override;
-    void Run() override;
-    void Exit() override;
-    bool AtTarget() override;
+    void SetUp() override;
+    bool Run() override;
+    void CompareAndReport() override;
 
 private:
-    void InitChassisMovement();
-    void InitSpeeds(double forwardScale, double strafeScale, double rotateScale);
-    void ResetPose();
-    void AlignGamePiece();
-    void HoldPosition();
-    void TurnForward();
-    void TurnBackward();
-    void SlowMode();
-    void CheckTipping(bool tippingSelected);
-    void CheckRobotOriented(bool robotOrientedSelected);
-    void PolarDrive();
-
-    void DriveToGamePiece(double forward, double strafe, double rot);
-
     SwerveChassis *m_swerve;
-    ChassisOptionEnums::DriveStateType m_previousDriveState;
-    const double m_slowModeMultiplier = 0.5;
-    bool m_CheckTipping = false;
-    bool m_checkTippingLatch = false;
+    frc::Timer *m_timer;
     ChassisMovement m_moveInfo;
-    bool m_robotOrientedLatch = false;
-    bool m_robotOrientedDrive = false;
+    const units::second_t m_maxtime = units::second_t(10.0);
 };

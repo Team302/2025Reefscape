@@ -12,14 +12,13 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-// C++ Includes
-#include <algorithm>
-#include <string>
 
-#include "auton/drivePrimitives/DriveStop.h"
-#include "chassis/HolonomicDrive.h"
-#include "auton/drivePrimitives/DriveStop.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-
-m_swerve(ChassisConfigMgr::GetInstance()->GetCurrentConfig() != nullptr ? ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis() : nullptr),
-    return m_timer->AdvanceIfElapsed(m_maxTime);
+class ChassisAutonTest
+{
+    ChassisAutonTest();
+    ~ChassisAutonTest() = default;
+    void SetUp();
+    void Init();
+    bool Run();
+    void Finish();
+};

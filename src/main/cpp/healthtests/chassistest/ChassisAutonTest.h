@@ -10,26 +10,5 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
-// OR OTER DEALINGS IN THE SOFTWARE.
+// OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#pragma once
-#include "chassis/HolonomicDrive.h"
-#include "auton/drivePrimitives/DriveStop.h"
-#include "frc/Timer.h"
-#include "healthtests/DragonTestCase.h"
-#include "chassis/ChassisMovement.h"
-class ChassisForwardTest : public DragonTestCase
-{
-    ChassisForwardTest();
-    ~ChassisForwardTest() = default;
-
-    void SetUp() override;
-    bool Run() override;
-    void CompareAndReport() override;
-
-private:
-    SwerveChassis *m_swerve;
-    frc::Timer *m_timer;
-    ChassisMovement m_moveInfo;
-    const units::second_t m_maxtime = units::second_t(10.0);
-};
