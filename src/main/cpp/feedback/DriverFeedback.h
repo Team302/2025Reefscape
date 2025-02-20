@@ -15,7 +15,7 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <feedback/LEDStates.h>
+#include <feedback/DragonLeds.h>
 #include <state/IRobotStateChangeSubscriber.h>
 #include "vision/DragonVision.h"
 
@@ -45,21 +45,24 @@ private:
     bool m_AutonomousEnabled = false;
     bool m_TeleopEnabled = false;
 
-    DragonLeds::Colors oldState = DragonLeds::WHITE;
-    DragonLeds::Colors currentState = DragonLeds::BLACK;
+    frc::Color oldState = frc::Color::kGhostWhite;
+    frc::Color currentState = frc::Color::kBlack;
 
     enum DriverFeedbackStates
     {
         NONE
     };
 
-    LEDStates *m_LEDStates = LEDStates::GetInstance();
+    DragonLeds *m_LEDStates = DragonLeds::GetInstance();
     int m_controllerCounter = 0;
     bool m_rumbleLauncher = false;
     bool m_rumblePlacer = false;
     bool m_rumbleIntake = false;
     int m_rumbleLoopCounter = 0;
     int m_firstloop = true;
+
+    units::time::millisecond_t m_breathingPeriod{100};
+    units::time::millisecond_t m_blinkingPeriod{100};
 
     static DriverFeedback *m_instance;
     RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;

@@ -20,6 +20,20 @@
 #include "feedback/DragonLeds.h"
 #include "utils/logging/debug/Logger.h"
 
+DragonLeds::DragonLeds() : m_addressibleLeds()
+{
+}
+
+DragonLeds *DragonLeds::m_instance = nullptr;
+DragonLeds *DragonLeds::GetInstance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new DragonLeds();
+    }
+    return m_instance;
+}
+
 void DragonLeds::Initialize(int PWMport, int numLeds)
 {
     if (!IsInitialized())
@@ -27,9 +41,11 @@ void DragonLeds::Initialize(int PWMport, int numLeds)
         m_addressibleLeds = new frc::AddressableLED(PWMport);
         m_addressibleLeds->SetLength(numLeds);
 
-        m_ledBuffer.resize(numLeds);
+        m_ledBuffer.resize(numLeds - m_numberofDiagnosticLEDs);
+        if (m_numberofDiagnosticLEDs > 0)
+            m_diagnosticLEDBuffer.resize(m_numberofDiagnosticLEDs);
 
-        setBufferAllLEDsColor(getColorValues(Colors::GREEN));
+        SetSolidColor(frc::Color::kDarkGreen);
         commitLedData();
         setOn();
     }
@@ -53,137 +69,170 @@ void DragonLeds::setOff()
 {
     m_addressibleLeds->Stop();
 }
-
-DragonLeds::DragonLeds() : m_addressibleLeds()
+void DragonLeds::ResetVariables()
 {
-}
-
-DragonLeds *DragonLeds::m_instance = nullptr;
-DragonLeds *DragonLeds::GetInstance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new DragonLeds();
-    }
-    return m_instance;
-}
-
-std::array<int, 3> DragonLeds::getColorValues(Colors c)
-{
-    switch (c)
-    {
-    case RED:
-        return {255, 0, 0};
-    case GREEN:
-        return {0, 255, 0};
-    case BLUE:
-        return {0, 0, 255};
-    case YELLOW:
-        return {255, 160, 0};
-    case PURPLE:
-        return {75, 0, 130};
-    case AZUL:
-        return {0, 255, 255};
-    case WHITE:
-        return {255, 255, 180};
-    case BLACK:
-        return {0, 0, 0};
-    default:
-        return {0, 0, 0};
-    }
-}
-
-std::array<int, 3> DragonLeds::getColorHSV(Colors c)
-{
-    switch (c)
-    {
-    case RED:
-        return {255, 0, 0};
-    case GREEN:
-        return {0, 255, 0};
-    case BLUE:
-        return {0, 0, 255};
-    case YELLOW:
-        return {255, 160, 0};
-    case PURPLE:
-        return {75, 0, 130};
-    case BLACK:
-        return {0, 0, 0};
-    case AZUL:
-        return {180, 255, 255};
-    case WHITE:
-        return {60, 75, 255};
-    default:
-        return {0, 0, 0};
-    }
+    m_loopThroughIndividualLEDs = -1;
+    m_colorLoop = 0;
+    m_timer = 0;
+    m_switchColor = false;
 }
 
 void DragonLeds::commitLedData()
 {
     if (m_ledBuffer.size() > 0)
     {
-        std::span ledSpan{m_ledBuffer.data(), m_ledBuffer.size()};
-        m_addressibleLeds->SetData(ledSpan);
+        m_addressibleLeds->SetData(m_ledBuffer);
     }
-}
 
-void DragonLeds::setBufferAllLEDsColor(std::array<int, 3> color)
-{
-    for (unsigned int i = m_numberofDiagnosticLEDs; i < m_ledBuffer.size(); i++)
+    if (m_diagnosticLEDBuffer.size() > 0)
     {
-        m_ledBuffer[i].SetRGB(color[0], color[1], color[2]);
+        m_addressibleLeds->SetData(m_diagnosticLEDBuffer);
     }
 }
-
-void DragonLeds::setBufferAllLEDsAlternatingColor(std::array<int, 3> color1, std::array<int, 3> color2)
+void DragonLeds::SetSolidColor(frc::Color colar)
 {
-    for (unsigned int i = m_numberofDiagnosticLEDs; i < m_ledBuffer.size(); i++)
+    frc::LEDPattern pattern = frc::LEDPattern::Solid(colar);
+    pattern.ApplyTo(m_ledBuffer);
+}
+
+void DragonLeds::SetAlternatingColor(frc::Color colar1, frc::Color colar2)
+{
+    for (unsigned int i = 0; i < m_ledBuffer.size(); i++)
     {
         if (i % 2 == 0)
-            m_ledBuffer[i].SetRGB(color1[0], color1[1], color1[2]);
+            m_ledBuffer[i].SetLED(colar1);
         else
-            m_ledBuffer[i].SetRGB(color2[0], color2[1], color2[2]);
+            m_ledBuffer[i].SetLED(colar2);
     }
 }
 
-void DragonLeds::setBufferAllLEDsRainbow()
+void DragonLeds::SetScorllingRainbow()
 {
-    for (unsigned int i = m_numberofDiagnosticLEDs; i < m_ledBuffer.size(); i++)
+    units::meter_t kLedSpacing{1 / 120.0};
+    frc::LEDPattern m_rainbow = frc::LEDPattern::Rainbow(255, 128);
+    frc::LEDPattern m_scrollingRainbow = m_rainbow.ScrollAtAbsoluteSpeed(1_mps, kLedSpacing);
+    m_scrollingRainbow.ApplyTo(m_ledBuffer);
+}
+
+void DragonLeds::SetSpecificLED(int id, frc::Color colar)
+{
+    m_ledBuffer[id].SetLED(colar);
+}
+
+void DragonLeds::SetDiagnosticLED(int id, frc::Color colar)
+{
+    m_diagnosticLEDBuffer[id].SetLED(colar);
+}
+
+void DragonLeds::SetBufferAllLEDsBlack()
+{
+    frc::LEDPattern pattern = frc::LEDPattern::Solid(frc::Color::kBlack);
+    pattern.ApplyTo(m_ledBuffer);
+    pattern.ApplyTo(m_diagnosticLEDBuffer);
+}
+
+void DragonLeds::SetBufferAllLEDsColorBrightness(frc::Color colar, double brightness)
+{
+    frc::LEDPattern base = frc::LEDPattern::Solid(colar);
+    frc::LEDPattern pattern = base.AtBrightness(brightness);
+
+    pattern.ApplyTo(m_ledBuffer);
+}
+
+void DragonLeds::SetBreathingPattern(frc::Color colar, units::time::second_t period)
+{
+    frc::LEDPattern base = frc::LEDPattern::Solid(colar);
+    frc::LEDPattern pattern = base.Breathe(period);
+
+    pattern.ApplyTo(m_ledBuffer);
+}
+
+void DragonLeds::SetBlinkingPattern(frc::Color colar, units::time::second_t cycleTime)
+{
+    frc::LEDPattern base = frc::LEDPattern::Solid(colar);
+    frc::LEDPattern pattern = base.Blink(cycleTime);
+
+    pattern.ApplyTo(m_ledBuffer);
+}
+
+void DragonLeds::SetAlternatingColorBlinkingPattern(frc::Color c1, frc::Color c2)
+{
+    if (m_ledBuffer.size() > 0)
     {
-        auto pixelHue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.size())) % 180;
-        m_ledBuffer[i].SetHSV(pixelHue, 255, 128);
+        if (m_timer > 2 * m_blinkPatternPeriod)
+            m_timer = 0;
+
+        int blinkState = (m_timer / m_blinkPatternPeriod) % 2;
+
+        if (blinkState == 0)
+            SetAlternatingColor(c1, c2);
+        else
+            SetAlternatingColor(c2, c1);
+
+        m_timer++;
     }
-    m_rainbowFirstPixelHue += 3;
-    m_rainbowFirstPixelHue %= 180;
 }
 
-void DragonLeds::setSpecificLED(int id, std::array<int, 3> color)
+void DragonLeds::SetChaserPattern(frc::Color c)
 {
-    if (id > m_numberofDiagnosticLEDs)
+    if (m_ledBuffer.size() > 0)
     {
-        m_ledBuffer[id].SetRGB(color[0], color[1], color[2]);
+        m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < static_cast<int>(m_ledBuffer.size()) - 1 ? 1 : -m_loopThroughIndividualLEDs;
+        if (!m_switchColor)
+        {
+            m_lastColor = m_lastColor == c ? frc::Color::kBlack : c;
+        }
+        m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_ledBuffer.size()) - 1;
+        SetSpecificLED(m_loopThroughIndividualLEDs, c);
     }
 }
 
-void DragonLeds::setDiagnosticLED(int id, std::array<int, 3> color)
+void DragonLeds::SetClosingInChaserPattern(frc::Color c)
 {
-    if (id <= m_numberofDiagnosticLEDs)
+    if (m_ledBuffer.size() > 0)
     {
-        m_ledBuffer[id].SetRGB(color[0], color[1], color[2]);
+        if (m_timer == 7)
+        {
+            int halfLength = (m_ledBuffer.size() - 1) / 2;
+            m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < halfLength ? 1 : -m_loopThroughIndividualLEDs;
+            int loopout = (m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
+            auto color = m_colorLoop >= 0 ? c : frc::Color::kBlack;
+            m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
+            SetSpecificLED(m_loopThroughIndividualLEDs, color);
+            SetSpecificLED(loopout, color);
+
+            m_timer = 0;
+        }
+        m_timer++;
     }
 }
 
-void DragonLeds::setBufferAllLEDsBlack()
+void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
-    setBufferAllLEDsColor(getColorValues(BLACK));
-}
+    auto allianceColor = alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue : frc::Color::kRed;
+    SetDiagnosticLED(m_diagnosticLED0, allianceColor);
 
-void DragonLeds::setBufferAllLEDsColorBrightness(Colors c, int brightness)
-{
-    std::array<int, 3U> hsvColor = getColorHSV(c);
-    hsvColor[2] = brightness;
-    for (unsigned int i = m_numberofDiagnosticLEDs; i < m_ledBuffer.size(); i++)
-    {
-        m_ledBuffer[i].SetHSV(hsvColor[0], hsvColor[1], hsvColor[2]);
-    }
+    auto coralInSensorcolor = coralInSensor ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED1, coralInSensorcolor);
+
+    auto coralOutSensorcolor = coralOutSensor ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED2, coralOutSensorcolor);
+
+    auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED3, algaeSensorcolor);
+
+    auto intakesensorcolor = intakesensor ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED4, intakesensorcolor);
+
+    auto questStatuscolor = questStatus ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
+    SetDiagnosticLED(m_diagnosticLED5, questStatuscolor);
+
+    auto ll1Statuscolor = ll1Status ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
+    SetDiagnosticLED(m_diagnosticLED6, ll1Statuscolor);
+
+    auto ll2Statuscolor = ll2Status ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED7, ll2Statuscolor);
+
+    auto pigeonfaultscolor = pigeonfaults ? frc::Color::kYellow : frc::Color::kBlack;
+    SetDiagnosticLED(m_diagnosticLED8, pigeonfaultscolor);
 }
