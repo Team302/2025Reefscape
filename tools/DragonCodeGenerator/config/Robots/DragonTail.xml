@@ -264,6 +264,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
     <MotorController
       xsi:type="TalonFX">
@@ -526,6 +549,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
     <MotorController
       xsi:type="TalonSRX">
@@ -959,6 +1005,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
     <MotorController
       xsi:type="TalonFX">
@@ -1220,6 +1289,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
     <MotorController
       xsi:type="TalonFXS">
@@ -1481,6 +1573,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
     <MotorController
       xsi:type="TalonFXS">
@@ -1742,6 +1857,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
   </MotorControllers>
   <closedLoopControlParameters />
@@ -4357,4 +4495,8 @@
       </motorTargets>
     </state>
   </states>
+  <doubleParameters />
+  <boolParameters />
+  <constDoubleParameters />
+  <constBoolParameters />
 </mechanism>

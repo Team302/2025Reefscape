@@ -277,6 +277,29 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
         </MotorControllers>
         <closedLoopControlParameters />
@@ -589,6 +612,10 @@
             </motorTargets>
           </state>
         </states>
+        <doubleParameters />
+        <boolParameters />
+        <constDoubleParameters />
+        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
     <mechanismInstance>
@@ -784,14 +811,14 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>2</value>
               </remoteForwardSensorID>
               <forwardResetPosition>
                 <unitsFamily>none</unitsFamily>
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </forwardResetPosition>
               <forwardPosition>
                 <unitsFamily>angle</unitsFamily>
@@ -800,7 +827,7 @@
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
-              <forwardType>LimitSwitchPin</forwardType>
+              <forwardType>RemoteCANdiS1</forwardType>
               <forwardOpenClose>NormallyOpen</forwardOpenClose>
               <enableReverse>
                 <unitsFamily>none</unitsFamily>
@@ -814,14 +841,14 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>2</value>
               </remoteReverseSensorID>
               <reverseResetPosition>
                 <unitsFamily>none</unitsFamily>
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </reverseResetPosition>
               <reversePosition>
                 <unitsFamily>angle</unitsFamily>
@@ -830,7 +857,7 @@
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
-              <revType>LimitSwitchPin</revType>
+              <revType>RemoteCANdiS2</revType>
               <revOpenClose>NormallyOpen</revOpenClose>
             </theConfigHWLimitSW>
             <theConfigMotorSettings>
@@ -858,6 +885,30 @@
               <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <Mode>Normal</Mode>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>turns/s</__units__>
+                <type>Double</type>
+                <value>150</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>turns/s^2</__units__>
+                <type>Double</type>
+                <value>100</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
           <MotorController xsi:type="TalonFX">
             <name>ElevatorLeader</name>
@@ -1046,7 +1097,7 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>1</value>
               </remoteForwardSensorID>
               <forwardResetPosition>
                 <unitsFamily>none</unitsFamily>
@@ -1062,7 +1113,7 @@
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
-              <forwardType>LimitSwitchPin</forwardType>
+              <forwardType>RemoteCANdiS1</forwardType>
               <forwardOpenClose>NormallyOpen</forwardOpenClose>
               <enableReverse>
                 <unitsFamily>none</unitsFamily>
@@ -1076,7 +1127,7 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>1</value>
               </remoteReverseSensorID>
               <reverseResetPosition>
                 <unitsFamily>none</unitsFamily>
@@ -1092,7 +1143,7 @@
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
-              <revType>LimitSwitchPin</revType>
+              <revType>RemoteCANdiS2</revType>
               <revOpenClose>NormallyOpen</revOpenClose>
             </theConfigHWLimitSW>
             <theConfigMotorSettings>
@@ -1119,6 +1170,29 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
           <MotorController xsi:type="TalonSRX">
             <name>Coral</name>
@@ -1550,6 +1624,29 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
           <MotorController xsi:type="TalonFX">
             <name>ElevatorFollower</name>
@@ -1737,7 +1834,7 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>1</value>
               </remoteForwardSensorID>
               <forwardResetPosition>
                 <unitsFamily>none</unitsFamily>
@@ -1753,7 +1850,7 @@
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
-              <forwardType>LimitSwitchPin</forwardType>
+              <forwardType>RemoteCANdiS1</forwardType>
               <forwardOpenClose>NormallyOpen</forwardOpenClose>
               <enableReverse>
                 <unitsFamily>none</unitsFamily>
@@ -1767,7 +1864,7 @@
                 <name>intParameter</name>
                 <__units__ />
                 <type>Int32</type>
-                <value>0</value>
+                <value>1</value>
               </remoteReverseSensorID>
               <reverseResetPosition>
                 <unitsFamily>none</unitsFamily>
@@ -1783,7 +1880,7 @@
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
-              <revType>LimitSwitchPin</revType>
+              <revType>RemoteCANdiS2</revType>
               <revOpenClose>NormallyOpen</revOpenClose>
             </theConfigHWLimitSW>
             <theConfigMotorSettings>
@@ -1811,6 +1908,29 @@
               <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
           <MotorController xsi:type="TalonFXS">
             <name>Coral</name>
@@ -2071,6 +2191,30 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
+            <MotorArrangementValue>Minion_JST</MotorArrangementValue>
           </MotorController>
           <MotorController xsi:type="TalonFXS">
             <name>Algae</name>
@@ -2332,6 +2476,30 @@
               <inverted>Clockwise_Positive</inverted>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
+            <MotorArrangementValue>Minion_JST</MotorArrangementValue>
           </MotorController>
         </MotorControllers>
         <closedLoopControlParameters />
@@ -4980,6 +5148,10 @@
             </motorTargets>
           </state>
         </states>
+        <doubleParameters />
+        <boolParameters />
+        <constDoubleParameters />
+        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
     <mechanismInstance>
@@ -5246,6 +5418,29 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
           <MotorController xsi:type="TalonFXS">
             <name>Extender</name>
@@ -5505,6 +5700,29 @@
               </peakReverseDutyCycle>
               <mode>Brake</mode>
             </theConfigMotorSettings>
+            <MotionMagicSettings>
+              <CruiseVelocity>
+                <unitsFamily>angularVelocity</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </CruiseVelocity>
+              <Acceleration>
+                <unitsFamily>angularAcceleration</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^2</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Acceleration>
+              <Jerk>
+                <unitsFamily>angularJerk</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__>rad/s^3</__units__>
+                <type>Double</type>
+                <value>0</value>
+              </Jerk>
+            </MotionMagicSettings>
           </MotorController>
         </MotorControllers>
         <closedLoopControlParameters />
@@ -6130,6 +6348,10 @@
             </motorTargets>
           </state>
         </states>
+        <doubleParameters />
+        <boolParameters />
+        <constDoubleParameters />
+        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
   </mechanismInstances>
