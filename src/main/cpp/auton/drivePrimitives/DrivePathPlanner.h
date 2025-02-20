@@ -26,7 +26,7 @@
 #include "chassis/SwerveChassis.h"
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
-#include "chassis/states/TrajectoryDrivePathplanner.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "auton/drivePrimitives/DriveToHelper.h"
 #include "utils/logging/signals/DragonDataLogger.h"
