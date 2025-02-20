@@ -6,6 +6,7 @@
         circlex="13.036"
         circley="4.038"
         radius="83.7402" 
-        pathUpdateOption="LEFT_REEF_BRANCH"/>
-        <!-- taleOption="STATE_L4SCORING_POSITION" -->
+        taleOption="STATE_L4SCORING_POSITION"/> 
+        <!-- we may need to make a new zone for the drive to... -->
+        <!-- pathUpdateOption="RIGHT_REEF_BRANCH"/> -->
 </auton>

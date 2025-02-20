@@ -108,6 +108,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
 
+    if (!params->GetZones().empty())
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone updateOption", "option", params->GetZones()[0]->getPathUpdateOption());
+
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
     {
@@ -123,14 +126,15 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
-    m_isVisionDrive = (m_pathname == "RIGHT_REEF_BRANCH");
+    m_isVisionDrive = false;
     m_visionAlignment = params->GetVisionAlignment();
 
     m_checkForDriveToReef = m_zone != nullptr;
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
-    if (m_zone != nullptr)
-        m_driveToInfo = m_updateOptionToTrajMap[params->GetZones()[m_zoneUpdateOptionIndex]->getPathUpdateOption()];
+
+    if (m_checkForDriveToReef)
+        m_driveToInfo = m_updateOptionToTrajMap[params->GetZones()[index]->getPathUpdateOption()];
     // Start timeout timer for path
 
     InitMoveInfo();
@@ -229,6 +233,7 @@ void DrivePathPlanner::CheckForDriveToReefBranch()
     bool isInZone = false;
     if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
     {
+
         if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
         {
             isInZone = AutonGrid::GetInstance()->IsPoseInZone(m_zone->getCircleZonePose(),

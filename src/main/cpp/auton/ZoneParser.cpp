@@ -315,7 +315,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
-                else if (strcmp(attr.name(), "updateOption") == 0)
+                else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                 {
                     auto itr = xmlStringToPathUpdateOptionMap.find(attr.value());
                     if (itr != xmlStringToPathUpdateOptionMap.end())
