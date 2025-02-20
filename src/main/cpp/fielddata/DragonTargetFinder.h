@@ -69,6 +69,8 @@ private:
     frc::Pose2d GetVisonPose(VisionData data);
     bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
 
+    void SetChassis();
+
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
 };

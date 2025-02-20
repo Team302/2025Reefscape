@@ -226,7 +226,6 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
@@ -235,6 +234,7 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
     m_dragonPower = DragonPower::GetInstance();
 
     // initialize cameras
