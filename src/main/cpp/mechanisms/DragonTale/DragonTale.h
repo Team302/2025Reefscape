@@ -268,4 +268,11 @@ private:
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 	frc::Pose2d m_robotPose;
+
+	// elevator diagnostics and remedial action variables
+	const int m_elevatorMaxFails = 5;
+	int m_currElevatorFails;
+	bool m_elevatorRemedialAction;
+	units::length::inch_t m_elevatorFailureHeight;
+	const units::length::inch_t m_elevatorRemedialThreshold{0.5};
 };

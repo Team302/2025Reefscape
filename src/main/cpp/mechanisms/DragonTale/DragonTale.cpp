@@ -974,7 +974,17 @@ void DragonTale::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE i
 void DragonTale::Update()
 {
 	m_Arm->SetControl(*m_ArmActiveTarget);
-	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
+
+	if (m_elevatorRemedialAction)
+	{
+		// set talonfx control to sync encoders
+		m_ElevatorLeader->Set();
+	}
+	else
+	{
+		// normal elevator control
+		m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
+	}
 
 	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 	{
@@ -985,6 +995,44 @@ void DragonTale::Update()
 	{
 		m_CoralTalonFXS->SetControl(*m_CoralTalonFXSActiveTarget);
 		m_AlgaeTalonFXS->SetControl(*m_AlgaeTalonFXSActiveTarget);
+	}
+
+	// TODO move check to beginning?
+	// TODO add detection logic
+	bool elevatorInSync = true;
+
+	// m_ElevatorLeader->GetVelocity
+	// m_ElevatorLeader->GetRotorVelocity
+
+	if (m_elevatorRemedialAction)
+	{
+		// TODO check if encoders are in sync
+		bool remedialActionDone = elevatorInSync && units::math::abs(m_elevatorFailureHeight - GetElevatorHeight()) < m_elevatorRemedialThreshold;
+		if (remedialActionDone)
+		{
+			// when we are back in sync, go to ready
+			SetCurrentState(STATE_NAMES::STATE_READY, true);
+			// set target to current height to prevent elevator from collapsing immediately
+			SetElevatorTarget(GetElevatorHeight());
+			m_currElevatorFails = 0;
+		}
+	}
+	else
+	{
+		// increment failure count and check if remedial action required
+		if (!elevatorInSync)
+		{
+			if (++m_currElevatorFails > m_elevatorMaxFails)
+			{
+				m_elevatorRemedialAction = true;
+				m_elevatorFailureHeight = GetElevatorHeight();
+			}
+		}
+		// reset failure count
+		else
+		{
+			m_currElevatorFails = 0;
+		}
 	}
 }
 
