@@ -136,26 +136,26 @@
       <wpiClassName>units::angular_velocity::degrees_per_second_t</wpiClassName>
     </physicalUnit>
     <physicalUnit>
-      <shortName>deg/s</shortName>
+      <shortName>turns/s</shortName>
       <longName>turns per second</longName>
       <family>angularVelocity</family>
-      <wpiClassName>units::angular_velocity::degrees_per_second_t</wpiClassName>
+      <wpiClassName>units::angular_velocity::turns_per_second_t</wpiClassName>
     </physicalUnit>
     <physicalUnit>
       <shortName>rad/s^3</shortName>
-      <longName>radians per second</longName>
+      <longName>radians per second cubed</longName>
       <family>angularJerk</family>
       <wpiClassName>units::angular_jerk::radians_per_second_cubed_t</wpiClassName>
     </physicalUnit>
     <physicalUnit>
       <shortName>deg/s^3</shortName>
-      <longName>degrees per second</longName>
+      <longName>degrees per second cubed</longName>
       <family>angularJerk</family>
       <wpiClassName>units::angular_jerk::degrees_per_second_cubed_t</wpiClassName>
     </physicalUnit>
     <physicalUnit>
-      <shortName>deg/s^3</shortName>
-      <longName>turns per second</longName>
+      <shortName>turn/s^3</shortName>
+      <longName>turns per second cubed</longName>
       <family>angularJerk</family>
       <wpiClassName>units::angular_jerk::turns_per_second_cubed_t</wpiClassName>
     </physicalUnit>
