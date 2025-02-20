@@ -49,7 +49,7 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 																											   m_chassisoption(autonchassisoption),
 																											   m_headingOption(headingOption),
 																											   m_avoidoption(autonavoidoption),
-																											   m_updateOption(updateOption),
+																											   m_pathUpdateOption(pathUpdateOption),
 																											   m_zoneMode(zoneMode),
 																											   m_circlePose(circlePose),
 																											   m_radius(radius)
