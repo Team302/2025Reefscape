@@ -86,8 +86,10 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
 
 pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
+    targetPose = frc::Pose2d(targetPose.X(), targetPose.Y(), targetPose.Rotation().Degrees() - 180_deg);
+
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("coral pose", targetPose);
+    DragonVisionStructLogger::logPose2d("Left Branch pose", targetPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
     std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
