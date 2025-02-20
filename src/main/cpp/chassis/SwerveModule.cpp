@@ -33,6 +33,7 @@
 #include "chassis/SwerveModuleConstants.h"
 #include "utils/AngleUtils.h"
 #include "utils/logging/debug/Logger.h"
+#include "utils/DragonPower.h"
 
 // Third Party Includes
 #include "ctre/phoenix6/CANcoder.hpp"
@@ -413,4 +414,13 @@ void SwerveModule::InitSteerMotorEncoder(bool turnInverted,
 
         m_steerCancoder->GetConfigurator().Apply(ccConfigs);
     }
+}
+
+std::tuple<double, double> SwerveModule::CalcSteerPowerEnergy(units::time::second_t deltaTime)
+{
+    return DragonPower::CalcPowerEnergy(deltaTime, m_steerTalon->GetSupplyVoltage().GetValueAsDouble(), m_steerTalon->GetSupplyCurrent().GetValueAsDouble());
+}
+std::tuple<double, double> SwerveModule::CalcDrivePowerEnergy(units::time::second_t deltaTime)
+{
+    return DragonPower::CalcPowerEnergy(deltaTime, m_driveTalon->GetSupplyVoltage().GetValueAsDouble(), m_driveTalon->GetSupplyCurrent().GetValueAsDouble());
 }

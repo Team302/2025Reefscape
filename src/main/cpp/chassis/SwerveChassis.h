@@ -191,4 +191,8 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
+
+    double m_totalEnergy = 0.0;
+    double m_totalWattHours = 0.0;
+    frc::Timer m_powerTimer;
 };
