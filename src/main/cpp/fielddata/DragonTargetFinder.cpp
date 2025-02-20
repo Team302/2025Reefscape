@@ -74,13 +74,14 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
             bool switchToVision = SwitchToVision(visTagPose);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", switchToVision ? "true" : "false");
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
                 if (switchToVision)
                 {
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
-                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Dragon Target Finder", "Field Realitve Angle", fieldRelativeAngle.value());
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
@@ -273,6 +274,8 @@ frc::Pose2d DragonTargetFinder::GetVisonPose(VisionData data)
 
 bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) // TODO: Update when we switch to ML and raw vision correction on reef sticks
 {
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "visTagPose has value", visTagPose.has_value() ? "true" : "false");
+
     if (visTagPose.has_value())
     {
         frc::Pose2d currentPose = m_chassis->GetPose();
@@ -284,4 +287,12 @@ bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) /
         }
     }
     return false;
+}
+
+void DragonTargetFinder::SetChassis()
+{
+    if (m_chassis == nullptr)
+    {
+        m_chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+    }
 }
