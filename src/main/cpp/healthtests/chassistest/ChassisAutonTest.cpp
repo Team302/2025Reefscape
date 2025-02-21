@@ -12,13 +12,19 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
-class ChassisAutonTest
+#include "healthtests/chassistest/ChassisAutonTest.h"
+ChassisAutonTest::ChassisAutonTest()
 {
-    ChassisAutonTest();
-    ~ChassisAutonTest() = default;
-    void SetUp();
-    void Init();
-    bool Run();
-    void Finish();
+}
+
+void ChassisAutonTest::SetUp()
+{
+}
+
+bool ChassisAutonTest::Run()
+{
+}
+
+void ChassisAutonTest::CompareAndReport() {
+
 };

@@ -23,6 +23,7 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "ChassisCWTest.h"
 #include "teleopcontrol/TeleopControl.h"
+#include "utils/logging/Logger.h"
 
 ChassisCWTest::ChassisCWTest() : DragonTestCase(std::string("drive"), std::string("CW"))
 {
@@ -32,9 +33,12 @@ ChassisCWTest::ChassisCWTest() : DragonTestCase(std::string("drive"), std::strin
 }
 void ChassisCWTest::SetUp()
 {
+
+    m_orignalPose = m_swerve->GetPose();
+
     m_timer->Reset();
     m_timer->Start();
-    m_moveInfo.rawX = 0.0;
+    m_moveInfo.rawX = 1.0;
     m_moveInfo.rawY = 0.0;
     m_moveInfo.rawOmega = 0.0;
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
@@ -42,16 +46,12 @@ void ChassisCWTest::SetUp()
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = units::angle::degree_t(0.0);
     m_moveInfo.checkTipping = false;
     m_moveInfo.tippingTolerance = units::angle::degree_t(5.0);
     m_moveInfo.tippingCorrection = -0.1;
     m_moveInfo.targetPose = frc::Pose2d();
-    m_moveInfo.rawX = 1.0;
-    m_moveInfo.rawY = 0;
-    m_moveInfo.rawOmega = 0;
 }
 bool ChassisCWTest::Run()
 {
@@ -66,4 +66,9 @@ bool ChassisCWTest::Run()
 }
 void ChassisCWTest::CompareAndReport()
 {
-}
+
+    auto pose = m_swerve->GetPose();
+    auto distance = pose.Translation().Distance();
+
+    Logger::GetLogger()->LogData();
+};

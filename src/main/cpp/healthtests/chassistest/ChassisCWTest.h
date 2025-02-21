@@ -19,7 +19,10 @@
 #include "healthtests/DragonTestCase.h"
 #include "chassis/ChassisMovement.h"
 #include "auton/drivePrimitives/DrivePathPlanner.h"
-class ChassisCWTest : public DragonTestCase
+#include "utils/logging/DragonDataLogger.h"
+#include "frc/geometry/Pose2d.h"
+
+class ChassisCWTest : public DragonTestCase, public DragonDataLogger
 {
     ChassisCWTest();
     ~ChassisCWTest() = default;
@@ -34,4 +37,6 @@ private:
     ChassisMovement m_moveInfo;
     const units::second_t m_maxtime = units::second_t(10.0);
     DrivePathPlanner *m_drivePathPlanner;
+
+    frc::Pose2d m_orignalPose;
 };
