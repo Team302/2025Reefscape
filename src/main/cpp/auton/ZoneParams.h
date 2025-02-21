@@ -44,7 +44,7 @@ public:
                DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::HeadingOption headingOption,
-               PATH_UPDATE_OPTION updateOption,
+               PATH_UPDATE_OPTION pathUpdateOption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
@@ -85,7 +85,7 @@ private:
     ChassisOptionEnums::HeadingOption m_headingOption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
 
-    PATH_UPDATE_OPTION m_updateOption;
+    PATH_UPDATE_OPTION m_pathUpdateOption;
 
     AutonGrid::ZoneMode m_zoneMode;
 

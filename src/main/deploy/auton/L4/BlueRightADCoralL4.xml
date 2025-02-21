@@ -9,6 +9,7 @@ choreoname= "BlueRightOutside_A"
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueRightOutside_A"
 time = "3.0">
+<zone filename = "BlueReefDriveToLeft.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -19,7 +20,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueRightCSA_A2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
@@ -27,6 +30,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_B1"
 time = "3.0">
+<zone filename = "BlueReefDriveToRight.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -37,7 +41,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_B2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
@@ -45,6 +51,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_C1"
 time= "3.0">
+<zone filename = "BlueReefDriveToRight.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -55,7 +62,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_C2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time= "3.0"/>
+time= "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
@@ -63,6 +72,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D1"
 time = "3.0">
+<zone filename = "BlueReefDriveToRight.xml"/>
 <zone filename = "BlueReefPlacerZones.xml"/>
 </primitive>
 
@@ -73,7 +83,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "BlueRightHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>

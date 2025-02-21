@@ -24,8 +24,6 @@
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
-#include "utils/DragonPower.h"
-#include "utils/DragonPower.h"
 #include "utils/logging/debug/LoggableItemMgr.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -234,8 +232,6 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
-    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
-    m_dragonPower = DragonPower::GetInstance();
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));

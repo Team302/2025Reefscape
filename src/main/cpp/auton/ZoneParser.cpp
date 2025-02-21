@@ -133,13 +133,13 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"FACE_CORAL_STATION", ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION},
         {"IGNORE", ChassisOptionEnums::HeadingOption::IGNORE}};
 
-    static std::map<string, PATH_UPDATE_OPTION> xmlStringToUpdateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
-                                                                           {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
-                                                                           {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
-                                                                           {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
-                                                                           {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
-                                                                           {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
-                                                                           {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
+    static std::map<string, PATH_UPDATE_OPTION> xmlStringToPathUpdateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                                               {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                                               {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                                               {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                                               {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                                               {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                               {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
 
     static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
         {"PODIUM", ChassisOptionEnums::AutonAvoidOptions::PODIUM},
@@ -317,8 +317,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 }
                 else if (strcmp(attr.name(), "updateOption") == 0)
                 {
-                    auto itr = xmlStringToUpdateOptionMap.find(attr.value());
-                    if (itr != xmlStringToUpdateOptionMap.end())
+                    auto itr = xmlStringToPathUpdateOptionMap.find(attr.value());
+                    if (itr != xmlStringToPathUpdateOptionMap.end())
                     {
                         chosenUpdateOption = itr->second;
                     }

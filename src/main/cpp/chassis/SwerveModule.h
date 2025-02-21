@@ -111,7 +111,8 @@ public:
 
     pathplanner::ModuleConfig GetModuleConfig() { return m_moduleConfig; }
 
-    // std::optional<uint16_t> GetLaserValue();
+    std::tuple<double, double> CalcSteerPowerEnergy(units::time::second_t deltaTime);
+    std::tuple<double, double> CalcDrivePowerEnergy(units::time::second_t deltaTime);
 
 private:
     void InitDriveMotor(bool inverted);

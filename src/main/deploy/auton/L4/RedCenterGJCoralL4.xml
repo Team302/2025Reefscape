@@ -8,6 +8,7 @@ choreoname = "BlueInside_G"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueInside_G"
 time = "3.0">
+<zone filename = "RedReefDriveToLeft.xml"/>
 <zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
@@ -18,7 +19,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_G2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/> 
@@ -26,6 +29,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueLeftCSA_H1"
 time = "3.0">
+<zone filename = "RedReefDriveToRight.xml"/>
 <zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
@@ -36,7 +40,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_H2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/> 
@@ -44,6 +50,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I1"
 time = "3.0">
+<zone filename = "RedReefDriveToLeft.xml"/>
 <zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
@@ -54,7 +61,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
@@ -62,6 +71,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J1"
 time = "3.0">
+<zone filename = "RedReefDriveToRight.xml"/>
 <zone filename = "RedReefPlacerZones.xml"/>
 </primitive>
 
@@ -72,7 +82,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_J2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "3.0"/>
+time = "3.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "1.0"/>
