@@ -206,7 +206,6 @@ void DrivePathPlanner::CheckForDriveToReefBranch()
             auto distanceToBranch = chassispose.Translation().Distance(branchPose.Translation());
 
             auto currentTime = m_timer.get()->Get();
-            auto percent = currentTime.value() / m_totalTrajectoryTime.value();
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "time:", currentTime.value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Done Percent:", static_cast<double>((currentTime.value()) / m_totalTrajectoryTime.value()));
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Distance: ", distanceToBranch.value());
