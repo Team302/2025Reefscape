@@ -31,18 +31,19 @@ using std::string;
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
-    auto finder = DragonTargetFinder::GetInstance();
-    if (finder != nullptr)
-    {
-        auto info = finder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
-        m_reefCenter = get<1>(info.value());
-    }
+    m_fmsData = FMSData::GetInstance();
+    m_targetFinder = DragonTargetFinder::GetInstance();
 }
 
 void PolarDrive::Init(ChassisMovement &chassismovement)
 {
     if (m_chassis != nullptr)
     {
+        if (m_targetFinder != nullptr)
+        {
+            auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
+            m_reefCenter = get<1>(info.value());
+        }
         frc::Pose2d currentPose = m_chassis->GetPose();
         units::length::meter_t xDiff = currentPose.X() - m_reefCenter.X();
         units::length::meter_t yDiff = currentPose.Y() - m_reefCenter.Y();
@@ -74,8 +75,14 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
         double vxNew = radialVelocity * units::math::cos(angle).value() - (m_radiusTarget.value() * angularVelocity * units::math::sin(angle).value());
         double vyNew = radialVelocity * units::math::sin(angle).value() + (m_radiusTarget.value() * angularVelocity * units::math::cos(angle).value());
 
-        chassisSpeeds.vx = units::velocity::meters_per_second_t(-vxNew);
-        chassisSpeeds.vy = units::velocity::meters_per_second_t(-vyNew);
+        // negative for blue and positive for red
+        if (m_fmsData->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+        {
+            vxNew = -vxNew;
+            vyNew = -vyNew;
+        }
+        chassisSpeeds.vx = units::velocity::meters_per_second_t(vxNew);
+        chassisSpeeds.vy = units::velocity::meters_per_second_t(vyNew);
 
         auto rot2d = Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
