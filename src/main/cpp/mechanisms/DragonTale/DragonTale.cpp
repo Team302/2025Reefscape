@@ -698,7 +698,7 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 180;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = 150_tps;
+	configs.MotionMagic.MotionMagicCruiseVelocity = 200_tps;
 	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
