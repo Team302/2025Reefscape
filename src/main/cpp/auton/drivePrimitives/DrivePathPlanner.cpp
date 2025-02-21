@@ -74,8 +74,6 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-    // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
 }
 void DrivePathPlanner::InitMap()
 {
@@ -96,7 +94,7 @@ int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
 {
     for (auto i = 0; i < zones.size(); i++)
     {
-        if (zones[i]->getPathUpdateOption() != NOTHING)
+        if (zones[i]->GetPathUpdateOption() != NOTHING)
         {
             return i;
         }
@@ -109,7 +107,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_zone = nullptr;
 
     if (!params->GetZones().empty())
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone updateOption", "option", params->GetZones()[0]->getPathUpdateOption());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone updateOption", "option", params->GetZones()[0]->GetPathUpdateOption());
 
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
@@ -134,7 +132,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
     if (m_checkForDriveToReef)
-        m_driveToInfo = m_updateOptionToTrajMap[params->GetZones()[index]->getPathUpdateOption()];
+        m_driveToInfo = m_updateOptionToTrajMap[params->GetZones()[index]->GetPathUpdateOption()];
     // Start timeout timer for path
 
     InitMoveInfo();
@@ -163,7 +161,6 @@ void DrivePathPlanner::InitMoveInfo()
 
     if (m_isVisionDrive)
     {
-        // m_driveToNote = dynamic_cast<DriveToNote *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE));
         trajectory = std::get<TrajectoryDrivePathPlanner *>(m_driveToInfo)->CreateTrajectory();
 
         m_moveInfo.driveOption = std::get<ChassisOptionEnums::DriveStateType>(m_driveToInfo);
@@ -214,7 +211,7 @@ bool DrivePathPlanner::IsDone()
 
     if (m_checkForDriveToReef && !m_isVisionDrive)
     {
-        CheckForDriveToReefBranch();
+        CheckForDriveTo();
     }
 
     if (m_isVisionDrive)
@@ -226,38 +223,13 @@ bool DrivePathPlanner::IsDone()
     return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
 }
 
-// TODO rework for REEF, CORAL_STATION and later PROCESSOR and ALGAE
-void DrivePathPlanner::CheckForDriveToReefBranch()
+void DrivePathPlanner::CheckForDriveTo()
 {
-    // Need to check if there is a Reef Branch
-    bool isInZone = false;
-    if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
-    {
-
-        if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
-        {
-            isInZone = AutonGrid::GetInstance()->IsPoseInZone(m_zone->getCircleZonePose(),
-                                                              m_zone->getRadius(),
-                                                              m_chassis->GetPose());
-        }
-        else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
-        {
-            isInZone = AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
-                                                              m_zone->GetXGrid2(),
-                                                              m_zone->GetYGrid1(),
-                                                              m_zone->GetYGrid2(),
-                                                              m_chassis->GetPose());
-        }
-    }
-
-    if (isInZone) // switch to drive to Reef Branch
+    if (IsInZone()) // switch to the selected drive to option
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Branch", "Switch to Drive To Reef Branch: ", true);
 
         m_isVisionDrive = true;
-
-        // Do we really need to change the pathname?
-        m_pathname = "RIGHT_REEF_BRANCH";
 
         // will come back to later
         m_visionAlignment = PrimitiveParams::VISION_ALIGNMENT::REEF;
@@ -267,4 +239,26 @@ void DrivePathPlanner::CheckForDriveToReefBranch()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
     }
+}
+bool DrivePathPlanner::IsInZone()
+{
+    if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
+    {
+
+        if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
+        {
+            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetCircleZonePose(),
+                                                          m_zone->GetRadius(),
+                                                          m_chassis->GetPose());
+        }
+        else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
+        {
+            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
+                                                          m_zone->GetXGrid2(),
+                                                          m_zone->GetYGrid1(),
+                                                          m_zone->GetYGrid2(),
+                                                          m_chassis->GetPose());
+        }
+    }
+    return false;
 }

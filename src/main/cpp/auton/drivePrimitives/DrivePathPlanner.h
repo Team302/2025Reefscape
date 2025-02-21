@@ -28,7 +28,6 @@
 #include "chassis/states/DriveToLeftReefBranch.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
-#include "auton/drivePrimitives/DriveToHelper.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 #include "utils/logging/signals/DragonDataLogger.h"
@@ -58,10 +57,9 @@ public:
 private:
     void InitMoveInfo();
     void InitMap();
+    bool IsInZone();
 
-    void CheckForDriveToReefBranch();
-    // void CheckForDriveToNote();
-    // bool ShouldConsiderNote(units::length::meter_t xposition);
+    void CheckForDriveTo();
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
@@ -84,7 +82,6 @@ private:
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
-    DriveToHelper *m_driveToHelper;
     PATH_UPDATE_OPTION m_updateOption;
 
     std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType>> m_updateOptionToTrajMap;
