@@ -24,6 +24,7 @@
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
 #include "utils/FMSData.h"
+#include "fielddata/DragonTargetFinder.h"
 
 class PolarDrive : public RobotDrive
 {
