@@ -23,6 +23,7 @@
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
+#include "utils/FMSData.h"
 
 class PolarDrive : public RobotDrive
 {
@@ -39,4 +40,6 @@ private:
     double m_loopRate = 0.02;
     units::length::meter_t m_radiusTarget{5.0};
     frc::Pose2d m_reefCenter;
+    FMSData *m_fmsData;
+    DragonTargetFinder *m_targetFinder;
 };
