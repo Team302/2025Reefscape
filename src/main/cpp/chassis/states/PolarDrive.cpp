@@ -49,8 +49,6 @@ void PolarDrive::Init(ChassisMovement &chassismovement)
         units::length::meter_t yDiff = currentPose.Y() - m_reefCenter.Y();
 
         m_radiusTarget = units::math::hypot(xDiff, yDiff);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "polarlog", "radTarget", m_radiusTarget.value());
-        // Delete this logging once it works
     }
 }
 
@@ -66,9 +64,6 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
         units::length::meter_t yDiff = currentPose.Y() - m_reefCenter.Y();
 
         units::angle::degree_t angle = units::math::atan2(yDiff, xDiff);
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "polarlog", "Logatan", angle.value());
-        // Delete this logging once it works
 
         double radialVelocity = abs((chassisSpeeds.vx / m_chassis->GetMaxSpeed()).value()) > 0.25 ? chassisSpeeds.vx.value() : 0;
         m_radiusTarget += units::length::meter_t(radialVelocity * m_loopRate);
