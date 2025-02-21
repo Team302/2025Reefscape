@@ -24,6 +24,7 @@
 #include "units/angular_acceleration.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/DataLogManager.h"
+#include "frc/Timer.h"
 
 // Team 302 includes
 #include "chassis/states/DriveToNote.h"
@@ -45,6 +46,7 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
+#include "utils/DragonPower.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
@@ -477,4 +479,69 @@ void SwerveChassis::DataLog(uint64_t timestamp)
     {
         LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
     }
+
+    auto currTime = m_powerTimer.Get();
+
+    auto leftFrontSteerPower = m_frontLeft->CalcSteerPowerEnergy(currTime);
+    auto power = get<0>(leftFrontSteerPower);
+    auto energy = get<1>(leftFrontSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY, energy);
+
+    auto leftFrontDrivePower = m_frontLeft->CalcDrivePowerEnergy(currTime);
+    power = get<0>(leftFrontDrivePower);
+    energy = get<1>(leftFrontDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY, energy);
+
+    auto leftBackSteerPower = m_backLeft->CalcSteerPowerEnergy(currTime);
+    power = get<0>(leftBackSteerPower);
+    energy = get<1>(leftBackSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY, energy);
+
+    auto leftBackDrivePower = m_backLeft->CalcDrivePowerEnergy(currTime);
+    power = get<0>(leftBackDrivePower);
+    energy = get<1>(leftBackDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY, energy);
+
+    auto rightFrontSteerPower = m_frontRight->CalcSteerPowerEnergy(currTime);
+    power = get<0>(rightFrontSteerPower);
+    energy = get<1>(rightFrontSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY, energy);
+
+    auto rightFrontDrivePower = m_frontRight->CalcDrivePowerEnergy(currTime);
+    power = get<0>(rightFrontDrivePower);
+    energy = get<1>(rightFrontDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY, energy);
+
+    auto rightBackSteerPower = m_backRight->CalcSteerPowerEnergy(currTime);
+    power = get<0>(rightBackSteerPower);
+    energy = get<1>(rightBackSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY, energy);
+
+    auto rightBackDrivePower = m_backRight->CalcDrivePowerEnergy(currTime);
+    power = get<0>(rightBackDrivePower);
+    energy = get<1>(rightBackDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY, energy);
+
+    m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY, m_totalEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS, m_totalWattHours);
+
+    m_powerTimer.Reset();
+    m_powerTimer.Start();
 }

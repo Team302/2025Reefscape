@@ -15,34 +15,18 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <frc/PowerDistribution.h>
 
-#include "frc/Timer.h"
-#include "utils/logging/debug/LoggableItem.h"
-#include "utils/logging/signals/DragonDataLogger.h"
+#include <tuple>
 
-class DragonPower : public LoggableItem, public DragonDataLogger
+#include <units/time.h>
+
+class DragonPower
 {
 public:
-    static DragonPower *GetInstance();
-    void DataLog(uint64_t timestamp) override;
-    void LogInformation() override;
+    static std::tuple<double, double> CalcPowerEnergy(units::time::second_t deltaTime, double voltage, double amps);
+    static double ConvertEnergyToWattHours(double energy);
 
 private:
-    DragonPower();
-    ~DragonPower() = default;
-
-    void CalculatePowerData();
-
-    static DragonPower *m_dragonPowerInstance;
-    int m_calcFrequency = 1000;
-    int m_logFrequency = 5000;
-    double m_currentCurrent = 0.0;
-    double m_currentVoltage = 0.0;
-    double m_currentPower = 0.0;
-    double m_currentEnergy = 0.0;
-    double m_matchWattHours = 0.0;
-    double m_matchEnergy = 0.0;
-    frc::PowerDistribution *m_pdp;
-    frc::Timer *m_calcTimer;
+    DragonPower() = delete;
+    ~DragonPower() = delete;
 };
