@@ -50,6 +50,6 @@ namespace ClimberManagerStates
 		const units::angle::turn_t m_ClimberTarget = units::angle::turn_t(0);
 		units::angle::turn_t m_manualTarget;
 		units::angle::turn_t m_minClimberAngle{-10.0};
-		units::angle::turn_t m_maxClimberAngle{180.0};
+		units::angle::turn_t m_maxClimberAngle{130.0};
 	};
 }
