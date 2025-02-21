@@ -61,7 +61,7 @@ private:
     int m_rumbleLoopCounter = 0;
     int m_firstloop = true;
 
-    units::time::millisecond_t m_breathingPeriod{100};
+    units::time::second_t m_breathingPeriod{1.5};
     units::time::millisecond_t m_blinkingPeriod{100};
 
     static DriverFeedback *m_instance;

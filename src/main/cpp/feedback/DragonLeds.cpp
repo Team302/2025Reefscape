@@ -41,9 +41,7 @@ void DragonLeds::Initialize(int PWMport, int numLeds)
         m_addressibleLeds = new frc::AddressableLED(PWMport);
         m_addressibleLeds->SetLength(numLeds);
 
-        m_ledBuffer.resize(numLeds - m_numberofDiagnosticLEDs);
-        if (m_numberofDiagnosticLEDs > 0)
-            m_diagnosticLEDBuffer.resize(m_numberofDiagnosticLEDs);
+        m_ledBuffer.resize(numLeds);
 
         SetSolidColor(frc::Color::kDarkGreen);
         commitLedData();
@@ -83,11 +81,6 @@ void DragonLeds::commitLedData()
     {
         m_addressibleLeds->SetData(m_ledBuffer);
     }
-
-    if (m_diagnosticLEDBuffer.size() > 0)
-    {
-        m_addressibleLeds->SetData(m_diagnosticLEDBuffer);
-    }
 }
 void DragonLeds::SetSolidColor(frc::Color colar)
 {
@@ -110,7 +103,7 @@ void DragonLeds::SetScorllingRainbow()
 {
     units::meter_t kLedSpacing{1 / 120.0};
     frc::LEDPattern m_rainbow = frc::LEDPattern::Rainbow(255, 128);
-    frc::LEDPattern m_scrollingRainbow = m_rainbow.ScrollAtAbsoluteSpeed(1_mps, kLedSpacing);
+    frc::LEDPattern m_scrollingRainbow = m_rainbow.ScrollAtAbsoluteSpeed(0.25_mps, kLedSpacing);
     m_scrollingRainbow.ApplyTo(m_ledBuffer);
 }
 
@@ -119,16 +112,10 @@ void DragonLeds::SetSpecificLED(int id, frc::Color colar)
     m_ledBuffer[id].SetLED(colar);
 }
 
-void DragonLeds::SetDiagnosticLED(int id, frc::Color colar)
-{
-    m_diagnosticLEDBuffer[id].SetLED(colar);
-}
-
 void DragonLeds::SetBufferAllLEDsBlack()
 {
     frc::LEDPattern pattern = frc::LEDPattern::Solid(frc::Color::kBlack);
     pattern.ApplyTo(m_ledBuffer);
-    pattern.ApplyTo(m_diagnosticLEDBuffer);
 }
 
 void DragonLeds::SetBufferAllLEDsColorBrightness(frc::Color colar, double brightness)
@@ -183,7 +170,8 @@ void DragonLeds::SetChaserPattern(frc::Color c)
             m_lastColor = m_lastColor == c ? frc::Color::kBlack : c;
         }
         m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_ledBuffer.size()) - 1;
-        SetSpecificLED(m_loopThroughIndividualLEDs, c);
+
+        SetSpecificLED(m_loopThroughIndividualLEDs, m_lastColor);
     }
 }
 
@@ -210,29 +198,29 @@ void DragonLeds::SetClosingInChaserPattern(frc::Color c)
 void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
     auto allianceColor = alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue : frc::Color::kRed;
-    SetDiagnosticLED(m_diagnosticLED0, allianceColor);
+    SetSpecificLED(m_diagnosticLED0, allianceColor);
 
     auto coralInSensorcolor = coralInSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED1, coralInSensorcolor);
+    SetSpecificLED(m_diagnosticLED1, coralInSensorcolor);
 
     auto coralOutSensorcolor = coralOutSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED2, coralOutSensorcolor);
+    SetSpecificLED(m_diagnosticLED2, coralOutSensorcolor);
 
     auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED3, algaeSensorcolor);
+    SetSpecificLED(m_diagnosticLED3, algaeSensorcolor);
 
     auto intakesensorcolor = intakesensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED4, intakesensorcolor);
+    SetSpecificLED(m_diagnosticLED4, intakesensorcolor);
 
     auto questStatuscolor = questStatus ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
-    SetDiagnosticLED(m_diagnosticLED5, questStatuscolor);
+    SetSpecificLED(m_diagnosticLED5, questStatuscolor);
 
     auto ll1Statuscolor = ll1Status ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
-    SetDiagnosticLED(m_diagnosticLED6, ll1Statuscolor);
+    SetSpecificLED(m_diagnosticLED6, ll1Statuscolor);
 
     auto ll2Statuscolor = ll2Status ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED7, ll2Statuscolor);
+    SetSpecificLED(m_diagnosticLED7, ll2Statuscolor);
 
     auto pigeonfaultscolor = pigeonfaults ? frc::Color::kYellow : frc::Color::kBlack;
-    SetDiagnosticLED(m_diagnosticLED8, pigeonfaultscolor);
+    SetSpecificLED(m_diagnosticLED8, pigeonfaultscolor);
 }

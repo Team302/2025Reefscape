@@ -27,7 +27,6 @@ class DragonLeds
 {
 public:
 	std::vector<frc::AddressableLED::LEDData> m_ledBuffer;
-	std::vector<frc::AddressableLED::LEDData> m_diagnosticLEDBuffer;
 
 	void Initialize(int PWMport, int numLeds);
 	bool IsInitialized() const;
@@ -43,7 +42,6 @@ public:
 	void SetBufferAllLEDsBlack();
 	void SetScorllingRainbow();
 	void SetSpecificLED(int id, frc::Color colar);
-	void SetDiagnosticLED(int id, frc::Color colar);
 	void SetBufferAllLEDsColorBrightness(frc::Color colar, double brightness);
 	void SetBreathingPattern(frc::Color colar, units::time::second_t period);
 	void SetBlinkingPattern(frc::Color colar, units::time::second_t cycleTime);

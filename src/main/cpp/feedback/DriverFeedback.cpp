@@ -95,7 +95,7 @@ void DriverFeedback::UpdateLEDStates()
             }
             else
             {
-                currentState = frc::Color::kAquamarine;
+                currentState = frc::Color::kAqua;
             }
             if (taleMgr != nullptr)
             {
@@ -107,7 +107,7 @@ void DriverFeedback::UpdateLEDStates()
                 {
                     if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
                     {
-                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAquamarine);
+                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
                     }
                     else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
