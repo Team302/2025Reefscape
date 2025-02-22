@@ -598,7 +598,7 @@
                 <target>
                   <unitsFamily>none</unitsFamily>
                   <name>Target</name>
-                  <__units__>deg</__units__>
+                  <__units__ />
                   <type>Double</type>
                 </target>
                 <motorName>Climber</motorName>
