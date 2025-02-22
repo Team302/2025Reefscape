@@ -18,10 +18,6 @@
       <cancoder />
       <stateMotorControlData />
       <states />
-      <doubleParameters />
-      <boolParameters />
-      <constDoubleParameters />
-      <constBoolParameters />
     </mechanism>
     <mechanism>
       <GUID>291938a9-4ec6-41fa-861a-32866baf4f67</GUID>
@@ -35,10 +31,6 @@
       <cancoder />
       <stateMotorControlData />
       <states />
-      <doubleParameters />
-      <boolParameters />
-      <constDoubleParameters />
-      <constBoolParameters />
     </mechanism>
     <mechanism>
       <GUID>178a8a32-a228-43f0-81f4-be4dc9132beb</GUID>
@@ -52,10 +44,6 @@
       <cancoder />
       <stateMotorControlData />
       <states />
-      <doubleParameters />
-      <boolParameters />
-      <constDoubleParameters />
-      <constBoolParameters />
     </mechanism>
   </Mechanisms>
 </topLevelAppDataElement>

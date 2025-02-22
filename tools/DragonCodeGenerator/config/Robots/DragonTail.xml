@@ -4356,8 +4356,4 @@
       </motorTargets>
     </state>
   </states>
-  <doubleParameters />
-  <boolParameters />
-  <constDoubleParameters />
-  <constBoolParameters />
 </mechanism>

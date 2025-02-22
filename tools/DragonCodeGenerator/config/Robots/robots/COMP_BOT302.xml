@@ -490,7 +490,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>1</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
@@ -504,7 +504,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.1</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
@@ -719,10 +719,6 @@
             </motorTargets>
           </state>
         </states>
-        <doubleParameters />
-        <boolParameters />
-        <constDoubleParameters />
-        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
     <mechanismInstance>
@@ -5113,10 +5109,6 @@
             </motorTargets>
           </state>
         </states>
-        <doubleParameters />
-        <boolParameters />
-        <constDoubleParameters />
-        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
     <mechanismInstance>
@@ -6267,10 +6259,6 @@
             </motorTargets>
           </state>
         </states>
-        <doubleParameters />
-        <boolParameters />
-        <constDoubleParameters />
-        <constBoolParameters />
       </mechanism>
     </mechanismInstance>
   </mechanismInstances>

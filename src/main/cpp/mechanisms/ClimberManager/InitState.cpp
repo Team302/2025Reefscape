@@ -44,20 +44,6 @@ void InitState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitState"), string("Init"));
 	m_mechanism->GetClimber()->SetPosition(units::angle::turn_t(108.0));
-
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitCOMP_BOT302();
-}
-
-void InitState::InitPRACTICE_BOT9999()
-{
-	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
-}
-
-void InitState::InitCOMP_BOT302()
-{
 	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
 }
 

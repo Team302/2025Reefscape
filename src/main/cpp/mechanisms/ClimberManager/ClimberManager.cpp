@@ -279,6 +279,22 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+
+	configs.Slot1.kP = m_PositionDegreeUp->GetP();
+	configs.Slot1.kI = m_PositionDegreeUp->GetI();
+	configs.Slot1.kD = m_PositionDegreeUp->GetD();
+	configs.Slot1.kG = m_PositionDegreeUp->GetF();
+	configs.Slot1.kS = m_PositionDegreeUp->GetS();
+	configs.Slot1.kV = m_PositionDegreeUp->GetV();
+	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -409,7 +425,8 @@ void ClimberManager::Cyclic()
 		ReadTuningParamsFromNT();
 	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target", (m_ClimberPositionDegree.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Down", (m_ClimberPositionDegree.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
 }
 
 void ClimberManager::CheckForTuningEnabled()
