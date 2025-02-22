@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,13 +13,19 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "utils/DragonPower.h"
+#pragma once
+#include "vision/definitions/CameraConfig.h"
 
-std::tuple<double, double> DragonPower::CalcPowerEnergy(units::time::second_t deltaTime, double volts, double amps)
+#include "units/length.h"
+
+class CameraConfig_302 : public CameraConfig
 {
-    return std::make_tuple<double, double>(amps * volts, amps * volts * deltaTime.value());
-}
-double DragonPower::ConvertEnergyToWattHours(double energy)
-{
-    return energy / 3600.0;
-}
+public:
+    CameraConfig_302() = default;
+    ~CameraConfig_302() = default;
+
+    void BuildCameraConfig() override;
+
+private:
+
+};
