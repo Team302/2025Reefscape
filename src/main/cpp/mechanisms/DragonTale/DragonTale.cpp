@@ -136,6 +136,12 @@ void DragonTale::CreateAndRegisterStates()
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeFloorStateInst);
+	ReadyStateInst->RegisterTransitionState(ProcessStateInst);
+	ReadyStateInst->RegisterTransitionState(NetStateInst);
+	ReadyStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(HoldStateInst);
@@ -504,10 +510,10 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration configs{};
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(50);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -617,10 +623,10 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	TalonFXConfiguration configs{};
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(50);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -947,6 +953,7 @@ void DragonTale::RunCommonTasks()
 	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
+	IsElevatorInSync();
 	Cyclic();
 
 	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
@@ -961,6 +968,8 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Fail Counts", m_currElevatorFails);
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -975,13 +984,11 @@ void DragonTale::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE i
 void DragonTale::Update()
 {
 	m_Arm->SetControl(*m_ArmActiveTarget);
-	oldPosition = GetElevatorHeight();
 
 	if (m_elevatorRemedialAction)
 	{
 		// set talonfx control to sync encoders
-		if (GetElevatorHeight() - oldPosition)
-			m_ElevatorLeader->Set(0.05);
+		m_elevatorDesiredDirectionUp ? m_ElevatorLeader->Set(-0.05) : m_ElevatorLeader->Set(0.1);
 	}
 	else
 	{
@@ -998,44 +1005,6 @@ void DragonTale::Update()
 	{
 		m_CoralTalonFXS->SetControl(*m_CoralTalonFXSActiveTarget);
 		m_AlgaeTalonFXS->SetControl(*m_AlgaeTalonFXSActiveTarget);
-	}
-
-	// TODO move check to beginning?
-	// TODO add detection logic
-	bool elevatorInSync = true;
-
-	// m_ElevatorLeader->GetVelocity
-	// m_ElevatorLeader->GetRotorVelocity
-
-	if (m_elevatorRemedialAction)
-	{
-		// TODO check if encoders are in sync
-		bool remedialActionDone = elevatorInSync && units::math::abs(m_elevatorFailureHeight - GetElevatorHeight()) < m_elevatorRemedialThreshold;
-		if (remedialActionDone)
-		{
-			// when we are back in sync, go to ready
-			SetCurrentState(STATE_NAMES::STATE_READY, true);
-			// set target to current height to prevent elevator from collapsing immediately
-			SetElevatorTarget(GetElevatorHeight());
-			m_currElevatorFails = 0;
-		}
-	}
-	else
-	{
-		// increment failure count and check if remedial action required
-		if (!elevatorInSync)
-		{
-			if (++m_currElevatorFails > m_elevatorMaxFails)
-			{
-				m_elevatorRemedialAction = true;
-				m_elevatorFailureHeight = GetElevatorHeight();
-			}
-		}
-		// reset failure count
-		else
-		{
-			m_currElevatorFails = 0;
-		}
 	}
 }
 
@@ -1216,4 +1185,32 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::P
 bool DragonTale::AtTarget()
 {
 	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
+}
+
+void DragonTale::IsElevatorInSync()
+{
+	bool elevatorDirectionUp = m_ElevatorHeightSensor->GetVelocity().GetValue() > 0.0_tps;
+	if (units::math::abs(m_ElevatorHeightSensor->GetVelocity().GetValue()) > 0.5_tps)
+	{
+		if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
+		{
+			m_currElevatorFails++;
+			if (m_currElevatorFails >= m_elevatorMaxFails)
+			{
+				m_elevatorRemedialAction = true;
+			}
+		}
+	}
+	else if (m_elevatorRemedialAction)
+	{
+		if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
+		{
+			m_currElevatorFails--;
+			if (m_currElevatorFails == 0)
+			{
+				m_elevatorRemedialAction = false;
+				SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
+			}
+		}
+	}
 }

@@ -100,11 +100,13 @@ public:
 	{
 		if (position < GetElevatorHeight())
 		{
+			m_elevatorDesiredDirectionUp = false;
 			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
+			m_elevatorDesiredDirectionUp = true;
 			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
@@ -246,6 +248,8 @@ private:
 	void InitializeTalonFXSCoralCOMP_BOT302();
 	void InitializeTalonFXSAlgaeCOMP_BOT302();
 
+	void IsElevatorInSync();
+
 	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
 
@@ -270,11 +274,8 @@ private:
 	frc::Pose2d m_robotPose;
 
 	// elevator diagnostics and remedial action variables
-	units::length::inch_t oldPosition;
-
-	const int m_elevatorMaxFails = 5;
+	bool m_elevatorDesiredDirectionUp;
+	const int m_elevatorMaxFails = 12;
 	int m_currElevatorFails;
-	bool m_elevatorRemedialAction;
-	units::length::inch_t m_elevatorFailureHeight;
-	const units::length::inch_t m_elevatorRemedialThreshold{0.5};
+	bool m_elevatorRemedialAction = false;
 };
