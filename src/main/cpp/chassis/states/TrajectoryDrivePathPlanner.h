@@ -23,6 +23,7 @@
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
 #include "chassis/SwerveChassis.h"
+#include "fielddata/DragonTargetFinder.h"
 
 // Third party includes
 #include "pathplanner/lib/path/PathPlannerPath.h"
@@ -44,8 +45,8 @@ public:
     virtual bool IsDone();
     units::angular_velocity::degrees_per_second_t CalcHeadingCorrection(units::angle::degree_t targetAngle, double kPFine, double kPCoarse);
 
-    virtual pathplanner::PathPlannerTrajectory CreateTrajectory();
-    virtual void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    virtual pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info) { return pathplanner::PathPlannerTrajectory(); }
+    virtual void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) {}
 
 protected:
     const units::meters_per_second_t m_maxVel = 4.0_mps;

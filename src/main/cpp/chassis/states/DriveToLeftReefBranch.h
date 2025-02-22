@@ -38,8 +38,7 @@ public:
     DriveToLeftReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
     std::string GetDriveStateName() const override;
 
-    pathplanner::PathPlannerTrajectory CreateTrajectory();
-    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranch(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
+    pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
 
     void Init(ChassisMovement &chassisMovement) override;
     void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
@@ -47,8 +46,6 @@ public:
 
     bool IsDone() override;
     std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
-
-    bool IsDone();
 
 private:
     pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);

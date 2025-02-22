@@ -79,15 +79,17 @@ void DrivePathPlanner::InitMap()
 {
     if (m_chassis != nullptr)
     {
-
         m_updateOptionToTrajMap[PATH_UPDATE_OPTION::LEFT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH)),
-                                                                                   ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
+                                                                                   ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH,
+                                                                                   DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH));
 
         m_updateOptionToTrajMap[PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH] = make_tuple(dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH)),
-                                                                                    ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
+                                                                                    ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH,
+                                                                                    DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH));
 
         m_updateOptionToTrajMap[PATH_UPDATE_OPTION::CORAL_STATION] = make_tuple(dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DRIVE_TO_CORAL_STATION)),
-                                                                                ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION); // needs to probably be checked on...
+                                                                                ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION,
+                                                                                DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)); // needs to probably be checked on...
     }
 }
 int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
@@ -161,7 +163,7 @@ void DrivePathPlanner::InitMoveInfo()
 
     if (m_isVisionDrive)
     {
-        trajectory = std::get<TrajectoryDrivePathPlanner *>(m_driveToInfo)->CreateTrajectory();
+        trajectory = std::get<TrajectoryDrivePathPlanner *>(m_driveToInfo)->CreateTrajectory(std::get<DragonTargetFinderPoseInfo>(m_driveToInfo));
 
         m_moveInfo.driveOption = std::get<ChassisOptionEnums::DriveStateType>(m_driveToInfo);
 

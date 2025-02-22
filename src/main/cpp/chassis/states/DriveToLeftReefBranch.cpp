@@ -49,8 +49,7 @@ void DriveToLeftReefBranch::Init(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
 
-    m_trajectory = CreateTrajectory();
-    m_trajectory = CreateDriveToLeftReefBranch(info);
+    m_trajectory = CreateTrajectory(info);
     InitFromTrajectory(chassisMovement, m_trajectory);
     m_currentType = get<0>(info.value());
 }
@@ -71,8 +70,7 @@ void DriveToLeftReefBranch::InitFromTrajectory(ChassisMovement &chassisMovement,
     }
 }
 
-pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateTrajectory()
-pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefBranch(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
+pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
 {
     pathplanner::PathPlannerTrajectory trajectory;
 
@@ -132,7 +130,7 @@ std::array<frc::SwerveModuleState, 4> DriveToLeftReefBranch::UpdateSwerveModuleS
 
     if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
     {
-        m_trajectory = CreateDriveToLeftReefBranch(info);
+        m_trajectory = CreateTrajectory(info);
         InitFromTrajectory(chassisMovement, m_trajectory);
     }
     m_currentType = get<0>(info.value());

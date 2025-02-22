@@ -239,10 +239,3 @@ void TrajectoryDrivePathPlanner::LogState(PathPlannerTrajectoryState state) cons
     LogPose(state.pose);
 }
 // overriden in the subclass
-pathplanner::PathPlannerTrajectory TrajectoryDrivePathPlanner::CreateTrajectory()
-{
-    return pathplanner::PathPlannerTrajectory();
-}
-void TrajectoryDrivePathPlanner::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
-{
-}

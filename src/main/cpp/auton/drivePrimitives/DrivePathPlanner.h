@@ -17,6 +17,7 @@
 // C++ Includes
 #include <memory>
 #include <map>
+#include <optional>
 #include <tuple>
 
 // Team302 Includes
@@ -29,6 +30,7 @@
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "fielddata/DragonTargetFinder.h"
 
 #include "utils/logging/signals/DragonDataLogger.h"
 
@@ -37,9 +39,12 @@
 #include "frc/Timer.h"
 #include "units/length.h"
 #include "units/time.h"
+#include "frc/geometry/Pose2d.h"
 
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+
+typedef std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> DragonTargetFinderPoseInfo;
 
 class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
@@ -84,8 +89,15 @@ private:
     frc::Pose2d m_finalPose;
     PATH_UPDATE_OPTION m_updateOption;
 
-    std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType>> m_updateOptionToTrajMap;
-    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
+    std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *,
+                                            ChassisOptionEnums::DriveStateType,
+                                            DragonTargetFinderPoseInfo>>
+        m_updateOptionToTrajMap;
+
+    std::tuple<TrajectoryDrivePathPlanner *,
+               ChassisOptionEnums::DriveStateType,
+               DragonTargetFinderPoseInfo>
+        m_driveToInfo;
 
     int m_zoneUpdateOptionIndex = -1;
     ZoneParams *m_zone;
