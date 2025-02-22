@@ -47,5 +47,4 @@ private:
     IPrimitive *m_resetPositionPathPlanner;
     IPrimitive *m_visionAlign;
     IPrimitive *m_drivePathPlanner;
-    IPrimitive *m_driveToNote;
 };

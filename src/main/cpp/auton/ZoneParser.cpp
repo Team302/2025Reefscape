@@ -118,7 +118,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"27", AutonGrid::YGRID::Y_27}};
 
     static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
-        {"VISION_DRIVE_NOTE", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_NOTE},
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
         {"NO_VISION", ChassisOptionEnums::AutonChassisOptions::NO_VISION},
     };
