@@ -32,6 +32,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
+#include "vision/DragonVision.h"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
-
+    void ResetWithLimelightData(frc::Pose3d visionpose);
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
 
 private:
@@ -53,10 +54,8 @@ private:
     double GetTimeStamp();
     void ZeroHeading();
     void ZeroPosition();
-    void CleanUpQuestMessages();
     units::angle::degree_t GetOculusYaw();
-    void DoStuff();
-    void ResetWithLimelightData();
+    void RefreshNT();
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
     std::shared_ptr<nt::NetworkTable> m_limelightNetworktable;
@@ -66,24 +65,21 @@ private:
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
-    nt::DoubleArrayTopic m_limelightPoseTopic;
 
-    // use opposite values to transfrom the quest to the center of the robot
-
-    double m_xOffset = 0; //-0.254;
+    double m_xOffset = 0;
     double m_yOffset = 0;
-    double m_zOffset = 0; // 0.47625;
+    double m_zOffset = 0;
 
     double m_rollOffset = 0;
     double m_pitchOffset = 0;
-    double m_yawOffset = 0; //-180;
+    double m_yawOffset = 0;
 
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
 
     bool m_hasreset = false;
-    int m_loopcounter = 0;
 
     const double m_stdxy = 0.5;
     const double m_stddeg = 6.0;
+    std::vector<double> limelightpose;
 };

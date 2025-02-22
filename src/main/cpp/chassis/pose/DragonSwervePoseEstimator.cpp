@@ -25,6 +25,7 @@
 #include "units/time.h"
 #include "wpi/array.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
                                                      const frc::Rotation2d &gyroAngle,
@@ -119,7 +120,7 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
         if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
         {
-            chassis->ResetPose(visionpose.value());
+            ResetPose(visionpose.value());
         }
     }
 }
@@ -131,4 +132,5 @@ frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
 {
     m_poseEstimator.ResetPose(pose);
+    DragonQuest::GetDragonQuest()->ResetWithLimelightData(frc::Pose3d(pose));
 }

@@ -28,7 +28,6 @@ DragonQuest *DragonQuest::GetDragonQuest()
 DragonQuest::DragonQuest()
 {
     m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
-    m_limelightNetworktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-test"));
     m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
@@ -39,11 +38,7 @@ DragonQuest::DragonQuest()
 
 frc::Pose3d DragonQuest::GetEstimatedPose()
 {
-    DoStuff();
-    if (!m_hasreset)
-    {
-        ResetWithLimelightData();
-    }
+    RefreshNT();
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
@@ -103,36 +98,43 @@ void DragonQuest::DataLog(uint64_t timestamp)
     Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
 }
 
-void DragonQuest::DoStuff()
+void DragonQuest::RefreshNT()
 {
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
-    m_limelightPoseTopic = m_limelightNetworktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
 }
 
-void DragonQuest::ResetWithLimelightData()
+void DragonQuest::ResetWithLimelightData(frc::Pose3d vsionpose)
 {
-    std::vector<double> limelightpose = m_limelightPoseTopic.GetEntry(std::array<double, 10>{}).Get();
-    if (limelightpose[0] != 0)
+    auto vision = DragonVision::GetDragonVision();
+    std::optional<VisionPose> llpose = vision->GetRobotPosition();
+    if (llpose.has_value())
     {
-        m_loopcounter++;
-        if (m_loopcounter > 100)
-        {
-            m_hasreset = true;
-            m_xOffset += limelightpose[0];
-            m_yOffset += limelightpose[1];
-            m_zOffset += limelightpose[2];
-            m_rollOffset += limelightpose[3];
-            m_pitchOffset += limelightpose[4];
-            m_yawOffset += limelightpose[5];
-        }
+        m_xOffset += llpose.value().estimatedPose.X().to<double>();
+        m_yOffset += llpose.value().estimatedPose.Y().to<double>();
+        m_zOffset += llpose.value().estimatedPose.Z().to<double>();
+        units::degree_t roll = llpose.value().estimatedPose.Rotation().X();
+        units::degree_t pitch = llpose.value().estimatedPose.Rotation().Y();
+        units::degree_t yaw = llpose.value().estimatedPose.Rotation().Z();
+
+        m_rollOffset += roll.to<double>();
+        m_pitchOffset += pitch.to<double>();
+        m_yawOffset += yaw.to<double>();
+        m_hasreset = true;
     }
 }
 
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+    if (m_hasreset)
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+    }
+    else
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    }
     str.m_visionPose = GetEstimatedPose().ToPose2d();
     str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     str.m_timeStamp = units::time::second_t(GetTimeStamp());
