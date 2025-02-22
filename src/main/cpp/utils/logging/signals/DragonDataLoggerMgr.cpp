@@ -16,6 +16,7 @@
 
 #include <filesystem>
 
+#include "ctre/phoenix6/SignalLogger.hpp"
 #include "frc/DataLogManager.h"
 #include "frc/DriverStation.h"
 #include "frc/RobotController.h"
@@ -23,6 +24,7 @@
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
 
 using namespace std;
+using ctre::phoenix6::SignalLogger;
 
 DragonDataLoggerMgr *DragonDataLoggerMgr::m_instance = nullptr;
 DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
@@ -36,14 +38,20 @@ DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
 
 DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignals(), m_boolDatalogSignals(), m_stringDatalogSignals()
 {
-    frc::DataLogManager::Start(GetLoggingDir(), CreateLogFileName());
+    auto logFolder = GetLoggingDir();
+    frc::DataLogManager::Start(logFolder, CreateLogFileName());
     frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
     DragonDataLoggerSignals::GetInstance();
+
+    SignalLogger::SetPath(logFolder.c_str());
+    SignalLogger::EnableAutoLogging(true);
+    SignalLogger::Start();
 }
 
 DragonDataLoggerMgr::~DragonDataLoggerMgr()
 {
     frc::DataLogManager::Stop();
+    SignalLogger::Stop();
 }
 
 /**

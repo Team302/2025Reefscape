@@ -28,6 +28,7 @@
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
+#include "mechanisms/ClimberManager/InitState.h"
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
@@ -48,15 +49,19 @@ using namespace ClimberManagerStates;
 
 void ClimberManager::CreateAndRegisterStates()
 {
-	OffState *OffStateInst = new OffState(string("Off"), 0, this, m_activeRobotId);
+	InitState *InitStateInst = new InitState(string("Init"), 0, this, m_activeRobotId);
+	AddToStateVector(InitStateInst);
+
+	OffState *OffStateInst = new OffState(string("Off"), 1, this, m_activeRobotId);
 	AddToStateVector(OffStateInst);
 
-	ManualClimbState *ManualClimbStateInst = new ManualClimbState(string("ManualClimb"), 1, this, m_activeRobotId);
+	ManualClimbState *ManualClimbStateInst = new ManualClimbState(string("ManualClimb"), 2, this, m_activeRobotId);
 	AddToStateVector(ManualClimbStateInst);
 
-	AutoClimbState *AutoClimbStateInst = new AutoClimbState(string("AutoClimb"), 2, this, m_activeRobotId);
+	AutoClimbState *AutoClimbStateInst = new AutoClimbState(string("AutoClimb"), 3, this, m_activeRobotId);
 	AddToStateVector(AutoClimbStateInst);
 
+	InitStateInst->RegisterTransitionState(OffStateInst);
 	OffStateInst->RegisterTransitionState(ManualClimbStateInst);
 	ManualClimbStateInst->RegisterTransitionState(OffStateInst);
 	ManualClimbStateInst->RegisterTransitionState(AutoClimbStateInst);
@@ -70,9 +75,11 @@ ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(Mechani
 {
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 }
 
 std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap{
+	{"STATE_INIT", ClimberManager::STATE_NAMES::STATE_INIT},
 	{"STATE_OFF", ClimberManager::STATE_NAMES::STATE_OFF},
 	{"STATE_MANUAL_CLIMB", ClimberManager::STATE_NAMES::STATE_MANUAL_CLIMB},
 	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},
@@ -123,6 +130,26 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double nominalValue
 		false									// bool enableFOC
 	);
+	m_PositionDegreeUp = new ControlData(
+		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PositionDegreeUp",							  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
+	);
 
 	ReadConstants("ClimberManager.xml", 9999);
 
@@ -140,7 +167,7 @@ void ClimberManager::CreateCOMP_BOT302()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		1.0,											  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
 		0.1,											  // double derivative
 		0,												  // double feedforward
@@ -160,6 +187,26 @@ void ClimberManager::CreateCOMP_BOT302()
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PercentOut",									  // std::string indentifier
+		0,												  // double proportional
+		0,												  // double integral
+		0,												  // double derivative
+		0,												  // double feedforward
+		0,												  // double velocityGain
+		0,												  // double accelartionGain
+		0,												  // double staticFrictionGain,
+
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
+		0,										// double integralZone
+		0,										// double maxAcceleration
+		0,										// double cruiseVelocity
+		0,										// double peakValue
+		0,										// double nominalValue
+		false									// bool enableFOC
+	);
+	m_PositionDegreeUp = new ControlData(
+		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
+		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
+		"m_PositionDegreeUp",							  // std::string indentifier
 		0,												  // double proportional
 		0,												  // double integral
 		0,												  // double derivative
@@ -232,6 +279,22 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+
+	configs.Slot1.kP = m_PositionDegreeUp->GetP();
+	configs.Slot1.kI = m_PositionDegreeUp->GetI();
+	configs.Slot1.kD = m_PositionDegreeUp->GetD();
+	configs.Slot1.kG = m_PositionDegreeUp->GetF();
+	configs.Slot1.kS = m_PositionDegreeUp->GetS();
+	configs.Slot1.kV = m_PositionDegreeUp->GetV();
+	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -279,6 +342,22 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+
+	configs.Slot1.kP = m_PositionDegreeUp->GetP();
+	configs.Slot1.kI = m_PositionDegreeUp->GetI();
+	configs.Slot1.kD = m_PositionDegreeUp->GetD();
+	configs.Slot1.kG = m_PositionDegreeUp->GetF();
+	configs.Slot1.kS = m_PositionDegreeUp->GetS();
+	configs.Slot1.kV = m_PositionDegreeUp->GetV();
+	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -288,19 +367,6 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
-}
-
-void ClimberManager::SetPIDClimberPositionDegree()
-{
-	Slot0Configs slot0Configs{};
-	slot0Configs.kP = m_PositionDegree->GetP();
-	slot0Configs.kI = m_PositionDegree->GetI();
-	slot0Configs.kD = m_PositionDegree->GetD();
-	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = m_PositionDegree->GetS();
-	slot0Configs.kV = m_PositionDegree->GetV();
-	slot0Configs.kA = m_PositionDegree->GetA();
-	m_Climber->GetConfigurator().Apply(slot0Configs);
 }
 
 void ClimberManager::SetCurrentState(int state, bool run)
@@ -359,7 +425,8 @@ void ClimberManager::Cyclic()
 		ReadTuningParamsFromNT();
 	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target", (m_ClimberPositionDegree.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Down", (m_ClimberPositionDegree.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
 }
 
 void ClimberManager::CheckForTuningEnabled()
@@ -382,6 +449,14 @@ void ClimberManager::ReadTuningParamsFromNT()
 	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
 	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegreeUp->SetIZone(m_table.get()->GetNumber("PositionDegreeUp_iZone", 0));
+	m_PositionDegreeUp->SetS(m_table.get()->GetNumber("PositionDegreeUp_sGain", 0));
+	m_PositionDegreeUp->SetV(m_table.get()->GetNumber("PositionDegreeUp_vGain", 0));
+	m_PositionDegreeUp->SetA(m_table.get()->GetNumber("PositionDegreeUp_aGain", 0));
+	m_PositionDegreeUp->SetF(m_table.get()->GetNumber("PositionDegreeUp_fGain", 0));
+	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 0));
+	m_PositionDegreeUp->SetI(m_table.get()->GetNumber("PositionDegreeUp_iGain", 0));
+	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0));
 }
 
 void ClimberManager::PushTuningParamsToNT()
@@ -394,12 +469,25 @@ void ClimberManager::PushTuningParamsToNT()
 	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
 	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
 	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
+	m_table.get()->PutNumber("PositionDegreeUp_iZone", m_PositionDegreeUp->GetIZone());
+	m_table.get()->PutNumber("PositionDegreeUp_sGain", m_PositionDegreeUp->GetS());
+	m_table.get()->PutNumber("PositionDegreeUp_vGain", m_PositionDegreeUp->GetV());
+	m_table.get()->PutNumber("PositionDegreeUp_aGain", m_PositionDegreeUp->GetA());
+	m_table.get()->PutNumber("PositionDegreeUp_fGain", m_PositionDegreeUp->GetF());
+	m_table.get()->PutNumber("PositionDegreeUp_pGain", m_PositionDegreeUp->GetP());
+	m_table.get()->PutNumber("PositionDegreeUp_iGain", m_PositionDegreeUp->GetI());
+	m_table.get()->PutNumber("PositionDegreeUp_dGain", m_PositionDegreeUp->GetD());
 }
+
 void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)
 {
 	if (statechange == RobotStateChanges::StateChange::ClimbModeStatus_Int)
 	{
 		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(ival);
+	}
+	else if (statechange == RobotStateChanges::StateChange::GameState_Int)
+	{
+		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(ival);
 	}
 }
 
@@ -409,6 +497,8 @@ ControlData *ClimberManager::GetControlData(string name)
 		return m_PositionDegree;
 	if (name.compare("PercentOut") == 0)
 		return m_PercentOut;
+	if (name.compare("PositionDegreeUp") == 0)
+		return m_PositionDegreeUp;
 
 	return nullptr;
 }

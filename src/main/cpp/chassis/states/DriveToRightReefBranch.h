@@ -38,16 +38,21 @@ public:
     DriveToRightReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
     std::string GetDriveStateName() const override;
 
-    pathplanner::PathPlannerTrajectory CreateDriveToRightReefBranch();
+    pathplanner::PathPlannerTrajectory CreateDriveToRightReefBranch(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
 
     void Init(ChassisMovement &chassisMovement) override;
     void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
     pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
 
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+
     bool IsDone();
 
 private:
     pathplanner::PathPlannerTrajectory CreateDriveToRightReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
+
     pathplanner::PathPlannerTrajectory m_trajectory;
+    DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     frc::Pose2d m_endPose;
+    units::inch_t m_distanceThreshold{3.0};
 };

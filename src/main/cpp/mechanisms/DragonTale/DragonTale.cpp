@@ -136,6 +136,12 @@ void DragonTale::CreateAndRegisterStates()
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ReadyStateInst->RegisterTransitionState(GrabAlgaeFloorStateInst);
+	ReadyStateInst->RegisterTransitionState(ProcessStateInst);
+	ReadyStateInst->RegisterTransitionState(NetStateInst);
+	ReadyStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	ReadyStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(HoldStateInst);
@@ -349,7 +355,7 @@ void DragonTale::CreateCOMP_BOT302()
 	m_AlgaeSensor = new frc::DigitalInput(1);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.2556155);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.117432);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -479,7 +485,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackRemoteSensorID = 17;
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
@@ -504,10 +510,10 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	TalonFXConfiguration configs{};
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(50);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -617,10 +623,10 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 	TalonFXConfiguration configs{};
 	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
 	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(70);
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(50);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
 	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.5);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.25);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
@@ -694,10 +700,11 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackRemoteSensorID = 17;
-	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
+	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
+	configs.Feedback.RotorToSensorRatio = 180;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = 150_tps;
+	configs.MotionMagic.MotionMagicCruiseVelocity = 200_tps;
 	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -749,7 +756,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	configs.Feedback.SensorToMechanismRatio = 0.108878152421;
+	configs.Feedback.SensorToMechanismRatio = 0.1086833;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -946,6 +953,7 @@ void DragonTale::RunCommonTasks()
 	SetSensorFailSafe();
 	ManualControl();
 	UpdateTarget();
+	IsElevatorInSync();
 	Cyclic();
 
 	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
@@ -960,6 +968,8 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Fail Counts", m_currElevatorFails);
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -974,7 +984,17 @@ void DragonTale::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USAGE i
 void DragonTale::Update()
 {
 	m_Arm->SetControl(*m_ArmActiveTarget);
-	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
+
+	if (m_elevatorRemedialAction)
+	{
+		// set talonfx control to sync encoders
+		m_elevatorDesiredDirectionUp ? m_ElevatorLeader->Set(-0.05) : m_ElevatorLeader->Set(0.1);
+	}
+	else
+	{
+		// normal elevator control
+		m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
+	}
 
 	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 	{
@@ -1165,4 +1185,35 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::P
 bool DragonTale::AtTarget()
 {
 	return ((units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold) && (units::math::abs(m_armTarget - GetArmAngle()) < m_ArmAtTargetThreshold));
+}
+
+void DragonTale::IsElevatorInSync()
+{
+	units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
+	bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
+	if (units::math::abs(cancoderVelocity) > 0.5_tps)
+	{
+		if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
+		{
+			m_currElevatorFails++;
+			if (m_currElevatorFails >= m_elevatorMaxFails)
+			{
+				m_elevatorRemedialAction = true;
+			}
+		}
+	}
+	else if (m_elevatorRemedialAction)
+	{
+		if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
+		{
+			if (m_currElevatorFails > 0)
+				m_currElevatorFails--;
+
+			if (m_currElevatorFails == 0)
+			{
+				m_elevatorRemedialAction = false;
+				SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
+			}
+		}
+	}
 }

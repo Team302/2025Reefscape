@@ -100,11 +100,13 @@ public:
 	{
 		if (position < GetElevatorHeight())
 		{
-			m_ElevatorLeaderPositionInch.Velocity = 30_tps;
+			m_elevatorDesiredDirectionUp = false;
+			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
+			m_elevatorDesiredDirectionUp = true;
 			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
@@ -148,7 +150,7 @@ public:
 	ctre::phoenix6::hardware::TalonFXS *GetCoralTalonFXS() const { return m_CoralTalonFXS; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
 	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
-	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
+	bool GetCoralOutSensorState() const { return (m_activeRobotId == RobotIdentifier::COMP_BOT_302) ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
@@ -185,6 +187,8 @@ public:
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
 	void SetCurrentState(int state, bool run) override;
+
+	bool GetRemedialActionStatus() { return m_elevatorRemedialAction; }
 
 protected:
 	RobotIdentifier m_activeRobotId;
@@ -246,6 +250,8 @@ private:
 	void InitializeTalonFXSCoralCOMP_BOT302();
 	void InitializeTalonFXSAlgaeCOMP_BOT302();
 
+	void IsElevatorInSync();
+
 	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
 
@@ -268,4 +274,10 @@ private:
 	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 	frc::Pose2d m_robotPose;
+
+	// elevator diagnostics and remedial action variables
+	bool m_elevatorDesiredDirectionUp;
+	const int m_elevatorMaxFails = 12;
+	int m_currElevatorFails;
+	bool m_elevatorRemedialAction = false;
 };
