@@ -94,11 +94,14 @@ void DrivePathPlanner::InitMap()
 }
 int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
 {
-    for (unsigned int i = 0; i < zones.size(); i++)
+    if (!zones.empty())
     {
-        if (zones[i]->GetPathUpdateOption() != NOTHING)
+        for (unsigned int i = 0; i < zones.size(); i++)
         {
-            return i;
+            if (zones[i]->GetPathUpdateOption() != PATH_UPDATE_OPTION::NOTHING)
+            {
+                return i;
+            }
         }
     }
     // if we don't have an update option
@@ -108,9 +111,6 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
 
-    if (!params->GetZones().empty())
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone updateOption", "option", params->GetZones()[0]->GetPathUpdateOption());
-
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
     {
@@ -118,6 +118,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     }
 
     InitMap();
+
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
     m_pathGainsType = params->GetPathGainsType();

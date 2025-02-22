@@ -301,7 +301,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 {
                                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone filename", "name", std::string(attr.value()));
                                     auto zone = ZoneParser::ParseXML(attr.value());
-                                    zones.emplace_back(zone);
+                                    if (zone != nullptr)
+                                    {
+                                        zones.emplace_back(zone);
+                                    }
                                 }
                             }
                         }

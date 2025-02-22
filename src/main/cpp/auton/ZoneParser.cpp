@@ -282,10 +282,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                             taleChosenOption = itr->second;
                             isTaleStateChanging = true;
                         }
-                    }
-                    else
-                    {
-                        hasError = true;
+                        else
+                        {
+                            hasError = true;
+                        }
                     }
                 }
 
