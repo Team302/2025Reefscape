@@ -23,7 +23,6 @@
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
 #include "units/time.h"
-#include "vision/DragonQuest.h"
 #include "vision/DragonVision.h"
 #include "wpi/array.h"
 
