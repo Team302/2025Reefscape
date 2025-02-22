@@ -26,7 +26,7 @@
 		  intakeOption        ( STATE_OFF | STATE_INTAKE | STATE_HOLD | 
 		                    STATE_TRANSFER_IN | STATE_TRANSFER_OUT | STATE_PROCESS | 
 		                    STATE_EXPEL ) "STATE_OFF"
-		  visionAligment    ( UNKNOWN | NOTE | SPEAKER ) "UNKNOWN"
+		  visionAligment    ( UNKNOWN ) "UNKNOWN"
 >
 
 

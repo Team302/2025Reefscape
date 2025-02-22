@@ -20,8 +20,6 @@
 #include "auton/ZoneParams.h"
 #include "chassis/ChassisOptionEnums.h"
 
-// #include "mechanisms/noteManager/generated/noteManagerGen.h"
-
 // @ADDMECH include for your mechanism state mgr
 
 // @ADDMECH mechanism state for mech as parameter
