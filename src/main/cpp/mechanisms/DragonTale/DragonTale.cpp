@@ -1189,8 +1189,9 @@ bool DragonTale::AtTarget()
 
 void DragonTale::IsElevatorInSync()
 {
-	bool elevatorDirectionUp = m_ElevatorHeightSensor->GetVelocity().GetValue() > 0.0_tps;
-	if (units::math::abs(m_ElevatorHeightSensor->GetVelocity().GetValue()) > 0.5_tps)
+	units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
+	bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
+	if (units::math::abs(cancoderVelocity) > 0.5_tps)
 	{
 		if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
 		{
@@ -1205,7 +1206,9 @@ void DragonTale::IsElevatorInSync()
 	{
 		if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
 		{
-			m_currElevatorFails--;
+			if (m_currElevatorFails > 0)
+				m_currElevatorFails--;
+
 			if (m_currElevatorFails == 0)
 			{
 				m_elevatorRemedialAction = false;
