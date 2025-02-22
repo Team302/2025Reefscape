@@ -83,6 +83,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 {
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
+
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
@@ -95,6 +96,9 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 {
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
+                    units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
+                    DragonVisionStructLogger::logPose3d("DragonTargetFinder-Left", pose3);
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Left", fieldRelativeAngle.to<double>());
 
                     return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
@@ -115,6 +119,9 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 {
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK);
+                    units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
+                    DragonVisionStructLogger::logPose3d("DragonTargetFinder-Right", pose3);
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
                     return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
@@ -158,9 +165,12 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (visiondata.has_value())
                 {
                     auto visiontagpose = GetVisonPose(visiondata.value());
-                    if (visiontagpose.Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
+                    if (visiontagpose)
                     {
-                        return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose);
+                        if (visiontagpose.value().Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
+                        {
+                            return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
+                        }
                     }
                 }
 
@@ -262,7 +272,7 @@ units::angle::degree_t DragonTargetFinder::AdjustRobotRelativeAngleForIntake(uni
     return robotRelativeAngle;
 }
 
-frc::Pose2d DragonTargetFinder::GetVisonPose(VisionData data)
+std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(VisionData data)
 {
     SetChassis();
 
@@ -277,6 +287,7 @@ frc::Pose2d DragonTargetFinder::GetVisonPose(VisionData data)
         units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
         return frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
     }
+    return std::nullopt;
 }
 
 bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) // TODO: Update when we switch to ML and raw vision correction on reef sticks

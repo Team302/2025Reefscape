@@ -66,7 +66,7 @@ private:
     std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
-    frc::Pose2d GetVisonPose(VisionData data);
+    std::optional<frc::Pose2d> GetVisonPose(VisionData data);
     bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
 
     void SetChassis();
