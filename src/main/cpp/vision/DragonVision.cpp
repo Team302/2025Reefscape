@@ -277,17 +277,17 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 			cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
 			cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
 		{
-			frc::Translation3d translationToNote = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
-																	  cam->EstimateTargetYDistance_RelToRobotCoords().value(),
-																	  cam->EstimateTargetZDistance_RelToRobotCoords().value());
-			frc::Rotation3d rotationToNote = frc::Rotation3d();
+			frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
+																	   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
+																	   cam->EstimateTargetZDistance_RelToRobotCoords().value());
+			frc::Rotation3d rotationToAlgae = frc::Rotation3d();
 			// create rotation3d with pitch and yaw (don't have access to roll)
-			rotationToNote = frc::Rotation3d(units::angle::degree_t(0.0),
-											 cam->GetTargetPitchRobotFrame().value(),
-											 cam->GetTargetYawRobotFrame().value());
+			rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
+											  cam->GetTargetPitchRobotFrame().value(),
+											  cam->GetTargetYawRobotFrame().value());
 
 			// return VisionData with new translation and rotation
-			return VisionData{frc::Transform3d(translationToNote, rotationToNote), translationToNote, rotationToNote, -1};
+			return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
 		}
 	}
 	// if we don't have a selected cam
