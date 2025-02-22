@@ -294,6 +294,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         {
             if (!m_megatag2PosBool)
             {
+                auto nt = m_networktable.get();
+                if (nt != nullptr)
+                {
+                    nt->PutNumber("imumode_set", 3);
+                }
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
 
                 // multiple targets detected
