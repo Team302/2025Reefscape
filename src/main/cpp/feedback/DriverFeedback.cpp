@@ -73,8 +73,11 @@ void DriverFeedback::UpdateLEDStates()
     }
     else
     {
-
-        if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
+        if (taleMgr->GetRemedialActionStatus())
+        {
+            m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, units::time::millisecond_t(50));
+        }
+        else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
         {
             currentState = frc::Color::kRed;
             if (oldState != currentState)
