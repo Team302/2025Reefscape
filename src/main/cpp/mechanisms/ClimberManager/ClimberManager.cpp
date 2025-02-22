@@ -326,9 +326,23 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
-	configs.Slot0.
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
 
-		ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	configs.Slot1.kP = m_PositionDegreeUp->GetP();
+	configs.Slot1.kI = m_PositionDegreeUp->GetI();
+	configs.Slot1.kD = m_PositionDegreeUp->GetD();
+	configs.Slot1.kG = m_PositionDegreeUp->GetF();
+	configs.Slot1.kS = m_PositionDegreeUp->GetS();
+	configs.Slot1.kV = m_PositionDegreeUp->GetV();
+	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
 		status = m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
@@ -337,27 +351,6 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
-}
-
-void ClimberManager::SetPIDClimberPositionDegree()
-{
-	slot0Configs.kP = m_PositionDegree->GetP();
-	slot0Configs.kI = m_PositionDegree->GetI();
-	slot0Configs.kD = m_PositionDegree->GetD();
-	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = m_PositionDegree->GetS();
-	slot0Configs.kV = m_PositionDegree->GetV();
-	slot0Configs.kA = m_PositionDegree->GetA();
-
-	slot1Configs.kP = m_PositionDegreeUp->GetP();
-	slot1Configs.kI = m_PositionDegreeUp->GetI();
-	slot1Configs.kD = m_PositionDegreeUp->GetD();
-	slot1Configs.kG = m_PositionDegreeUp->GetF();
-	slot1Configs.kS = m_PositionDegreeUp->GetS();
-	slot1Configs.kV = m_PositionDegreeUp->GetV();
-	slot1Configs.kA = m_PositionDegreeUp->GetA();
-	m_Climber->GetConfigurator().Apply(slot0Configs);
-	m_Climber->GetConfigurator().Apply(slot1Configs);
 }
 
 void ClimberManager::SetCurrentState(int state, bool run)
