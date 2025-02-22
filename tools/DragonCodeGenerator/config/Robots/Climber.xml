@@ -568,6 +568,38 @@
   </stateMotorControlData>
   <states>
     <state>
+      <name>Init</name>
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance_1</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
+      <motorTargets>
+        <motorTarget>
+          <name>Climber</name>
+          <target>
+            <unitsFamily>none</unitsFamily>
+            <name>Target</name>
+            <__units__ />
+            <type>Double</type>
+          </target>
+          <motorName>Climber</motorName>
+          <Enabled>
+            <unitsFamily>none</unitsFamily>
+            <name>boolParameter</name>
+            <__units__ />
+            <type>Boolean</type>
+            <value>true</value>
+          </Enabled>
+          <controlDataName>PercentOut</controlDataName>
+        </motorTarget>
+      </motorTargets>
+    </state>
+    <state>
       <name>Off</name>
       <transitionsTo>
         <stringParameterConstInMechInstance>
