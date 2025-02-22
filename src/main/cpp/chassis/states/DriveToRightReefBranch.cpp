@@ -63,7 +63,7 @@ void DriveToRightReefBranch::InitFromTrajectory(ChassisMovement &chassisMovement
     if (!m_trajectory.getStates().empty())
     {
         chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
+        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
         TrajectoryDrivePathPlanner::Init(chassisMovement);
     }
 }

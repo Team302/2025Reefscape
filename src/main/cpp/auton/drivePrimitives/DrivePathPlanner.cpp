@@ -92,7 +92,7 @@ void DrivePathPlanner::InitMap()
 }
 int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
 {
-    for (auto i = 0; i < zones.size(); i++)
+    for (unsigned int i = 0; i < zones.size(); i++)
     {
         if (zones[i]->GetPathUpdateOption() != NOTHING)
         {
