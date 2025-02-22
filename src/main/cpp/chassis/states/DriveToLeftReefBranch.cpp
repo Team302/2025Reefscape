@@ -87,6 +87,7 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
 
 pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
+    PathPlannerTrajectory trajectory;
     targetPose = frc::Pose2d(targetPose.X(), targetPose.Y(), targetPose.Rotation().Degrees() - 180_deg);
 
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
@@ -105,7 +106,8 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
 
     path->preventFlipping = true;
 
-    return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    return trajectory;
 }
 
 bool DriveToLeftReefBranch::IsDone()
