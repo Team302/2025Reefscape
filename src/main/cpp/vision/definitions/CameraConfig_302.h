@@ -14,33 +14,18 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "vision/definitions/CameraConfig.h"
 
-#include <string>
+#include "units/length.h"
 
-// FRC Includes
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/ChassisSpeeds.h>
-
-// Team302 Includes
-#include "chassis/states/RobotDrive.h"
-#include "utils/FMSData.h"
-#include "fielddata/DragonTargetFinder.h"
-
-class PolarDrive : public RobotDrive
+class CameraConfig_302 : public CameraConfig
 {
 public:
-    PolarDrive(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+    CameraConfig_302() = default;
+    ~CameraConfig_302() = default;
 
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
-
-    void Init(ChassisMovement &chassisMovement) override;
+    void BuildCameraConfig() override;
 
 private:
-    RobotDrive *m_robotDrive;
-    double m_loopRate = 0.02;
-    units::length::meter_t m_radiusTarget{5.0};
-    frc::Pose2d m_reefCenter;
-    FMSData *m_fmsData;
-    DragonTargetFinder *m_targetFinder;
+
 };

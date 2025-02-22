@@ -778,7 +778,6 @@
               <value>false</value>
             </enableFollowID>
             <remoteSensor>
-              <Source>CANCoder</Source>
               <CanID>
                 <unitsFamily>none</unitsFamily>
                 <name>uintParameter</name>
@@ -800,7 +799,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </enable>
               <fusedCANcoder>
                 <name>ArmAngleSensor</name>
@@ -819,7 +818,7 @@
                 <type>Double</type>
                 <value>180</value>
               </rotorToSensorRatio>
-              <fusedSyncChoice>SYNC</fusedSyncChoice>
+              <fusedSyncChoice>FUSED</fusedSyncChoice>
             </fusedSyncCANcoder>
             <sensorIsInverted>
               <unitsFamily>none</unitsFamily>
@@ -1053,7 +1052,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0.108878152421</value>
+                <value>0.1086833</value>
               </sensorToMechanismRatio>
             </remoteSensor>
             <fusedSyncCANcoder>
@@ -2530,7 +2529,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.2556155</value>
+              <value>0.117432</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
@@ -3119,7 +3118,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>83</value>
+                  <value>87</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
