@@ -295,7 +295,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>1</value>
               </pGain>
               <iGain>
                 <unitsFamily>none</unitsFamily>
@@ -309,7 +309,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>0</value>
+                <value>0.1</value>
               </dGain>
               <fGain>
                 <unitsFamily>none</unitsFamily>
@@ -481,8 +481,138 @@
               <value>false</value>
             </enableFOC>
           </motorControlData>
+          <motorControlData>
+            <name>PositionDegreeUp</name>
+            <PID>
+              <name>PIDFZ</name>
+              <pGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>1</value>
+              </pGain>
+              <iGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </iGain>
+              <dGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0.1</value>
+              </dGain>
+              <fGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </fGain>
+              <iZone>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </iZone>
+              <sGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </sGain>
+              <vGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </vGain>
+              <aGain>
+                <unitsFamily>none</unitsFamily>
+                <name>doubleParameter</name>
+                <__units__ />
+                <type>Double</type>
+                <value>0</value>
+              </aGain>
+            </PID>
+            <peakValue>
+              <unitsFamily>none</unitsFamily>
+              <name>doubleParameter</name>
+              <__units__ />
+              <type>Double</type>
+              <value>0</value>
+            </peakValue>
+            <nominalValue>
+              <unitsFamily>none</unitsFamily>
+              <name>doubleParameter</name>
+              <__units__ />
+              <type>Double</type>
+              <value>0</value>
+            </nominalValue>
+            <maxAcceleration>
+              <unitsFamily>none</unitsFamily>
+              <name>doubleParameter</name>
+              <__units__ />
+              <type>Double</type>
+              <value>0</value>
+            </maxAcceleration>
+            <cruiseVelocity>
+              <unitsFamily>none</unitsFamily>
+              <name>doubleParameter</name>
+              <__units__ />
+              <type>Double</type>
+              <value>0</value>
+            </cruiseVelocity>
+            <enableFOC>
+              <unitsFamily>none</unitsFamily>
+              <name>boolParameter</name>
+              <__units__ />
+              <type>Boolean</type>
+              <value>true</value>
+            </enableFOC>
+            <controlType>POSITION_DEGREES</controlType>
+          </motorControlData>
         </stateMotorControlData>
         <states>
+          <state>
+            <name>Init</name>
+            <transitionsTo>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance_1</name>
+                <__units__ />
+                <type>String</type>
+                <value>Off</value>
+              </stringParameterConstInMechInstance>
+            </transitionsTo>
+            <motorTargets>
+              <motorTarget>
+                <name>Climber</name>
+                <target>
+                  <unitsFamily>none</unitsFamily>
+                  <name>Target</name>
+                  <__units__ />
+                  <type>Double</type>
+                </target>
+                <motorName>Climber</motorName>
+                <Enabled>
+                  <unitsFamily>none</unitsFamily>
+                  <name>boolParameter</name>
+                  <__units__ />
+                  <type>Boolean</type>
+                  <value>true</value>
+                </Enabled>
+                <controlDataName>PercentOut</controlDataName>
+              </motorTarget>
+            </motorTargets>
+          </state>
           <state>
             <name>Off</name>
             <transitionsTo>
@@ -582,7 +712,7 @@
                   <type>Boolean</type>
                   <value>true</value>
                 </Enabled>
-                <controlDataName>PositionDegree</controlDataName>
+                <controlDataName>PositionDegreeUp</controlDataName>
               </motorTarget>
             </motorTargets>
           </state>
@@ -1012,21 +1142,21 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>70</value>
+                <value>50</value>
               </supplyCurrentLimit>
               <supplyCurrentThreshold>
                 <unitsFamily>current</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>35</value>
+                <value>40</value>
               </supplyCurrentThreshold>
               <supplyTimeThreshold>
                 <unitsFamily>time</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </supplyTimeThreshold>
             </theCurrentLimits>
             <PIDFs />
@@ -1531,7 +1661,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>70</value>
+                <value>50</value>
               </supplyCurrentLimit>
               <supplyCurrentThreshold>
                 <unitsFamily>current</unitsFamily>
@@ -1545,7 +1675,7 @@
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </supplyTimeThreshold>
             </theCurrentLimits>
             <PIDFs />
@@ -2711,6 +2841,48 @@
                 <__units__ />
                 <type>String</type>
                 <value>GrabAlgaeFloor</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>Process</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>Net</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>L1ScoringPosition</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>L2ScoringPosition</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>L3ScoringPosition</value>
+              </stringParameterConstInMechInstance>
+              <stringParameterConstInMechInstance>
+                <unitsFamily>none</unitsFamily>
+                <name>stringParameterConstInMechInstance</name>
+                <__units__ />
+                <type>String</type>
+                <value>L4ScoringPosition</value>
               </stringParameterConstInMechInstance>
             </transitionsTo>
             <motorTargets>

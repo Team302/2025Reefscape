@@ -25,7 +25,6 @@
 
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
-// #include "mechanisms/noteManager/generated/noteManagerGen.h"
 #include "utils/logging/debug/Logger.h"
 
 #include <pugixml/pugixml.hpp>
@@ -46,7 +45,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["DRIVE_PATH_PLANNER"] = DRIVE_PATH_PLANNER;
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER"] = RESET_POSITION_PATH_PLANNER;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
-    primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
     primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
 
@@ -77,13 +75,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                     {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
                                                     {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
                                                     {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
-
-    /** TODO Come back to this
-    map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
-        {"NOTE", ChassisOptionEnums::PathUpdateOption::NOTE},
-        {"NONE", ChassisOptionEnums::PathUpdateOption::NONE},
-    };
-    **/
 
     map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
         {"START", DriveStopDelay::DelayOption::START},
@@ -310,7 +301,10 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 {
                                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "zone filename", "name", std::string(attr.value()));
                                     auto zone = ZoneParser::ParseXML(attr.value());
-                                    zones.emplace_back(zone);
+                                    if (zone != nullptr)
+                                    {
+                                        zones.emplace_back(zone);
+                                    }
                                 }
                             }
                         }
@@ -369,8 +363,6 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Dragon Tale State"), param->GetTaleState());
-        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
-        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber state"), param->GetClimberState());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("num zones"), (double)param->GetZones().size());

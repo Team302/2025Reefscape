@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,35 +14,18 @@
 //====================================================================================================================================================
 
 #pragma once
+#include "vision/definitions/CameraConfig.h"
 
-// C++ Includes
+#include "units/length.h"
 
-// FRC includes
-
-// Team 302 includes
-
-// Third Party Includes
-
-enum PRIMITIVE_IDENTIFIER
+class CameraConfig_302 : public CameraConfig
 {
-  UNKNOWN_PRIMITIVE = -1,
-  DO_NOTHING,
-  HOLD_POSITION,
-  DRIVE_PATH_PLANNER,
-  RESET_POSITION_PATH_PLANNER,
-  VISION_ALIGN,
-  DO_NOTHING_DELAY,
-  DO_NOTHING_MECHANISMS,
-  MAX_AUTON_PRIMITIVES
-};
-enum PATH_UPDATE_OPTION
-{
-  NOTHING = -1,
-  RIGHT_REEF_BRANCH,
-  LEFT_REEF_BRANCH,
-  REEF_ALGAE,
-  FLOOR_ALGAE,
-  CORAL_STATION,
-  PROCESSOR,
-  MAX_DRIVE_TO_OPTIONS
+public:
+    CameraConfig_302() = default;
+    ~CameraConfig_302() = default;
+
+    void BuildCameraConfig() override;
+
+private:
+
 };

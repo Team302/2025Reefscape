@@ -16,6 +16,9 @@
 
 // C++ Includes
 #include <memory>
+#include <map>
+#include <optional>
+#include <tuple>
 
 // Team302 Includes
 #include "auton/PrimitiveParams.h"
@@ -23,7 +26,11 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/states/DriveToRightReefBranch.h"
+#include "chassis/states/DriveToLeftReefBranch.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+#include "fielddata/DragonTargetFinder.h"
 
 #include "utils/logging/signals/DragonDataLogger.h"
 
@@ -32,9 +39,12 @@
 #include "frc/Timer.h"
 #include "units/length.h"
 #include "units/time.h"
+#include "frc/geometry/Pose2d.h"
 
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+
+typedef std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> DragonTargetFinderPoseInfo;
 
 class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
@@ -47,16 +57,17 @@ public:
     bool IsDone() override;
     void DataLog(uint64_t timestamp) override;
 
+    int FindDriveToZoneIndex(ZoneParamsVector zones);
+
 private:
     void InitMoveInfo();
+    void InitMap();
+    bool IsInZone();
 
-    void CheckForDriveToReefBranch();
-    // void CheckForDriveToNote();
-    // bool ShouldConsiderNote(units::length::meter_t xposition);
+    void CheckForDriveTo();
     SwerveChassis *m_chassis;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-    DriveToRightReefBranch *m_driveToRightReefBranch;
     std::unique_ptr<frc::Timer> m_timer;
     pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
@@ -76,4 +87,18 @@ private:
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
+    PATH_UPDATE_OPTION m_updateOption;
+
+    std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *,
+                                            ChassisOptionEnums::DriveStateType,
+                                            DragonTargetFinderPoseInfo>>
+        m_updateOptionToTrajMap;
+
+    std::tuple<TrajectoryDrivePathPlanner *,
+               ChassisOptionEnums::DriveStateType,
+               DragonTargetFinderPoseInfo>
+        m_driveToInfo;
+
+    int m_zoneUpdateOptionIndex = -1;
+    ZoneParams *m_zone;
 };

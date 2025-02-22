@@ -95,9 +95,8 @@ enum class DRAGON_LIMELIGHT_SNAPSHOT_MODE
 enum class DRAGON_LIMELIGHT_PIPELINE
 {
     UNKNOWN = -1,
-    OFF,
-    MACHINE_LEARNING_PL,
     APRIL_TAG,
+    MACHINE_LEARNING_PL,
     COLOR_THRESHOLD
 };
 
@@ -210,7 +209,6 @@ protected:
     // from old dragon camera
     std::string m_cameraName;
     frc::Pose3d m_cameraPose;
-    const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);
     SwerveChassis *m_chassis;
     const double m_maxRotationRateDegreesPerSec = 720.0;
     const double m_yawRate = 0.0;

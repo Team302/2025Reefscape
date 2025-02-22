@@ -38,13 +38,13 @@ public:
     DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
     std::string GetDriveStateName() const override;
 
-    pathplanner::PathPlannerTrajectory CreateDriveToCoralStation();
-    
+    pathplanner::PathPlannerTrajectory CreateTrajectory();
+
     void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
     pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
 
-    bool IsDone();
+    bool IsDone() override;
 
 private:
     pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);

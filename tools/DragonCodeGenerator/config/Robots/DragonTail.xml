@@ -2122,6 +2122,48 @@
           <type>String</type>
           <value>GrabAlgaeFloor</value>
         </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Process</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>Net</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>L1ScoringPosition</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>L2ScoringPosition</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>L3ScoringPosition</value>
+        </stringParameterConstInMechInstance>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance</name>
+          <__units__ />
+          <type>String</type>
+          <value>L4ScoringPosition</value>
+        </stringParameterConstInMechInstance>
       </transitionsTo>
       <motorTargets>
         <motorTarget>

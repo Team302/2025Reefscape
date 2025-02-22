@@ -48,7 +48,7 @@ DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrive
 void DriveToCoralStation::Init(ChassisMovement &chassisMovement)
 {
 
-    m_trajectory = CreateDriveToCoralStation();
+    m_trajectory = CreateTrajectory();
     InitFromTrajectory(chassisMovement, m_trajectory);
 }
 
@@ -63,12 +63,12 @@ void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, p
     if (!m_trajectory.getStates().empty())
     {
         chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
+        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
         TrajectoryDrivePathPlanner::Init(chassisMovement);
     }
 }
 
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
+pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateTrajectory()
 {
     pathplanner::PathPlannerTrajectory trajectory;
 
