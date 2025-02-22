@@ -43,6 +43,7 @@ class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChang
 public:
 	enum STATE_NAMES
 	{
+		STATE_INIT,
 		STATE_OFF,
 		STATE_MANUAL_CLIMB,
 		STATE_AUTO_CLIMB
@@ -100,6 +101,7 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOut() const { return m_PercentOut; }
+	ControlData *GetPositionDegreeUp() const { return m_PositionDegreeUp; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -120,6 +122,7 @@ private:
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOut;
+	ControlData *m_PositionDegreeUp;
 
 	RobotStateChanges::ClimbMode m_climbMode;
 
