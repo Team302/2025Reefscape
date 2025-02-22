@@ -98,7 +98,7 @@ private:
     DragonVision();
     ~DragonVision() = default;
 
-    std::vector<DragonLimelight *> GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const;
+    std::vector<DragonLimelight *> GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const;
 
     std::optional<VisionData> GetVisionDataFromAlgae(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataFromElement(VISION_ELEMENT element);

@@ -55,11 +55,6 @@ public:
 
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
 
-    static void SetCorrection(ChassisMovement &chassisMovement,
-                              SwerveChassis *chassis,
-                              units::angle::degree_t target,
-                              double kp);
-
 private:
     DragonTargetFinder();
     ~DragonTargetFinder() = default;
@@ -71,7 +66,11 @@ private:
     std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
-    frc::Pose2d GetVisonPose(VisionData data);
+    std::optional<frc::Pose2d> GetVisonPose(VisionData data);
+    bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
 
-    const units::length::meter_t m_fuseTol = units::length::meter_t(0.25);
+    void SetChassis();
+
+    const units::length::meter_t m_fuseTol{0.25};
+    const units::length::meter_t m_switchToVisionThreshold{1.0};
 };
