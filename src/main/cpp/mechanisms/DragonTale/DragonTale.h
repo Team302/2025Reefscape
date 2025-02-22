@@ -188,6 +188,8 @@ public:
 
 	void SetCurrentState(int state, bool run) override;
 
+	bool GetRemedialActionStatus() { return m_elevatorRemedialAction; }
+
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
