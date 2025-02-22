@@ -95,6 +95,7 @@ void DragonLimelight::PeriodicCacheData()
         m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
         m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
         m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
+        m_pipeline = static_cast<DRAGON_LIMELIGHT_PIPELINE>(nt->GetNumber("getpipe", -1));
     }
     else
     {

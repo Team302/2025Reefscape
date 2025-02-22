@@ -47,9 +47,12 @@ DriveToRightReefBranch::DriveToRightReefBranch(RobotDrive *robotDrive, Trajector
 
 void DriveToRightReefBranch::Init(ChassisMovement &chassisMovement)
 {
+    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
 
     m_trajectory = CreateTrajectory();
+    m_trajectory = CreateDriveToRightReefBranch(info);
     InitFromTrajectory(chassisMovement, m_trajectory);
+    m_currentType = get<0>(info.value());
 }
 
 std::string DriveToRightReefBranch::GetDriveStateName() const
@@ -69,13 +72,13 @@ void DriveToRightReefBranch::InitFromTrajectory(ChassisMovement &chassisMovement
 }
 
 pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateTrajectory()
+pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightReefBranch(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
 {
     pathplanner::PathPlannerTrajectory trajectory;
 
     if (m_chassis != nullptr)
     {
-        std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
-        if (info && !IsDone())
+        if (info)
         {
             m_endPose = std::get<frc::Pose2d>(info.value());
             trajectory = CreateDriveToRightReefBranchTrajectory(m_chassis->GetPose(), m_endPose);
@@ -113,8 +116,24 @@ bool DriveToRightReefBranch::IsDone()
     {
         frc::Pose2d currentPose(m_chassis->GetPose());
 
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < units::inch_t(6))
+        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < m_distanceThreshold)
             return true;
     }
     return false;
+}
+
+std::array<frc::SwerveModuleState, 4> DriveToRightReefBranch::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
+{
+    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);
+    frc::Pose2d newEndPose = get<1>(info.value());
+    bool regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+
+    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+    {
+        m_trajectory = CreateDriveToRightReefBranch(info);
+        InitFromTrajectory(chassisMovement, m_trajectory);
+    }
+    m_currentType = get<0>(info.value());
+
+    return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
 }
