@@ -23,8 +23,8 @@
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
 #include "units/time.h"
-#include "wpi/array.h"
 #include "vision/DragonVision.h"
+#include "wpi/array.h"
 
 DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
                                                      const frc::Rotation2d &gyroAngle,
@@ -112,6 +112,7 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 }
 void DragonSwervePoseEstimator::CalculateInitialPose()
 {
+
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
@@ -119,7 +120,7 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
         if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
         {
-            chassis->ResetPose(visionpose.value());
+            ResetPose(visionpose.value());
         }
     }
 }
