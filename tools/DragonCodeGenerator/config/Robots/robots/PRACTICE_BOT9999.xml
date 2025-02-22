@@ -575,7 +575,7 @@
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>false</value>
+              <value>true</value>
             </enableFOC>
             <controlType>POSITION_DEGREES</controlType>
           </motorControlData>
@@ -712,7 +712,7 @@
                   <type>Boolean</type>
                   <value>true</value>
                 </Enabled>
-                <controlDataName>PositionDegree</controlDataName>
+                <controlDataName>PositionDegreeUp</controlDataName>
               </motorTarget>
             </motorTargets>
           </state>

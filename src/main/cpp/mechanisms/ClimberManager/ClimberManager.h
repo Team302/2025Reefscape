@@ -72,16 +72,15 @@ public:
 		m_ClimberPercentOut.Output = percentOut;
 		m_ClimberActiveTarget = &m_ClimberPercentOut;
 	}
-	void UpdateTargetClimberPercentOut(double percentOut, bool enableFOC)
-	{
-		m_ClimberPercentOut.Output = percentOut;
-		m_ClimberPercentOut.EnableFOC = enableFOC;
-		m_ClimberActiveTarget = &m_ClimberPercentOut;
-	}
 	void UpdateTargetClimberPositionDegree(units::angle::turn_t position)
 	{
 		m_ClimberPositionDegree.Position = position;
-		m_ClimberActiveTarget = &m_ClimberPositionDegree;
+		m_ClimberActiveTarget = &m_ClimberPositionDegree.WithSlot(0);
+	}
+	void UpdateTargetClimberPositionDegreeUp(units::angle::turn_t position)
+	{
+		m_ClimberPositionDegreeUp.Position = position;
+		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
 	void SetPIDClimberPositionDegree();
@@ -94,6 +93,7 @@ public:
 	void RunCommonTasks() override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
+	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int ival);
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
@@ -124,6 +124,7 @@ private:
 	ControlData *m_PercentOut;
 	ControlData *m_PositionDegreeUp;
 
+	RobotStateChanges::GamePeriod m_gameMode;
 	RobotStateChanges::ClimbMode m_climbMode;
 
 	void CheckForTuningEnabled();
@@ -135,5 +136,6 @@ private:
 
 	ctre::phoenix6::controls::DutyCycleOut m_ClimberPercentOut{0.0};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegreeUp{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 };

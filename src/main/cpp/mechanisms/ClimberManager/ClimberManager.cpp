@@ -75,6 +75,7 @@ ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(Mechani
 {
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 }
 
 std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap{
@@ -325,7 +326,9 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
 
-	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	configs.Slot0.
+
+		ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
 		status = m_Climber->GetConfigurator().Apply(configs, units::time::second_t(0.25));
@@ -338,7 +341,6 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 
 void ClimberManager::SetPIDClimberPositionDegree()
 {
-	Slot0Configs slot0Configs{};
 	slot0Configs.kP = m_PositionDegree->GetP();
 	slot0Configs.kI = m_PositionDegree->GetI();
 	slot0Configs.kD = m_PositionDegree->GetD();
@@ -346,7 +348,16 @@ void ClimberManager::SetPIDClimberPositionDegree()
 	slot0Configs.kS = m_PositionDegree->GetS();
 	slot0Configs.kV = m_PositionDegree->GetV();
 	slot0Configs.kA = m_PositionDegree->GetA();
+
+	slot1Configs.kP = m_PositionDegreeUp->GetP();
+	slot1Configs.kI = m_PositionDegreeUp->GetI();
+	slot1Configs.kD = m_PositionDegreeUp->GetD();
+	slot1Configs.kG = m_PositionDegreeUp->GetF();
+	slot1Configs.kS = m_PositionDegreeUp->GetS();
+	slot1Configs.kV = m_PositionDegreeUp->GetV();
+	slot1Configs.kA = m_PositionDegreeUp->GetA();
 	m_Climber->GetConfigurator().Apply(slot0Configs);
+	m_Climber->GetConfigurator().Apply(slot1Configs);
 }
 
 void ClimberManager::SetCurrentState(int state, bool run)
@@ -463,6 +474,10 @@ void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechang
 	if (statechange == RobotStateChanges::StateChange::ClimbModeStatus_Int)
 	{
 		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(ival);
+	}
+	else if (statechange == RobotStateChanges::StateChange::GameState_Int)
+	{
+		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(ival);
 	}
 }
 

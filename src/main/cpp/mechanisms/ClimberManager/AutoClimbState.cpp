@@ -43,23 +43,14 @@ AutoClimbState::AutoClimbState(std::string stateName,
 void AutoClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutoClimbState"), string("Init"));
-
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
-		InitCOMP_BOT302();
-}
-
-void AutoClimbState::InitPRACTICE_BOT9999()
-{
-	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-}
-
-void AutoClimbState::InitCOMP_BOT302()
-{
-	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_ClimberTarget)
+	{
+		m_mechanism->UpdateTargetClimberPositionDegreeUp(m_ClimberTarget);
+	}
+	else
+	{
+		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	}
 }
 
 void AutoClimbState::Run()

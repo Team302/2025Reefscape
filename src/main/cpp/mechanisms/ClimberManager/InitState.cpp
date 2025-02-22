@@ -43,6 +43,7 @@ InitState::InitState(std::string stateName,
 void InitState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitState"), string("Init"));
+	m_mechanism->GetClimber()->SetPosition(units::angle::turn_t(108.0));
 
 	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
 		InitPRACTICE_BOT9999();
