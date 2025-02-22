@@ -104,7 +104,11 @@ void DragonQuest::RefreshNT()
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
 }
 
-void DragonQuest::ResetWithLimelightData(frc::Pose3d vsionpose)
+void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
+{
+    ResetWithLimelightData(pose.ToPose3d());
+}
+void DragonQuest::ResetWithLimelightData(frc::Pose3d visionpose)
 {
     auto vision = DragonVision::GetDragonVision();
     std::optional<VisionPose> llpose = vision->GetRobotPosition();

@@ -609,3 +609,26 @@ void DragonLimelight::DataLog(uint64_t timestamp)
         }
     }
 }
+
+void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
+{
+    auto yawrate = 0.0;
+    auto pitch = 0.0;
+    auto pitchrate = 0.0;
+    auto roll = 0.0;
+    auto rollrate = 0.0;
+    if (m_chassis != nullptr)
+    {
+        yawrate = m_chassis->GetRotationRateDegreesPerSecond();
+        pitch = GetCameraPitch().value();
+        roll = GetCameraRoll().value();
+    }
+
+    LimelightHelpers::SetRobotOrientation(m_cameraName,
+                                          pose.value(),
+                                          yawrate,
+                                          pitch,
+                                          pitchrate,
+                                          roll,
+                                          rollrate);
+}

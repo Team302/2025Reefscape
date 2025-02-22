@@ -183,6 +183,7 @@ public:
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void DataLog(uint64_t timestamp) override;
+    void SetRobotPose(const frc::Pose2d &pose) override;
 
 protected:
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);

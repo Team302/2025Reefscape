@@ -31,8 +31,8 @@
 #include "networktables/IntegerTopic.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
-#include "vision/DragonVisionStructs.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonVisionStructs.h"
 
 using namespace std;
 
@@ -45,6 +45,7 @@ public:
     void DataLog(uint64_t timestamp) override;
     void ResetWithLimelightData(frc::Pose3d visionpose);
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
+    void SetRobotPose(const frc::Pose2d &pose) override;
 
 private:
     DragonQuest();

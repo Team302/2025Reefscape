@@ -23,15 +23,14 @@
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
 #include "units/time.h"
-#include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
+#include "vision/DragonVision.h"
 #include "wpi/array.h"
 
 DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
                                                      const frc::Rotation2d &gyroAngle,
                                                      const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                                                     const frc::Pose2d &initialPose) : // m_chassis(chassis),
-                                                                                       m_frontLeft(nullptr),
+                                                     const frc::Pose2d &initialPose) : m_frontLeft(nullptr),
                                                                                        m_frontRight(nullptr),
                                                                                        m_backLeft(nullptr),
                                                                                        m_backRight(nullptr),
@@ -121,6 +120,7 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
         if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
         {
+            m_hasInitialPoseBeenCalculated = true;
             ResetPose(visionpose.value());
         }
     }
@@ -133,5 +133,12 @@ frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
 {
     m_poseEstimator.ResetPose(pose);
-    DragonQuest::GetDragonQuest()->ResetWithLimelightData(frc::Pose3d(pose));
+    if (m_hasInitialPoseBeenCalculated)
+    {
+        for (auto estimator : m_visionPoseEstimators)
+        {
+            estimator->SetRobotPose(pose);
+            // DragonQuest::GetDragonQuest()->ResetWithLimelightData(frc::Pose3d(pose));
+        }
+    }
 }

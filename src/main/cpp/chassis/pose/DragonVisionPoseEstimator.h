@@ -15,6 +15,7 @@
 
 #pragma once
 #include "chassis/pose/DragonVisionPoseEstimatorStruct.h"
+#include "frc/geometry/Pose2d.h"
 
 class DragonVisionPoseEstimator
 {
@@ -23,6 +24,7 @@ public:
     ~DragonVisionPoseEstimator() = default;
 
     virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
+    virtual void SetRobotPose(frc::Pose2d &pose) {};
 
 private:
     DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;
