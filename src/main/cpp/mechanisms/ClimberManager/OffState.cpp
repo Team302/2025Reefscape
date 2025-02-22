@@ -43,23 +43,7 @@ OffState::OffState(std::string stateName,
 void OffState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
-
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
-		InitCOMP_BOT302();
-}
-
-void OffState::InitPRACTICE_BOT9999()
-{
-	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-}
-
-void OffState::InitCOMP_BOT302()
-{
-	m_mechanism->SetPIDClimberPositionDegree();
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
 }
 
 void OffState::Run()
@@ -83,7 +67,8 @@ bool OffState::AtTarget()
 bool OffState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return !m_mechanism->IsClimbMode();
+	return (!m_mechanism->IsClimbMode() && !(m_mechanism->GetCurrentState() == ClimberManager::STATE_INIT)) ||
+		   ((m_mechanism->GetCurrentState() == ClimberManager::STATE_INIT) && (m_mechanism->IsTeleop()));
 
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

@@ -43,6 +43,7 @@ class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChang
 public:
 	enum STATE_NAMES
 	{
+		STATE_INIT,
 		STATE_OFF,
 		STATE_MANUAL_CLIMB,
 		STATE_AUTO_CLIMB
@@ -71,16 +72,15 @@ public:
 		m_ClimberPercentOut.Output = percentOut;
 		m_ClimberActiveTarget = &m_ClimberPercentOut;
 	}
-	void UpdateTargetClimberPercentOut(double percentOut, bool enableFOC)
-	{
-		m_ClimberPercentOut.Output = percentOut;
-		m_ClimberPercentOut.EnableFOC = enableFOC;
-		m_ClimberActiveTarget = &m_ClimberPercentOut;
-	}
 	void UpdateTargetClimberPositionDegree(units::angle::turn_t position)
 	{
 		m_ClimberPositionDegree.Position = position;
-		m_ClimberActiveTarget = &m_ClimberPositionDegree;
+		m_ClimberActiveTarget = &m_ClimberPositionDegree.WithSlot(0);
+	}
+	void UpdateTargetClimberPositionDegreeUp(units::angle::turn_t position)
+	{
+		m_ClimberPositionDegreeUp.Position = position;
+		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
 	void SetPIDClimberPositionDegree();
@@ -93,6 +93,7 @@ public:
 	void RunCommonTasks() override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
+	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int ival);
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
@@ -100,6 +101,7 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOut() const { return m_PercentOut; }
+	ControlData *GetPositionDegreeUp() const { return m_PositionDegreeUp; }
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -120,7 +122,9 @@ private:
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOut;
+	ControlData *m_PositionDegreeUp;
 
+	RobotStateChanges::GamePeriod m_gameMode;
 	RobotStateChanges::ClimbMode m_climbMode;
 
 	void CheckForTuningEnabled();
@@ -132,5 +136,6 @@ private:
 
 	ctre::phoenix6::controls::DutyCycleOut m_ClimberPercentOut{0.0};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegreeUp{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 };
