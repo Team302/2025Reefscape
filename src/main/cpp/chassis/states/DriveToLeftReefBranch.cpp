@@ -48,10 +48,14 @@ DriveToLeftReefBranch::DriveToLeftReefBranch(RobotDrive *robotDrive, TrajectoryD
 void DriveToLeftReefBranch::Init(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
+    m_endPose = std::nullopt;
 
-    m_trajectory = CreateTrajectory(info);
-    InitFromTrajectory(chassisMovement, m_trajectory);
-    m_currentType = get<0>(info.value());
+    if (!IsDone())
+    {
+        m_trajectory = CreateTrajectory(info);
+        InitFromTrajectory(chassisMovement, m_trajectory);
+        m_currentType = get<0>(info.value());
+    }
 }
 
 std::string DriveToLeftReefBranch::GetDriveStateName() const
@@ -85,16 +89,17 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateTrajectory(std::
     return trajectory;
 }
 
-pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
+pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose2d, std::optional<frc::Pose2d> targetPose)
 {
     PathPlannerTrajectory trajectory;
-    targetPose = frc::Pose2d(targetPose.X(), targetPose.Y(), targetPose.Rotation().Degrees() - 180_deg);
+    frc::Pose2d finalPose = targetPose.value();
+    finalPose = frc::Pose2d(finalPose.X(), finalPose.Y(), finalPose.Rotation().Degrees() - 180_deg);
 
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("Left Branch pose", targetPose);
+    DragonVisionStructLogger::logPose2d("Left Branch pose", finalPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
+    std::vector<frc::Pose2d> poses{currentPose2d, finalPose};
     std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
     shared_ptr<PathPlannerPath> path;
 
@@ -102,7 +107,7 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
         waypoints,
         constraints,
         std::nullopt,
-        GoalEndState(0.0_mps, targetPose.Rotation()), false);
+        GoalEndState(0.0_mps, finalPose.Rotation()), false);
 
     path->preventFlipping = true;
 
@@ -114,14 +119,15 @@ std::array<frc::SwerveModuleState, 4> DriveToLeftReefBranch::UpdateSwerveModuleS
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
     frc::Pose2d newEndPose = get<1>(info.value());
-    bool regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+    bool regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
     if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
     {
         m_trajectory = CreateTrajectory(info);
         InitFromTrajectory(chassisMovement, m_trajectory);
+        m_currentType = get<0>(info.value());
     }
-    m_currentType = get<0>(info.value());
+    
 
     return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
 }

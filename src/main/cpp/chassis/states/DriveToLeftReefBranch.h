@@ -47,9 +47,9 @@ public:
     std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
 private:
-    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
+    pathplanner::PathPlannerTrajectory CreateDriveToLeftReefBranchTrajectory(frc::Pose2d currentPose, std::optional<frc::Pose2d> csaPose);
 
     pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
-    frc::Pose2d m_endPose;
+    std::optional<frc::Pose2d> m_endPose = std::nullopt;
 };
