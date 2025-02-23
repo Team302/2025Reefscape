@@ -54,10 +54,6 @@ DriveStop::DriveStop() : IPrimitive(),
 {
 	auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
 	m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
-	// get reference to notemanager in drivestop to check for state
-	// StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-	// m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
 }
 
 /// @brief initialize this usage of the primitive
@@ -98,17 +94,5 @@ void DriveStop::Run()
 bool DriveStop::IsDone()
 {
 
-	// if note manager is in a launch mode,
-	// don't end the drive stop state as we haven't launched yet
-	/**
-	if (m_noteManager != nullptr)
-	{
-		if ((m_noteManager->GetCurrentState() == noteManagerGen::STATE_AUTO_LAUNCH) || (m_noteManager->GetCurrentState() == noteManagerGen::STATE_MANUAL_LAUNCH))
-		{
-			if (m_noteManager->HasNote())
-				return false;
-		}
-	}
-	**/
 	return m_timer->AdvanceIfElapsed(m_maxTime);
 }

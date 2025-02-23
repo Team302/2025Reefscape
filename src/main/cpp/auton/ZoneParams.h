@@ -58,8 +58,10 @@ public:
 
     AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
 
-    frc::Pose2d getCircleZonePose() const { return m_circlePose; }
-    units::length::inch_t getRadius() const { return m_radius; }
+    frc::Pose2d GetCircleZonePose() const { return m_circlePose; }
+    units::length::inch_t GetRadius() const { return m_radius; }
+
+    PATH_UPDATE_OPTION GetPathUpdateOption() const { return m_pathUpdateOption; }
 
     bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
     bool IsTaleStateChanging() const { return m_isTaleStateChanging; }

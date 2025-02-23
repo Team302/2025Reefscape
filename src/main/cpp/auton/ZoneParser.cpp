@@ -118,7 +118,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"27", AutonGrid::YGRID::Y_27}};
 
     static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
-        {"VISION_DRIVE_NOTE", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_NOTE},
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
         {"NO_VISION", ChassisOptionEnums::AutonChassisOptions::NO_VISION},
     };
@@ -283,10 +282,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                             taleChosenOption = itr->second;
                             isTaleStateChanging = true;
                         }
-                    }
-                    else
-                    {
-                        hasError = true;
+                        else
+                        {
+                            hasError = true;
+                        }
                     }
                 }
 
@@ -315,7 +314,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
-                else if (strcmp(attr.name(), "updateOption") == 0)
+                else if (strcmp(attr.name(), "pathUpdateOption") == 0)
                 {
                     auto itr = xmlStringToPathUpdateOptionMap.find(attr.value());
                     if (itr != xmlStringToPathUpdateOptionMap.end())

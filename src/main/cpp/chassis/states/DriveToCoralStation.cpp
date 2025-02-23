@@ -48,8 +48,11 @@ DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrive
 void DriveToCoralStation::Init(ChassisMovement &chassisMovement)
 {
 
-    m_trajectory = CreateDriveToCoralStation();
+    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
+
+    m_trajectory = CreateTrajectory(info);
     InitFromTrajectory(chassisMovement, m_trajectory);
+    m_currentType = get<0>(info.value());
 }
 
 std::string DriveToCoralStation::GetDriveStateName() const
@@ -63,19 +66,19 @@ void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, p
     if (!m_trajectory.getStates().empty())
     {
         chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
+        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
         TrajectoryDrivePathPlanner::Init(chassisMovement);
     }
 }
 
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
+pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
 {
+
     pathplanner::PathPlannerTrajectory trajectory;
 
     if (m_chassis != nullptr)
     {
-        std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
-        if (info && !IsDone())
+        if (info)
         {
             m_endPose = std::get<frc::Pose2d>(info.value());
             trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), m_endPose);
@@ -86,6 +89,8 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
 
 pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
 {
+    PathPlannerTrajectory trajectory;
+
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
     DragonVisionStructLogger::logPose2d("coral pose", targetPose);
 
@@ -102,7 +107,8 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
 
     path->preventFlipping = true;
 
-    return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    return trajectory;
 }
 
 bool DriveToCoralStation::IsDone()
@@ -115,4 +121,20 @@ bool DriveToCoralStation::IsDone()
             return true;
     }
     return false;
+}
+
+std::array<frc::SwerveModuleState, 4> DriveToCoralStation::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
+{
+    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
+    frc::Pose2d newEndPose = get<1>(info.value());
+    bool regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+
+    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+    {
+        m_trajectory = CreateTrajectory(info);
+        InitFromTrajectory(chassisMovement, m_trajectory);
+    }
+    m_currentType = get<0>(info.value());
+
+    return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
 }
