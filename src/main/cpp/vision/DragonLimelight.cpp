@@ -591,13 +591,13 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
                 yaw = poseest->GetPose().Rotation().Degrees().value();
             }
 
-            LimelightHelpers::SetRobotOrientation(GetCameraName(),
-                                                  yaw,
-                                                  m_yawRate,
-                                                  m_pitch,
-                                                  m_pitchRate,
-                                                  m_roll,
-                                                  m_rollRate);
+            // LimelightHelpers::SetRobotOrientation(GetCameraName(),
+            //                                       yaw,
+            //                                       m_yawRate,
+            //                                       m_pitch,
+            //                                       m_pitchRate,
+            //                                       m_roll,
+            //                                       m_rollRate);
 
             std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
 
@@ -645,11 +645,11 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
         roll = GetCameraRoll().value();
     }
 
-    LimelightHelpers::SetRobotOrientation(m_cameraName,
-                                          pose.Rotation().Degrees().value(),
-                                          yawrate,
-                                          pitch,
-                                          pitchrate,
-                                          roll,
-                                          rollrate);
+    // LimelightHelpers::SetRobotOrientation(m_cameraName,
+    //                                       pose.Rotation().Degrees().value(),
+    //                                       yawrate,
+    //                                       pitch,
+    //                                       pitchrate,
+    //                                       roll,
+    //                                      rollrate);
 }
