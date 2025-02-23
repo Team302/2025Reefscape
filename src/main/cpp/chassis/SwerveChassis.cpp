@@ -173,8 +173,6 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
-    UpdateOdometry();
-
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
@@ -314,16 +312,6 @@ units::angle::degree_t SwerveChassis::GetPitch() const
 units::angle::degree_t SwerveChassis::GetRoll() const
 {
     return m_pigeon->GetRoll().GetValue();
-}
-
-//==================================================================================
-/// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
-void SwerveChassis::UpdateOdometry()
-{
-    if (m_swervePoseEstimator != nullptr)
-    {
-        m_swervePoseEstimator->Update();
-    }
 }
 
 //==================================================================================

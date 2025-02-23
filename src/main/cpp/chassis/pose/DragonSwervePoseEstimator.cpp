@@ -119,7 +119,6 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
         if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
         {
-            m_hasInitialPoseBeenCalculated = true;
             ResetPose(visionpose.value());
         }
     }
@@ -132,11 +131,8 @@ frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
 {
     m_poseEstimator.ResetPose(pose);
-    if (m_hasInitialPoseBeenCalculated)
+    for (auto estimator : m_visionPoseEstimators)
     {
-        for (auto estimator : m_visionPoseEstimators)
-        {
-            estimator->SetRobotPose(pose);
-        }
+        estimator->SetRobotPose(pose);
     }
 }

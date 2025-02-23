@@ -34,6 +34,7 @@
 // Team 302 includes
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "vision/DragonLimelight.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
@@ -575,8 +576,15 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
 {
     if (m_chassis != nullptr && m_chassis->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
     {
+        auto yaw = m_chassis->GetYaw().value();
+        auto poseest = m_chassis->GetSwervePoseEstimator();
+        if (poseest != nullptr)
+        {
+            yaw = poseest->GetPose().Rotation().Degrees().value();
+        }
+
         LimelightHelpers::SetRobotOrientation(GetCameraName(),
-                                              m_chassis->GetYaw().value(),
+                                              yaw,
                                               m_yawRate,
                                               m_pitch,
                                               m_pitchRate,

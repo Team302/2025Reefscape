@@ -59,5 +59,4 @@ private:
     frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
     std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
-    bool m_hasInitialPoseBeenCalculated = false;
 };
