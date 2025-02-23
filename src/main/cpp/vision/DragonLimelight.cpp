@@ -230,12 +230,16 @@ std::optional<units::angle::degree_t> DragonLimelight::GetTargetSkew()
  */
 std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool megatag2)
 {
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("gotMT1"), m_getMT1 ? std::string("true") : std::string("false"));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("gotMT2"), m_getMT2 ? std::string("true") : std::string("false"));
+
     // Megatag 1
     if (m_networktable.get() != nullptr)
     {
         // Megatag 1
         if (!megatag2)
         {
+            m_getMT1 = true;
             if (!m_megatag1PosBool)
             {
                 nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
@@ -287,6 +291,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 }
                 m_megatag1PosBool = true;
                 m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
+                // m_gotInitialMT1Pose = true;
             }
             return m_megatag1Pos;
         }
@@ -294,12 +299,13 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         // Megatag 2
         else
         {
-            if (!m_megatag2PosBool)
+            m_getMT2 = true;
+            if (!m_megatag2PosBool && m_gotInitialMT1Pose)
             {
                 auto nt = m_networktable.get();
                 if (nt != nullptr)
                 {
-                    nt->PutNumber("imumode_set", 3);
+                    // nt->PutNumber("imumode_set", 3);
                 }
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
 
@@ -313,7 +319,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 {
                     double xyStds = .7;
                     double degStds = 9999999;
-                    m_megatag2PosBool = true;
+                    // m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
                 }
             }
@@ -576,31 +582,34 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
 {
     if (m_chassis != nullptr && m_chassis->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
     {
-        auto yaw = m_chassis->GetYaw().value();
-        auto poseest = m_chassis->GetSwervePoseEstimator();
-        if (poseest != nullptr)
+        if (m_gotInitialMT1Pose)
         {
-            yaw = poseest->GetPose().Rotation().Degrees().value();
-        }
+            auto yaw = m_chassis->GetYaw().value();
+            auto poseest = m_chassis->GetSwervePoseEstimator();
+            if (poseest != nullptr)
+            {
+                yaw = poseest->GetPose().Rotation().Degrees().value();
+            }
 
-        LimelightHelpers::SetRobotOrientation(GetCameraName(),
-                                              yaw,
-                                              m_yawRate,
-                                              m_pitch,
-                                              m_pitchRate,
-                                              m_roll,
-                                              m_rollRate);
+            LimelightHelpers::SetRobotOrientation(GetCameraName(),
+                                                  yaw,
+                                                  m_yawRate,
+                                                  m_pitch,
+                                                  m_pitchRate,
+                                                  m_roll,
+                                                  m_rollRate);
 
-        std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
+            std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
 
-        if (megaTag2Pose.has_value())
-        {
-            DragonVisionPoseEstimatorStruct str;
-            str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
-            str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
-            str.m_timeStamp = megaTag2Pose.value().timeStamp;
-            str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
-            return str;
+            if (megaTag2Pose.has_value())
+            {
+                DragonVisionPoseEstimatorStruct str;
+                str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+                str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
+                str.m_timeStamp = megaTag2Pose.value().timeStamp;
+                str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
+                return str;
+            }
         }
     }
     return DragonVisionPoseEstimatorStruct();
