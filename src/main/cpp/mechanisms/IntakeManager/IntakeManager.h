@@ -89,8 +89,6 @@ public:
 		m_ExtenderActiveTarget = &m_ExtenderPositionDegree;
 	}
 
-	void SetPIDExtenderPositionDegree();
-
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 

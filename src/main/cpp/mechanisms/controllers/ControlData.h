@@ -74,7 +74,9 @@ public:
         double cruiseVelocity,
         double peakValue,
         double nominalValue,
-        bool enableFOC);
+        bool enableFOC,
+        GravityTypeValue gravityType,
+        StaticFeedforwardSignValue staticFeedforwardSign);
 
     virtual ~ControlData() = default;
 
@@ -159,6 +161,12 @@ public:
     inline bool IsFOCEnabled() const { return m_enableFOC; }
     inline void SetFOCEnabled(bool enable) { m_enableFOC = enable; }
 
+    inline GravityTypeValue GetGravityType() const { return m_gravityType; }
+    inline void SetNominalValue(GravityTypeValue value) { m_gravityType = value; }
+
+    inline StaticFeedforwardSignValue GetStaticFeedforwardSign() const { return m_staticFeedforwardSign; }
+    inline void SetNominalValue(StaticFeedforwardSignValue value) { m_staticFeedforwardSign = value; }
+
 private:
     ControlModes::CONTROL_TYPE m_mode;
     ControlModes::CONTROL_RUN_LOCS m_runLoc;
@@ -177,4 +185,6 @@ private:
     double m_peakValue;
     double m_nominalValue;
     bool m_enableFOC;
+    GravityTypeValue m_gravityType;
+    StaticFeedforwardSignValue m_staticFeedforwardSign;
 };
