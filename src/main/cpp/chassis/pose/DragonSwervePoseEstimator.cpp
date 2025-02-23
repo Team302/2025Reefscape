@@ -137,7 +137,6 @@ void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
         for (auto estimator : m_visionPoseEstimators)
         {
             estimator->SetRobotPose(pose);
-            // DragonQuest::GetDragonQuest()->ResetWithLimelightData(frc::Pose3d(pose));
         }
     }
 }

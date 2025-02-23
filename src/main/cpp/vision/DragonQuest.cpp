@@ -106,7 +106,8 @@ void DragonQuest::RefreshNT()
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
-    ResetWithLimelightData(pose.ToPose3d());
+    frc::Pose3d p3d{frc::Pose3d(pose)};
+    ResetWithLimelightData(p3d);
 }
 void DragonQuest::ResetWithLimelightData(frc::Pose3d visionpose)
 {

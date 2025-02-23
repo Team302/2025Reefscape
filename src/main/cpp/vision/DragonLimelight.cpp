@@ -625,7 +625,7 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
     }
 
     LimelightHelpers::SetRobotOrientation(m_cameraName,
-                                          pose.value(),
+                                          pose.Rotation().Degrees().value(),
                                           yawrate,
                                           pitch,
                                           pitchrate,
