@@ -108,18 +108,6 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
     return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
 }
 
-bool DriveToRightReefBranch::IsDone()
-{
-    if (m_chassis != nullptr)
-    {
-        frc::Pose2d currentPose(m_chassis->GetPose());
-
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < m_distanceThreshold)
-            return true;
-    }
-    return false;
-}
-
 std::array<frc::SwerveModuleState, 4> DriveToRightReefBranch::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH);

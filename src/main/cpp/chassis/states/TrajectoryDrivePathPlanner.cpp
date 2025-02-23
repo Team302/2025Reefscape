@@ -150,16 +150,7 @@ bool TrajectoryDrivePathPlanner::IsDone()
 
         if ((currentTime) / m_totalTrajectoryTime > 0.9)
         {
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose X", currentPose.X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Y", currentPose.Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Rotation", currentPose.Rotation().Degrees().value());
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose X", m_finalState.pose.X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.pose.Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.pose.Rotation().Degrees().value());
-
-            isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
+            isDone = IsSamePose(currentPose, m_finalState.pose); // TO DO verify these values
         }
     }
     else
@@ -172,32 +163,14 @@ bool TrajectoryDrivePathPlanner::IsDone()
     return isDone;
 }
 
-bool TrajectoryDrivePathPlanner::IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance)
+bool TrajectoryDrivePathPlanner::IsSamePose(frc::Pose2d currentPose, frc::Pose2d endPose)
 {
     // Detect if the two poses are the same within a tolerance
-    double dCurPosX = currentPose.X().to<double>() * 100; // cm
-    double dCurPosY = currentPose.Y().to<double>() * 100;
-    double dPrevPosX = previousPose.X().to<double>() * 100;
-    double dPrevPosY = previousPose.Y().to<double>() * 100;
 
-    double dCurPosRot = currentPose.Rotation().Degrees().to<double>();
-    double dPrevPosRot = previousPose.Rotation().Degrees().to<double>();
+    if (endPose.Translation().Distance(m_chassis->GetPose().Translation()) < m_distanceThreshold)
+        return true;
 
-    dCurPosRot = dCurPosRot < 0 ? 360 + dCurPosRot : dCurPosRot;
-    dPrevPosRot = dPrevPosRot < 0 ? 360 + dPrevPosRot : dPrevPosRot;
-
-    double dDeltaX = abs(dPrevPosX - dCurPosX);
-    double dDeltaY = abs(dPrevPosY - dCurPosY);
-    double dDeltaRot = abs(dCurPosRot - dPrevPosRot);
-
-    units::velocity::meters_per_second_t chassisSpeed = units::math::sqrt((velocity.vx * velocity.vx) + (velocity.vy * velocity.vy));
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "deltaX", dPrevPosX - dCurPosX);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "deltaY", dPrevPosY - dCurPosY);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "deltaRotation", dDeltaRot);
-
-    //  If Position of X or Y has moved since last scan..  Using Delta X/Y
-    return ((dDeltaX <= xyTolerance) && (dDeltaY <= xyTolerance) && (dDeltaRot <= rotTolerance) && (chassisSpeed.to<double>() <= speedTolerance));
+    return false;
 }
 
 units::angular_velocity::degrees_per_second_t TrajectoryDrivePathPlanner::CalcHeadingCorrection(units::angle::degree_t targetAngle, double kPFine, double kPCoarse)

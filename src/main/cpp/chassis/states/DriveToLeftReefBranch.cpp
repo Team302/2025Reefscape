@@ -110,18 +110,6 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
     return trajectory;
 }
 
-bool DriveToLeftReefBranch::IsDone()
-{
-    if (m_chassis != nullptr)
-    {
-        frc::Pose2d currentPose(m_chassis->GetPose());
-
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < m_distanceThreshold)
-            return true;
-    }
-    return false;
-}
-
 std::array<frc::SwerveModuleState, 4> DriveToLeftReefBranch::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);

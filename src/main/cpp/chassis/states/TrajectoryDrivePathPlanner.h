@@ -48,15 +48,19 @@ public:
     virtual pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info) { return pathplanner::PathPlannerTrajectory(); }
     virtual void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) {}
 
+    units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
+
 protected:
     const units::meters_per_second_t m_maxVel = 4.0_mps;
     const units::meters_per_second_squared_t m_maxAccel = 3.0_mps_sq;
     const units::radians_per_second_t m_maxAngularVel = 540_deg_per_s;
     const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
 
+    const units::inch_t m_distanceThreshold{0.5};
+
 private:
     bool
-    IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
+    IsSamePose(frc::Pose2d currentPose, frc::Pose2d endPose);
 
     void LogPose(frc::Pose2d pose) const;
     void LogState(pathplanner::PathPlannerTrajectoryState state) const;
