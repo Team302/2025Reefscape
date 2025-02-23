@@ -73,62 +73,65 @@ void DriverFeedback::UpdateLEDStates()
     }
     else
     {
-        if (taleMgr->GetRemedialActionStatus())
+        if (taleMgr != nullptr)
         {
-            m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, units::time::millisecond_t(50));
-        }
-        else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
-        {
-            currentState = frc::Color::kRed;
-            if (oldState != currentState)
+            if (taleMgr->GetRemedialActionStatus())
             {
-                m_LEDStates->ResetVariables();
+                m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, units::time::millisecond_t(50));
             }
-            m_LEDStates->SetSolidColor(currentState);
-        }
-        else
-        {
-            if (oldState != currentState)
+            else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
             {
-                m_LEDStates->ResetVariables();
-            }
-            if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
-            {
-                currentState = frc::Color::kGhostWhite;
+                currentState = frc::Color::kRed;
+                if (oldState != currentState)
+                {
+                    m_LEDStates->ResetVariables();
+                }
+                m_LEDStates->SetSolidColor(currentState);
             }
             else
             {
-                currentState = frc::Color::kAqua;
-            }
-            if (taleMgr != nullptr)
-            {
-                if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
+                if (oldState != currentState)
                 {
-                    m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
+                    m_LEDStates->ResetVariables();
                 }
-                else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+                if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
                 {
-                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
-                    {
-                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
-                    }
-                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
-                    {
-                        m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
-                    }
-                }
-                else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
-                         taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
-                         taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
-                         taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
-                         taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
-                         taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
-                {
-                    taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
+                    currentState = frc::Color::kGhostWhite;
                 }
                 else
                 {
-                    m_LEDStates->SetSolidColor(currentState);
+                    currentState = frc::Color::kAqua;
+                }
+                if (taleMgr != nullptr)
+                {
+                    if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
+                    {
+                        m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
+                    }
+                    else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+                    {
+                        if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
+                        {
+                            m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
+                        }
+                        else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
+                        {
+                            m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
+                        }
+                    }
+                    else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
+                            taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                            taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                            taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                            taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                            taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+                    {
+                        taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
+                    }
+                    else
+                    {
+                        m_LEDStates->SetSolidColor(currentState);
+                    }
                 }
             }
         }
