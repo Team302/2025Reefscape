@@ -115,9 +115,6 @@ public:
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
-	std::string m_tuningIsEnabledStr;
-	bool m_tuning = false;
-	std::shared_ptr<nt::NetworkTable> m_table;
 
 	ControlData *GetControlData(std::string name) override;
 
@@ -129,10 +126,6 @@ private:
 	frc::DigitalInput *m_IntakeSensor;
 	ControlData *m_PercentOutput;
 	ControlData *m_PositionDegree;
-
-	void CheckForTuningEnabled();
-	void ReadTuningParamsFromNT();
-	void PushTuningParamsToNT();
 
 	void InitializeTalonFXSIntakePRACTICE_BOT9999();
 	void InitializeTalonFXSExtenderPRACTICE_BOT9999();

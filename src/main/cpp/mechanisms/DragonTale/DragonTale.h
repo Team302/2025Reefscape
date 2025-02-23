@@ -198,9 +198,6 @@ public:
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
-	std::string m_tuningIsEnabledStr;
-	bool m_tuning = false;
-	std::shared_ptr<nt::NetworkTable> m_table;
 
 	ControlData *GetControlData(std::string name) override;
 
@@ -239,10 +236,6 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
-
-	void CheckForTuningEnabled();
-	void ReadTuningParamsFromNT();
-	void PushTuningParamsToNT();
 
 	void InitializeTalonFXArmPRACTICE_BOT9999();
 	void InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();

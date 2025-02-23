@@ -523,45 +523,6 @@ void IntakeManager::Cyclic()
 {
 	Update();
 
-	CheckForTuningEnabled();
-	if (m_tuning)
-	{
-		ReadTuningParamsFromNT();
-	}
-}
-
-void IntakeManager::CheckForTuningEnabled()
-{
-	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
-	if (pastTuning != m_tuning && m_tuning == true)
-	{
-		PushTuningParamsToNT();
-	}
-}
-
-void IntakeManager::ReadTuningParamsFromNT()
-{
-	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
-	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
-	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
-}
-
-void IntakeManager::PushTuningParamsToNT()
-{
-	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
-	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
-	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
-	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
-	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
-	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
-	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
 }
 
 ControlData *IntakeManager::GetControlData(string name)

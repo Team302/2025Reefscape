@@ -433,64 +433,9 @@ void ClimberManager::Cyclic()
 {
 	Update();
 
-	CheckForTuningEnabled();
-	if (m_tuning)
-	{
-		ReadTuningParamsFromNT();
-	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Down", (m_ClimberPositionDegree.Position.value()));
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
-}
-
-void ClimberManager::CheckForTuningEnabled()
-{
-	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
-	if (pastTuning != m_tuning && m_tuning == true)
-	{
-		PushTuningParamsToNT();
-	}
-}
-
-void ClimberManager::ReadTuningParamsFromNT()
-{
-	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
-	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
-	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 1));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0.1));
-	m_PositionDegreeUp->SetIZone(m_table.get()->GetNumber("PositionDegreeUp_iZone", 0));
-	m_PositionDegreeUp->SetS(m_table.get()->GetNumber("PositionDegreeUp_sGain", 0));
-	m_PositionDegreeUp->SetV(m_table.get()->GetNumber("PositionDegreeUp_vGain", 0));
-	m_PositionDegreeUp->SetA(m_table.get()->GetNumber("PositionDegreeUp_aGain", 0));
-	m_PositionDegreeUp->SetF(m_table.get()->GetNumber("PositionDegreeUp_fGain", 0));
-	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 1));
-	m_PositionDegreeUp->SetI(m_table.get()->GetNumber("PositionDegreeUp_iGain", 0));
-	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0.1));
-}
-
-void ClimberManager::PushTuningParamsToNT()
-{
-	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
-	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
-	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
-	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
-	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
-	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
-	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
-	m_table.get()->PutNumber("PositionDegreeUp_iZone", m_PositionDegreeUp->GetIZone());
-	m_table.get()->PutNumber("PositionDegreeUp_sGain", m_PositionDegreeUp->GetS());
-	m_table.get()->PutNumber("PositionDegreeUp_vGain", m_PositionDegreeUp->GetV());
-	m_table.get()->PutNumber("PositionDegreeUp_aGain", m_PositionDegreeUp->GetA());
-	m_table.get()->PutNumber("PositionDegreeUp_fGain", m_PositionDegreeUp->GetF());
-	m_table.get()->PutNumber("PositionDegreeUp_pGain", m_PositionDegreeUp->GetP());
-	m_table.get()->PutNumber("PositionDegreeUp_iGain", m_PositionDegreeUp->GetI());
-	m_table.get()->PutNumber("PositionDegreeUp_dGain", m_PositionDegreeUp->GetD());
 }
 
 void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)
