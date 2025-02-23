@@ -38,17 +38,20 @@ public:
     DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
     std::string GetDriveStateName() const override;
 
-    pathplanner::PathPlannerTrajectory CreateDriveToCoralStation();
-    
+    pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
+
     void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory);
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
     pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
 
-    bool IsDone();
+    bool IsDone() override;
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
 private:
     pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
 
     pathplanner::PathPlannerTrajectory m_trajectory;
+    DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     frc::Pose2d m_endPose;
+    units::inch_t m_distanceThreshold{3.0};
 };

@@ -433,7 +433,9 @@ std::optional<units::length::inch_t> DragonLimelight::EstimateTargetXDistance()
             }
             else
             {
-                units::length::inch_t estimatedTargetDistance = (m_noteVerticalOffset - mountingHeight) / tangent;
+                // TODO come back to this with different math
+                // units::length::inch_t estimatedTargetDistance = (m_noteVerticalOffset - mountingHeight) / tangent;
+                units::length::inch_t estimatedTargetDistance = (mountingHeight) / tangent;
 
                 return estimatedTargetDistance;
             }
@@ -476,7 +478,9 @@ std::optional<units::length::inch_t> DragonLimelight::EstimateTargetZDistance()
 
     if (!GetAprilTagID())
     {
-        units::length::inch_t estimatedTargetZDistance = m_cameraPose.Z() - m_noteVerticalOffset;
+        // TODO COME BACK TO THIS ONE
+        // units::length::inch_t estimatedTargetZDistance = m_cameraPose.Z() - m_noteVerticalOffset;
+        units::length::inch_t estimatedTargetZDistance = m_cameraPose.Z();
         return estimatedTargetZDistance;
     }
 

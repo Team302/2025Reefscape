@@ -95,14 +95,14 @@ private:
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-13.0),
+            units::length::inch_t(-14.0), //-13.0
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(0.0),
+            units::length::inch_t(-1.0), // 0.0
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 

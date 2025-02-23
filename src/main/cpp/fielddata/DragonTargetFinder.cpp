@@ -292,6 +292,7 @@ std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(VisionData data)
 
 bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) // TODO: Update when we switch to ML and raw vision correction on reef sticks
 {
+    return false;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "visTagPose has value", visTagPose.has_value() ? "true" : "false");
 
     if (visTagPose.has_value())
