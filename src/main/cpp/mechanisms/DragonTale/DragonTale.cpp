@@ -69,11 +69,13 @@ using ctre::phoenix6::configs::TalonFXSConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
 using std::tuple;
@@ -291,7 +293,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -311,7 +315,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -331,7 +337,9 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("DragonTale.xml", 9999);
@@ -383,7 +391,9 @@ void DragonTale::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -403,7 +413,9 @@ void DragonTale::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -423,7 +435,9 @@ void DragonTale::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("DragonTale.xml", 302);
@@ -484,13 +498,14 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(75);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(100);
+	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::turns_per_second_cubed_t(0);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 240;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = 75_tps;
-	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -502,7 +517,7 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
 
-	SetPIDArmPositionDegree();
+	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
@@ -552,6 +567,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonSRXCoralPRACTICE_BOT9999()
@@ -699,13 +715,13 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(200);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(100);
+	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::turns_per_second_cubed_t(0);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
 	configs.Feedback.RotorToSensorRatio = 180;
-
-	configs.MotionMagic.MotionMagicCruiseVelocity = 200_tps;
-	configs.MotionMagic.MotionMagicAcceleration = 100_tr_per_s_sq;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -717,7 +733,7 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Arm", "m_Arm Status", status.GetName());
 
-	SetPIDArmPositionDegree();
+	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
@@ -767,6 +783,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
+
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerCOMP_BOT302()
@@ -920,10 +938,9 @@ void DragonTale::SetPIDArmPositionDegree()
 	slot0Configs.kS = m_PositionDegree->GetS();
 	slot0Configs.kV = m_PositionDegree->GetV();
 	slot0Configs.kA = m_PositionDegree->GetA();
-	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
-	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
-	m_Arm->GetConfigurator().Apply(slot0Configs, units::time::second_t(0.25));
-	m_ArmPositionDegree.EnableFOC = m_PositionDegree->IsFOCEnabled();
+	slot0Configs.GravityType = m_PositionDegree->GetGravityType();
+	slot0Configs.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
+	m_Arm->GetConfigurator().Apply(slot0Configs);
 }
 void DragonTale::SetPIDElevatorLeaderPositionInch()
 {
@@ -935,10 +952,9 @@ void DragonTale::SetPIDElevatorLeaderPositionInch()
 	slot0Configs.kS = m_PositionInch->GetS();
 	slot0Configs.kV = m_PositionInch->GetV();
 	slot0Configs.kA = m_PositionInch->GetA();
-	slot0Configs.GravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
-	slot0Configs.StaticFeedforwardSign = ctre::phoenix6::signals::StaticFeedforwardSignValue(0); // uses Velcoity Sign
+	slot0Configs.GravityType = m_PositionInch->GetGravityType();
+	slot0Configs.StaticFeedforwardSign = m_PositionInch->GetStaticFeedforwardSign();
 	m_ElevatorLeader->GetConfigurator().Apply(slot0Configs);
-	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::SetCurrentState(int state, bool run)

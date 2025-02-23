@@ -45,11 +45,13 @@ using ctre::phoenix6::configs::TalonFXSConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
 using namespace IntakeManagerStates;
@@ -134,7 +136,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -154,7 +158,9 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("IntakeManager.xml", 9999);
@@ -190,7 +196,9 @@ void IntakeManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -210,7 +218,9 @@ void IntakeManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("IntakeManager.xml", 302);
@@ -359,7 +369,6 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
@@ -367,6 +376,8 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+	
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 4;
 
@@ -445,6 +456,8 @@ void IntakeManager::SetPIDExtenderPositionDegree()
 	slot0Configs.kS = m_PositionDegree->GetS();
 	slot0Configs.kV = m_PositionDegree->GetV();
 	slot0Configs.kA = m_PositionDegree->GetA();
+	slot0Configs.GravityType = m_PositionDegree->GetGravityType();
+	slot0Configs.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
 	m_Extender->GetConfigurator().Apply(slot0Configs);
 }
 

@@ -27,7 +27,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>9</value>
+                <value>0.2302879074</value>
               </gearRatio>
               <diameter>
                 <unitsFamily>length</unitsFamily>
@@ -868,7 +868,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>180</value>
+                <value>240</value>
               </rotorToSensorRatio>
               <fusedSyncChoice>FUSED</fusedSyncChoice>
             </fusedSyncCANcoder>
@@ -1030,7 +1030,7 @@
               <Jerk>
                 <unitsFamily>angularJerk</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>rad/s^3</__units__>
+                <__units__>turn/s^3</__units__>
                 <type>Double</type>
                 <value>0</value>
               </Jerk>
@@ -1297,26 +1297,27 @@
               <mode>Brake</mode>
             </theConfigMotorSettings>
             <MotionMagicSettings>
+              <Mode>Dynamic</Mode>
               <CruiseVelocity>
                 <unitsFamily>angularVelocity</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>rad/s</__units__>
+                <__units__>turns/s</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>1</value>
               </CruiseVelocity>
               <Acceleration>
                 <unitsFamily>angularAcceleration</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>rad/s^2</__units__>
+                <__units__>turns/s^2</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>10</value>
               </Acceleration>
               <Jerk>
                 <unitsFamily>angularJerk</unitsFamily>
                 <name>doubleParameter</name>
-                <__units__>rad/s^3</__units__>
+                <__units__>turn/s^3</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>100</value>
               </Jerk>
             </MotionMagicSettings>
           </MotorController>
@@ -5605,6 +5606,7 @@
                 <value>0</value>
               </Jerk>
             </MotionMagicSettings>
+            <MotorArrangementValue>Minion_JST</MotorArrangementValue>
           </MotorController>
           <MotorController xsi:type="TalonFXS">
             <name>Extender</name>
@@ -5784,7 +5786,7 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>true</value>
+                <value>false</value>
               </enableForward>
               <remoteForwardSensorID>
                 <unitsFamily>none</unitsFamily>
@@ -5798,14 +5800,14 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>true</value>
+                <value>false</value>
               </forwardResetPosition>
               <forwardPosition>
                 <unitsFamily>angle</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>deg</__units__>
                 <type>Double</type>
-                <value>95</value>
+                <value>0</value>
               </forwardPosition>
               <forwardType>LimitSwitchPin</forwardType>
               <forwardOpenClose>NormallyOpen</forwardOpenClose>
@@ -5887,6 +5889,7 @@
                 <value>0</value>
               </Jerk>
             </MotionMagicSettings>
+            <MotorArrangementValue>Minion_JST</MotorArrangementValue>
           </MotorController>
         </MotorControllers>
         <closedLoopControlParameters />
@@ -6112,7 +6115,7 @@
               <name>boolParameter</name>
               <__units__ />
               <type>Boolean</type>
-              <value>true</value>
+              <value>false</value>
             </enableFOC>
             <controlType>POSITION_DEGREES</controlType>
           </motorControlData>

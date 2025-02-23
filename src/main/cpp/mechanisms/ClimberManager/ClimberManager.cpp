@@ -39,10 +39,12 @@ using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
 using namespace ClimberManagerStates;
@@ -94,9 +96,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -108,7 +110,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOut = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -128,15 +132,17 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegreeUp = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegreeUp",							  // std::string indentifier
-		0,												  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -148,7 +154,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("ClimberManager.xml", 9999);
@@ -181,7 +189,9 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOut = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -201,15 +211,17 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegreeUp = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegreeUp",							  // std::string indentifier
-		0,												  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -221,7 +233,9 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("ClimberManager.xml", 302);
@@ -446,17 +460,17 @@ void ClimberManager::ReadTuningParamsFromNT()
 	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
 	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
 	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
+	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 1));
 	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
+	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0.1));
 	m_PositionDegreeUp->SetIZone(m_table.get()->GetNumber("PositionDegreeUp_iZone", 0));
 	m_PositionDegreeUp->SetS(m_table.get()->GetNumber("PositionDegreeUp_sGain", 0));
 	m_PositionDegreeUp->SetV(m_table.get()->GetNumber("PositionDegreeUp_vGain", 0));
 	m_PositionDegreeUp->SetA(m_table.get()->GetNumber("PositionDegreeUp_aGain", 0));
 	m_PositionDegreeUp->SetF(m_table.get()->GetNumber("PositionDegreeUp_fGain", 0));
-	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 0));
+	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 1));
 	m_PositionDegreeUp->SetI(m_table.get()->GetNumber("PositionDegreeUp_iGain", 0));
-	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0));
+	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0.1));
 }
 
 void ClimberManager::PushTuningParamsToNT()

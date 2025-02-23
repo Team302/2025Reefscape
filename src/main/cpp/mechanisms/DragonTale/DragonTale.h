@@ -129,6 +129,11 @@ public:
 		m_AlgaePercentOutput.Output = percentOut;
 		m_AlgaeTalonFXSActiveTarget = &m_AlgaePercentOutput;
 	}
+	void UpdateTargetElevatorLeaderPercentOutput(double percentOut)
+	{
+		m_ElevatorLeaderPercentOutput.Output = percentOut;
+		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPercentOutput;
+	}
 
 	void SetPIDArmPositionDegree();
 	void SetPIDElevatorLeaderPositionInch();
@@ -252,13 +257,14 @@ private:
 
 	void IsElevatorInSync();
 
-	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
-	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
+	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{units::angle::turn_t(0.0)};
+	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{units::angle::turn_t(0.0), units::angular_velocity::turns_per_second_t(1), units::angular_acceleration::turns_per_second_squared_t(10), units::angular_jerk::turns_per_second_cubed_t(100)};
 
 	double m_CoralTalonSRXActiveTarget;
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 
+	ctre::phoenix6::controls::DutyCycleOut m_ElevatorLeaderPercentOutput{0.0};
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_CoralTalonFXSActiveTarget;
