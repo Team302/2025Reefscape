@@ -48,8 +48,9 @@ void ManualCoralLoadState::Init()
 		InitPRACTICE_BOT9999();
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
-	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+
 	m_mechanism->SetArmTarget(m_ArmTarget);
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 }
 
 void ManualCoralLoadState::InitPRACTICE_BOT9999()
@@ -62,16 +63,8 @@ void ManualCoralLoadState::InitCOMP_BOT302()
 
 void ManualCoralLoadState::Run()
 {
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-	{
-		m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
-	else
-	{
-		m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
+	double target = -1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT) + TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN);
+	m_mechanism->UpdateTargetCoralPercentOutput(target);
 
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualCoralLoadState"), string("Run"));
 }

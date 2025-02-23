@@ -62,16 +62,8 @@ void ManualGrabAlgaeFloorState::InitCOMP_BOT302()
 
 void ManualGrabAlgaeFloorState::Run()
 {
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-	{
-		m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
-	else
-	{
-		m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
+	double target = -1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT) + TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN);
+	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(target);
 }
 
 void ManualGrabAlgaeFloorState::Exit()
