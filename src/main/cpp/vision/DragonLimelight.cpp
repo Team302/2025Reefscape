@@ -236,6 +236,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
     // Megatag 1
     if (m_networktable.get() != nullptr)
     {
+        auto nt = m_networktable.get();
+        if (nt != nullptr)
+        {
+            nt->PutNumber("imumode_set", 1);
+        }
         // Megatag 1
         if (!megatag2)
         {
@@ -302,11 +307,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
             m_getMT2 = true;
             if (!m_megatag2PosBool && m_gotInitialMT1Pose)
             {
-                auto nt = m_networktable.get();
-                if (nt != nullptr)
-                {
-                    // nt->PutNumber("imumode_set", 3);
-                }
+                // auto nt = m_networktable.get();
+                // if (nt != nullptr)
+                //{
+                //  nt->PutNumber("imumode_set", 3);
+                //}
                 LimelightHelpers::PoseEstimate poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
 
                 // multiple targets detected
@@ -321,6 +326,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                     double degStds = 9999999;
                     // m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
+                    auto nt = m_networktable.get();
+                    if (nt != nullptr)
+                    {
+                        nt->PutNumber("imumode_set", 2);
+                    }
                 }
             }
             return m_megatag2Pos;
@@ -645,11 +655,11 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
         roll = GetCameraRoll().value();
     }
 
-    // LimelightHelpers::SetRobotOrientation(m_cameraName,
-    //                                       pose.Rotation().Degrees().value(),
-    //                                       yawrate,
-    //                                       pitch,
-    //                                       pitchrate,
-    //                                       roll,
-    //                                      rollrate);
+    LimelightHelpers::SetRobotOrientation(m_cameraName,
+                                          pose.Rotation().Degrees().value(),
+                                          yawrate,
+                                          pitch,
+                                          pitchrate,
+                                          roll,
+                                          rollrate);
 }

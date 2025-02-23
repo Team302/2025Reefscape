@@ -118,18 +118,26 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 }
 void DragonSwervePoseEstimator::CalculateInitialPose()
 {
-
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
-    if (chassis != nullptr)
+    auto vision = DragonVision::GetDragonVision();
+    if (vision != nullptr)
     {
-        auto vision = DragonVision::GetDragonVision();
-        std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
-        if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
+        auto mt1Pose = vision->GetRobotPosition();
+        if (mt1Pose.has_value())
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose X"), visionpose.value().X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Y"), visionpose.value().Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Omega"), visionpose.value().Rotation().Degrees().value());
-            ResetPose(visionpose.value());
+            ResetPose(mt1Pose.value().estimatedPose.ToPose2d());
+
+            // auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+            // if (chassis != nullptr)
+            //{
+            std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
+            if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
+            {
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose X"), visionpose.value().X().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Y"), visionpose.value().Y().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Omega"), visionpose.value().Rotation().Degrees().value());
+                ResetPose(visionpose.value());
+            }
+            //}
         }
     }
 }

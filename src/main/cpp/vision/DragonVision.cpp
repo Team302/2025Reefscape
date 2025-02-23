@@ -372,7 +372,6 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
-		/**
 		LimelightHelpers::SetRobotOrientation(cam->GetCameraName(),
 											  yaw.value(),
 											  yawRate.value(),
@@ -380,7 +379,6 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 											  pitchRate.value(),
 											  roll.value(),
 											  rollRate.value());
-		**/
 		return cam->EstimatePoseOdometryLimelight(true); // true since megatag2
 	}
 
