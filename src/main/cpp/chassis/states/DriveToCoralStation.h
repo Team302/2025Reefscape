@@ -43,8 +43,6 @@ public:
     void Init(ChassisMovement &chassisMovement) override;
     void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
     pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
-
-    bool IsDone() override;
     std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
 private:
@@ -53,5 +51,4 @@ private:
     pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     frc::Pose2d m_endPose;
-    units::inch_t m_distanceThreshold{3.0};
 };

@@ -111,18 +111,6 @@ pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStatio
     return trajectory;
 }
 
-bool DriveToCoralStation::IsDone()
-{
-    if (m_chassis != nullptr)
-    {
-        frc::Pose2d currentPose(m_chassis->GetPose());
-
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < units::inch_t(6))
-            return true;
-    }
-    return false;
-}
-
 std::array<frc::SwerveModuleState, 4> DriveToCoralStation::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);

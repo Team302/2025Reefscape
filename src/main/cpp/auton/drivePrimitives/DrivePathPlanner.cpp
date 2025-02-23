@@ -178,12 +178,15 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), string("Valid Path"), true);
+
             trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
         }
         else
         {
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), string("Path not found"), m_pathname);
         }
+        m_moveInfo.pathplannerTrajectory = trajectory;
     }
 
     auto endstate = trajectory.getEndState();
@@ -216,13 +219,10 @@ bool DrivePathPlanner::IsDone()
         CheckForDriveTo();
     }
 
-    if (m_isVisionDrive && m_driveToObject != nullptr)
-    {
-        return m_driveToObject->IsDone();
-    }
     auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
 
-    return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
+    // return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
+    return false;
 }
 
 void DrivePathPlanner::CheckForDriveTo()
