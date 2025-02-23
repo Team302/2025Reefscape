@@ -18,7 +18,7 @@
 #include "vision/DragonVision.h"
 #include "utils/AngleUtils.h"
 
-FaceNearestCoralStation::FaceNearestCoralStation() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
+FaceNearestCoralStation::FaceNearestCoralStation() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
 {
 }
 

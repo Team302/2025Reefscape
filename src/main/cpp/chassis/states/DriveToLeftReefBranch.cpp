@@ -111,7 +111,8 @@ pathplanner::PathPlannerTrajectory DriveToLeftReefBranch::CreateDriveToLeftReefB
 
     path->preventFlipping = true;
 
-    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    // trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    trajectory = path.get()->generateTrajectory(frc::ChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
     return trajectory;
 }
 

@@ -105,7 +105,8 @@ pathplanner::PathPlannerTrajectory DriveToRightReefBranch::CreateDriveToRightRee
 
     path->preventFlipping = true;
 
-    return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    // return  path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    return path.get()->generateTrajectory(frc::ChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToRightReefBranch::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)

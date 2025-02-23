@@ -5,6 +5,6 @@
     <zone 
         circlex="16.742"
         circley="0.602"
-        radius="78.74" 
+        radius="100" 
         driveOption = "CORAL_STATION"/>
 </auton>

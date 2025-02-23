@@ -179,6 +179,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             DragonTale::STATE_NAMES taleChosenOption = DragonTale::STATE_NAMES::STATE_READY;
             IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::HeadingOption chosenHeadingOption = ChassisOptionEnums::HeadingOption::IGNORE;
+
             ChassisOptionEnums::DriveStateType chosenUpdateOption = ChassisOptionEnums::STOP_DRIVE;
             ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
@@ -320,6 +321,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                     if (itr != xmlStringToPathUpdateOptionMap.end())
                     {
                         chosenUpdateOption = itr->second;
+                        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "Update Option Parsed", chosenUpdateOption);
                     }
                     else
                     {

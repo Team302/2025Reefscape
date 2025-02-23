@@ -42,8 +42,8 @@ TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) :
                                                                                  m_trajectory(),
                                                                                  m_robotDrive(robotDrive),
                                                                                  // TODO need to tune this also update radius as it is probably wrong
-                                                                                 m_longpathHolonomicController(pathplanner::PIDConstants(3.0, 1.5, 0.0), //(1.95, 0.95, 0.0)
-                                                                                                               pathplanner::PIDConstants(4.0, 0.5, 0.0),
+                                                                                 m_longpathHolonomicController(pathplanner::PIDConstants(2.0, 0.0, 0.0), //(1.95, 0.95, 0.0)
+                                                                                                               pathplanner::PIDConstants(6.0, 4.0, 0.0),
                                                                                                                // robotDrive->GetChassis()->GetMaxSpeed(),
                                                                                                                // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                units::time::second_t(0.02)),
@@ -112,6 +112,9 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             refChassisSpeeds = m_shortpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
         }
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Traj Gains", "Gain Type",
+                                     (refChassisSpeeds == m_longpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState) ? "Long Gains" : "Short Gains"));
+
         if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
         {
             chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
@@ -131,7 +134,6 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         speeds.omega = units::angular_velocity::radians_per_second_t(0);
         chassisMovement.chassisSpeeds = speeds;
     }
-
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
@@ -139,6 +141,7 @@ bool TrajectoryDrivePathPlanner::IsDone()
 {
 
     bool isDone = false;
+    return false;
 
     auto currentPose = m_chassis != nullptr ? m_chassis->GetPose() : Pose2d();
     if (!m_trajectoryStates.empty()) // If we have states...

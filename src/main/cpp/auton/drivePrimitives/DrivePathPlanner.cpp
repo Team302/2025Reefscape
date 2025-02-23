@@ -108,6 +108,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
     m_updateTimeLatch = false;
+    m_driveToObject = nullptr;
 
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
@@ -121,6 +122,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_ntName = string("DrivePathPlanner: ") + m_pathname;
     m_maxTime = params->GetTime();
+
     m_isVisionDrive = false;
     m_visionAlignment = params->GetVisionAlignment();
 
@@ -144,8 +146,17 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_timer.get()->Reset();
     m_timer.get()->Start();
+
+    LogMoveInfo();
 }
 
+void DrivePathPlanner::LogMoveInfo()
+{
+    currentPrim++;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Drive Option", m_moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Gain Type", m_moveInfo.pathnamegains);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Heading Option", m_moveInfo.headingOption);
+}
 void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
     LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
@@ -167,7 +178,7 @@ void DrivePathPlanner::InitMoveInfo()
     {
         m_moveInfo.driveOption = m_zone->GetPathUpdateOption();
 
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Total time", "Total time", m_maxTime.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Drive Option", m_zone->GetPathUpdateOption());
     }
     else
     {

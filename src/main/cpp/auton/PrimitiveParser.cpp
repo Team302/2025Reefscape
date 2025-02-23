@@ -56,8 +56,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
     headingOptionMap["FACE_CORAL_STATION"] = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
 
-    headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
-
     map<string, ChassisOptionEnums::PathGainsType> pathGainsMap;
     pathGainsMap["LongPath"] = ChassisOptionEnums::PathGainsType::LONG;
     pathGainsMap["ShortPath"] = ChassisOptionEnums::PathGainsType::SHORT;
@@ -73,7 +71,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                     {"LEFT_REEF_BRANCH", ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH},
                                                                     // {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE}, // need to update when drive option is implemented
                                                                     // {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
-                                                                    {"CORAL_STATION", ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH},
+                                                                    {"CORAL_STATION", ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION},
                                                                     // {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
                                                                     {"NOTHING", ChassisOptionEnums::DriveStateType::STOP_DRIVE}};
 
@@ -154,7 +152,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     std::string choreoTrajectoryName;
                     ChassisOptionEnums::PathGainsType pathGainsType = ChassisOptionEnums::PathGainsType::LONG;
                     ZoneParamsVector zones;
-                    ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
                     DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
                     ChassisOptionEnums::DriveStateType pathUpdateOption = ChassisOptionEnums::DriveStateType::STOP_DRIVE;
