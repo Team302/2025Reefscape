@@ -32,6 +32,18 @@ public:
         DUTY_CYCLE
     };
 
+    enum GravityTypeValue
+    {
+        Elevator_Static = 0,
+        Arm_Cosine = 1
+    };
+
+    enum StaticFeedforwardSignValue
+    {
+        UseVelocitySign = 0,
+        UseClosedLoopSign = 1
+    };
+
     /// @brief      Create the ControlData object that is used to control mechanisms
     /// @param [in] mode - control mode
     /// @param [in] server - where to run the controller on
