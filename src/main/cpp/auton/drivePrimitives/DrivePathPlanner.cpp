@@ -107,6 +107,7 @@ int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
 void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
+    m_updateTimeLatch = false;
 
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
@@ -187,11 +188,10 @@ void DrivePathPlanner::InitMoveInfo()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), string("Path not found"), m_pathname);
         }
         m_moveInfo.pathplannerTrajectory = trajectory;
+        auto endstate = trajectory.getEndState();
+        m_finalPose = endstate.pose;
+        m_totalTrajectoryTime = trajectory.getTotalTime();
     }
-
-    auto endstate = trajectory.getEndState();
-    m_finalPose = endstate.pose;
-    m_totalTrajectoryTime = trajectory.getTotalTime();
 }
 void DrivePathPlanner::Run()
 {
@@ -200,17 +200,20 @@ void DrivePathPlanner::Run()
         m_chassis->Drive(m_moveInfo);
     }
 
-    if (m_isVisionDrive && !m_moveInfo.pathplannerTrajectory.getStates().empty())
+    if (m_isVisionDrive && !m_moveInfo.pathplannerTrajectory.getStates().empty() && !m_updateTimeLatch)
     {
         m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
+        m_updateTimeLatch = true;
     }
 }
 
 bool DrivePathPlanner::IsDone()
 {
 
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Max Time", m_maxTime.value());
     if (m_timer.get()->Get() > m_maxTime && m_timer.get()->Get().to<double>() > 0.0)
     {
+
         return true;
     }
 

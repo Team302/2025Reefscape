@@ -5,8 +5,8 @@
     <zone 
         circlex="13.036"
         circley="4.038"
-        radius="86.7402" 
-        taleOption = "STATE_L4SCORING_POSITION"
+        radius="90.7402" 
         pathUpdateOption="LEFT_REEF_BRANCH"/>
         <!-- testing drive to-->
+        <!-- taleOption = "STATE_L4SCORING_POSITION"/> -->
 </auton>

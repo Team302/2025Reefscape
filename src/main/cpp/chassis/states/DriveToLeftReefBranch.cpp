@@ -50,7 +50,7 @@ void DriveToLeftReefBranch::Init(ChassisMovement &chassisMovement)
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH);
     m_endPose = std::nullopt;
 
-    if (!IsDone())
+    if (!TrajectoryDrivePathPlanner::IsDone())
     {
         m_trajectory = CreateTrajectory(info);
         InitFromTrajectory(chassisMovement, m_trajectory);
@@ -127,7 +127,6 @@ std::array<frc::SwerveModuleState, 4> DriveToLeftReefBranch::UpdateSwerveModuleS
         InitFromTrajectory(chassisMovement, m_trajectory);
         m_currentType = get<0>(info.value());
     }
-    
 
     return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
 }

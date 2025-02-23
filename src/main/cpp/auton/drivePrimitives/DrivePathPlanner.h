@@ -81,6 +81,7 @@ private:
     units::length::meter_t m_chassisOffset = units::length::meter_t(0.5);
 
     bool m_checkForDriveToUpdate = false;
+    bool m_updateTimeLatch = false;
     // const double m_percentageCompleteThreshold = 0.75;
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;

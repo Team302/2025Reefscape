@@ -56,11 +56,9 @@ protected:
     const units::radians_per_second_t m_maxAngularVel = 540_deg_per_s;
     const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
 
-    const units::inch_t m_distanceThreshold{0.5};
-
 private:
     bool
-    IsSamePose(frc::Pose2d currentPose, frc::Pose2d endPose);
+    IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
     void LogPose(frc::Pose2d pose) const;
     void LogState(pathplanner::PathPlannerTrajectoryState state) const;
