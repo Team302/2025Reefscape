@@ -69,6 +69,7 @@ public:
     IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeOption; }
     DragonTale::STATE_NAMES GetTaleOption() const { return m_taleOption; }
 
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; }
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
     ChassisOptionEnums::AutonAvoidOptions GetAvoidOption() const { return m_avoidoption; }
 

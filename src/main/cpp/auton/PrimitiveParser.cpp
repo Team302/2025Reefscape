@@ -54,6 +54,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
+    headingOptionMap["FACE_CORAL_STATION"] = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
 
     headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
 

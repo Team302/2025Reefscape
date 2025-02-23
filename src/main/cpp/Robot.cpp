@@ -86,7 +86,7 @@ void Robot::RobotPeriodic()
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
-        m_datalogger->PeriodicDataLog();
+        // m_datalogger->PeriodicDataLog();
     }
 
     if (m_robotState != nullptr)

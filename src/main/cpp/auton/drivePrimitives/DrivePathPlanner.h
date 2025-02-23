@@ -99,6 +99,5 @@ private:
                DragonTargetFinderPoseInfo>
         m_driveToInfo;
 
-    int m_zoneUpdateOptionIndex = -1;
     ZoneParams *m_zone;
 };
