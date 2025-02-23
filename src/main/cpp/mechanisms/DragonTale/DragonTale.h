@@ -26,8 +26,6 @@
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-#include <ctre/phoenix/motorcontrol/SupplyCurrentLimitConfiguration.h>
 #include "ctre/phoenix6/TalonFXS.hpp"
 #include <frc/DigitalInput.h>
 #include <frc/filter/Debouncer.h>
@@ -113,11 +111,10 @@ public:
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
 	}
-	void UpdateTargetCoralTalonSRXPercentOutput(double percentOut) { m_CoralTalonSRXActiveTarget = percentOut; }
-	void UpdateTargetCoralTalonFXSPercentOutput(double percentOut)
+	void UpdateTargetCoralPercentOutput(double percentOut)
 	{
 		m_CoralPercentOutput.Output = percentOut;
-		m_CoralTalonFXSActiveTarget = &m_CoralPercentOutput;
+		m_CoralActiveTarget = &m_CoralPercentOutput;
 	}
 	void UpdateTargetAlgaeTalonFXPercentOutput(double percentOut)
 	{
@@ -144,10 +141,9 @@ public:
 
 	ctre::phoenix6::hardware::TalonFX *GetArm() const { return m_Arm; }
 	ctre::phoenix6::hardware::TalonFX *GetElevatorLeader() const { return m_ElevatorLeader; }
-	ctre::phoenix::motorcontrol::can::TalonSRX *GetCoralTalonSRX() const { return m_CoralTalonSRX; }
 	ctre::phoenix6::hardware::TalonFX *GetAlgaeTalonFX() const { return m_AlgaeTalonFX; }
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
-	ctre::phoenix6::hardware::TalonFXS *GetCoralTalonFXS() const { return m_CoralTalonFXS; }
+	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
 	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return (m_activeRobotId == RobotIdentifier::COMP_BOT_302) ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
@@ -204,10 +200,9 @@ private:
 
 	ctre::phoenix6::hardware::TalonFX *m_Arm;
 	ctre::phoenix6::hardware::TalonFX *m_ElevatorLeader;
-	ctre::phoenix::motorcontrol::can::TalonSRX *m_CoralTalonSRX;
 	ctre::phoenix6::hardware::TalonFX *m_AlgaeTalonFX;
 	ctre::phoenix6::hardware::TalonFX *m_ElevatorFollower;
-	ctre::phoenix6::hardware::TalonFXS *m_CoralTalonFXS;
+	ctre::phoenix6::hardware::TalonFXS *m_Coral;
 	ctre::phoenix6::hardware::TalonFXS *m_AlgaeTalonFXS;
 	frc::DigitalInput *m_CoralInSensor;
 	frc::DigitalInput *m_CoralOutSensor;
@@ -241,9 +236,9 @@ private:
 
 	void InitializeTalonFXArmPRACTICE_BOT9999();
 	void InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
-	void InitializeTalonSRXCoralPRACTICE_BOT9999();
 	void InitializeTalonFXAlgaePRACTICE_BOT9999();
 	void InitializeTalonFXElevatorFollowerPRACTICE_BOT9999();
+	void InitializeTalonFXSCoralPRACTICE_BOT9999();
 	void InitializeTalonFXArmCOMP_BOT302();
 	void InitializeTalonFXElevatorLeaderCOMP_BOT302();
 	void InitializeTalonFXElevatorFollowerCOMP_BOT302();
@@ -255,13 +250,12 @@ private:
 	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
 
-	double m_CoralTalonSRXActiveTarget;
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
-	ctre::phoenix6::controls::ControlRequest *m_CoralTalonFXSActiveTarget;
+	ctre::phoenix6::controls::ControlRequest *m_CoralActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXSActiveTarget;
 

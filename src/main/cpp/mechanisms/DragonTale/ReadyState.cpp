@@ -48,19 +48,19 @@ void ReadyState::Init()
 		InitPRACTICE_BOT9999();
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
-	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+
+	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 }
 
 void ReadyState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(m_AlgaeTarget);
 }
 
 void ReadyState::InitCOMP_BOT302()
 {
-	m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(m_AlgaeTarget);
 }
 
