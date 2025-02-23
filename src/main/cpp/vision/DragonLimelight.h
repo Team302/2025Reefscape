@@ -211,14 +211,10 @@ protected:
     std::string m_cameraName;
     frc::Pose3d m_cameraPose;
     SwerveChassis *m_chassis;
-    bool m_gotInitialMT1Pose = false;
     const double m_maxRotationRateDegreesPerSec = 720.0;
     const double m_yawRate = 0.0;
     const double m_pitch = 0.0;
     const double m_pitchRate = 0.0;
     const double m_roll = 0.0;
     const double m_rollRate = 0.0;
-
-    bool m_getMT1 = false;
-    bool m_getMT2 = false;
 };
