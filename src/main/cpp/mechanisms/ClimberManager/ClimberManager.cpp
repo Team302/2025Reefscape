@@ -39,10 +39,12 @@ using ctre::phoenix6::configs::TalonFXConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
 using namespace ClimberManagerStates;
@@ -94,9 +96,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegree",								  // std::string indentifier
-		0,												  // double proportional
+	    1, // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -108,7 +110,9 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOut = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -128,15 +132,17 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegreeUp = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegreeUp",							  // std::string indentifier
-		0,												  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -148,14 +154,12 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("ClimberManager.xml", 9999);
-
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
-	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void ClimberManager::CreateCOMP_BOT302()
@@ -181,7 +185,9 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		true									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOut = new ControlData(
 		ControlModes::CONTROL_TYPE::PERCENT_OUTPUT,		  // ControlModes::CONTROL_TYPE mode
@@ -201,15 +207,17 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegreeUp = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
 		"m_PositionDegreeUp",							  // std::string indentifier
-		0,												  // double proportional
+		1,												  // double proportional
 		0,												  // double integral
-		0,												  // double derivative
+		0.1,											  // double derivative
 		0,												  // double feedforward
 		0,												  // double velocityGain
 		0,												  // double accelartionGain
@@ -221,14 +229,12 @@ void ClimberManager::CreateCOMP_BOT302()
 		0,										// double cruiseVelocity
 		0,										// double peakValue
 		0,										// double nominalValue
-		false									// bool enableFOC
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("ClimberManager.xml", 302);
-
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
-	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void ClimberManager::InitializePRACTICE_BOT9999()
@@ -286,6 +292,8 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	configs.Slot0.kS = m_PositionDegree->GetS();
 	configs.Slot0.kV = m_PositionDegree->GetV();
 	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
 
 	configs.Slot1.kP = m_PositionDegreeUp->GetP();
 	configs.Slot1.kI = m_PositionDegreeUp->GetI();
@@ -294,6 +302,8 @@ void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 	configs.Slot1.kS = m_PositionDegreeUp->GetS();
 	configs.Slot1.kV = m_PositionDegreeUp->GetV();
 	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+	configs.Slot1.GravityType = m_PositionDegreeUp->GetGravityType();
+	configs.Slot1.StaticFeedforwardSign = m_PositionDegreeUp->GetStaticFeedforwardSign();
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -349,6 +359,8 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.Slot0.kS = m_PositionDegree->GetS();
 	configs.Slot0.kV = m_PositionDegree->GetV();
 	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
 
 	configs.Slot1.kP = m_PositionDegreeUp->GetP();
 	configs.Slot1.kI = m_PositionDegreeUp->GetI();
@@ -357,6 +369,8 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.Slot1.kS = m_PositionDegreeUp->GetS();
 	configs.Slot1.kV = m_PositionDegreeUp->GetV();
 	configs.Slot1.kA = m_PositionDegreeUp->GetA();
+	configs.Slot1.GravityType = m_PositionDegreeUp->GetGravityType();
+	configs.Slot1.StaticFeedforwardSign = m_PositionDegreeUp->GetStaticFeedforwardSign();
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -419,64 +433,9 @@ void ClimberManager::Cyclic()
 {
 	Update();
 
-	CheckForTuningEnabled();
-	if (m_tuning)
-	{
-		ReadTuningParamsFromNT();
-	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Down", (m_ClimberPositionDegree.Position.value()));
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
-}
-
-void ClimberManager::CheckForTuningEnabled()
-{
-	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
-	if (pastTuning != m_tuning && m_tuning == true)
-	{
-		PushTuningParamsToNT();
-	}
-}
-
-void ClimberManager::ReadTuningParamsFromNT()
-{
-	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
-	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
-	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
-	m_PositionDegreeUp->SetIZone(m_table.get()->GetNumber("PositionDegreeUp_iZone", 0));
-	m_PositionDegreeUp->SetS(m_table.get()->GetNumber("PositionDegreeUp_sGain", 0));
-	m_PositionDegreeUp->SetV(m_table.get()->GetNumber("PositionDegreeUp_vGain", 0));
-	m_PositionDegreeUp->SetA(m_table.get()->GetNumber("PositionDegreeUp_aGain", 0));
-	m_PositionDegreeUp->SetF(m_table.get()->GetNumber("PositionDegreeUp_fGain", 0));
-	m_PositionDegreeUp->SetP(m_table.get()->GetNumber("PositionDegreeUp_pGain", 0));
-	m_PositionDegreeUp->SetI(m_table.get()->GetNumber("PositionDegreeUp_iGain", 0));
-	m_PositionDegreeUp->SetD(m_table.get()->GetNumber("PositionDegreeUp_dGain", 0));
-}
-
-void ClimberManager::PushTuningParamsToNT()
-{
-	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
-	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
-	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
-	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
-	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
-	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
-	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
-	m_table.get()->PutNumber("PositionDegreeUp_iZone", m_PositionDegreeUp->GetIZone());
-	m_table.get()->PutNumber("PositionDegreeUp_sGain", m_PositionDegreeUp->GetS());
-	m_table.get()->PutNumber("PositionDegreeUp_vGain", m_PositionDegreeUp->GetV());
-	m_table.get()->PutNumber("PositionDegreeUp_aGain", m_PositionDegreeUp->GetA());
-	m_table.get()->PutNumber("PositionDegreeUp_fGain", m_PositionDegreeUp->GetF());
-	m_table.get()->PutNumber("PositionDegreeUp_pGain", m_PositionDegreeUp->GetP());
-	m_table.get()->PutNumber("PositionDegreeUp_iGain", m_PositionDegreeUp->GetI());
-	m_table.get()->PutNumber("PositionDegreeUp_dGain", m_PositionDegreeUp->GetD());
 }
 
 void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)

@@ -126,9 +126,11 @@ public:
 		m_AlgaePercentOutput.Output = percentOut;
 		m_AlgaeTalonFXSActiveTarget = &m_AlgaePercentOutput;
 	}
-
-	void SetPIDArmPositionDegree();
-	void SetPIDElevatorLeaderPositionInch();
+	void UpdateTargetElevatorLeaderPercentOutput(double percentOut)
+	{
+		m_ElevatorLeaderPercentOutput.Output = percentOut;
+		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPercentOutput;
+	}
 
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
@@ -189,9 +191,6 @@ public:
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
-	std::string m_tuningIsEnabledStr;
-	bool m_tuning = false;
-	std::shared_ptr<nt::NetworkTable> m_table;
 
 	ControlData *GetControlData(std::string name) override;
 
@@ -253,6 +252,7 @@ private:
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 
+	ctre::phoenix6::controls::DutyCycleOut m_ElevatorLeaderPercentOutput{0.0};
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_CoralActiveTarget;

@@ -49,8 +49,6 @@ public:
 
     $$_TARGET_UPDATE_FUNCTIONS_$$
 
-    $$_PID_UPDATE_FUNCTIONS_$$
-
     _MECHANISM_HAS_SOLENOIDS_START_
     /// @brief Set the target value for the actuator
     /// @param identifier solenoid Usage to indicate what motor to update
@@ -81,9 +79,12 @@ public:
 protected:
     RobotIdentifier m_activeRobotId;
     std::string m_ntName;
+
+    _NT_TUNING_FUNCTIONS_START_
     std::string m_tuningIsEnabledStr;
     bool m_tuning = false;
     std::shared_ptr<nt::NetworkTable> m_table;
+    _NT_TUNING_FUNCTIONS_END_
 
     ControlData *GetControlData(std::string name) override;
 
@@ -94,9 +95,11 @@ private:
 
     $$_TUNABLE_PARAMETERS_$$
 
+    _NT_TUNING_FUNCTIONS_START_
     void CheckForTuningEnabled();
     void ReadTuningParamsFromNT();
     void PushTuningParamsToNT();
+    _NT_TUNING_FUNCTIONS_END_
 
     $$_PRIVATE_INITIALZATION_FUNCTIONS_$$
 
