@@ -254,7 +254,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_ElevatorLeader = new ctre::phoenix6::hardware::TalonFX(4, "canivore");
 	m_AlgaeTalonFX = new ctre::phoenix6::hardware::TalonFX(19, "rio");
 	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "canivore");
-	m_Coral = new ctre::phoenix6::hardware::TalonFXS(18, "canivore");
+	m_Coral = new ctre::phoenix6::hardware::TalonFXS(18, "rio");
 
 	m_CoralInSensor = new frc::DigitalInput(0);	 // yellow wire reverse
 	m_CoralOutSensor = new frc::DigitalInput(1); // black
@@ -650,16 +650,16 @@ void DragonTale::InitializeTalonFXElevatorFollowerPRACTICE_BOT9999()
 void DragonTale::InitializeTalonFXSCoralPRACTICE_BOT9999()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.StatorCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLimitEnable = false;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(0);
-	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
 	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
-	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0);
+	configs.OpenLoopRamps.VoltageOpenLoopRampPeriod = units::time::second_t(0.25);
 	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -681,6 +681,8 @@ void DragonTale::InitializeTalonFXSCoralPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -692,12 +694,6 @@ void DragonTale::InitializeTalonFXSCoralPRACTICE_BOT9999()
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Coral", "m_Coral Status", status.GetName());
 }
 
-// CoralInSensor : Digital inputs do not have initialization needs
-// CoralOutSensor : Digital inputs do not have initialization needs
-// AlgaeSensor : Digital inputs do not have initialization needs
-
-// ArmAngleSensor : CANcoder inputs do not have initialization needs
-// ElevatorHeightSensor : CANcoder inputs do not have initialization needs
 void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 {
 	TalonFXConfiguration configs{};
