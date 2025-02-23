@@ -576,6 +576,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonFXAlgaePRACTICE_BOT9999()
@@ -842,6 +843,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	}
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_ElevatorLeader", "m_ElevatorLeader Status", status.GetName());
+	m_ElevatorLeaderPositionInch.EnableFOC = m_PositionInch->IsFOCEnabled();
 }
 
 void DragonTale::InitializeTalonFXElevatorFollowerCOMP_BOT302()
