@@ -92,17 +92,45 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
+    frc::Transform3d m_calcLeftStickPractice = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-12.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStickPractice = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(1.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcLeftStickComp = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-14.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStickComp = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-1.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-14.0), //-13.0
+            units::length::inch_t(-6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-1.0), // 0.0
+            units::length::inch_t(6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
