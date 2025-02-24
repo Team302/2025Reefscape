@@ -272,9 +272,9 @@ void Robot::UpdateDriveTeamFeedback()
     {
         m_previewer->CheckCurrentAuton();
     }
-    if (m_field != nullptr && m_chassis != nullptr)
+    if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
     {
-        m_field->UpdateRobotPosition(m_chassis->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
+        m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
     }
     auto feedback = DriverFeedback::GetInstance();
     if (feedback != nullptr)

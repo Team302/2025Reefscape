@@ -103,8 +103,7 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr && m_frontLeft != nullptr && m_frontRight != nullptr && m_backLeft != nullptr && m_backRight != nullptr)
     {
-        auto yaw = chassis->GetYaw();
-
+        auto yaw = GetPose().Rotation().Degrees();
         m_poseEstimator.ResetPosition(yaw,
                                       wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()},
                                       pose);
@@ -115,17 +114,11 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
     auto vision = DragonVision::GetDragonVision();
     if (vision != nullptr)
     {
-        auto mt1Pose = vision->GetRobotPosition();
-        if (mt1Pose.has_value())
+        auto visionpose = vision->CalcVisionPose();
+        if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
         {
-            ResetPose(mt1Pose.value().estimatedPose.ToPose2d());
-
-            std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
-            if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
-            {
-                ResetPose(visionpose.value());
-                // ResetPosition(visionpose.value());
-            }
+            ResetPose(visionpose.value());
+            // ResetPosition(visionpose.value());
         }
     }
 }

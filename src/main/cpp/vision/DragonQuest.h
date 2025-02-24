@@ -43,7 +43,6 @@ public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
-    void ResetWithLimelightData(frc::Pose3d visionpose);
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
 

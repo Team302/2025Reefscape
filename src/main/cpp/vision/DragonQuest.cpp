@@ -107,26 +107,17 @@ void DragonQuest::RefreshNT()
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     frc::Pose3d p3d{frc::Pose3d(pose)};
-    ResetWithLimelightData(p3d);
-}
-void DragonQuest::ResetWithLimelightData(frc::Pose3d visionpose)
-{
-    auto vision = DragonVision::GetDragonVision();
-    std::optional<VisionPose> llpose = vision->GetRobotPosition();
-    if (llpose.has_value())
-    {
-        m_xOffset += llpose.value().estimatedPose.X().to<double>();
-        m_yOffset += llpose.value().estimatedPose.Y().to<double>();
-        m_zOffset += llpose.value().estimatedPose.Z().to<double>();
-        units::degree_t roll = llpose.value().estimatedPose.Rotation().X();
-        units::degree_t pitch = llpose.value().estimatedPose.Rotation().Y();
-        units::degree_t yaw = llpose.value().estimatedPose.Rotation().Z();
+    m_xOffset += p3d.X().to<double>();
+    m_yOffset += p3d.Y().to<double>();
+    m_zOffset += p3d.Z().to<double>();
+    units::degree_t roll = p3d.Rotation().X();
+    units::degree_t pitch = p3d.Rotation().Y();
+    units::degree_t yaw = p3d.Rotation().Z();
 
-        m_rollOffset += roll.to<double>();
-        m_pitchOffset += pitch.to<double>();
-        m_yawOffset += yaw.to<double>();
-        m_hasreset = true;
-    }
+    m_rollOffset += roll.to<double>();
+    m_pitchOffset += pitch.to<double>();
+    m_yawOffset += yaw.to<double>();
+    m_hasreset = true;
 }
 
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()

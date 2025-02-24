@@ -186,6 +186,14 @@ public:
     void SetRobotPose(const frc::Pose2d &pose) override;
 
 protected:
+    enum class LIMELIGHT_IMU_MODE
+    {
+        USE_EXTERNAL_IMU_ONLY = 0,
+        USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU,
+        USE_INTERNAL_IMU,
+        USE_INTERNAL_WITH_MT1_ASSISTED_CONVERGENCE,
+        USE_INTERNAL_IMU_WITH_EXTERNAL_IMU_ASSISTED_CONVERGENCE
+    };
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER m_identifier;
