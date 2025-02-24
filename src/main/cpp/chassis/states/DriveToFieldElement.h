@@ -48,7 +48,7 @@ protected:
     virtual DragonTargetFinderTarget GetDriveToTarget() const = 0;
     virtual ChassisOptionEnums::DriveStateType GetDriveStateType() const = 0;
     virtual ChassisOptionEnums::HeadingOption GetHeadingOption() const = 0;
-    virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
+    virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
     void InitChassisMovement(ChassisMovement &chassisMovement);

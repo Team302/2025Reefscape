@@ -37,5 +37,5 @@ protected:
     DragonTargetFinderTarget GetDriveToTarget() const override;
     ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
     ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
-    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 };
