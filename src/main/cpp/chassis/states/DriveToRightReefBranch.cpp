@@ -38,3 +38,11 @@ DragonTargetFinderTarget DriveToRightReefBranch::GetDriveToTarget() const
 {
     return DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH;
 }
+ChassisOptionEnums::DriveStateType DriveToRightReefBranch::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH;
+}
+ChassisOptionEnums::HeadingOption DriveToRightReefBranch::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+}

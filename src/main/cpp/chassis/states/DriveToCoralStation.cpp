@@ -38,3 +38,11 @@ DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
     return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
 }
+ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION;
+}
+ChassisOptionEnums::HeadingOption DriveToCoralStation::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+}

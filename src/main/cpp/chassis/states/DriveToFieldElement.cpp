@@ -77,10 +77,7 @@ pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateTrajectory(std::op
         if (info.has_value())
         {
             m_endPose = std::get<frc::Pose2d>(info.value());
-            if (m_endPose.has_value())
-            {
-                trajectory = CreateDriveToFieldElementTrajectory(m_chassis->GetPose(), m_endPose.value());
-            }
+            trajectory = CreateDriveToFieldElementTrajectory(m_chassis->GetPose(), m_endPose.value()); // No need to check has_value since we just set it on the previous line
         }
     }
     return trajectory;
@@ -90,11 +87,14 @@ pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElemen
 {
     PathPlannerTrajectory trajectory;
 
+    auto endheading = GetModifiedHeadingValue(targetPose.Rotation().Degrees());
+    frc::Pose2d endPose = frc::Pose2d(targetPose.Translation(), endheading);
+
     DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("coral pose", targetPose);
+    DragonVisionStructLogger::logPose2d("target pose", endPose);
 
     pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
+    std::vector<frc::Pose2d> poses{currentPose2d, endPose};
     std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
     shared_ptr<PathPlannerPath> path;
 
@@ -102,7 +102,7 @@ pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElemen
         waypoints,
         constraints,
         std::nullopt,
-        GoalEndState(0.0_mps, targetPose.Rotation()), false);
+        GoalEndState(0.0_mps, endPose.Rotation()), false);
 
     path->preventFlipping = true;
 
@@ -134,12 +134,11 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
 {
     // initialize the same as holonomic drive
     chassisMovement.rawOmega = 0.0;
-    chassisMovement.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH;
+    chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-    chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+    chassisMovement.headingOption = GetHeadingOption();
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
-    chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
     if (chassis != nullptr)

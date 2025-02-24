@@ -21,10 +21,12 @@
 #include <vector>
 
 // FRC Includes
-#include <frc/geometry/Pose2d.h>
+#include "frc/geometry/Pose2d.h"
+#include "units/angle.h"
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
+#include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
@@ -44,6 +46,9 @@ public:
 
 protected:
     virtual DragonTargetFinderTarget GetDriveToTarget() const = 0;
+    virtual ChassisOptionEnums::DriveStateType GetDriveStateType() const = 0;
+    virtual ChassisOptionEnums::HeadingOption GetHeadingOption() const = 0;
+    virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 
 private:
     void InitChassisMovement(ChassisMovement &chassisMovement);
