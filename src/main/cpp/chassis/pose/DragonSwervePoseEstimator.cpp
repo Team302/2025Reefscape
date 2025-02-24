@@ -89,12 +89,6 @@ void DragonSwervePoseEstimator::AddVisionMeasurements()
             continue;
         }
 
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision est Pose X"), poseInfo.m_visionPose.X().value());
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision est Pose Y"), poseInfo.m_visionPose.Y().value());
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision est Pose Omega"), poseInfo.m_visionPose.Rotation().Degrees().value());
-
-        // continue;
-
         // currently just using std deviation for vision measurements passed in;
         // may need to revisit if the different systems provide different std deviation values
         // for similar data confidence
@@ -126,18 +120,12 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         {
             ResetPose(mt1Pose.value().estimatedPose.ToPose2d());
 
-            // auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
-            // if (chassis != nullptr)
-            //{
             std::optional<frc::Pose2d> visionpose = vision->CalcVisionPose();
             if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
             {
-                // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose X"), visionpose.value().X().value());
-                // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Y"), visionpose.value().Y().value());
-                // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonSwervePoseEstimator"), std::string("vision Pose Omega"), visionpose.value().Rotation().Degrees().value());
                 ResetPose(visionpose.value());
+                // ResetPosition(visionpose.value());
             }
-            //}
         }
     }
 }

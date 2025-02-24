@@ -634,6 +634,7 @@ void DragonLimelight::DataLog(uint64_t timestamp)
 
 void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
 {
+    return;
     auto yawrate = 0.0;
     auto pitch = 0.0;
     auto pitchrate = 0.0;
