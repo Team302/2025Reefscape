@@ -314,6 +314,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 {
                     double xyStds = .7;
                     double degStds = 9999999;
+                    m_megatag2PosBool = true;
                     m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
                     // auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
                     LimelightHelpers::SetIMUMode(m_cameraName, mode);
@@ -623,7 +624,6 @@ void DragonLimelight::DataLog(uint64_t timestamp)
 
 void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
 {
-    return;
     auto yawrate = 0.0;
     auto pitch = 0.0;
     auto pitchrate = 0.0;
