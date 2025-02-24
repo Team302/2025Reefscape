@@ -133,14 +133,17 @@ void HolonomicDrive::Run()
         else if (driveToLeftReefBranch)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
+            m_resetPathplannerTrajectory = false;
         }
         else if (driveToRightReefBranch)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
+            m_resetPathplannerTrajectory = false;
         }
         else if (driveToCoralStation)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION, ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION);
+            m_resetPathplannerTrajectory = false;
         }
         else
         {
@@ -184,6 +187,7 @@ void HolonomicDrive::Run()
                     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
                 }
             }
+            m_resetPathplannerTrajectory = true;
         }
         if (isSlowMode)
         {
@@ -236,7 +240,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.chassisSpeeds.vy = strafeScale * maxSpeed * scale;
     m_moveInfo.chassisSpeeds.omega = rotateScale * maxAngSpeed;
 
-    if ((abs(forwardScale) > 0.05) || (abs(strafeScale) > 0.05) || (abs(rotateScale) > 0.05))
+    if (m_resetPathplannerTrajectory)
     {
         m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     }
@@ -355,7 +359,7 @@ bool HolonomicDrive::AtTarget()
 }
 void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState)
 {
-    if (abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35)
+    if (abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35 && m_moveInfo.pathplannerTrajectory.getStates().empty())
     {
         m_moveInfo.driveOption = driveState;
         m_moveInfo.headingOption = headingState;
