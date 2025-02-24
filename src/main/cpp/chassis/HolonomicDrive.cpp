@@ -132,15 +132,15 @@ void HolonomicDrive::Run()
         }
         else if (driveToLeftReefBranch)
         {
-            DriveToLeftReefBranch();
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
         }
         else if (driveToRightReefBranch)
         {
-            DriveToRightReefBranch();
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
         }
         else if (driveToCoralStation)
         {
-            DriveToCoralStation();
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION, ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION);
         }
         else
         {
@@ -215,7 +215,6 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = m_swerve->GetYaw();
     m_moveInfo.checkTipping = false;
@@ -354,18 +353,17 @@ bool HolonomicDrive::AtTarget()
 {
     return false;
 }
-void HolonomicDrive::DriveToLeftReefBranch()
+void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState)
 {
-    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH;
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
-}
-void HolonomicDrive::DriveToRightReefBranch()
-{
-    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH;
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
-}
-void HolonomicDrive::DriveToCoralStation()
-{
-    m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION;
-    m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+    if (forward < 0.35 && strafe < 0.35 && rot < 0.35)
+    {
+        m_moveInfo.driveOption = driveState;
+        m_moveInfo.headingOption = headingState;
+    }
+    else
+    {
+        m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE; // TODO: maybe do robot drive if we can figure out how to transition it correctly
+        m_moveInfo.headingOption = headingState;
+        m_moveInfo.chassisSpeeds = m_moveInfo.chassisSpeeds * m_slowModeMultiplier;
+    }
 }
