@@ -355,7 +355,7 @@ bool HolonomicDrive::AtTarget()
 }
 void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState)
 {
-    if (forward < 0.35 && strafe < 0.35 && rot < 0.35)
+    if (abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35)
     {
         m_moveInfo.driveOption = driveState;
         m_moveInfo.headingOption = headingState;
