@@ -93,7 +93,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
     {
         Init(chassisMovement);
     }
-    if (!m_trajectoryStates.empty() && !states.empty()) // If we have a path parsed / have states to run
+    if (!m_trajectoryStates.empty() && !states.empty() && !IsDone()) // If we have a path parsed / have states to run
     {
         if (m_trajectory.getInitialPose() != chassisMovement.pathplannerTrajectory.getInitialPose())
         {
@@ -139,9 +139,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
 
 bool TrajectoryDrivePathPlanner::IsDone()
 {
-
     bool isDone = false;
-    return false;
 
     auto currentPose = m_chassis != nullptr ? m_chassis->GetPose() : Pose2d();
     if (!m_trajectoryStates.empty()) // If we have states...
@@ -163,6 +161,18 @@ bool TrajectoryDrivePathPlanner::IsDone()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.pose.Rotation().Degrees().value());
 
             isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
+        }
+        else
+        {
+            if (currentPose.Translation().Distance(m_prevPose.Translation()) < units::length::inch_t(0.25))
+            {
+                m_samePoseCount++;
+                isDone = m_samePoseCount > m_samePoseCountThreshold;
+            }
+            else
+            {
+                m_samePoseCount = 0;
+            }
         }
     }
     else

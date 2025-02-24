@@ -15,24 +15,42 @@
 
 #pragma once
 
-// C++ Includes
-#include <string>
+// C++
+#include <optional>
+#include <tuple>
+#include <vector>
 
 // FRC Includes
+#include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
-#include "chassis/states/DriveToFieldElement.h"
+#include "chassis/states/RobotDrive.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
 
-class RobotDrive;
-class TrajectoryDrivePathPlanner;
-
-class DriveToRightReefBranch : public DriveToFieldElement
+class DriveToFieldElement : public TrajectoryDrivePathPlanner
 {
 public:
-    DriveToRightReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
-    std::string GetDriveStateName() const override;
+    DriveToFieldElement(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+
+    pathplanner::PathPlannerTrajectory
+    CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
+
+    void Init(ChassisMovement &chassisMovement) override;
+    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
+    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
 protected:
-    DragonTargetFinderTarget GetDriveToTarget() const override;
+    virtual DragonTargetFinderTarget GetDriveToTarget() const = 0;
+
+private:
+    void InitChassisMovement(ChassisMovement &chassisMovement);
+
+    pathplanner::PathPlannerTrajectory CreateDriveToFieldElementTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
+
+    pathplanner::PathPlannerTrajectory m_trajectory;
+    DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
+    std::optional<frc::Pose2d> m_endPose = std::nullopt;
 };

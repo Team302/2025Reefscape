@@ -79,4 +79,6 @@ private:
     double m_kPCoarse = 5.0;
     double m_kPFine = 9.0;
     const double m_percentageCompleteThreshold = 0.90;
+    int m_samePoseCount = 0;
+    const int m_samePoseCountThreshold = 3;
 };

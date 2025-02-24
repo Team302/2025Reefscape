@@ -15,114 +15,26 @@
 
 // C++ Includes
 #include <string>
-#include <tuple>
 
 // FRC Includes
-#include <frc/geometry/Rotation2d.h>
-#include <pathplanner/lib/path/PathPlannerPath.h>
-#include <pathplanner/lib/path/PathConstraints.h>
-#include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
-#include "vision/DragonVision.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/DriveToCoralStation.h"
-#include "utils/FMSData.h"
-#include "vision/DragonVisionStructs.h"
-#include "vision/DragonVisionStructLogger.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "chassis/SwerveChassis.h"
 
-#include "utils/logging/debug/Logger.h"
-#include "utils/logging/debug/LoggerData.h"
-#include "utils/logging/debug/LoggerEnums.h"
-
-using namespace pathplanner;
-using namespace std;
+using std::string;
 
 DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
-    : TrajectoryDrivePathPlanner(robotDrive)
+    : DriveToFieldElement(robotDrive, trajectoryDrivePathPlanner)
 {
 }
 
-void DriveToCoralStation::Init(ChassisMovement &chassisMovement)
-{
-
-    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
-
-    m_trajectory = CreateTrajectory(info);
-    InitFromTrajectory(chassisMovement, m_trajectory);
-    m_currentType = get<0>(info.value());
-}
-
-std::string DriveToCoralStation::GetDriveStateName() const
+string DriveToCoralStation::GetDriveStateName() const
 {
     return std::string("DriveToCoralStation");
 }
 
-void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
+DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
-    m_trajectory = trajectory;
-    if (!m_trajectory.getStates().empty())
-    {
-        chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
-        TrajectoryDrivePathPlanner::Init(chassisMovement);
-    }
-}
-
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
-{
-
-    pathplanner::PathPlannerTrajectory trajectory;
-
-    if (m_chassis != nullptr)
-    {
-        if (info)
-        {
-            m_endPose = std::get<frc::Pose2d>(info.value());
-            trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), m_endPose);
-        }
-    }
-    return trajectory;
-}
-
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
-{
-    PathPlannerTrajectory trajectory;
-
-    DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("coral pose", targetPose);
-
-    pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
-    std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
-    shared_ptr<PathPlannerPath> path;
-
-    path = std::make_shared<PathPlannerPath>(
-        waypoints,
-        constraints,
-        std::nullopt,
-        GoalEndState(0.0_mps, targetPose.Rotation()), false);
-
-    path->preventFlipping = true;
-
-    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
-    return trajectory;
-}
-
-std::array<frc::SwerveModuleState, 4> DriveToCoralStation::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
-{
-    std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
-    frc::Pose2d newEndPose = get<1>(info.value());
-    bool regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-
-    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
-    {
-        m_trajectory = CreateTrajectory(info);
-        InitFromTrajectory(chassisMovement, m_trajectory);
-    }
-    m_currentType = get<0>(info.value());
-
-    return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
 }

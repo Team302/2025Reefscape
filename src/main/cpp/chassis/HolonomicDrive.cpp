@@ -209,8 +209,6 @@ void HolonomicDrive::Run()
 
 void HolonomicDrive::InitChassisMovement()
 {
-    m_moveInfo.rawX = 0.0;
-    m_moveInfo.rawY = 0.0;
     m_moveInfo.rawOmega = 0.0;
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
     m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
@@ -230,8 +228,6 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
                                 double strafeScale,
                                 double rotateScale)
 {
-    m_moveInfo.rawX = forwardScale;
-    m_moveInfo.rawY = strafeScale;
     m_moveInfo.rawOmega = rotateScale;
 
     auto maxSpeed = m_swerve->GetMaxSpeed();

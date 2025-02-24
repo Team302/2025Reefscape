@@ -233,7 +233,7 @@ bool DrivePathPlanner::IsDone()
         CheckForDriveTo();
     }
 
-    auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
+    // auto *trajectoryDrive = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER));
 
     // return trajectoryDrive != nullptr ? trajectoryDrive->IsDone() : false;
     return false;
