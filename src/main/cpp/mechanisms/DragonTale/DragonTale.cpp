@@ -285,12 +285,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0.05,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -307,12 +307,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0.25,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -329,12 +329,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		false,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -357,7 +357,7 @@ void DragonTale::CreateCOMP_BOT302()
 	m_AlgaeSensor = new frc::DigitalInput(1);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.117432);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.10498);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -379,12 +379,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0.05,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -401,12 +401,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0.25,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -423,12 +423,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		false,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -488,9 +488,9 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t ( 75 );
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t ( 100 );
-	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t ( 0 );
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(75);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(100);
+	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
