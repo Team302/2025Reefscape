@@ -83,7 +83,6 @@ public:
 		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
-	void SetPIDClimberPositionDegree();
 
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
@@ -110,9 +109,6 @@ public:
 protected:
 	RobotIdentifier m_activeRobotId;
 	std::string m_ntName;
-	std::string m_tuningIsEnabledStr;
-	bool m_tuning = false;
-	std::shared_ptr<nt::NetworkTable> m_table;
 
 	ControlData *GetControlData(std::string name) override;
 
@@ -126,10 +122,6 @@ private:
 
 	RobotStateChanges::GamePeriod m_gameMode;
 	RobotStateChanges::ClimbMode m_climbMode;
-
-	void CheckForTuningEnabled();
-	void ReadTuningParamsFromNT();
-	void PushTuningParamsToNT();
 
 	void InitializeTalonFXClimberPRACTICE_BOT9999();
 	void InitializeTalonFXClimberCOMP_BOT302();
