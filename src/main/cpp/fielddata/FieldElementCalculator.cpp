@@ -17,6 +17,8 @@
 #include "FieldConstantsPoseLogger.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
+#include <frc/RobotController.h>
+#include "RobotIdentifier.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
@@ -44,12 +46,26 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
 
 frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset)
 {
-    frc::Transform3d transformToApply = m_calcLeftStick;
-    if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
+    int32_t teamNumber = frc::RobotController::GetTeamNumber();
+
+    if ((RobotIdentifier)teamNumber == RobotIdentifier::COMP_BOT_302)
     {
-        transformToApply = m_calcRightStick;
+        frc::Transform3d transformToApply = m_calcLeftStickComp;
+        if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
+        {
+            transformToApply = m_calcRightStickComp;
+        }
+        return poseOfFaceTag + transformToApply + m_halfRobotTransform;
     }
-    return poseOfFaceTag + transformToApply + m_halfRobotTransform;
+    else
+    {
+        frc::Transform3d transformToApply = m_calcLeftStickPractice;
+        if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
+        {
+            transformToApply = m_calcRightStickPractice;
+        }
+        return poseOfFaceTag + transformToApply + m_halfRobotTransform;
+    }
 }
 
 void FieldElementCalculator::InitializeTransforms()
@@ -85,7 +101,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::BLUE_CENTER_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_A] =
-        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick);
+        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick); // TODO: is this correct? Do we need to check the robot identifier and use those offsets?
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_B] =
         TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_C] =
@@ -137,7 +153,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::RED_CENTER_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::RED_REEF_A] =
-        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick);
+        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick); // TODO: is this correct? Do we need to check the robot identifier and use those offsets?
     m_transformCalculatedMap[FieldConstants::RED_REEF_B] =
         TransformToPose(FieldConstants::RED_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::RED_REEF_C] =
