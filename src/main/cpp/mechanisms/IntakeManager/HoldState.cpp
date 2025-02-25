@@ -53,14 +53,12 @@ void HoldState::Init()
 void HoldState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
-	m_mechanism->SetPIDExtenderPositionDegree();
 	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
 }
 
 void HoldState::InitCOMP_BOT302()
 {
 	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
-	m_mechanism->SetPIDExtenderPositionDegree();
 	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
 }
 

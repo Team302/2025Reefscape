@@ -32,8 +32,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 								 IntakeManager::STATE_NAMES intakeState,
 								 bool taleStateChanged,
 								 DragonTale::STATE_NAMES taleState,
-								 ChassisOptionEnums::PathUpdateOption updatePathOption,
-								 PATH_UPDATE_OPTION updateOption,
+								 ChassisOptionEnums::DriveStateType pathUpdateOption,
 								 DriveStopDelay::DelayOption delayOption) : m_id(id), // Primitive ID
 																			m_time(time),
 																			m_headingOption(headingOpt),
@@ -48,8 +47,7 @@ PrimitiveParams::PrimitiveParams(PRIMITIVE_IDENTIFIER id,
 																			m_intakeState(intakeState),
 																			m_taleState(taleState),
 																			m_zones(zones),
-																			m_pathUpdateOption(updatePathOption),
-																			m_updateOption(updateOption)
+																			m_pathUpdateOption(pathUpdateOption)
 
 // @ADDMECH initilize state mgr attribute
 {
