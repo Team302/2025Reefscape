@@ -48,7 +48,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
 
-    // if (!IsDone())
+    // if (!IsDone()) //TODO: don't generate if you are within a certain distance to the pose
     // {
     m_trajectory = CreateTrajectory(info);
     InitFromTrajectory(chassisMovement, m_trajectory);
