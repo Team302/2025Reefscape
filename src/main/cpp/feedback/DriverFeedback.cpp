@@ -28,6 +28,7 @@
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
+#include "vision/DragonVision.h"
 
 using frc::DriverStation;
 

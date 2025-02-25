@@ -15,8 +15,6 @@
 #include "FieldElementCalculator.h"
 
 #include "FieldConstantsPoseLogger.h"
-#include "utils/logging/debug/Logger.h"
-#include "vision/DragonVisionStructLogger.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {

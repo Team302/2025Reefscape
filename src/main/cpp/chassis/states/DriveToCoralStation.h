@@ -15,22 +15,13 @@
 
 #pragma once
 
-// C++ Includes
-#include <vector>
-
-// FRC Includes
-#include <frc/geometry/Rotation3d.h>
-#include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
-#include "vision/DragonVision.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
-#include "utils/FMSData.h"
-#include "chassis/SwerveChassis.h"
 
 class DriveToCoralStation : public TrajectoryDrivePathPlanner
 {

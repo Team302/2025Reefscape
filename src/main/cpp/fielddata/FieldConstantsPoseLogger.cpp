@@ -13,12 +13,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <fielddata/FieldConstantsPoseLogger.h>
+
 
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #include "wpi/DataLog.h"
 #include "frc/DataLogManager.h"
 #include "frc/geometry/Pose3d.h"
+
+#include <fielddata/FieldConstantsPoseLogger.h>
 
 void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {

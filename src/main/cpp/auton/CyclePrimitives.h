@@ -17,7 +17,6 @@
 #pragma once
 
 // C++ Includes
-#include <memory>
 #include <vector>
 
 // FRC includes

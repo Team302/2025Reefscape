@@ -39,7 +39,6 @@
 #include "units/mass.h"
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
-#include "utils/logging/debug/LoggableItem.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 class RobotDrive;

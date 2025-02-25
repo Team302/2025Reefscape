@@ -16,6 +16,7 @@
 #include <string>
 
 #include "chassis/definitions/chassis9998/ChassisConfigChassis_9998.h"
+#include "chassis/definitions/chassis9998/TunerConstants9998.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
 #include "utils/logging/debug/Logger.h"
