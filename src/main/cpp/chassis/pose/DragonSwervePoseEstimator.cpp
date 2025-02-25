@@ -114,11 +114,23 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
     auto vision = DragonVision::GetDragonVision();
     if (vision != nullptr)
     {
-        auto visionpose = vision->CalcVisionPose();
-        if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
+        // try making sure MegaTag1 has a good position before resetting pose to avoid screwing up MegaTag2 && Quest
+        auto megaTag1Position = vision->GetRobotPosition(); // Megatag1
+        if (megaTag1Position.has_value())
         {
-            ResetPose(visionpose.value());
-            // ResetPosition(visionpose.value());
+            auto stddev = megaTag1Position.value().visionMeasurementStdDevs;
+            if (stddev.size() > 2)
+            {
+                if (stddev[0] < 1.1 && stddev[1] < 1.1 && stddev[2] < 13.0)
+                {
+                    auto visionpose = vision->CalcVisionPose();
+                    if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
+                    {
+                        ResetPose(visionpose.value());
+                        // ResetPosition(visionpose.value());
+                    }
+                }
+            }
         }
     }
 }
