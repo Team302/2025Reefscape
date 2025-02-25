@@ -547,7 +547,8 @@ std::optional<VisionData> DragonLimelight::GetDataToNearestAprilTag()
         frc::Rotation3d rotation = frc::Rotation3d(units::angle::degree_t(vector[5]), units::angle::degree_t(vector[3]), units::angle::degree_t(vector[4]));
         auto transform = frc::Transform3d(units::length::meter_t(vector[0]), units::length::meter_t(vector[1]), units::length::meter_t(vector[2]), rotation);
 
-        return VisionData{transform, transform.Translation(), rotation, tagId.value()};
+        return VisionData{
+            transform, transform.Translation(), rotation, tagId.value()};
     }
 
     return std::nullopt;
@@ -584,24 +585,34 @@ DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
         auto poseest = m_chassis->GetSwervePoseEstimator();
         if (poseest != nullptr)
         {
-            // LimelightHelpers::SetRobotOrientation(GetCameraName(),
-            //                                       poseest->GetPose().Rotation().Degrees().value(),
-            //                                       m_yawRate,
-            //                                       m_pitch,
-            //                                       m_pitchRate,
-            //                                       m_roll,
-            //                                       m_rollRate);
+            LimelightHelpers::SetRobotOrientation(GetCameraName(),
+                                                  poseest->GetPose().Rotation().Degrees().value(),
+                                                  m_yawRate,
+                                                  m_pitch,
+                                                  m_pitchRate,
+                                                  m_roll,
+                                                  m_rollRate);
 
             std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
 
             if (megaTag2Pose.has_value())
             {
-                DragonVisionPoseEstimatorStruct str;
-                str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
-                str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
-                str.m_timeStamp = megaTag2Pose.value().timeStamp;
-                str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
-                return str;
+                if (EstimateTargetXDistance())
+                {
+                    DragonVisionPoseEstimatorStruct str;
+                    if (EstimateTargetXDistance().value().to<double>() < 36)
+                    {
+                        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+                    }
+                    else
+                    {
+                        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::MEDIUM;
+                    }
+                    str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
+                    str.m_timeStamp = megaTag2Pose.value().timeStamp;
+                    str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
+                    return str;
+                }
             }
         }
     }
