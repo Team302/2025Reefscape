@@ -8,6 +8,7 @@ enum class RobotIdentifier
     CHASSIS_BOT_9998 = 9998,
     CHASSIS_BOT_9997 = 9997,
     $$_ROBOT_CONFIGURATIONS_NAMES_ENUMS_$$
+        SIM_BOT_0 = 0,
 
-        MAX_ROBOT_IDENTIFIERS
+    MAX_ROBOT_IDENTIFIERS
 };

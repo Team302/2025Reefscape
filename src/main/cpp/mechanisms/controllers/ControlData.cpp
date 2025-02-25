@@ -58,7 +58,9 @@ ControlData::ControlData(
     double cruiseVelocity,
     double peakVal,
     double nominalVal,
-    bool enableFOC) : m_mode(mode),
+    bool enableFOC,
+    GravityTypeValue gravityType,
+    StaticFeedforwardSignValue staticFeedforwardSign) : m_mode(mode),
                       m_runLoc(server),
                       m_identifier(identifier),
                       m_proportional(proportional),
@@ -74,6 +76,8 @@ ControlData::ControlData(
                       m_cruiseVelocity(cruiseVelocity),
                       m_peakValue(peakVal),
                       m_nominalValue(nominalVal),
-                      m_enableFOC(enableFOC)
+                                                        m_enableFOC(enableFOC),
+                                                        m_gravityType(gravityType),
+                                                        m_staticFeedforwardSign(staticFeedforwardSign)
 {
 }

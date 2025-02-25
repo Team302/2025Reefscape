@@ -52,8 +52,6 @@ void InitializeState::Init()
 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
-	m_mechanism->SetPIDArmPositionDegree();
-	m_mechanism->SetPIDElevatorLeaderPositionInch();
 }
 
 void InitializeState::InitPRACTICE_BOT9999()
