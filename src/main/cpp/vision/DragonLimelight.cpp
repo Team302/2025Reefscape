@@ -232,7 +232,7 @@ std::optional<units::angle::degree_t> DragonLimelight::GetTargetSkew()
 std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool megatag2)
 {
     // use megatag1
-    megatag2 = false;
+    // megatag2 = false;  TODO: Try Again without this
     auto mode = static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_ONLY); // Chief Delphi answer says perfect portrait pose doesn't work with internal IMU
 
     // Megatag 1

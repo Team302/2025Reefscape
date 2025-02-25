@@ -101,10 +101,8 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_networkTableName(networkTableName)
 {
     InitStates();
-    ZeroAlignSwerveModules();
-    ResetYaw();
+    m_pigeon->Reset();
     ResetPose(frc::Pose2d());
-    SetStoredHeading(units::angle::degree_t(0.0));
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
     m_radius = m_frontLeftLocation.Norm();
 
@@ -373,7 +371,7 @@ void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
 void SwerveChassis::ResetYaw()
 {
     m_pigeon->Reset();
-    SetStoredHeading(units::angle::degree_t(0));
+    SetStoredHeading(units::angle::degree_t(0.0));
     ZeroAlignSwerveModules();
 }
 
