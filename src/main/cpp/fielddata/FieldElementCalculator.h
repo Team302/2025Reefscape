@@ -35,76 +35,104 @@ private:
     void CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
-    //Robot is 34" from front to back
+    // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(17.0),
+            units::length::inch_t(18.0), // 16
             units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_noTransform = frc::Transform3d(
-                                         frc::Translation3d(
-                                             units::length::inch_t(0.0),
-                                             units::length::inch_t(0.0),
-                                             units::length::inch_t(0.0)),
-                                         frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftAlliance = frc::Transform3d(
-                                                   frc::Translation3d(
-                                                       units::length::inch_t(0.0),
-                                                       units::length::inch_t(-30.0),
-                                                       units::length::inch_t(0.0)),
-                                                   frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftSidewall = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0.0),
-                                                        units::length::inch_t(30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightAlliance = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0.0),
-                                                        units::length::inch_t(30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightSidewall = frc::Transform3d(
-                                                    frc::Translation3d(
-                                                        units::length::inch_t(0),
-                                                        units::length::inch_t(-30.0),
-                                                        units::length::inch_t(0.0)),
-                                                    frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0),
+            units::length::inch_t(-30.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCageLeft = frc::Transform3d(
-                                          frc::Translation3d(
-                                              units::length::inch_t(0.0),
-                                              units::length::inch_t(-42.5),
-                                              units::length::inch_t(0.0)),
-                                          frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-42.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcCageRight = frc::Transform3d(
-                                           frc::Translation3d(
-                                               units::length::inch_t(0.0),
-                                               units::length::inch_t(42.5),
-                                               units::length::inch_t(0.0)),
-                                           frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(42.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcLeftStickPractice = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-12.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStickPractice = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(1.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcLeftStickComp = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-14.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStickComp = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-1.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
-                                           frc::Translation3d(
-                                               units::length::inch_t(0.0),
-                                               units::length::inch_t(-6.5),
-                                               units::length::inch_t(0.0)),
-                                           frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-19.0), //TODO: Need to make updates to use the different offsets depending on Robot Identifier
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
-                                            frc::Translation3d(
-                                                units::length::inch_t(0.0),
-                                                units::length::inch_t(6.5),
-                                                units::length::inch_t(0.0)),
-                                            frc::Rotation3d());
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-5.0),//TODO: Need to make updates to use the different offsets depending on Robot Identifier
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;

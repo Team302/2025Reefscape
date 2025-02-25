@@ -24,8 +24,6 @@
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
-#include "utils/DragonPower.h"
-#include "utils/DragonPower.h"
 #include "utils/logging/debug/LoggableItemMgr.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -34,8 +32,6 @@
 #include "utils/logging/trace/DataTrace.h"
 #include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorData.h"
-#include "utils/sensors/SensorDataMgr.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
@@ -79,6 +75,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+    SensorDataMgr::GetInstance()->CacheData();
+
     isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)
     {
@@ -86,10 +84,10 @@ void Robot::RobotPeriodic()
         Logger::GetLogger()->PeriodicLog();
     }
 
-    if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
-    {
-        m_datalogger->PeriodicDataLog();
-    }
+    // if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
+    // {
+    //     m_datalogger->PeriodicDataLog();
+    // }
 
     if (m_robotState != nullptr)
     {
@@ -130,7 +128,6 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
@@ -174,7 +171,6 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-    SensorDataMgr::GetInstance()->CacheData();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
@@ -237,7 +233,6 @@ void Robot::InitializeRobot()
     {
         m_holonomic = new HolonomicDrive();
     }
-    m_dragonPower = DragonPower::GetInstance();
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));

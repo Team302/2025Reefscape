@@ -26,6 +26,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
+#include "auton/PrimitiveEnums.h"
 // Third Party Includes
 
 class ZoneParams
@@ -42,6 +43,8 @@ public:
                IntakeManager::STATE_NAMES intakeOption,
                DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
+               ChassisOptionEnums::HeadingOption headingOption,
+               ChassisOptionEnums::DriveStateType pathUpdateOption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
@@ -55,8 +58,10 @@ public:
 
     AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
 
-    frc::Pose2d getCircleZonePose() const { return m_circlePose; }
-    units::length::inch_t getRadius() const { return m_radius; }
+    frc::Pose2d GetCircleZonePose() const { return m_circlePose; }
+    units::length::inch_t GetRadius() const { return m_radius; }
+
+    ChassisOptionEnums::DriveStateType GetPathUpdateOption() const { return m_pathUpdateOption; }
 
     bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
     bool IsTaleStateChanging() const { return m_isTaleStateChanging; }
@@ -64,6 +69,7 @@ public:
     IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeOption; }
     DragonTale::STATE_NAMES GetTaleOption() const { return m_taleOption; }
 
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; }
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
     ChassisOptionEnums::AutonAvoidOptions GetAvoidOption() const { return m_avoidoption; }
 
@@ -79,7 +85,10 @@ private:
     DragonTale::STATE_NAMES m_taleOption;
 
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
+    ChassisOptionEnums::HeadingOption m_headingOption;
     ChassisOptionEnums::AutonAvoidOptions m_avoidoption; // instances of said parameters
+
+    ChassisOptionEnums::DriveStateType m_pathUpdateOption;
 
     AutonGrid::ZoneMode m_zoneMode;
 

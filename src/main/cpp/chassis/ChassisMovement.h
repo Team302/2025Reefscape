@@ -20,7 +20,6 @@
 #include "frc/geometry/Translation2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/trajectory/TrajectoryUtil.h"
-
 #include "units/angle.h"
 
 // Team302 Includes
@@ -33,17 +32,16 @@
 
 struct ChassisMovement
 {
-    double rawX;
-    double rawY;
     double rawOmega;
     ChassisOptionEnums::DriveStateType driveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
+    ChassisOptionEnums::DriveStateType previousDriveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
     frc::ChassisSpeeds chassisSpeeds = frc::ChassisSpeeds();
     pathplanner::PathPlannerTrajectory pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     ChassisOptionEnums::PathGainsType pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     frc::Translation2d centerOfRotationOffset = frc::Translation2d();
     ChassisOptionEnums::HeadingOption headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     ChassisOptionEnums::NoMovementOption noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
-    ChassisOptionEnums::AutonControllerType controllerType = ChassisOptionEnums::AutonControllerType::RAMSETE;
+    ChassisOptionEnums::AutonControllerType controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     units::angle::degree_t yawAngle = units::angle::degree_t(0.0);
     bool checkTipping = false;
     units::angle::degree_t tippingTolerance = units::angle::degree_t(5.0);

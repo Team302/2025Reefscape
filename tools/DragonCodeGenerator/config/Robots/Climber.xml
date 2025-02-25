@@ -263,6 +263,29 @@
         </peakReverseDutyCycle>
         <mode>Brake</mode>
       </theConfigMotorSettings>
+      <MotionMagicSettings>
+        <CruiseVelocity>
+          <unitsFamily>angularVelocity</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </CruiseVelocity>
+        <Acceleration>
+          <unitsFamily>angularAcceleration</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^2</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Acceleration>
+        <Jerk>
+          <unitsFamily>angularJerk</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__>rad/s^3</__units__>
+          <type>Double</type>
+          <value>0</value>
+        </Jerk>
+      </MotionMagicSettings>
     </MotorController>
   </MotorControllers>
   <closedLoopControlParameters />
@@ -333,6 +356,222 @@
           <value>0</value>
         </aGain>
       </PID>
+      <SlotIndex>
+        <unitsFamily>none</unitsFamily>
+        <name>intParameter</name>
+        <__units__ />
+        <type>Int32</type>
+        <value>0</value>
+      </SlotIndex>
+      <peakValue>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </peakValue>
+      <nominalValue>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </nominalValue>
+      <maxAcceleration>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </maxAcceleration>
+      <cruiseVelocity>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </cruiseVelocity>
+      <enableFOC>
+        <unitsFamily>none</unitsFamily>
+        <name>boolParameter</name>
+        <__units__ />
+        <type>Boolean</type>
+        <value>true</value>
+      </enableFOC>
+      <controlType>POSITION_DEGREES</controlType>
+    </motorControlData>
+    <motorControlData>
+      <name>PercentOut</name>
+      <PID>
+        <name>PIDFZ</name>
+        <pGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </pGain>
+        <iGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </iGain>
+        <dGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </dGain>
+        <fGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </fGain>
+        <iZone>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
+      </PID>
+      <SlotIndex>
+        <unitsFamily>none</unitsFamily>
+        <name>intParameter</name>
+        <__units__ />
+        <type>Int32</type>
+        <value>0</value>
+      </SlotIndex>
+      <peakValue>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </peakValue>
+      <nominalValue>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </nominalValue>
+      <maxAcceleration>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </maxAcceleration>
+      <cruiseVelocity>
+        <unitsFamily>none</unitsFamily>
+        <name>doubleParameter</name>
+        <__units__ />
+        <type>Double</type>
+        <value>0</value>
+      </cruiseVelocity>
+      <enableFOC>
+        <unitsFamily>none</unitsFamily>
+        <name>boolParameter</name>
+        <__units__ />
+        <type>Boolean</type>
+        <value>false</value>
+      </enableFOC>
+    </motorControlData>
+    <motorControlData>
+      <name>PositionDegreeUp</name>
+      <PID>
+        <name>PIDFZ</name>
+        <pGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </pGain>
+        <iGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </iGain>
+        <dGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </dGain>
+        <fGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </fGain>
+        <iZone>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </iZone>
+        <sGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </sGain>
+        <vGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </vGain>
+        <aGain>
+          <unitsFamily>none</unitsFamily>
+          <name>doubleParameter</name>
+          <__units__ />
+          <type>Double</type>
+          <value>0</value>
+        </aGain>
+      </PID>
+      <SlotIndex>
+        <unitsFamily>none</unitsFamily>
+        <name>intParameter</name>
+        <__units__ />
+        <type>Int32</type>
+        <value>0</value>
+      </SlotIndex>
       <peakValue>
         <unitsFamily>none</unitsFamily>
         <name>doubleParameter</name>
@@ -372,6 +611,38 @@
     </motorControlData>
   </stateMotorControlData>
   <states>
+    <state>
+      <name>Init</name>
+      <transitionsTo>
+        <stringParameterConstInMechInstance>
+          <unitsFamily>none</unitsFamily>
+          <name>stringParameterConstInMechInstance_1</name>
+          <__units__ />
+          <type>String</type>
+          <value>Off</value>
+        </stringParameterConstInMechInstance>
+      </transitionsTo>
+      <motorTargets>
+        <motorTarget>
+          <name>Climber</name>
+          <target>
+            <unitsFamily>none</unitsFamily>
+            <name>Target</name>
+            <__units__ />
+            <type>Double</type>
+          </target>
+          <motorName>Climber</motorName>
+          <Enabled>
+            <unitsFamily>none</unitsFamily>
+            <name>boolParameter</name>
+            <__units__ />
+            <type>Boolean</type>
+            <value>true</value>
+          </Enabled>
+          <controlDataName>PercentOut</controlDataName>
+        </motorTarget>
+      </motorTargets>
+    </state>
     <state>
       <name>Off</name>
       <transitionsTo>
@@ -471,9 +742,13 @@
             <type>Boolean</type>
             <value>true</value>
           </Enabled>
-          <controlDataName>PositionDegree</controlDataName>
+          <controlDataName>PositionDegreeUp</controlDataName>
         </motorTarget>
       </motorTargets>
     </state>
   </states>
+  <doubleParameters />
+  <boolParameters />
+  <constDoubleParameters />
+  <constBoolParameters />
 </mechanism>

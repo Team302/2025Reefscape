@@ -59,7 +59,7 @@ public:
                     IntakeManager::STATE_NAMES intakeState,
                     bool changeTaleState,
                     DragonTale::STATE_NAMES taleState,
-                    ChassisOptionEnums::PathUpdateOption updateHeadingOption,
+                    ChassisOptionEnums::DriveStateType pathUpdateOption,
                     DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
 
     PrimitiveParams() = delete;
@@ -67,6 +67,8 @@ public:
 
     // Some getters
     PRIMITIVE_IDENTIFIER GetID() const { return m_id; };
+    ChassisOptionEnums::DriveStateType GetPathUpdateOption() const { return m_pathUpdateOption; }
+
     units::time::second_t GetTime() const { return m_time; };
     ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; };
     float GetHeading() const { return m_heading; };
@@ -75,7 +77,7 @@ public:
     ChassisOptionEnums::PathGainsType GetPathGainsType() const { return m_pathGainsType; }
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
-    ChassisOptionEnums::PathUpdateOption GetPathUpdateOption() const { return m_pathUpdateOption; }
+
     DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
 
     void SetStartDelay(units::time::second_t startDelay) { m_startDelay = startDelay; }
@@ -121,7 +123,8 @@ private:
     DragonTale::STATE_NAMES m_taleState;
 
     ZoneParamsVector m_zones;
-    ChassisOptionEnums::PathUpdateOption m_pathUpdateOption;
+
+    ChassisOptionEnums::DriveStateType m_pathUpdateOption;
 };
 
 typedef std::vector<PrimitiveParams *> PrimitiveParamsVector;

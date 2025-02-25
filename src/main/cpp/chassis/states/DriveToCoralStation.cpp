@@ -15,104 +15,34 @@
 
 // C++ Includes
 #include <string>
-#include <tuple>
 
 // FRC Includes
-#include <frc/geometry/Rotation2d.h>
-#include <pathplanner/lib/path/PathPlannerPath.h>
-#include <pathplanner/lib/path/PathConstraints.h>
-#include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
-#include "vision/DragonVision.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/DriveToCoralStation.h"
-#include "utils/FMSData.h"
-#include "vision/DragonVisionStructs.h"
-#include "vision/DragonVisionStructLogger.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "chassis/SwerveChassis.h"
 
-#include "utils/logging/debug/Logger.h"
-#include "utils/logging/debug/LoggerData.h"
-#include "utils/logging/debug/LoggerEnums.h"
-
-using namespace pathplanner;
-using namespace std;
+using std::string;
 
 DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
-    : TrajectoryDrivePathPlanner(robotDrive)
+    : DriveToFieldElement(robotDrive, trajectoryDrivePathPlanner)
 {
 }
 
-void DriveToCoralStation::Init(ChassisMovement &chassisMovement)
-{
-
-    m_trajectory = CreateDriveToCoralStation();
-    InitFromTrajectory(chassisMovement, m_trajectory);
-}
-
-std::string DriveToCoralStation::GetDriveStateName() const
+string DriveToCoralStation::GetDriveStateName() const
 {
     return std::string("DriveToCoralStation");
 }
 
-void DriveToCoralStation::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
+DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
-    m_trajectory = trajectory;
-    if (!m_trajectory.getStates().empty())
-    {
-        chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
-        TrajectoryDrivePathPlanner::Init(chassisMovement);
-    }
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
 }
-
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStation()
+ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() const
 {
-    pathplanner::PathPlannerTrajectory trajectory;
-
-    if (m_chassis != nullptr)
-    {
-        std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info = DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE);
-        if (info && !IsDone())
-        {
-            m_endPose = std::get<frc::Pose2d>(info.value());
-            trajectory = CreateDriveToCoralStationTrajectory(m_chassis->GetPose(), m_endPose);
-        }
-    }
-    return trajectory;
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION;
 }
-
-pathplanner::PathPlannerTrajectory DriveToCoralStation::CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
+ChassisOptionEnums::HeadingOption DriveToCoralStation::GetHeadingOption() const
 {
-    DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("coral pose", targetPose);
-
-    pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, targetPose};
-    std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
-    shared_ptr<PathPlannerPath> path;
-
-    path = std::make_shared<PathPlannerPath>(
-        waypoints,
-        constraints,
-        std::nullopt,
-        GoalEndState(0.0_mps, targetPose.Rotation()), false);
-
-    path->preventFlipping = true;
-
-    return path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
-}
-
-bool DriveToCoralStation::IsDone()
-{
-    if (m_chassis != nullptr)
-    {
-        frc::Pose2d currentPose(m_chassis->GetPose());
-
-        if (m_endPose.Translation().Distance(m_chassis->GetPose().Translation()) < units::inch_t(6))
-            return true;
-    }
-    return false;
+    return ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
 }

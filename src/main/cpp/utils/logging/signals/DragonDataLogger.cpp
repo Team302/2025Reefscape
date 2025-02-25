@@ -103,6 +103,142 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals
             signals->m_cpuTemp.Update(value, timestamp);
             break;
 
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER:
+            signals->m_lfSteerPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY:
+            signals->m_lfSteerEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
+            signals->m_lfSteerTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_WATT_HOURS:
+            signals->m_lfSteerWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER:
+            signals->m_lfDrivePower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY:
+            signals->m_lfDriveEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER:
+            signals->m_lfDriveTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS:
+            signals->m_lfDriveWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER:
+            signals->m_rfSteerPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY:
+            signals->m_rfSteerEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_TOTALPOWER:
+            signals->m_rfSteerTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_WATT_HOURS:
+            signals->m_rfSteerWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER:
+            signals->m_rfDrivePower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY:
+            signals->m_rfDriveEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER:
+            signals->m_rfDriveTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS:
+            signals->m_rfDriveWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER:
+            signals->m_lbSteerPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY:
+            signals->m_lbSteerEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_TOTALPOWER:
+            signals->m_lbSteerTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_WATT_HOURS:
+            signals->m_lbSteerWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER:
+            signals->m_lbDrivePower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY:
+            signals->m_lbDriveEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_TOTALPOWER:
+            signals->m_lbDriveTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_WATT_HOURS:
+            signals->m_lbDriveWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER:
+            signals->m_rbSteerPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY:
+            signals->m_rbSteerEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_TOTALPOWER:
+            signals->m_rbSteerTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_WATT_HOURS:
+            signals->m_rbSteerWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER:
+            signals->m_rbDrivePower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY:
+            signals->m_rbDriveEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER:
+            signals->m_rbDriveTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS:
+            signals->m_rbDriveWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
+            signals->m_swerveChassisTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
+            signals->m_swerveChassisWattHours.Update(value, timestamp);
+            break;
+
         default:
             break;
         }

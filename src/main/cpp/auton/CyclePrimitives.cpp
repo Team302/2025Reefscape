@@ -120,8 +120,8 @@ void CyclePrimitives::Run()
 						}
 						else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
 						{
-							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->getCircleZonePose(),
-																			  zone->getRadius(),
+							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetCircleZonePose(),
+																			  zone->GetRadius(),
 																			  m_chassis->GetPose());
 						}
 
@@ -212,7 +212,7 @@ void CyclePrimitives::RunDriveStop()
 										  IntakeManager::STATE_NAMES::STATE_OFF,
 										  false,
 										  DragonTale::STATE_NAMES::STATE_READY,
-										  ChassisOptionEnums::PathUpdateOption::NONE,
+										  ChassisOptionEnums::DriveStateType::STOP_DRIVE,
 										  DriveStopDelay::DelayOption::START);
 		m_driveStop = m_primFactory->GetIPrimitive(params);
 		m_driveStop->Init(params);
