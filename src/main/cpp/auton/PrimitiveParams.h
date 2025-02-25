@@ -78,7 +78,6 @@ public:
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
 
-    // ChassisOptionEnums::DriveStateType GetPathUpdateOption() const { return m_pathUpdateOption; }
     DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
 
     void SetStartDelay(units::time::second_t startDelay) { m_startDelay = startDelay; }
