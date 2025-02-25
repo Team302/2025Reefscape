@@ -40,8 +40,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "4.0"/>
-<!-- <zone filename = "RedLeftHumanPlayerStation.xml"/> -->
+time = "4.0">
+<zone filename = "RedLeftHumanPlayerStation.xml"/>
+</primitive>
 <!-- </primitive> -->
 
 <primitive id = "DRIVE_STOP_MECH"

@@ -48,12 +48,12 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
 
-    if (!IsDone())
-    {
-        m_trajectory = CreateTrajectory(info);
-        InitFromTrajectory(chassisMovement, m_trajectory);
-        m_currentType = get<0>(info.value());
-    }
+    // if (!IsDone())
+    // {
+    m_trajectory = CreateTrajectory(info);
+    InitFromTrajectory(chassisMovement, m_trajectory);
+    m_currentType = get<0>(info.value());
+    // }
 }
 
 void DriveToFieldElement::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
@@ -136,7 +136,7 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.rawOmega = 0.0;
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-    chassisMovement.headingOption = GetHeadingOption();
+    chassisMovement.headingOption = ChassisOptionEnums::IGNORE;
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;

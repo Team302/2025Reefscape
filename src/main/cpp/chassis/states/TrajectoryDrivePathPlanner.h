@@ -51,8 +51,8 @@ public:
     units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
 
 protected:
-    const units::meters_per_second_t m_maxVel = 3.0_mps;
-    const units::meters_per_second_squared_t m_maxAccel = 2.0_mps_sq;
+    const units::meters_per_second_t m_maxVel = 1_mps;
+    const units::meters_per_second_squared_t m_maxAccel = 0.5_mps_sq;
     const units::radians_per_second_t m_maxAngularVel = 540_deg_per_s;
     const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
     units::inch_t m_distanceThreshold{2.0};

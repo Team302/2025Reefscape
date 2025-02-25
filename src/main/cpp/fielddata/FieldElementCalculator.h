@@ -123,14 +123,14 @@ private:
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
+            units::length::inch_t(-19.0), //TODO: Need to make updates to use the different offsets depending on Robot Identifier
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(6.5),
+            units::length::inch_t(-5.0),//TODO: Need to make updates to use the different offsets depending on Robot Identifier
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
