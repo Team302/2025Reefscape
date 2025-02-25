@@ -977,7 +977,7 @@
                 <type>Double</type>
                 <value>0</value>
               </forwardPosition>
-              <forwardType>RemoteCANdiS1</forwardType>
+              <forwardType>RemoteCANdiS2</forwardType>
               <forwardOpenClose>NormallyOpen</forwardOpenClose>
               <enableReverse>
                 <unitsFamily>none</unitsFamily>
@@ -1007,7 +1007,7 @@
                 <type>Double</type>
                 <value>0</value>
               </reversePosition>
-              <revType>RemoteCANdiS2</revType>
+              <revType>RemoteCANdiS1</revType>
               <revOpenClose>NormallyOpen</revOpenClose>
             </theConfigHWLimitSW>
             <theConfigMotorSettings>
@@ -2052,7 +2052,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>60</value>
+                <value>80</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -2066,7 +2066,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>40</value>
+                <value>60</value>
               </supplyCurrentLimit>
               <supplyCurrentThreshold>
                 <unitsFamily>current</unitsFamily>
@@ -2493,7 +2493,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>2</value>
+              <value>0</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2517,7 +2517,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>2</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2733,7 +2733,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>25</value>
+                <value>30</value>
               </iGain>
               <dGain>
                 <unitsFamily>none</unitsFamily>
@@ -2747,7 +2747,7 @@
                 <name>doubleParameter</name>
                 <__units__ />
                 <type>Double</type>
-                <value>1.8</value>
+                <value>1</value>
               </fGain>
               <iZone>
                 <unitsFamily>none</unitsFamily>
@@ -3246,6 +3246,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4576,7 +4577,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>53</value>
+                  <value>58</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
