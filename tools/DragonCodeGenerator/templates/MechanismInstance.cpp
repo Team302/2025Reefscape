@@ -6,11 +6,13 @@ $$_GEN_NOTICE_$$
 
 // FRC Includes
 #include <networktables/NetworkTableInstance.h>
+#include <frc/Timer.h>
 
 #include "$$_MECHANISM_INSTANCE_NAME_$$.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
+#include "utils/DragonPower.h"
 
 $$_INCLUDE_FILES_$$
 
