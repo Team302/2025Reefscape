@@ -1204,4 +1204,5 @@ void DragonTale::IsElevatorInSync()
 			}
 		}
 	}
+	m_elevatorRemedialAction = false;
 }
