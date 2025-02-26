@@ -75,7 +75,6 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-    SensorDataMgr::GetInstance()->CacheData();
 
     isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)
@@ -132,6 +131,11 @@ void Robot::AutonomousPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
     }
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->Update();
+    }
 
     if (m_cyclePrims != nullptr)
     {
@@ -175,6 +179,11 @@ void Robot::TeleopPeriodic()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
     }
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->Update();
+    }
 
     if (m_chassis != nullptr && m_controller != nullptr && m_holonomic != nullptr)
     {
@@ -199,7 +208,10 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-    m_dragonswerveposeestimator->CalculateInitialPose();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->CalculateInitialPose();
+    }
 }
 
 void Robot::TestInit()
@@ -225,15 +237,18 @@ void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
     FieldConstants::GetInstance();
-    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
+
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     m_holonomic = nullptr;
+    m_dragonswerveposeestimator = nullptr;
     if (m_chassis != nullptr)
     {
         m_holonomic = new HolonomicDrive();
+        m_dragonswerveposeestimator = m_chassis->GetSwervePoseEstimator();
     }
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
@@ -260,9 +275,9 @@ void Robot::UpdateDriveTeamFeedback()
     {
         m_previewer->CheckCurrentAuton();
     }
-    if (m_field != nullptr && m_chassis != nullptr)
+    if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
     {
-        m_field->UpdateRobotPosition(m_chassis->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
+        m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
     }
     auto feedback = DriverFeedback::GetInstance();
     if (feedback != nullptr)

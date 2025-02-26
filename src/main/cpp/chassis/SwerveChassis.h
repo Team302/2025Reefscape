@@ -77,9 +77,6 @@ public:
     /// @brief Drive the chassis
     void Drive(ChassisMovement &moveInfo) override;
 
-    /// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
-    void UpdateOdometry();
-
     /// @brief Provide the current chassis speed information
     frc::ChassisSpeeds GetChassisSpeeds() const;
 

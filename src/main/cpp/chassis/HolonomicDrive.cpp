@@ -108,7 +108,7 @@ void HolonomicDrive::Run()
         InitSpeeds(forward, strafe, rotate);
 
         // teleop buttons to check for mode changes
-        auto isResetPoseSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
+        auto isResetYawSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
         auto isAlignGamePieceSelected = false;
         auto isRobotOriented = controller->IsButtonPressed(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
         auto isHoldPositionSelected = controller->IsButtonPressed(TeleopControlFunctions::HOLD_POSITION);
@@ -145,9 +145,9 @@ void HolonomicDrive::Run()
         else
         {
             // Switch Heading Options
-            if (isResetPoseSelected)
+            if (isResetYawSelected)
             {
-                ResetPose();
+                ResetYaw();
             }
             else if (isFaceForward)
             {
@@ -245,7 +245,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 
-void HolonomicDrive::ResetPose()
+void HolonomicDrive::ResetYaw()
 {
 
     if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
