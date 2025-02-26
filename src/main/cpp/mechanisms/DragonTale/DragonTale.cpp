@@ -1296,7 +1296,7 @@ void DragonTale::LogCoralOutSensor(bool value)
 
 void DragonTale::LogAlgaeSensor(uint64_t timestamp, bool value)
 {
-	m_LogAlgaeSensor.Update(value);
+	m_LogAlgaeSensor.Update(value, timestamp);
 }
 
 void DragonTale::LogScoringMode(int value)

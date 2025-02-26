@@ -85,14 +85,13 @@ public:
 		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
-
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
-	void DataLog() override;
+	void DataLog(uint64_t timestamp) override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
@@ -133,14 +132,4 @@ private:
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegreeUp{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
-
-	// Add here all the loggong objects
-	wpi::log::IntegerLogEntry m_LogState;
-	wpi::log::DoubleLogEntry m_LogTarget;
-	wpi::log::DoubleLogEntry m_LogPositionAngle;
-
-	// Add here all the logging functions
-	void LogState(int value);
-	void LogTarget(double value);
-	void LogAngle(double value);
 };
