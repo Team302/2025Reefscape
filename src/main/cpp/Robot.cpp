@@ -224,6 +224,7 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
+    FieldConstants::GetInstance();
     MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
@@ -240,6 +241,7 @@ void Robot::InitializeRobot()
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
+    
 }
 
 void Robot::InitializeAutonOptions()
