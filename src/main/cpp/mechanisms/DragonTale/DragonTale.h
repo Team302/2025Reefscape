@@ -180,6 +180,8 @@ public:
 
 	bool AtTarget();
 
+	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
+
 	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
@@ -212,6 +214,8 @@ private:
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode;
+	RobotStateChanges::GamePeriod m_gameMode;
+	RobotStateChanges::ClimbMode m_climbMode;
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(10.7); // change these later
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(3.7);
@@ -228,6 +232,8 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
+
+	const units::length::inch_t m_climbModeHeight{15.0};
 
 	void CheckForTuningEnabled();
 	void ReadTuningParamsFromNT();

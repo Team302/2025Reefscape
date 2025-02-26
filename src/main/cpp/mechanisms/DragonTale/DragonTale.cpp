@@ -226,6 +226,8 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
@@ -285,12 +287,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0.05,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -307,12 +309,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0.25,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -329,12 +331,12 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		false,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -352,12 +354,12 @@ void DragonTale::CreateCOMP_BOT302()
 	m_Coral = new ctre::phoenix6::hardware::TalonFXS(18, "canivore");
 	m_AlgaeTalonFXS = new ctre::phoenix6::hardware::TalonFXS(19, "canivore");
 
-	m_CoralInSensor = new frc::DigitalInput(2);
-	m_CoralOutSensor = new frc::DigitalInput(0);
+	m_CoralInSensor = new frc::DigitalInput(0);
+	m_CoralOutSensor = new frc::DigitalInput(2);
 	m_AlgaeSensor = new frc::DigitalInput(1);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.117432);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.10498);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -379,12 +381,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0.05,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -401,12 +403,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0.25,											  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		true,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -423,12 +425,12 @@ void DragonTale::CreateCOMP_BOT302()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
 		false,													 // bool enableFOC
 		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
@@ -488,9 +490,9 @@ void DragonTale::InitializeTalonFXArmPRACTICE_BOT9999()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t ( 75 );
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t ( 100 );
-	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t ( 0 );
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(75);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(100);
+	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
@@ -739,14 +741,14 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 2;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = m_maxAngle;
-	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::RemoteCANdiS1; // Verify S1/S2
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::RemoteCANdiS2; // Verify S1/S2
 	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
 
 	configs.HardwareLimitSwitch.ReverseLimitEnable = true;
 	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 2;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
 	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = m_minAngle;
-	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::RemoteCANdiS2; // Verify S1/S2
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::RemoteCANdiS1; // Verify S1/S2
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
 	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
@@ -896,11 +898,11 @@ void DragonTale::InitializeTalonFXElevatorFollowerCOMP_BOT302()
 void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(80);
 	configs.CurrentLimits.StatorCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(60);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(50);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
@@ -1097,6 +1099,12 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 {
 	if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+
+	else if (RobotStateChanges::StateChange::GameState_Int == change)
+		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
+
+	else if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
+		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
 
 void DragonTale::SetSensorFailSafe()
@@ -1157,6 +1165,11 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetAngle = m_armProtectionAngle;
 	}
+
+	if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
+	{
+		actualTargetHeight = m_climbModeHeight;
+	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
@@ -1179,7 +1192,7 @@ void DragonTale::IsElevatorInSync()
 {
 	units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
 	bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
-	if (units::math::abs(cancoderVelocity) > 0.5_tps)
+	if (units::math::abs(cancoderVelocity) > 0.5_tps && !(units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold))
 	{
 		if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
 		{
@@ -1204,4 +1217,5 @@ void DragonTale::IsElevatorInSync()
 			}
 		}
 	}
+	m_elevatorRemedialAction = false;
 }
