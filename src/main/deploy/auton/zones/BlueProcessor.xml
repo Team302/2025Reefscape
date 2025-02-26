@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "zone.dtd">
+
+<auton>
+    <zone 
+        circlex="6.37"
+        circley="20"
+        radius="45" 
+        taleOption="STATE_PROCESS"
+        pathUpdateOptionOption="PROCESSOR"/>
+
+</auton>
