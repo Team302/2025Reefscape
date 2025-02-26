@@ -316,7 +316,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,														 // double peakValue
 		0,														 // double nominalValue
 		true,													 // bool enableFOC
-		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::GravityTypeValue::Arm_Cosine,				 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(
@@ -410,7 +410,7 @@ void DragonTale::CreateCOMP_BOT302()
 		0,														 // double peakValue
 		0,														 // double nominalValue
 		true,													 // bool enableFOC
-		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::GravityTypeValue::Arm_Cosine,				 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(

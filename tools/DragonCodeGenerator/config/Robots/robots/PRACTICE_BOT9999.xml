@@ -2814,6 +2814,7 @@
               <value>true</value>
             </enableFOC>
             <controlType>POSITION_DEGREES</controlType>
+            <GravityType>Arm_Cosine</GravityType>
           </motorControlData>
           <motorControlData>
             <name>PercentOutput</name>
