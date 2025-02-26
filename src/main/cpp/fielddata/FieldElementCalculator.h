@@ -44,7 +44,7 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-    // practice bot 
+    // practice bot
     frc::Transform3d m_calcLeftStick_Practice_offset = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
@@ -59,21 +59,20 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-    //comp bot offsets
+    // comp bot offsets
     frc::Transform3d m_calcLeftStick_Comp_offset = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-7.5),
+            units::length::inch_t(-8.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick_Comp_offset = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-7.5),
+            units::length::inch_t(-8.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
-
 
     // other transforms
     frc::Transform3d m_noTransform = frc::Transform3d(
@@ -125,11 +124,10 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-6.5), 
+            units::length::inch_t(-6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 

@@ -109,7 +109,6 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_zone = nullptr;
     m_updateTimeLatch = false;
     m_driveToObject = nullptr;
-    m_updateOptionCheck = false;
 
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
@@ -216,7 +215,6 @@ void DrivePathPlanner::Run()
     {
         m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
         m_updateTimeLatch = true;
-        m_updateOptionCheck = true;
     }
 }
 
@@ -230,14 +228,20 @@ bool DrivePathPlanner::IsDone()
         return true;
     }
 
+    if (m_isVisionDrive)
+    {
+        return m_driveToObject->IsDone();
+    }
+
     if (m_checkForDriveToUpdate && !m_isVisionDrive)
     {
         CheckForDriveTo();
     }
 
-    if (m_updateOptionCheck)
+    auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
+    if (trajDrivePathPlanner != nullptr)
     {
-        return m_driveToObject->IsDone();
+        return trajDrivePathPlanner->IsDone();
     }
     return false; // TODO: Add logic for IsDone() from TrajectoryDrivePathPlanner
 }

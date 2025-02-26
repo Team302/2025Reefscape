@@ -1166,10 +1166,10 @@ void DragonTale::UpdateTarget()
 		actualTargetAngle = m_armProtectionAngle;
 	}
 
-	if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
-	{
-		actualTargetHeight = m_climbModeHeight;
-	}
+	// if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
+	// {
+	// 	actualTargetHeight = m_climbModeHeight;
+	// }
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
