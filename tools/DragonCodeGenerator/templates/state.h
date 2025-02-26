@@ -7,6 +7,8 @@ $$_GEN_NOTICE_$$
 #include "mechanisms/$$_MECHANISM_INSTANCE_NAME_$$/$$_MECHANISM_INSTANCE_NAME_$$.h"
 #include "state/State.h"
 
+$$_INCLUDE_FILES_$$
+
 using namespace std;
 
 namespace $$_MECHANISM_INSTANCE_NAME_$$States
@@ -31,5 +33,7 @@ namespace $$_MECHANISM_INSTANCE_NAME_$$States
         $$_STATE_INIT_FUNCTION_DECLS_$$
         RobotIdentifier m_RobotId;
         $$_TARGET_VALUE_CONSTANT_$$
+
+        $$_USER_VALUE_CONSTANT_$$
     };
 }
