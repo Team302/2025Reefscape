@@ -50,7 +50,6 @@ void GrabAlgaeReefState::Init()
 		InitCOMP_BOT302();
 
 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void GrabAlgaeReefState::InitPRACTICE_BOT9999()
