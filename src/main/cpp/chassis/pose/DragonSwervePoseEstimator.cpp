@@ -118,18 +118,13 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         auto megaTag1Position = vision->GetRobotPosition(); // Megatag1
         if (megaTag1Position.has_value())
         {
-            auto stddev = megaTag1Position.value().visionMeasurementStdDevs;
-            if (stddev.size() > 2)
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PoseEst", std::string("MegaTag1 yaw"), megaTag1Position.value().estimatedPose.Rotation().Angle().value() * 2 * M_PI / 360.0);
+            auto visionpose = vision->CalcVisionPose();
+            if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
             {
-                if (stddev[0] < 1.1 && stddev[1] < 1.1 && stddev[2] < 13.0)
-                {
-                    auto visionpose = vision->CalcVisionPose();
-                    if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
-                    {
-                        ResetPose(visionpose.value());
-                        // ResetPosition(visionpose.value());
-                    }
-                }
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PoseEst", std::string("MegaTag2 yaw"), visionpose.value().Rotation().Degrees().value());
+                ResetPose(visionpose.value());
+                // ResetPosition(visionpose.value());
             }
         }
     }
