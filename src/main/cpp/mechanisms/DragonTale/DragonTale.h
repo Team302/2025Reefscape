@@ -147,8 +147,8 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
 	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
-	bool GetCoralInSensorState() const { return !m_CoralInSensor->Get(); }
-	bool GetCoralOutSensorState() const { return (m_activeRobotId == RobotIdentifier::COMP_BOT_302) ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
+	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
+	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
@@ -213,12 +213,14 @@ private:
 	ControlData *m_PositionInch;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOutput;
-	RobotStateChanges::ScoringMode m_scoringMode;
-	RobotStateChanges::GamePeriod m_gameMode;
-	RobotStateChanges::ClimbMode m_climbMode;
+	RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
+	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
+	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(10.7); // change these later
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(3.7);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(29.0);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(13.5);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(7.0);
+	const units::angle::degree_t m_grabAlgaeHighLow = units::angle::degree_t(-14.0);
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);

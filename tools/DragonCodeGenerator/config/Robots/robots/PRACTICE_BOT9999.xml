@@ -2487,7 +2487,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>1</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2511,7 +2511,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>1</value>
+              <value>0</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -3239,6 +3239,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4725,7 +4726,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
