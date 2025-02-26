@@ -61,8 +61,12 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER usage)
 {
 	bool isHealthy = false;
 	auto camera = GetCameras(usage);
-	isHealthy = camera->HealthCheck();
-	return isHealthy;
+	if (camera != nullptr)
+	{
+		isHealthy = camera->HealthCheck();
+		return isHealthy;
+	}
+	return false;
 }
 
 std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
@@ -601,7 +605,7 @@ DragonLimelight *DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER ide
 		{
 			return cam;
 		}
-		return;
+		return nullptr;
 	}
 }
 
