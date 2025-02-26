@@ -226,6 +226,8 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
@@ -1097,6 +1099,12 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 {
 	if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
 		m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+
+	else if (RobotStateChanges::StateChange::GameState_Int == change)
+		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
+
+	else if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
+		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
 
 void DragonTale::SetSensorFailSafe()
@@ -1156,6 +1164,11 @@ void DragonTale::UpdateTarget()
 	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
 	{
 		actualTargetAngle = m_armProtectionAngle;
+	}
+
+	if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
+	{
+		actualTargetHeight = m_climbModeHeight;
 	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 
