@@ -170,9 +170,8 @@ public:
 	bool IsAlgaeMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Algae; }
 
 	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
-	void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
-	units::length::inch_t GetAlgaeHeight();
+	void SetAlgaeReefPosition();
 
 	void SetArmTarget(units::angle::degree_t target) { m_armTarget = std::clamp(target, m_minAngle, m_maxAngle); }
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
@@ -222,7 +221,8 @@ private:
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(29.0);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(13.5);
 	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(7.0);
-	const units::angle::degree_t m_grabAlgaeHighLow = units::angle::degree_t(-14.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(-14.0);
+	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);

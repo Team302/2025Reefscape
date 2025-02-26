@@ -64,7 +64,8 @@ void GrabAlgaeReefState::InitCOMP_BOT302()
 
 void GrabAlgaeReefState::Run()
 {
-	m_mechanism->SetElevatorTarget(m_mechanism->GetAlgaeHeight());
+
+	m_mechanism->SetAlgaeReefPosition();
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("GrabAlgaeReefState"), string("Run"));
 }
 

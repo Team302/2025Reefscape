@@ -225,7 +225,6 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
-	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
@@ -1105,12 +1104,6 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
 
-void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
-{
-	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
-		m_robotPose = value;
-}
-
 void DragonTale::SetSensorFailSafe()
 {
 	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
@@ -1123,28 +1116,34 @@ void DragonTale::SetSensorFailSafe()
 	}
 }
 
-units::length::inch_t DragonTale::GetAlgaeHeight()
+void DragonTale::SetAlgaeReefPosition()
 {
 	units::length::inch_t algeHeight = m_grabAlgaeLow;
+	units::angle::degree_t algeAngle = m_grabAlgaeLowAngle;
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
 	{
 		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg;
+		units::angle::degree_t closestMultiple = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? algaePose.Rotation().Degrees() - 180_deg : algaePose.Rotation().Degrees();
 
 		int multipleNumber = closestMultiple.value() / 60.0;
 
 		if (multipleNumber % 2 == 0)
 		{
 			algeHeight = m_grabAlgaeHigh;
-			SetArmTarget(m_grabAlgaeHighAngle);
+			algeAngle = m_grabAlgaeHighAngle;
 		}
-		else
-			SetArmTarget(m_grabAlgaeHighLow);
 	}
-	return algeHeight;
+
+	if (m_prevAlgaeHeight != algeHeight)
+	{
+		SetElevatorTarget(algeHeight);
+		SetArmTarget(algeAngle);
+	}
+
+	m_prevAlgaeHeight = algeHeight;
 }
 
 void DragonTale::UpdateTarget()
