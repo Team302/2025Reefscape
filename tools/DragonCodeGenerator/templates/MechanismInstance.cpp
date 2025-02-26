@@ -177,8 +177,6 @@ _NT_TUNING_FUNCTIONS_END_
     return nullptr;
 }
 
-$$_LOGGING_METHOD_DEFINITIONS_$$
-
 void $$_MECHANISM_INSTANCE_NAME_$$::DataLog(uint64_t timestamp)
 {
     $$_DATALOG_METHOD_$$
