@@ -43,13 +43,14 @@ public:
     frc::Pose3d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
+    bool IsConnected();
+
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
 
 private:
     DragonQuest();
     ~DragonQuest() = default;
-    bool IsConnected();
     double GetBatteryPercent();
     double GetTimeStamp();
     void ZeroHeading();

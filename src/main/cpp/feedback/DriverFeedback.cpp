@@ -29,6 +29,7 @@
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 using frc::DriverStation;
 
@@ -121,11 +122,11 @@ void DriverFeedback::UpdateLEDStates()
                         }
                     }
                     else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
                     {
                         taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
                     }
@@ -154,16 +155,15 @@ void DriverFeedback::UpdateDiagnosticLEDs()
 
             if (DragonVision::GetDragonVision() != nullptr)
             {
-                // auto vision = DragonVision::GetDragonVision();
-                // vision->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE);
-                bool questStatus = false;
-                bool ll1Status = false;
-                bool ll2Status = false;
+                auto vision = DragonVision::GetDragonVision();
+                bool questStatus = DragonQuest::GetDragonQuest()->IsConnected();
+                bool ll1Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA);
+                bool ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
                 bool pigeonfaults = false;
                 bool coralInSensor = taleMgr->GetCoralInSensorState();
                 bool coralOutSensor = taleMgr->GetCoralOutSensorState();
                 bool algaeSensor = taleMgr->GetAlgaeSensorState();
-                bool intsakeSensor = false; // intakeMgr->GetIntakeSensorState();
+                bool intsakeSensor = false;
                 m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
             }
         }

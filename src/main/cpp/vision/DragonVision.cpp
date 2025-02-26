@@ -57,6 +57,14 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
+bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER usage)
+{
+	bool isHealthy = false;
+	auto camera = GetCameras(usage);
+	isHealthy = camera->HealthCheck();
+	return isHealthy;
+}
+
 std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
 {
 	std::optional<VisionPose> megaTag1Position = GetRobotPosition(); // Megatag1
@@ -582,6 +590,19 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 		}
 	}
 	return validCameras;
+}
+
+DragonLimelight *DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier) const
+{
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
+	for (auto cam : cameras)
+	{
+		if (cam->GetCameraIdentifier() == identifier)
+		{
+			return cam;
+		}
+		return;
+	}
 }
 
 std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const
