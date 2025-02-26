@@ -94,6 +94,11 @@ public:
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
+	void UpdateTargetArmPercentOutput(double percentOut)
+	{
+		m_ArmPercentOutput.Output = percentOut;
+		m_ArmActiveTarget = &m_ArmPercentOutput;
+	}
 	void UpdateTargetElevatorLeaderPositionInch(units::length::inch_t position)
 	{
 		if (position < GetElevatorHeight())
@@ -164,9 +169,8 @@ public:
 	bool IsCoralMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Coral; }
 	bool IsAlgaeMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Algae; }
 
-	void ManualControl();
-
-	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value);
+	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
+	void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
 	units::length::inch_t GetAlgaeHeight();
 
@@ -181,8 +185,6 @@ public:
 	bool AtTarget();
 
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
-
-	virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) override;
 
 	static std::map<std::string, STATE_NAMES> stringToSTATE_NAMESEnumMap;
 
@@ -234,12 +236,9 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
+	const double m_manualControlThreshold = 0.1;
 
 	const units::length::inch_t m_climbModeHeight{15.0};
-
-	void CheckForTuningEnabled();
-	void ReadTuningParamsFromNT();
-	void PushTuningParamsToNT();
 
 	void InitializeTalonFXArmPRACTICE_BOT9999();
 	void InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
@@ -259,21 +258,20 @@ private:
 
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
-
 	ctre::phoenix6::controls::DutyCycleOut m_ElevatorLeaderPercentOutput{0.0};
+	ctre::phoenix6::controls::DutyCycleOut m_ArmPercentOutput{0.0};
+
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_CoralActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXSActiveTarget;
 
-	double m_loopRate = 0.02;
-	double m_armChangeRate = 3 * m_loopRate;
-	double m_elevatorChangeRate = 3 * m_loopRate;
+	double m_changeRate = 0.5;
 
 	bool m_manualMode = false;
 
-	units::length::inch_t m_elevatorAtTargetThreshold{2.0};
+	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 	frc::Pose2d m_robotPose;
 

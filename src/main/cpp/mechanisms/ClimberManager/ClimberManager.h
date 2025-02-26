@@ -83,7 +83,6 @@ public:
 		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
-
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 
@@ -93,7 +92,7 @@ public:
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
-	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int ival);
+	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int value) override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 

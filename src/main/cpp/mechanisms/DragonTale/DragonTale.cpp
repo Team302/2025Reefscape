@@ -999,7 +999,6 @@ void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	SetSensorFailSafe();
-	ManualControl();
 	UpdateTarget();
 	IsElevatorInSync();
 	Cyclic();
@@ -1106,6 +1105,12 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
 
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
+{
+	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
+		m_robotPose = value;
+}
+
 void DragonTale::SetSensorFailSafe()
 {
 	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
@@ -1142,24 +1147,14 @@ units::length::inch_t DragonTale::GetAlgaeHeight()
 	return algeHeight;
 }
 
-void DragonTale::ManualControl()
-{
-	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR);
-	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM);
-
-	units::inch_t ElevatorChange = (abs(elevatorInput) > 0.05) ? units::length::inch_t(elevatorInput * m_elevatorChangeRate) : units::length::inch_t(0);
-	units::angle::degree_t ArmChange = (abs(armInput) > 0.05) ? units::angle::degree_t(armInput * m_armChangeRate) : units::angle::degree_t(0);
-
-	SetElevatorTarget(m_elevatorTarget + ElevatorChange);
-	SetArmTarget(m_armTarget + ArmChange);
-}
-
 void DragonTale::UpdateTarget()
 {
 	units::angle::degree_t actualTargetAngle = m_armTarget;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
-
 	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
+
+	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_changeRate;
+	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_changeRate;
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
@@ -1174,18 +1169,27 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetHeight = m_climbModeHeight;
 	}
+
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-	UpdateTargetArmPositionDegree(actualTargetAngle);
-	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
-}
 
-void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
-{
-	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
-		m_robotPose = value;
+	if (abs(armInput) > m_manualControlThreshold)
+	{
+		UpdateTargetArmPercentOutput(armInput);
+		SetArmTarget(GetArmAngle());
+	}
+	else
+		UpdateTargetArmPositionDegree(actualTargetAngle);
+
+	if (abs(elevatorInput) > m_manualControlThreshold)
+	{
+		UpdateTargetElevatorLeaderPercentOutput(elevatorInput);
+		SetElevatorTarget(GetElevatorHeight());
+	}
+	else
+		UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }
 
 bool DragonTale::AtTarget()
