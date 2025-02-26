@@ -1152,8 +1152,8 @@ void DragonTale::UpdateTarget()
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
 	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
 
-	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR) * m_changeRate;
-	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM) * m_changeRate;
+	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR);
+	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM);
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
@@ -1176,7 +1176,7 @@ void DragonTale::UpdateTarget()
 
 	if (abs(armInput) > m_manualControlThreshold)
 	{
-		UpdateTargetArmPercentOutput(armInput);
+		UpdateTargetArmPercentOutput(armInput * m_changeRate);
 		SetArmTarget(GetArmAngle());
 	}
 	else
@@ -1184,7 +1184,7 @@ void DragonTale::UpdateTarget()
 
 	if (abs(elevatorInput) > m_manualControlThreshold)
 	{
-		UpdateTargetElevatorLeaderPercentOutput(elevatorInput);
+		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
 		SetElevatorTarget(GetElevatorHeight());
 	}
 	else
