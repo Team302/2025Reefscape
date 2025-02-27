@@ -49,7 +49,7 @@ public:
 	void SetChaserPattern(frc::Color c);
 	void SetClosingInChaserPattern(frc::Color c);
 
-	void DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
+	void DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults);
 
 	static DragonLeds *GetInstance();
 
@@ -69,11 +69,10 @@ private:
 	const int m_coralInSensorDiagnosticLED = 1;
 	const int m_coralOutSensorDiagnosticLED = 2;
 	const int m_algaeSensorDiagnosticLED = 3;
-	const int m_intakeSensorDiagnosticLED = 4;
-	const int m_questDiagnosticLED = 5;
-	const int m_limeLight1diagnosticLED = 6;
-	const int m_limeLight2diagnosticLED = 7;
-	const int m_piegonFaultDiagnosticLED = 8;
+	const int m_questDiagnosticLED = 4;
+	const int m_limeLight1diagnosticLED = 5;
+	const int m_limeLight2diagnosticLED = 6;
+	const int m_piegonFaultDiagnosticLED = 7;
 
 	DragonLeds();
 };

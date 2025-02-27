@@ -567,29 +567,41 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 	std::vector<DragonLimelight *> validCameras;
 	for (auto it = m_dragonLimelightMap.begin(); it != m_dragonLimelightMap.end(); ++it)
 	{
-		auto addCam = (*it).first == usage;
-		auto cam = (*it).second;
-		if (!addCam)
+		if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
 		{
-			if ((*it).first == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
-			{
-				auto pipe = cam->GetPipeline();
-				if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS)
-				{
-					addCam = pipe == DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG;
-				}
-				else if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION)
-				{
-					addCam = pipe == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL || pipe == DRAGON_LIMELIGHT_PIPELINE::COLOR_THRESHOLD;
-				}
-			}
-		}
-
-		if (addCam)
-		{
+			auto cam = (*it).second;
 			if (cam->HealthCheck())
 			{
 				validCameras.emplace_back(cam);
+			}
+		}
+		else
+		{
+
+			auto addCam = (*it).first == usage;
+			auto cam = (*it).second;
+			if (!addCam)
+			{
+				if ((*it).first == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
+				{
+					auto pipe = cam->GetPipeline();
+					if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS)
+					{
+						addCam = pipe == DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG;
+					}
+					else if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION)
+					{
+						addCam = pipe == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL || pipe == DRAGON_LIMELIGHT_PIPELINE::COLOR_THRESHOLD;
+					}
+				}
+			}
+
+			if (addCam)
+			{
+				if (cam->HealthCheck())
+				{
+					validCameras.emplace_back(cam);
+				}
 			}
 		}
 	}
@@ -607,6 +619,7 @@ DragonLimelight *DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER ide
 		}
 		return nullptr;
 	}
+	return nullptr;
 }
 
 std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const

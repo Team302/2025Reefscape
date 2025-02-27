@@ -195,7 +195,7 @@ void DragonLeds::SetClosingInChaserPattern(frc::Color c)
     }
 }
 
-void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakesensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
+void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
     auto allianceColor = alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue : frc::Color::kRed;
     SetSpecificLED(m_allianceColorLED, allianceColor);
@@ -209,18 +209,15 @@ void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool c
     auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
     SetSpecificLED(m_algaeSensorDiagnosticLED, algaeSensorcolor);
 
-    auto intakesensorcolor = intakesensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetSpecificLED(m_intakeSensorDiagnosticLED, intakesensorcolor);
-
-    auto questStatuscolor = questStatus ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
+    auto questStatuscolor = questStatus ? frc::Color::kGreen : frc::Color::kDarkRed;
     SetSpecificLED(m_questDiagnosticLED, questStatuscolor);
 
-    auto ll1Statuscolor = ll1Status ? frc::Color::kDarkGreen : frc::Color::kDarkRed;
+    auto ll1Statuscolor = ll1Status ? frc::Color::kGreen : frc::Color::kDarkRed;
     SetSpecificLED(m_limeLight1diagnosticLED, ll1Statuscolor);
 
-    auto ll2Statuscolor = ll2Status ? frc::Color::kYellow : frc::Color::kBlack;
+    auto ll2Statuscolor = ll2Status ? frc::Color::kGreen : frc::Color::kDarkRed;
     SetSpecificLED(m_limeLight2diagnosticLED, ll2Statuscolor);
 
-    auto pigeonfaultscolor = pigeonfaults ? frc::Color::kYellow : frc::Color::kBlack;
+    auto pigeonfaultscolor = pigeonfaults ? frc::Color::kGreen : frc::Color::kDarkRed;
     SetSpecificLED(m_piegonFaultDiagnosticLED, pigeonfaultscolor);
 }
