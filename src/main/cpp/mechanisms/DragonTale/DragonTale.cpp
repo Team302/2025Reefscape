@@ -227,7 +227,6 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	RobotState *m_robotState = RobotState::GetInstance();
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
-	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ChassisPose_Pose2D);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
@@ -295,8 +294,8 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_ElevatorFollower = new ctre::phoenix6::hardware::TalonFX(16, "canivore");
 	m_Coral = new ctre::phoenix6::hardware::TalonFXS(18, "rio");
 
-	m_CoralInSensor = new frc::DigitalInput(0);	 // yellow wire reverse
-	m_CoralOutSensor = new frc::DigitalInput(1); // black
+	m_CoralInSensor = new frc::DigitalInput(1);	 // yellow wire reverse
+	m_CoralOutSensor = new frc::DigitalInput(0); // black
 	m_AlgaeSensor = new frc::DigitalInput(2);	 // red reverse this one
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
@@ -351,7 +350,7 @@ void DragonTale::CreatePRACTICE_BOT9999()
 		0,														 // double peakValue
 		0,														 // double nominalValue
 		true,													 // bool enableFOC
-		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::GravityTypeValue::Arm_Cosine,				 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(
@@ -445,7 +444,7 @@ void DragonTale::CreateCOMP_BOT302()
 		0,														 // double peakValue
 		0,														 // double nominalValue
 		true,													 // bool enableFOC
-		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::GravityTypeValue::Arm_Cosine,				 // Gravity type
 		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PercentOutput = new ControlData(
@@ -1034,7 +1033,6 @@ void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	SetSensorFailSafe();
-	ManualControl();
 	UpdateTarget();
 	IsElevatorInSync();
 	Cyclic();
@@ -1045,7 +1043,6 @@ void DragonTale::RunCommonTasks()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Coral Out Sensor", GetCoralOutSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", m_elevatorTarget.value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
@@ -1155,43 +1152,51 @@ void DragonTale::SetSensorFailSafe()
 	}
 }
 
-units::length::inch_t DragonTale::GetAlgaeHeight()
+void DragonTale::SetAlgaeReefPosition()
 {
-	units::length::inch_t algeHeight = m_grabAlgaeLow;
+	bool isBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+
+	units::length::inch_t algeHeight = isBlue ? m_grabAlgaeLow : m_grabAlgaeHigh;
+	units::angle::degree_t algeAngle = isBlue ? m_grabAlgaeLowAngle : m_grabAlgaeHighAngle;
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
 	{
 		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-		units::angle::degree_t closestMultiple = algaePose.Rotation().Degrees() - 180_deg;
+		int closestMultiple = static_cast<int>((algaePose.Rotation().Degrees() + 180.5_deg).value());
 
-		int multipleNumber = closestMultiple.value() / 60.0;
+		int multipleNumber = closestMultiple / 60;
 
 		if (multipleNumber % 2 == 0)
-			algeHeight = m_grabAlgaeHigh;
+		{
+			algeHeight = isBlue ? m_grabAlgaeHigh : m_grabAlgaeLow;
+			algeAngle = isBlue ? m_grabAlgaeHighAngle : m_grabAlgaeLowAngle;
+		}
+
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "algeHeight", algeHeight.value());
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "ClosestMultiple", closestMultiple);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "multipleNumber", multipleNumber);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Previous algeHeight", m_prevAlgaeHeight.value());
 	}
-	return algeHeight;
-}
 
-void DragonTale::ManualControl()
-{
-	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR);
-	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM);
+	if (m_prevAlgaeHeight != algeHeight)
+	{
+		SetElevatorTarget(algeHeight);
+		SetArmTarget(algeAngle);
+	}
 
-	units::inch_t ElevatorChange = (abs(elevatorInput) > 0.05) ? units::length::inch_t(elevatorInput * m_elevatorChangeRate) : units::length::inch_t(0);
-	units::angle::degree_t ArmChange = (abs(armInput) > 0.05) ? units::angle::degree_t(armInput * m_armChangeRate) : units::angle::degree_t(0);
-
-	SetElevatorTarget(m_elevatorTarget + ElevatorChange);
-	SetArmTarget(m_armTarget + ArmChange);
+	m_prevAlgaeHeight = algeHeight;
 }
 
 void DragonTale::UpdateTarget()
 {
 	units::angle::degree_t actualTargetAngle = m_armTarget;
 	units::length::inch_t actualTargetHeight = m_elevatorTarget;
-
 	units::length::inch_t elevatorError = units::math::abs(m_elevatorTarget - GetElevatorHeight());
+
+	double elevatorInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ELAVATOR);
+	double armInput = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::ARM);
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
@@ -1206,17 +1211,27 @@ void DragonTale::UpdateTarget()
 	{
 		actualTargetHeight = m_climbModeHeight;
 	}
+
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-	UpdateTargetArmPositionDegree(actualTargetAngle);
-	UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
-}
 
-void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value)
-{
-	if (RobotStateChanges::StateChange::ChassisPose_Pose2D == change)
-		m_robotPose = value;
+	if (abs(armInput) > m_manualControlThreshold)
+	{
+		UpdateTargetArmPercentOutput(armInput * m_changeRate);
+		SetArmTarget(GetArmAngle());
+	}
+	else
+		UpdateTargetArmPositionDegree(actualTargetAngle);
+
+	if (abs(elevatorInput) > m_manualControlThreshold)
+	{
+		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
+		SetElevatorTarget(GetElevatorHeight());
+	}
+	else
+		UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
 }
 
 bool DragonTale::AtTarget()

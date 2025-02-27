@@ -50,7 +50,6 @@ void GrabAlgaeReefState::Init()
 		InitCOMP_BOT302();
 
 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void GrabAlgaeReefState::InitPRACTICE_BOT9999()
@@ -65,7 +64,8 @@ void GrabAlgaeReefState::InitCOMP_BOT302()
 
 void GrabAlgaeReefState::Run()
 {
-	m_mechanism->SetElevatorTarget(m_mechanism->GetAlgaeHeight());
+
+	m_mechanism->SetAlgaeReefPosition();
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("GrabAlgaeReefState"), string("Run"));
 }
 

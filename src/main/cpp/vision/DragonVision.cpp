@@ -59,27 +59,21 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 
 std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
 {
-	std::optional<VisionPose> visionPosition = GetRobotPosition();
-	auto hasVisionPose = visionPosition.has_value();
-	if (hasVisionPose)
+	std::optional<VisionPose> megaTag1Position = GetRobotPosition(); // Megatag1
+	if (megaTag1Position.has_value())
 	{
-		auto initialRot = visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees();
-
-		// use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
-		std::optional<VisionPose> megaTag2Position = GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
-																			  units::angular_velocity::degrees_per_second_t(0.0),
-																			  units::angle::degree_t(0.0),
-																			  units::angular_velocity::degrees_per_second_t(0.0),
-																			  units::angle::degree_t(0.0),
-																			  units::angular_velocity::degrees_per_second_t(0.0));
+		auto megaTag2Position = GetRobotPositionMegaTag2(megaTag1Position.value().estimatedPose.ToPose2d().Rotation().Degrees(),
+														 units::angular_velocity::degrees_per_second_t(0.0),
+														 units::angle::degree_t(0.0),
+														 units::angular_velocity::degrees_per_second_t(0.0),
+														 units::angle::degree_t(0.0),
+														 units::angular_velocity::degrees_per_second_t(0.0));
 		if (megaTag2Position.has_value())
 		{
 
-			std::optional<frc::Pose2d> megaTag2Posed = megaTag2Position.value().estimatedPose.ToPose2d();
-			return megaTag2Posed;
+			return megaTag2Position.value().estimatedPose.ToPose2d();
 		}
-
-		return visionPosition.value().estimatedPose.ToPose2d();
+		return megaTag1Position.value().estimatedPose.ToPose2d();
 	}
 
 	return std::nullopt;
@@ -379,8 +373,11 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 											  pitchRate.value(),
 											  roll.value(),
 											  rollRate.value());
-
-		return cam->EstimatePoseOdometryLimelight(true); // true since megatag2
+		auto estPose = cam->EstimatePoseOdometryLimelight(true); // true since megatag2
+		if (estPose.has_value())
+		{
+			return estPose;
+		}
 	}
 
 	return std::nullopt;

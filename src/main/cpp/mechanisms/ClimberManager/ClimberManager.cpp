@@ -439,15 +439,15 @@ void ClimberManager::Cyclic()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
 }
 
-void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int ival)
+void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int value)
 {
 	if (statechange == RobotStateChanges::StateChange::ClimbModeStatus_Int)
 	{
-		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(ival);
+		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 	}
 	else if (statechange == RobotStateChanges::StateChange::GameState_Int)
 	{
-		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(ival);
+		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
 	}
 }
 
