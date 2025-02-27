@@ -98,10 +98,16 @@ pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElemen
     std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
     shared_ptr<PathPlannerPath> path;
 
+    auto vx = m_chassis->GetChassisSpeeds().vx.value();
+    auto vy = m_chassis->GetChassisSpeeds().vy.value();
+    auto currVel = units::velocity::meters_per_second_t(pow(pow(vx, 2) + pow(vy, 2), 0.5));
+    auto rotation = m_chassis->GetPose().Rotation();
+    pathplanner::IdealStartingState startingState{currVel, rotation};
+
     path = std::make_shared<PathPlannerPath>(
         waypoints,
         constraints,
-        std::nullopt,
+        startingState,
         GoalEndState(0.0_mps, endPose.Rotation()), false);
 
     path->preventFlipping = true;
