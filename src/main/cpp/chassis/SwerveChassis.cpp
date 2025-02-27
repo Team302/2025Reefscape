@@ -101,10 +101,8 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_networkTableName(networkTableName)
 {
     InitStates();
-    ZeroAlignSwerveModules();
-    ResetYaw();
+    m_pigeon->Reset();
     ResetPose(frc::Pose2d());
-    SetStoredHeading(units::angle::degree_t(0.0));
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
     m_radius = m_frontLeftLocation.Norm();
 
@@ -173,8 +171,6 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
-    UpdateOdometry();
-
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
@@ -317,16 +313,6 @@ units::angle::degree_t SwerveChassis::GetRoll() const
 }
 
 //==================================================================================
-/// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
-void SwerveChassis::UpdateOdometry()
-{
-    if (m_swervePoseEstimator != nullptr)
-    {
-        m_swervePoseEstimator->Update();
-    }
-}
-
-//==================================================================================
 double SwerveChassis::GetEncoderValues(SwerveModule *motor)
 {
     return motor->GetEncoderValues();
@@ -385,7 +371,7 @@ void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
 void SwerveChassis::ResetYaw()
 {
     m_pigeon->Reset();
-    SetStoredHeading(units::angle::degree_t(0));
+    SetStoredHeading(units::angle::degree_t(0.0));
     ZeroAlignSwerveModules();
 }
 

@@ -39,7 +39,7 @@ public:
 private:
     void InitChassisMovement();
     void InitSpeeds(double forwardScale, double strafeScale, double rotateScale);
-    void ResetPose();
+    void ResetYaw();
     void AlignGamePiece();
     void HoldPosition();
     void TurnForward();
