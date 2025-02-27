@@ -9,7 +9,6 @@ choreoname = "BlueLeftInside_I"/>
 choreoname = "BlueLeftInside_I"
 time = "2.5">
 <zone filename = "RedReefDriveToLeft.xml"/>
-<!-- <zone filename = "RedReefPlacerZones.xml"/> -->
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"

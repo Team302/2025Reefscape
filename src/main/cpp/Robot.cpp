@@ -84,10 +84,10 @@ void Robot::RobotPeriodic()
         Logger::GetLogger()->PeriodicLog();
     }
 
-    // if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
-    // {
-    //     m_datalogger->PeriodicDataLog();
-    // }
+    if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
+    {
+        m_datalogger->PeriodicDataLog();
+    }
 
     if (m_robotState != nullptr)
     {
@@ -241,7 +241,6 @@ void Robot::InitializeRobot()
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
-    
 }
 
 void Robot::InitializeAutonOptions()
