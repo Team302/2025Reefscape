@@ -112,8 +112,6 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             refChassisSpeeds = m_shortpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
         }
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Traj Gains", "Gain Type",
-                                     (refChassisSpeeds == m_longpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState) ? "Long Gains" : "Short Gains"));
 
         if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
         {

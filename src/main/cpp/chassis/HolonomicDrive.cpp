@@ -230,6 +230,10 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
 {
     m_moveInfo.rawOmega = rotateScale;
 
+    forwardScale *= m_inputScale;
+    strafeScale *= m_inputScale;
+    rotateScale *= m_inputScale;
+
     auto maxSpeed = m_swerve->GetMaxSpeed();
     auto maxAngSpeed = m_swerve->GetMaxAngularSpeed();
     auto scale = (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue) ? 1.0 : -1.0;
