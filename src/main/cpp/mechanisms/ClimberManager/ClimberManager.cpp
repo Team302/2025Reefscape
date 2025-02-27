@@ -350,7 +350,7 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.Feedback.SensorToMechanismRatio = 0.2302879074;
+	configs.Feedback.SensorToMechanismRatio = 0.83213507808;
 
 	configs.Slot0.kP = m_PositionDegree->GetP();
 	configs.Slot0.kI = m_PositionDegree->GetI();
