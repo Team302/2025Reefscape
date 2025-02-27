@@ -5,6 +5,6 @@
     <zone 
         circlex="16.742"
         circley="7.444"
-        radius="75.0"
+        radius="120.0"
         pathUpdateOption = "CORAL_STATION" />
 </auton>

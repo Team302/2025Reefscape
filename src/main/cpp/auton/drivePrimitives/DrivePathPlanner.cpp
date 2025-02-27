@@ -240,7 +240,7 @@ bool DrivePathPlanner::IsDone()
     }
 
     auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
-    if (trajDrivePathPlanner != nullptr)
+    if (trajDrivePathPlanner != nullptr && m_driveToObject == nullptr)
     {
         return trajDrivePathPlanner->IsDone();
     }

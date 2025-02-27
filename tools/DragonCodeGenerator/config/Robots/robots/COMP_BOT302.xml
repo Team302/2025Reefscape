@@ -4437,7 +4437,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>61</value>
+                  <value>55</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4578,7 +4578,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>58</value>
+                  <value>47</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
