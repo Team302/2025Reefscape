@@ -140,7 +140,7 @@ void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
-        chassis->SetYaw(pose.Rotation().Degrees());
+        // chassis->SetYaw(pose.Rotation().Degrees());
         chassis->SetStoredHeading(pose.Rotation().Degrees());
     }
 
