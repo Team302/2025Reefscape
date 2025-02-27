@@ -2821,6 +2821,7 @@
               <value>true</value>
             </enableFOC>
             <controlType>POSITION_DEGREES</controlType>
+            <GravityType>Arm_Cosine</GravityType>
           </motorControlData>
           <motorControlData>
             <name>PercentOutput</name>
@@ -3265,7 +3266,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>0.5</value>
+                  <value>1</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
@@ -4733,7 +4734,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>
