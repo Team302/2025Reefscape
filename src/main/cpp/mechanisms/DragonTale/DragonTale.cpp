@@ -1118,23 +1118,30 @@ void DragonTale::SetSensorFailSafe()
 
 void DragonTale::SetAlgaeReefPosition()
 {
-	units::length::inch_t algeHeight = m_grabAlgaeLow;
-	units::angle::degree_t algeAngle = m_grabAlgaeLowAngle;
+	bool isBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+
+	units::length::inch_t algeHeight = isBlue ? m_grabAlgaeLow : m_grabAlgaeHigh;
+	units::angle::degree_t algeAngle = isBlue ? m_grabAlgaeLowAngle : m_grabAlgaeHighAngle;
 	// Adjust the angle to the nearest 60-degree increment
 	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
 	if (info)
 	{
 		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-		units::angle::degree_t closestMultiple = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? algaePose.Rotation().Degrees() - 180_deg : algaePose.Rotation().Degrees();
+		int closestMultiple = static_cast<int>(algaePose.Rotation().Degrees() + 180.5_deg);
 
-		int multipleNumber = closestMultiple.value() / 60.0;
+		int multipleNumber = closestMultiple / 60;
 
 		if (multipleNumber % 2 == 0)
 		{
-			algeHeight = m_grabAlgaeHigh;
-			algeAngle = m_grabAlgaeHighAngle;
+			algeHeight = isBlue ? m_grabAlgaeHigh : m_grabAlgaeLow;
+			algeAngle = isBlue ? m_grabAlgaeHighAngle : m_grabAlgaeLowAngle;
 		}
+
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "algeHeight", algeHeight.value());
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "ClosestMultiple", closestMultiple);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "multipleNumber", multipleNumber);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Previous algeHeight", m_prevAlgaeHeight.value());
 	}
 
 	if (m_prevAlgaeHeight != algeHeight)

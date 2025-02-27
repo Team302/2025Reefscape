@@ -220,8 +220,8 @@ private:
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(29.0);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(13.5);
-	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(7.0);
-	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(-14.0);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(-7.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(-7.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
@@ -267,7 +267,7 @@ private:
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_AlgaeTalonFXSActiveTarget;
 
-	double m_changeRate = 0.5;
+	double m_changeRate = 0.35;
 
 	bool m_manualMode = false;
 
