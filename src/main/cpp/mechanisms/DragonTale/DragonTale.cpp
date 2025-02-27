@@ -1128,7 +1128,7 @@ void DragonTale::SetAlgaeReefPosition()
 	{
 		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-		int closestMultiple = static_cast<int>(algaePose.Rotation().Degrees() + 180.5_deg);
+		int closestMultiple = static_cast<int>((algaePose.Rotation().Degrees() + 180.5_deg).value());
 
 		int multipleNumber = closestMultiple / 60;
 
