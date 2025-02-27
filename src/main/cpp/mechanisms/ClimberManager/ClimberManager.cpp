@@ -386,7 +386,6 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 void ClimberManager::SetCurrentState(int state, bool run)
 {
 	StateMgr::SetCurrentState(state, run);
-	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void ClimberManager::RunCommonTasks()

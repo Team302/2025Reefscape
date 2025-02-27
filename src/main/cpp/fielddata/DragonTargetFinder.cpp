@@ -74,8 +74,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
-            // bool switchToVision = SwitchToVision(visTagPose); TODO: Need to test switching and accuracy
-            bool switchToVision = false;
+            bool switchToVision = SwitchToVision(visTagPose);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", switchToVision ? "true" : "false");
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
@@ -98,10 +97,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
-                    DragonVisionStructLogger::logPose3d("DragonTargetFinder-Left", pose3);
+                    DragonVisionStructLogger::logPose3d("Left Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Left", fieldRelativeAngle.to<double>());
 
-                    return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                    // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
                 // If no vision, then just use odometry based pose
@@ -121,9 +120,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK);
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
-                    DragonVisionStructLogger::logPose3d("DragonTargetFinder-Right", pose3);
+                    DragonVisionStructLogger::logPose3d("Right Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
-                    return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+
+                    // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
                 // If no vision, then just use odometry based pose
