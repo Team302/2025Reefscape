@@ -42,14 +42,14 @@ using std::string;
 
 void Robot::RobotInit()
 {
-    isFMSAttached = frc::DriverStation::IsFMSAttached();
+    // isFMSAttached = frc::DriverStation::IsFMSAttached();
 
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("arrived"));
-        InitializeDataTracing();
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("arrived"));
+    //     InitializeDataTracing();
+    // }
 
     m_controller = nullptr;
 
@@ -59,10 +59,10 @@ void Robot::RobotInit()
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("end"));
+    // }
 }
 
 /**
@@ -76,12 +76,12 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
 
-    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
-    if (!isFMSAttached)
-    {
-        LoggableItemMgr::GetInstance()->LogData();
-        Logger::GetLogger()->PeriodicLog();
-    }
+    //    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    //    if (!isFMSAttached)
+    //    {
+    //        LoggableItemMgr::GetInstance()->LogData();
+    //        Logger::GetLogger()->PeriodicLog();
+    //    }
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
@@ -109,28 +109,28 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("arrived"));
+    // }
 
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Init();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("end"));
+    // }
 }
 
 void Robot::AutonomousPeriodic()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
+    // }
     SensorDataMgr::GetInstance()->CacheData();
     if (m_dragonswerveposeestimator != nullptr)
     {
@@ -142,18 +142,18 @@ void Robot::AutonomousPeriodic()
         m_cyclePrims->Run();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
+    // }
 }
 
 void Robot::TeleopInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("arrived"));
+    // }
 
     if (m_controller == nullptr)
     {
@@ -167,18 +167,18 @@ void Robot::TeleopInit()
 
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("end"));
+    // }
 }
 
 void Robot::TeleopPeriodic()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
+    // }
     SensorDataMgr::GetInstance()->CacheData();
     if (m_dragonswerveposeestimator != nullptr)
     {
@@ -191,19 +191,19 @@ void Robot::TeleopPeriodic()
     }
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
+    // }
 }
 
 void Robot::DisabledInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("arrived"));
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("arrived"));
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("end"));
+    // }
 }
 
 void Robot::DisabledPeriodic()
@@ -216,7 +216,7 @@ void Robot::DisabledPeriodic()
 
 void Robot::TestInit()
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
+    // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
 }
 
 void Robot::TestPeriodic()
