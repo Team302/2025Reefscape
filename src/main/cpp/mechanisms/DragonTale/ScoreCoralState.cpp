@@ -47,7 +47,7 @@ void ScoreCoralState::Init()
 
 void ScoreCoralState::Run()
 {
-	if (m_mechanism->AtTarget())
+	if (m_mechanism->AtTarget() || m_mechanism->IsTeleop())
 	{
 		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	}

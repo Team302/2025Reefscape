@@ -74,7 +74,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
-            bool switchToVision = SwitchToVision(visTagPose);
+            // bool switchToVision = SwitchToVision(visTagPose); TODO: Need to test switching and accuracy
+            bool switchToVision = false;
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", switchToVision ? "true" : "false");
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
@@ -292,7 +293,6 @@ std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(VisionData data)
 
 bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) // TODO: Update when we switch to ML and raw vision correction on reef sticks
 {
-    return false;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "visTagPose has value", visTagPose.has_value() ? "true" : "false");
 
     if (visTagPose.has_value())

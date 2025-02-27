@@ -15,34 +15,27 @@
 
 #pragma once
 
-#include <frc/geometry/Pose2d.h>
+// C++ Includes
+#include <string>
+
+// FRC Includes
 
 // Team302 Includes
-#include "chassis/states/RobotDrive.h"
+#include "chassis/states/DriveToFieldElement.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
-#include "chassis/states/TrajectoryDrivePathPlanner.h"
 
-class DriveToCoralStation : public TrajectoryDrivePathPlanner
+class RobotDrive;
+class TrajectoryDrivePathPlanner;
+
+class DriveToCoralStation : public DriveToFieldElement
 {
 public:
     DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
     std::string GetDriveStateName() const override;
 
-    pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
-
-    void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
-    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
-
-    bool IsDone() override;
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
-
-private:
-    pathplanner::PathPlannerTrajectory CreateDriveToCoralStationTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
-
-    pathplanner::PathPlannerTrajectory m_trajectory;
-    DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
-    frc::Pose2d m_endPose;
-    units::inch_t m_distanceThreshold{3.0};
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 };

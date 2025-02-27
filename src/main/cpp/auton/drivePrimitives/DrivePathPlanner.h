@@ -38,8 +38,6 @@
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 
-typedef std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> DragonTargetFinderPoseInfo;
-
 class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
 public:
@@ -55,11 +53,14 @@ public:
 
 private:
     void InitMoveInfo();
-    void InitMap();
+    TrajectoryDrivePathPlanner *GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType);
     bool IsInZone();
 
     void CheckForDriveTo();
+    void LogMoveInfo();
     SwerveChassis *m_chassis;
+
+    int currentPrim = 0;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
     std::unique_ptr<frc::Timer> m_timer;
@@ -76,23 +77,18 @@ private:
     units::length::meter_t m_offset = units::length::meter_t(1.0);
     units::length::meter_t m_chassisOffset = units::length::meter_t(0.5);
 
-    bool m_checkForDriveToReef = false;
+    bool m_checkForDriveToUpdate = false;
+    bool m_updateTimeLatch = false;
     // const double m_percentageCompleteThreshold = 0.75;
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
-    PATH_UPDATE_OPTION m_updateOption;
 
-    std::map<PATH_UPDATE_OPTION, std::tuple<TrajectoryDrivePathPlanner *,
-                                            ChassisOptionEnums::DriveStateType,
-                                            DragonTargetFinderPoseInfo>>
-        m_updateOptionToTrajMap;
+    TrajectoryDrivePathPlanner *m_driveToObject;
 
     std::tuple<TrajectoryDrivePathPlanner *,
-               ChassisOptionEnums::DriveStateType,
-               DragonTargetFinderPoseInfo>
+               ChassisOptionEnums::DriveStateType>
         m_driveToInfo;
 
-    int m_zoneUpdateOptionIndex = -1;
     ZoneParams *m_zone;
 };

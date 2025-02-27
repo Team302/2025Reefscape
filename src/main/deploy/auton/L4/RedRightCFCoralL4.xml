@@ -3,10 +3,10 @@
 <auton>
 
 <primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueRightOutside_F"/>
+choreoname = "BlueRightInsideF"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueRightOutside_F"
+choreoname = "BlueRightInsideF"
 time = "3.0">
 <zone filename = "RedReefDriveToRight.xml"/>
 </primitive>
@@ -18,7 +18,9 @@ time = "3.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_F2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "4.0"/>
+time = "4.0">
+<zone filename = "RedRightHumanPlayerStation.xml"/>
+</primitive>
 
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -28,7 +30,7 @@ time = "5.0"/>
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D1"
 time = "3.0">
-<zone filename = "RedReefDriveToLeft.xml"/>
+<zone filename = "RedReefDriveToRight.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -49,7 +51,6 @@ time = "5.0"/>
 choreoname = "BlueRightCSA_C1"
 time = "3.0">
 <zone filename = "RedReefDriveToRight.xml"/>
-<zone filename= "RedReefPlacerZones.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"

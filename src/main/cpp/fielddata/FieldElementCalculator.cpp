@@ -15,9 +15,14 @@
 #include "FieldElementCalculator.h"
 
 #include "FieldConstantsPoseLogger.h"
+#include "utils/logging/debug/Logger.h"
+#include "vision/DragonVisionStructLogger.h"
+#include <frc/RobotController.h>
+#include "RobotIdentifier.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
+    UpdateReefStickRobotTransforms();
     InitializeTransforms();
     CalculateCenters(fieldConstantsPoseMap);
 
@@ -42,12 +47,30 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
 
 frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset)
 {
+
     frc::Transform3d transformToApply = m_calcLeftStick;
     if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
     {
         transformToApply = m_calcRightStick;
     }
     return poseOfFaceTag + transformToApply + m_halfRobotTransform;
+
+}
+
+void FieldElementCalculator::UpdateReefStickRobotTransforms()
+{
+    int32_t teamNumber = frc::RobotController::GetTeamNumber();
+
+    if ((RobotIdentifier)teamNumber == RobotIdentifier::COMP_BOT_302)
+    {
+        m_calcLeftStick = m_calcLeftStick + m_calcLeftStick_Comp_offset;
+        m_calcRightStick = m_calcRightStick + m_calcRightStick_Comp_offset;
+    }
+    else
+    {
+        m_calcLeftStick = m_calcLeftStick + m_calcLeftStick_Practice_offset;
+        m_calcRightStick = m_calcRightStick + m_calcRightStick_Practice_offset;
+    }
 }
 
 void FieldElementCalculator::InitializeTransforms()
@@ -83,7 +106,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::BLUE_CENTER_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_A] =
-        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick);
+        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick); 
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_B] =
         TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_C] =
@@ -135,7 +158,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::RED_CENTER_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::RED_REEF_A] =
-        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick);
+        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick); 
     m_transformCalculatedMap[FieldConstants::RED_REEF_B] =
         TransformToPose(FieldConstants::RED_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::RED_REEF_C] =
