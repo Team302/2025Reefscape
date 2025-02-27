@@ -111,7 +111,7 @@ public:
 		{
 			m_elevatorDesiredDirectionUp = true;
 			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
+			m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
@@ -253,8 +253,8 @@ private:
 
 	void IsElevatorInSync();
 
-	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
-	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
+	ctre::phoenix6::controls::MotionMagicExpoVoltage m_ArmPositionDegree{0_tr};
+	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 0_tr_per_s_cu};
 
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
