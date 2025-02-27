@@ -57,14 +57,13 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
-bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER usage)
+bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier)
 {
 	bool isHealthy = false;
-	auto camera = GetCameras(usage);
+	auto camera = GetCameras(identifier);
 	if (camera != nullptr)
 	{
-		isHealthy = camera->HealthCheck();
-		return isHealthy;
+		return camera->HealthCheck();
 	}
 	return false;
 }
