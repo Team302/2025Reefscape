@@ -48,7 +48,6 @@ void ManualGrabAlgaeReefState::Init()
 		InitPRACTICE_BOT9999();
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
-	m_mechanism->SetArmTarget(m_ArmTarget);
 }
 
 void ManualGrabAlgaeReefState::InitPRACTICE_BOT9999()
@@ -61,18 +60,9 @@ void ManualGrabAlgaeReefState::InitCOMP_BOT302()
 
 void ManualGrabAlgaeReefState::Run()
 {
-	m_mechanism->SetElevatorTarget(m_mechanism->GetAlgaeHeight());
-
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-	{
-		m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
-	else
-	{
-		m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT));
-		m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(-1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN));
-	}
+	double target = -1 * TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_OUT) + TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_IN);
+	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(target);
+	m_mechanism->SetAlgaeReefPosition();
 }
 
 void ManualGrabAlgaeReefState::Exit()

@@ -36,7 +36,6 @@ public:
         TRAJECTORY_DRIVE_PLANNER,
         HOLD_DRIVE,
         POLAR_DRIVE,
-        DRIVE_TO_NOTE,
         DRIVE_TO_CORAL_STATION,
         DRIVE_TO_LEFT_REEF_BRANCH,
         DRIVE_TO_RIGHT_REEF_BRANCH,
@@ -57,7 +56,6 @@ public:
 
     enum AutonChassisOptions
     {
-        VISION_DRIVE_NOTE,
         VISION_DRIVE_SPEAKER,
         NO_VISION
     };
@@ -76,7 +74,6 @@ public:
 
     enum PathUpdateOption
     {
-        NOTE,
         NONE
     };
 

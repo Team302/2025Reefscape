@@ -48,19 +48,19 @@ void HoldState::Init()
 		InitPRACTICE_BOT9999();
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
-	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+
+	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
+	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 }
 
 void HoldState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(m_AlgaeTarget);
 }
 
 void HoldState::InitCOMP_BOT302()
 {
-	m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(m_AlgaeTarget);
 }
 
@@ -92,7 +92,7 @@ bool HoldState::AtTarget()
 bool HoldState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return ((m_mechanism->GetCoralOutSensorState() && m_mechanism->GetCoralInSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) ||
+	return ((m_mechanism->GetCoralOutSensorState() && m_mechanism->GetCurrentState() == m_mechanism->STATE_HUMAN_PLAYER_LOAD) ||
 			(m_mechanism->GetAlgaeSensorState() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_GRAB_ALGAE_REEF))) ||
 			(m_mechanism->IsCoralMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_PROCESS) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_NET))) ||
 			(m_mechanism->IsAlgaeMode() && ((m_mechanism->GetCurrentState() == m_mechanism->STATE_L1SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L2SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L3SCORING_POSITION) || (m_mechanism->GetCurrentState() == m_mechanism->STATE_L4SCORING_POSITION))) ||

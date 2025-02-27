@@ -95,9 +95,8 @@ enum class DRAGON_LIMELIGHT_SNAPSHOT_MODE
 enum class DRAGON_LIMELIGHT_PIPELINE
 {
     UNKNOWN = -1,
-    OFF,
-    MACHINE_LEARNING_PL,
     APRIL_TAG,
+    MACHINE_LEARNING_PL,
     COLOR_THRESHOLD
 };
 
@@ -184,8 +183,17 @@ public:
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void DataLog(uint64_t timestamp) override;
+    void SetRobotPose(const frc::Pose2d &pose) override;
 
 protected:
+    enum class LIMELIGHT_IMU_MODE
+    {
+        USE_EXTERNAL_IMU_ONLY = 0,
+        USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU,
+        USE_INTERNAL_IMU,
+        USE_INTERNAL_WITH_MT1_ASSISTED_CONVERGENCE,
+        USE_INTERNAL_IMU_WITH_EXTERNAL_IMU_ASSISTED_CONVERGENCE
+    };
     units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER m_identifier;
@@ -210,7 +218,6 @@ protected:
     // from old dragon camera
     std::string m_cameraName;
     frc::Pose3d m_cameraPose;
-    const units::length::inch_t m_noteVerticalOffset = units::length::inch_t(0.0);
     SwerveChassis *m_chassis;
     const double m_maxRotationRateDegreesPerSec = 720.0;
     const double m_yawRate = 0.0;

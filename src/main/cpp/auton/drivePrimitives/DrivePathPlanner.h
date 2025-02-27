@@ -16,6 +16,9 @@
 
 // C++ Includes
 #include <memory>
+#include <map>
+#include <optional>
+#include <tuple>
 
 // Team302 Includes
 #include "auton/PrimitiveParams.h"
@@ -23,7 +26,11 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/states/DriveToRightReefBranch.h"
+#include "chassis/states/DriveToLeftReefBranch.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "utils/logging/signals/DragonDataLogger.h"
+#include "fielddata/DragonTargetFinder.h"
 
 #include "utils/logging/signals/DragonDataLogger.h"
 
@@ -32,6 +39,7 @@
 #include "frc/Timer.h"
 #include "units/length.h"
 #include "units/time.h"
+#include "frc/geometry/Pose2d.h"
 
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
@@ -47,16 +55,20 @@ public:
     bool IsDone() override;
     void DataLog(uint64_t timestamp) override;
 
+    int FindDriveToZoneIndex(ZoneParamsVector zones);
+
 private:
     void InitMoveInfo();
+    TrajectoryDrivePathPlanner *GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType);
+    bool IsInZone();
 
-    void CheckForDriveToReefBranch();
-    // void CheckForDriveToNote();
-    // bool ShouldConsiderNote(units::length::meter_t xposition);
+    void CheckForDriveTo();
+    void LogMoveInfo();
     SwerveChassis *m_chassis;
 
+    int currentPrim = 0;
+
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
-    DriveToRightReefBranch *m_driveToRightReefBranch;
     std::unique_ptr<frc::Timer> m_timer;
     pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
@@ -71,9 +83,18 @@ private:
     units::length::meter_t m_offset = units::length::meter_t(1.0);
     units::length::meter_t m_chassisOffset = units::length::meter_t(0.5);
 
-    bool m_checkForDriveToReef = false;
+    bool m_checkForDriveToUpdate = false;
+    bool m_updateTimeLatch = false;
     // const double m_percentageCompleteThreshold = 0.75;
     const units::length::meter_t m_distanceThreshold = units::length::meter_t(1.0);
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
+
+    TrajectoryDrivePathPlanner *m_driveToObject;
+
+    std::tuple<TrajectoryDrivePathPlanner *,
+               ChassisOptionEnums::DriveStateType>
+        m_driveToInfo;
+
+    ZoneParams *m_zone;
 };

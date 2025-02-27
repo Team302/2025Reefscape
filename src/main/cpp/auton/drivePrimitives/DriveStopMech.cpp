@@ -38,10 +38,6 @@ using namespace frc;
 /// @brief constructor that creates/initializes the object
 DriveStopMech::DriveStopMech() : DriveStop()
 {
-
-    // get reference to notemanager in drivestop to check for state
-    // StateMgr *noteStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::NOTE_MANAGER);
-    // m_noteManager = noteStateManager != nullptr ? dynamic_cast<noteManager *>(noteStateManager) : nullptr;
     auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
     auto dragonTale = config != nullptr ? config->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
 

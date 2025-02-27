@@ -20,8 +20,6 @@
 #include "auton/ZoneParams.h"
 #include "chassis/ChassisOptionEnums.h"
 
-// #include "mechanisms/noteManager/generated/noteManagerGen.h"
-
 // @ADDMECH include for your mechanism state mgr
 
 // @ADDMECH mechanism state for mech as parameter
@@ -37,7 +35,7 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 					   DragonTale::STATE_NAMES taleOption,
 					   ChassisOptionEnums::AutonChassisOptions autonchassisoption,
 					   ChassisOptionEnums::HeadingOption headingOption,
-					   PATH_UPDATE_OPTION pathUpdateOption,
+					   ChassisOptionEnums::DriveStateType pathUpdateOption,
 					   ChassisOptionEnums::AutonAvoidOptions autonavoidoption, AutonGrid::ZoneMode zoneMode) : m_xgrid1(xgrid1),
 																											   m_ygrid1(ygrid1),
 																											   m_xgrid2(xgrid2),

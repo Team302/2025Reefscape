@@ -32,17 +32,49 @@ public:
 
 private:
     void InitializeTransforms();
+    void UpdateReefStickRobotTransforms();
     void CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
     // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(16.0),
+            units::length::inch_t(17.0), // 16
             units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
+    // practice bot
+    frc::Transform3d m_calcLeftStick_Practice_offset = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-6.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStick_Practice_offset = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-6.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    // comp bot offsets
+    frc::Transform3d m_calcLeftStick_Comp_offset = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcRightStick_Comp_offset = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    // other transforms
     frc::Transform3d m_noTransform = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
@@ -95,14 +127,14 @@ private:
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-13.0),
+            units::length::inch_t(-6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(0.0),
+            units::length::inch_t(6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 

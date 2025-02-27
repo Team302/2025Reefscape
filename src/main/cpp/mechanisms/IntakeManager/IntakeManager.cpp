@@ -45,11 +45,13 @@ using ctre::phoenix6::configs::TalonFXSConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
+using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
 using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
 using namespace IntakeManagerStates;
@@ -128,13 +130,15 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
-		false									// bool enableFOC
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -148,20 +152,18 @@ void IntakeManager::CreatePRACTICE_BOT9999()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
-		true									// bool enableFOC
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("IntakeManager.xml", 9999);
-
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
-	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void IntakeManager::CreateCOMP_BOT302()
@@ -184,13 +186,15 @@ void IntakeManager::CreateCOMP_BOT302()
 		0,												  // double accelartionGain
 		0,												  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
-		false									// bool enableFOC
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
+		false,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -204,20 +208,18 @@ void IntakeManager::CreateCOMP_BOT302()
 		0,												  // double accelartionGain
 		0.5,											  // double staticFrictionGain,
 
-		ControlData::FEEDFORWARD_TYPE::VOLTAGE, // FEEDFORWARD_TYPE feedforwadType
-		0,										// double integralZone
-		0,										// double maxAcceleration
-		0,										// double cruiseVelocity
-		0,										// double peakValue
-		0,										// double nominalValue
-		true									// bool enableFOC
+		ControlData::FEEDFORWARD_TYPE::VOLTAGE,					 // FEEDFORWARD_TYPE feedforwadType
+		0,														 // double integralZone
+		0,														 // double maxAcceleration
+		0,														 // double cruiseVelocity
+		0,														 // double peakValue
+		0,														 // double nominalValue
+		true,													 // bool enableFOC
+		ControlData::GravityTypeValue::Elevator_Static,			 // Gravity type
+		ControlData::StaticFeedforwardSignValue::UseVelocitySign // Static feedforward sign
 	);
 
 	ReadConstants("IntakeManager.xml", 302);
-
-	m_table = nt::NetworkTableInstance::GetDefault().GetTable(m_ntName);
-	m_tuningIsEnabledStr = "Enable Tuning for " + m_ntName; // since this string is used every loop, we do not want to create the string every time
-	m_table.get()->PutBoolean(m_tuningIsEnabledStr, m_tuning);
 }
 
 void IntakeManager::InitializePRACTICE_BOT9999()
@@ -319,6 +321,16 @@ void IntakeManager::InitializeTalonFXSExtenderPRACTICE_BOT9999()
 
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 405;
+
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -359,8 +371,6 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
-
 	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
@@ -369,6 +379,8 @@ void IntakeManager::InitializeTalonFXSIntakeCOMP_BOT302()
 
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
 	configs.ExternalFeedback.SensorToMechanismRatio = 4;
+
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -422,6 +434,16 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 
 	m_ExtenderPositionDegree.EnableFOC = true;
 
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -433,25 +455,9 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Extender", "m_Extender Status", status.GetName());
 }
 
-// IntakeSensor : Digital inputs do not have initialization needs
-
-void IntakeManager::SetPIDExtenderPositionDegree()
-{
-	Slot0Configs slot0Configs{};
-	slot0Configs.kP = m_PositionDegree->GetP();
-	slot0Configs.kI = m_PositionDegree->GetI();
-	slot0Configs.kD = m_PositionDegree->GetD();
-	slot0Configs.kG = m_PositionDegree->GetF();
-	slot0Configs.kS = m_PositionDegree->GetS();
-	slot0Configs.kV = m_PositionDegree->GetV();
-	slot0Configs.kA = m_PositionDegree->GetA();
-	m_Extender->GetConfigurator().Apply(slot0Configs);
-}
-
 void IntakeManager::SetCurrentState(int state, bool run)
 {
 	StateMgr::SetCurrentState(state, run);
-	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void IntakeManager::RunCommonTasks()
@@ -509,46 +515,6 @@ bool IntakeManager::IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE id
 void IntakeManager::Cyclic()
 {
 	Update();
-
-	CheckForTuningEnabled();
-	if (m_tuning)
-	{
-		ReadTuningParamsFromNT();
-	}
-}
-
-void IntakeManager::CheckForTuningEnabled()
-{
-	bool pastTuning = m_tuning;
-	m_tuning = m_table.get()->GetBoolean(m_tuningIsEnabledStr, false);
-	if (pastTuning != m_tuning && m_tuning == true)
-	{
-		PushTuningParamsToNT();
-	}
-}
-
-void IntakeManager::ReadTuningParamsFromNT()
-{
-	m_PositionDegree->SetIZone(m_table.get()->GetNumber("PositionDegree_iZone", 0));
-	m_PositionDegree->SetS(m_table.get()->GetNumber("PositionDegree_sGain", 0));
-	m_PositionDegree->SetV(m_table.get()->GetNumber("PositionDegree_vGain", 0));
-	m_PositionDegree->SetA(m_table.get()->GetNumber("PositionDegree_aGain", 0));
-	m_PositionDegree->SetF(m_table.get()->GetNumber("PositionDegree_fGain", 0));
-	m_PositionDegree->SetP(m_table.get()->GetNumber("PositionDegree_pGain", 0));
-	m_PositionDegree->SetI(m_table.get()->GetNumber("PositionDegree_iGain", 0));
-	m_PositionDegree->SetD(m_table.get()->GetNumber("PositionDegree_dGain", 0));
-}
-
-void IntakeManager::PushTuningParamsToNT()
-{
-	m_table.get()->PutNumber("PositionDegree_iZone", m_PositionDegree->GetIZone());
-	m_table.get()->PutNumber("PositionDegree_sGain", m_PositionDegree->GetS());
-	m_table.get()->PutNumber("PositionDegree_vGain", m_PositionDegree->GetV());
-	m_table.get()->PutNumber("PositionDegree_aGain", m_PositionDegree->GetA());
-	m_table.get()->PutNumber("PositionDegree_fGain", m_PositionDegree->GetF());
-	m_table.get()->PutNumber("PositionDegree_pGain", m_PositionDegree->GetP());
-	m_table.get()->PutNumber("PositionDegree_iGain", m_PositionDegree->GetI());
-	m_table.get()->PutNumber("PositionDegree_dGain", m_PositionDegree->GetD());
 }
 
 ControlData *IntakeManager::GetControlData(string name)

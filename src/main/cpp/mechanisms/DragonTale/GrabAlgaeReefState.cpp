@@ -49,24 +49,23 @@ void GrabAlgaeReefState::Init()
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
 
-	m_mechanism->SetArmTarget(m_ArmTarget);
+	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 }
 
 void GrabAlgaeReefState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(m_AlgaeTarget);
 }
 
 void GrabAlgaeReefState::InitCOMP_BOT302()
 {
-	m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(m_CoralTarget);
 	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(m_AlgaeTarget);
 }
 
 void GrabAlgaeReefState::Run()
 {
-	m_mechanism->SetElevatorTarget(m_mechanism->GetAlgaeHeight());
+
+	m_mechanism->SetAlgaeReefPosition();
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("GrabAlgaeReefState"), string("Run"));
 }
 

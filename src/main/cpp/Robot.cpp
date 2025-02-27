@@ -42,14 +42,14 @@ using std::string;
 
 void Robot::RobotInit()
 {
-    isFMSAttached = frc::DriverStation::IsFMSAttached();
+    // isFMSAttached = frc::DriverStation::IsFMSAttached();
 
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("arrived"));
-        InitializeDataTracing();
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("arrived"));
+    //     InitializeDataTracing();
+    // }
 
     m_controller = nullptr;
 
@@ -59,10 +59,10 @@ void Robot::RobotInit()
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("end"));
+    // }
 }
 
 /**
@@ -75,14 +75,13 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-    SensorDataMgr::GetInstance()->CacheData();
 
-    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
-    if (!isFMSAttached)
-    {
-        LoggableItemMgr::GetInstance()->LogData();
-        Logger::GetLogger()->PeriodicLog();
-    }
+    //    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    //    if (!isFMSAttached)
+    //    {
+    //        LoggableItemMgr::GetInstance()->LogData();
+    //        Logger::GetLogger()->PeriodicLog();
+    //    }
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
@@ -110,27 +109,32 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("arrived"));
+    // }
 
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Init();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("end"));
+    // }
 }
 
 void Robot::AutonomousPeriodic()
 {
-    if (!isFMSAttached)
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
+    // }
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
+        m_dragonswerveposeestimator->Update();
     }
 
     if (m_cyclePrims != nullptr)
@@ -138,18 +142,18 @@ void Robot::AutonomousPeriodic()
         m_cyclePrims->Run();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
+    // }
 }
 
 void Robot::TeleopInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("arrived"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("arrived"));
+    // }
 
     if (m_controller == nullptr)
     {
@@ -163,17 +167,22 @@ void Robot::TeleopInit()
 
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("end"));
+    // }
 }
 
 void Robot::TeleopPeriodic()
 {
-    if (!isFMSAttached)
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
+    // }
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
+        m_dragonswerveposeestimator->Update();
     }
 
     if (m_chassis != nullptr && m_controller != nullptr && m_holonomic != nullptr)
@@ -182,29 +191,32 @@ void Robot::TeleopPeriodic()
     }
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
+    // }
 }
 
 void Robot::DisabledInit()
 {
-    if (!isFMSAttached)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("arrived"));
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("end"));
-    }
+    // if (!isFMSAttached)
+    // {
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("arrived"));
+    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("end"));
+    // }
 }
 
 void Robot::DisabledPeriodic()
 {
-    m_dragonswerveposeestimator->CalculateInitialPose();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->CalculateInitialPose();
+    }
 }
 
 void Robot::TestInit()
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
+    // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
 }
 
 void Robot::TestPeriodic()
@@ -224,15 +236,19 @@ void Robot::SimulationPeriodic()
 void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
+    FieldConstants::GetInstance();
+
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     m_holonomic = nullptr;
+    m_dragonswerveposeestimator = nullptr;
     if (m_chassis != nullptr)
     {
         m_holonomic = new HolonomicDrive();
+        m_dragonswerveposeestimator = m_chassis->GetSwervePoseEstimator();
     }
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
@@ -258,9 +274,9 @@ void Robot::UpdateDriveTeamFeedback()
     {
         m_previewer->CheckCurrentAuton();
     }
-    if (m_field != nullptr && m_chassis != nullptr)
+    if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
     {
-        m_field->UpdateRobotPosition(m_chassis->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
+        m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
     }
     auto feedback = DriverFeedback::GetInstance();
     if (feedback != nullptr)

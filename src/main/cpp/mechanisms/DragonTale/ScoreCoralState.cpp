@@ -43,31 +43,23 @@ ScoreCoralState::ScoreCoralState(std::string stateName,
 void ScoreCoralState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Init"));
-
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
-		InitCOMP_BOT302();
-}
-
-void ScoreCoralState::InitPRACTICE_BOT9999()
-{
-	m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(m_AlgaeTarget);
-}
-
-void ScoreCoralState::InitCOMP_BOT302()
-{
-	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(m_AlgaeTarget);
 }
 
 void ScoreCoralState::Run()
 {
-	if (m_mechanism->AtTarget())
+	if (m_mechanism->AtTarget() || m_mechanism->IsTeleop())
+	{
+		if (m_mechanism->GetElevatorHeight() < units::length::inch_t(5))
+			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
+		else
+			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+	}
+	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
 	{
 		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-			m_mechanism->UpdateTargetCoralTalonSRXPercentOutput(m_CoralTarget);
+			m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			m_mechanism->UpdateTargetCoralTalonFXSPercentOutput(m_CoralTarget);
+			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.1);
 	}
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }

@@ -44,31 +44,45 @@ void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Init"));
 	m_manualTarget = m_ClimberTarget;
-	if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-		InitPRACTICE_BOT9999();
-	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
-		InitCOMP_BOT302();
+	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_ClimberTarget)
+	{
+		m_mechanism->UpdateTargetClimberPositionDegreeUp(m_ClimberTarget);
+	}
+	else
+	{
+		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	}
 }
 
 void ManualClimbState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->SetPIDClimberPositionDegree();
 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void ManualClimbState::InitCOMP_BOT302()
 {
-	m_mechanism->SetPIDClimberPositionDegree();
 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void ManualClimbState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
-	units::angle::turn_t TargetChange = units::angle::turn_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
-	m_manualTarget += TargetChange;
+	// units::angle::turn_t TargetChange = units::angle::turn_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
+	// m_manualTarget += TargetChange;
 
-	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+	// if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_manualTarget)
+	// {
+	// 	m_mechanism->UpdateTargetClimberPositionDegreeUp(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+	// }
+	// else
+	// {
+	// 	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+	// }
+	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
+	if (abs(manualClimberPercent) > 0.1)
+		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent);
+	else
+		m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
 }
 
 void ManualClimbState::Exit()

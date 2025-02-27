@@ -38,12 +38,9 @@ $$_CREATE_FUNCTIONS_$$
 
 $$_INITIALZATION_FUNCTIONS_$$
 
-$$_PID_UPDATE_FUNCTION_$$
-
 void $$_MECHANISM_INSTANCE_NAME_$$::SetCurrentState(int state, bool run)
 {
     StateMgr::SetCurrentState(state, run);
-    PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void $$_MECHANISM_INSTANCE_NAME_$$::RunCommonTasks()
@@ -131,13 +128,16 @@ void $$_MECHANISM_INSTANCE_NAME_$$::Cyclic()
 {
     Update();
 
+    _NT_TUNING_FUNCTION_CALLS_START_
     CheckForTuningEnabled();
     if (m_tuning)
     {
         ReadTuningParamsFromNT();
     }
+    _NT_TUNING_FUNCTION_CALLS_END_
 }
 
+_NT_TUNING_FUNCTIONS_START_
 void $$_MECHANISM_INSTANCE_NAME_$$::CheckForTuningEnabled()
 {
     bool pastTuning = m_tuning;
@@ -156,7 +156,9 @@ void $$_MECHANISM_INSTANCE_NAME_$$::ReadTuningParamsFromNT()
 void $$_MECHANISM_INSTANCE_NAME_$$::PushTuningParamsToNT(){
     $$_PUSH_TUNABLE_PARAMETERS_$$}
 
-ControlData *$$_MECHANISM_INSTANCE_NAME_$$::GetControlData(string name)
+_NT_TUNING_FUNCTIONS_END_
+
+    ControlData *$$_MECHANISM_INSTANCE_NAME_$$::GetControlData(string name)
 {
     $$_CONTROLDATA_NAME_TO_VARIABLE_$$
 

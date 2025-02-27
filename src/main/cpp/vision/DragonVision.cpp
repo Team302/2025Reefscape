@@ -45,7 +45,7 @@ DragonVision *DragonVision::GetDragonVision()
 bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	bool isHealthy = false;
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	for (auto cam : cameras)
 	{
 		isHealthy = cam->HealthCheck();
@@ -59,27 +59,21 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 
 std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
 {
-	std::optional<VisionPose> visionPosition = GetRobotPosition();
-	auto hasVisionPose = visionPosition.has_value();
-	if (hasVisionPose)
+	std::optional<VisionPose> megaTag1Position = GetRobotPosition(); // Megatag1
+	if (megaTag1Position.has_value())
 	{
-		auto initialRot = visionPosition.value().estimatedPose.ToPose2d().Rotation().Degrees();
-
-		// use the path angle as an initial guess for the MegaTag2 calc; chassis is most-likely 0.0 right now which may cause issues based on color
-		std::optional<VisionPose> megaTag2Position = GetRobotPositionMegaTag2(initialRot, // chassis->GetYaw(), // mtAngle.Degrees(),
-																			  units::angular_velocity::degrees_per_second_t(0.0),
-																			  units::angle::degree_t(0.0),
-																			  units::angular_velocity::degrees_per_second_t(0.0),
-																			  units::angle::degree_t(0.0),
-																			  units::angular_velocity::degrees_per_second_t(0.0));
+		auto megaTag2Position = GetRobotPositionMegaTag2(megaTag1Position.value().estimatedPose.ToPose2d().Rotation().Degrees(),
+														 units::angular_velocity::degrees_per_second_t(0.0),
+														 units::angle::degree_t(0.0),
+														 units::angular_velocity::degrees_per_second_t(0.0),
+														 units::angle::degree_t(0.0),
+														 units::angular_velocity::degrees_per_second_t(0.0));
 		if (megaTag2Position.has_value())
 		{
 
-			std::optional<frc::Pose2d> megaTag2Posed = megaTag2Position.value().estimatedPose.ToPose2d();
-			return megaTag2Posed;
+			return megaTag2Position.value().estimatedPose.ToPose2d();
 		}
-
-		return visionPosition.value().estimatedPose.ToPose2d();
+		return megaTag1Position.value().estimatedPose.ToPose2d();
 	}
 
 	return std::nullopt;
@@ -131,7 +125,7 @@ std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 
 std::optional<VisionData> DragonVision::GetVisionDataToNearestFieldElementAprilTag(VISION_ELEMENT element)
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
 		std::optional<VisionData> limelightData = cam->GetDataToNearestAprilTag();
@@ -249,7 +243,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 	units::length::inch_t closest = units::length::inch_t(-1.0);
 	std::vector<VisionData> visData;
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
 		auto data = cam->GetDataToNearestAprilTag();
@@ -269,7 +263,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION);
 	for (auto cam : cameras)
 	{
 		// create translation using 3 estimated distances
@@ -277,17 +271,17 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 			cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
 			cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
 		{
-			frc::Translation3d translationToNote = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
-																	  cam->EstimateTargetYDistance_RelToRobotCoords().value(),
-																	  cam->EstimateTargetZDistance_RelToRobotCoords().value());
-			frc::Rotation3d rotationToNote = frc::Rotation3d();
+			frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
+																	   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
+																	   cam->EstimateTargetZDistance_RelToRobotCoords().value());
+			frc::Rotation3d rotationToAlgae = frc::Rotation3d();
 			// create rotation3d with pitch and yaw (don't have access to roll)
-			rotationToNote = frc::Rotation3d(units::angle::degree_t(0.0),
-											 cam->GetTargetPitchRobotFrame().value(),
-											 cam->GetTargetYawRobotFrame().value());
+			rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
+											  cam->GetTargetPitchRobotFrame().value(),
+											  cam->GetTargetYawRobotFrame().value());
 
 			// return VisionData with new translation and rotation
-			return VisionData{frc::Transform3d(translationToNote, rotationToNote), translationToNote, rotationToNote, -1};
+			return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
 		}
 	}
 	// if we don't have a selected cam
@@ -336,7 +330,7 @@ std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT 
 
 std::optional<VisionData> DragonVision::SingleTagToElement(frc::Pose3d elementPose, int idToSearch)
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
 		// get the optional of the translation and rotation to the apriltag
@@ -352,10 +346,14 @@ std::optional<VisionData> DragonVision::SingleTagToElement(frc::Pose3d elementPo
 
 std::optional<VisionPose> DragonVision::GetRobotPosition()
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
-		return cam->EstimatePoseOdometryLimelight(false); // false since megatag1
+		auto pose = cam->EstimatePoseOdometryLimelight(false); // false megatag1
+		if (pose.has_value())								   // if we have a valid pose, return it
+		{
+			return pose;
+		}
 	}
 
 	// if we aren't able to calculate our pose from vision, return a null optional
@@ -369,7 +367,7 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 																 units::angle::degree_t roll,
 																 units::angular_velocity::degrees_per_second_t rollRate)
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
 		LimelightHelpers::SetRobotOrientation(cam->GetCameraName(),
@@ -379,8 +377,11 @@ std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::d
 											  pitchRate.value(),
 											  roll.value(),
 											  rollRate.value());
-
-		return cam->EstimatePoseOdometryLimelight(true); // true since megatag2
+		auto estPose = cam->EstimatePoseOdometryLimelight(true); // true since megatag2
+		if (estPose.has_value())
+		{
+			return estPose;
+		}
 	}
 
 	return std::nullopt;
@@ -415,7 +416,7 @@ void DragonVision::testAndLogVisionData()
 // TODO:  these need to be smarter to deal with multiple cameras with the same usage
 std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	std::optional<double> maxArea = std::nullopt;
 	for (auto cam : cameras)
 	{
@@ -432,7 +433,7 @@ std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE 
 }
 units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	units::angle::degree_t minTx = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
@@ -447,7 +448,7 @@ units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 
 units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	units::angle::degree_t minTy = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
@@ -462,7 +463,7 @@ units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	std::optional<units::angle::degree_t> minYaw = std::nullopt;
 	for (auto cam : cameras)
 	{
@@ -480,7 +481,7 @@ std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DRAGON_LIMELIGH
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	std::optional<units::angle::degree_t> minSkew = std::nullopt;
 	for (auto cam : cameras)
 	{
@@ -498,7 +499,7 @@ std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(DRAGON_LIMELIG
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	std::optional<units::angle::degree_t> minPitch = std::nullopt;
 	for (auto cam : cameras)
 	{
@@ -516,7 +517,7 @@ std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(DRAGON_LIMELI
 
 std::optional<int> DragonVision::GetAprilTagID(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	std::optional<int> targetAprilTag = std::nullopt;
 	std::optional<double> minArea = std::nullopt;
 	for (auto cam : cameras)
@@ -537,7 +538,7 @@ std::optional<int> DragonVision::GetAprilTagID(DRAGON_LIMELIGHT_CAMERA_USAGE usa
 
 bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
-	auto cameras = GetCammeras(usage);
+	auto cameras = GetCameras(usage);
 	for (auto cam : cameras)
 	{
 		auto hasTarget = cam->HasTarget();
@@ -549,7 +550,7 @@ bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return false;
 }
 
-std::vector<DragonLimelight *> DragonVision::GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const
+std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const
 {
 	std::vector<DragonLimelight *> validCameras;
 	for (auto it = m_dragonLimelightMap.begin(); it != m_dragonLimelightMap.end(); ++it)
@@ -585,10 +586,15 @@ std::vector<DragonLimelight *> DragonVision::GetCammeras(DRAGON_LIMELIGHT_CAMERA
 
 std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const
 {
-	auto cameras = GetCammeras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - cam"), cam->GetCameraName());
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - tagID"), static_cast<int>(tagId));
+
 		auto visdata = cam->GetDataToSpecifiedTag(static_cast<int>(tagId));
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - visData.has_value()"), visdata.has_value() ? "true" : "false");
+
 		if (visdata.has_value())
 		{
 			auto currentPose{frc::Pose3d(ChassisConfigMgr::GetInstance()->GetCurrentChassis()->GetPose())};
