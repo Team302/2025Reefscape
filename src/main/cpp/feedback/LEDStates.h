@@ -53,4 +53,14 @@ private:
     const int m_blinkPatternPeriod = 10;
     const int m_altColorBlinkPatternPeriod = 10;
     const int m_breathePatternPeriod = 10;
+
+    const int m_diagnosticLED0 = 0;
+    const int m_diagnosticLED1 = 1;
+    const int m_diagnosticLED2 = 2;
+    const int m_diagnosticLED3 = 3;
+    const int m_diagnosticLED4 = 4;
+    const int m_diagnosticLED5 = 5;
+    const int m_diagnosticLED6 = 6;
+    const int m_diagnosticLED7 = 7;
+    const int m_diagnosticLED8 = 8;
 };

@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
 
 ///	 @interface     State
 ///  @brief      	Interface for state classes

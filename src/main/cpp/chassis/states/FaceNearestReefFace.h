@@ -26,8 +26,8 @@ public:
     ~FaceNearestReefFace() = default;
 
     std::string GetHeadingStateName() const override;
-    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace);
 
 protected:
     DragonTargetFinderTarget GetTarget() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 };

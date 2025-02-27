@@ -15,11 +15,12 @@
 
 // Team302 Includes
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/states/SpecifiedHeading.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-
-#include "utils/logging/Logger.h"
+#include "chassis/states/SpecifiedHeading.h"
+#include "utils/AngleUtils.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 SpecifiedHeading::SpecifiedHeading() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE),
                                        m_targetAngle(units::angle::degree_t(0.0))
@@ -42,11 +43,16 @@ void SpecifiedHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
 
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    if (chassisMovement.previousDriveOption == ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER)
+    {
+        m_pid->Reset();
+    }
     if (chassis != nullptr)
     {
         auto correction = CalcHeadingCorrection(m_targetAngle, kPSpecifiedHeading);
         chassisMovement.chassisSpeeds.omega += correction;
-        chassis->SetStoredHeading(m_targetAngle);
+
+        chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_targetAngle));
     }
 }
 

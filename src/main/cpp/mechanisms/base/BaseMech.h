@@ -20,7 +20,7 @@
 #include <string>
 
 // Team 302 includes
-#include "utils/logging/LoggableItem.h"
+#include "utils/logging/debug/LoggableItem.h"
 #include "mechanisms/MechanismTypes.h"
 #include "mechanisms/controllers/ControlData.h"
 
@@ -59,7 +59,7 @@ public:
     void SetNetworkFileName(std::string ntName) { m_ntName = ntName; }
 
 protected:
-    virtual ControlData* GetControlData(std::string name);
+    virtual ControlData *GetControlData(std::string name);
 
 private:
     BaseMech() = delete;

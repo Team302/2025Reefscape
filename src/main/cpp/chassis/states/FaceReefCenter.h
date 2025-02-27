@@ -26,7 +26,6 @@ public:
     ~FaceReefCenter() = default;
 
     std::string GetHeadingStateName() const override;
-    units::angle::degree_t DetermineReefFaceAngle(units::angle::degree_t angleToReefCenter);
 
 protected:
     DragonTargetFinderTarget GetTarget() const override;

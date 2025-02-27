@@ -29,7 +29,7 @@
 
 // Team 302 Includes
 #include <utils/HardwareIDValidation.h>
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

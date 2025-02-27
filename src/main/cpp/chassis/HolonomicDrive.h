@@ -48,6 +48,9 @@ private:
     void CheckTipping(bool tippingSelected);
     void CheckRobotOriented(bool robotOrientedSelected);
     void PolarDrive();
+    void DriveToRightReefBranch();
+    void DriveToLeftReefBranch();
+    void DriveToCoralStation();
 
     void DriveToGamePiece(double forward, double strafe, double rot);
 

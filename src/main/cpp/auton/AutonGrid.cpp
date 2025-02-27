@@ -14,12 +14,13 @@
 //====================================================================================================================================================
 
 // FRC Includes
-#include <frc/geometry/Pose2d.h>
 #include <math.h>
+
+#include <frc/geometry/Pose2d.h>
 
 // Team302 Includes
 #include "auton/AutonGrid.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Thirdparty includes
 

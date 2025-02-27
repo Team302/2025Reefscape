@@ -1,5 +1,5 @@
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionUtils.h"
-#include "utils/logging/Logger.h"
 
 bool DragonVisionUtils::CompareVisionData(std::optional<VisionData> data1, std::optional<VisionData> data2)
 {

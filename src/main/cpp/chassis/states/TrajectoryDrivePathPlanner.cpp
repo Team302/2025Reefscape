@@ -25,10 +25,11 @@
 // Team302 Includes
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/ChassisMovement.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "chassis/states/SpecifiedHeading.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "chassis/states/DriveToNote.h"
+#include "vision/DragonVisionStructs.h"
+#include "vision/DragonVisionStructLogger.h"
 
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
 #include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
@@ -41,13 +42,13 @@ TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) :
                                                                                  m_trajectory(),
                                                                                  m_robotDrive(robotDrive),
                                                                                  // TODO need to tune this also update radius as it is probably wrong
-                                                                                 m_longpathHolonomicController(pathplanner::PIDConstants(1.45, 0.5, 0.0), //(1.95, 0.95, 0.0)
-                                                                                                               pathplanner::PIDConstants(2.5, 2.0, 0.0),
+                                                                                 m_longpathHolonomicController(pathplanner::PIDConstants(8.0, 0.0, 0.0), //(1.95, 0.95, 0.0)
+                                                                                                               pathplanner::PIDConstants(4.0, 0.5, 0.0),
                                                                                                                // robotDrive->GetChassis()->GetMaxSpeed(),
                                                                                                                // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                units::time::second_t(0.02)),
-                                                                                 m_shortpathHolonomicController(pathplanner::PIDConstants(1.5, 0.65, 0.0),
-                                                                                                                pathplanner::PIDConstants(2.5, 2.0, 0.0),
+                                                                                 m_shortpathHolonomicController(pathplanner::PIDConstants(8.0, 0.0, 0.0),
+                                                                                                                pathplanner::PIDConstants(4.0, 0.5, 0.0),
                                                                                                                 // robotDrive->GetChassis()->GetMaxSpeed(),
                                                                                                                 // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                 units::time::second_t(0.02)),
@@ -92,7 +93,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
     {
         Init(chassisMovement);
     }
-    if (!m_trajectoryStates.empty()) // If we have a path parsed / have states to run
+    if (!m_trajectoryStates.empty() && !states.empty()) // If we have a path parsed / have states to run
     {
         if (m_trajectory.getInitialPose() != chassisMovement.pathplannerTrajectory.getInitialPose())
         {
@@ -124,10 +125,15 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             refChassisSpeeds = m_shortpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
         }
-
-        chassisMovement.chassisSpeeds = refChassisSpeeds;
-
-        m_chassis->SetStoredHeading(m_chassis->GetPose().Rotation().Degrees());
+        if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
+        {
+            chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
+            chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
+        }
+        else
+        {
+            chassisMovement.chassisSpeeds = refChassisSpeeds;
+        }
     }
     else // If we don't have states to run, don't move the robot
     {
@@ -166,7 +172,7 @@ bool TrajectoryDrivePathPlanner::IsDone()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.pose.Y().value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.pose.Rotation().Degrees().value());
 
-            isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5);
+            isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
         }
     }
     else

@@ -30,11 +30,4 @@ std::string IgnoreHeading::GetHeadingStateName() const
 
 void IgnoreHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
 {
-    // update stored heading for transition to teleop from auton
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-    if (chassis != nullptr)
-    {
-        chassis->SetStoredHeading(chassis->GetPose().Rotation().Degrees());
-    }
 }

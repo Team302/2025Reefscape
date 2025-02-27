@@ -22,7 +22,7 @@
 #include "chassis/states/FaceGamePiece.h"
 
 /// debugging
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 FaceGamePiece::FaceGamePiece() : ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE)
 {

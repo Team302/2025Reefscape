@@ -19,6 +19,7 @@
 #include "vision/DragonLimelight.h"
 #include "frc/geometry/Translation3d.h"
 #include "frc/geometry/Transform3d.h"
+#include "Limelight/LimelightHelpers.h"
 
 class DragonVisionStructLogger
 {
@@ -31,5 +32,5 @@ public:
     static void logPose3d(const std::string &loggerName, const frc::Pose3d pose3d);
     static void logVisionPose(const std::string &loggerName, const std::optional<VisionPose> optVisionPose);
     static void logPose2d(const std::string &loggerName, const frc::Pose2d pose2d);
-    
+    static void logLLPoseEstimation(const std::string &loggerName, const LimelightHelpers::PoseEstimate llPoseEstimate);
 };

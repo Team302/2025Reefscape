@@ -14,12 +14,12 @@
 //====================================================================================================================================================
 
 // Team302 Includes
-#include "chassis/states/ISwerveDriveOrientation.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/states/ISwerveDriveOrientation.h"
 #include "utils/AngleUtils.h"
+#include "utils/logging/debug/Logger.h"
 
-#include "utils/logging/Logger.h"
 frc::PIDController *ISwerveDriveOrientation::m_pid = new frc::PIDController(6.0, 5.0, 0.0);
 
 ISwerveDriveOrientation::ISwerveDriveOrientation(ChassisOptionEnums::HeadingOption headingOption) : m_headingOption(headingOption)

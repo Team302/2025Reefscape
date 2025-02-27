@@ -15,70 +15,12 @@
 //====================================================================================================================================================
 
 #include "utils/DragonPower.h"
-#include "utils/logging/Logger.h"
-#include <string>
 
-DragonPower *DragonPower::m_dragonPowerInstance = nullptr;
-bool calculateInLogger = true; //set this to false to calculate power data via LoggableItem instead of signel
-
-DragonPower *DragonPower::GetInstance()
+std::tuple<double, double> DragonPower::CalcPowerEnergy(units::time::second_t deltaTime, double volts, double amps)
 {
-    if (DragonPower::m_dragonPowerInstance == nullptr)
-    {
-        DragonPower::m_dragonPowerInstance = new DragonPower();
-    }
-    return DragonPower::m_dragonPowerInstance;
+    return std::make_tuple<double, double>(amps * volts, amps * volts * deltaTime.value());
 }
-
-DragonPower::DragonPower()
-{    
-    int pdpCanID = 0;
-    m_pdp = new frc::PowerDistribution(pdpCanID, frc::PowerDistribution::ModuleType::kCTRE);
-    m_calcTimer = new frc::Timer();
-}
-
-void DragonPower::CalculatePowerData()
+double DragonPower::ConvertEnergyToWattHours(double energy)
 {
-
-    // need to determine if we met the calcFrequency threshold
-    if (m_pdp != nullptr)
-    {
-        double currentTimeCalc = m_calcTimer->Get().to<double>();
-        m_currentCurrent = m_pdp->GetTotalCurrent();
-        m_currentVoltage = m_pdp->GetVoltage();
-        m_currentPower = m_currentCurrent * m_currentVoltage;
-        m_currentEnergy = m_currentPower * currentTimeCalc;
-        m_matchEnergy += m_currentEnergy;
-        m_matchWattHours = m_matchEnergy / 3600.0;
-        m_calcTimer->Reset();
-        m_calcTimer->Start();
-    }
-
-    
+    return energy / 3600.0;
 }
-
-void DragonPower::LogInformation()
-{
-    if (!calculateInLogger)
-        CalculatePowerData();
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Current", m_currentCurrent);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Voltage", m_currentVoltage);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Power", m_currentPower);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Energy", m_currentEnergy);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Watt Hours", m_matchWattHours);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonPower", "Match Joules", m_matchEnergy);
-}
-
-void DragonPower::DataLog()
-{
-    if (calculateInLogger)
-        CalculatePowerData();    
-
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_CURRENT, m_currentCurrent);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_VOLTAGE, m_currentVoltage);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_POWER, m_currentPower);
-    LogDoubleData(DragonDataLoggerSignals::ELECTRICAL_ENERGY, m_currentEnergy);
-}
-
-

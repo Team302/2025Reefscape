@@ -1,6 +1,14 @@
 #ifndef LIMELIGHTHELPERS_H
 #define LIMELIGHTHELPERS_H
 
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+#ifndef __FRC_ROBORIO__
+#define DESKTOP_SIM
+#endif
 ///
 // https://github.com/LimelightVision/limelightlib-wpicpp
 ///
@@ -12,8 +20,12 @@
 #include <wpinet/PortForwarder.h>
 #include "wpi/json.h"
 #include <string>
+#ifndef DESKTOP_SIM
 #include <unistd.h>
-// #include <curl/curl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif // DESKTOP_SIM
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -23,9 +35,6 @@
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Rotation3d.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
 
@@ -674,6 +683,9 @@ namespace LimelightHelpers
 
     inline void PhoneHome()
     {
+        
+#ifndef DESKTOP_SIM
+
         static int sockfd = -1;
         static struct sockaddr_in servaddr, cliaddr;
 
@@ -730,6 +742,8 @@ namespace LimelightHelpers
             close(sockfd);
             sockfd = -1;
         }
+        
+#endif // DESKTOP_SIM
     }
 
     inline void SetupPortForwarding(const std::string &limelightName)

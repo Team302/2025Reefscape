@@ -17,6 +17,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+
 #include "frc/geometry/Pose2d.h"
 
 class CyclePrimitives;
@@ -25,11 +26,11 @@ class SwerveChassis;
 class TeleopControl;
 class FMSData;
 class DragonField;
-class DragonPower;
 class AutonPreviewer;
 class RobotState;
 class SomeMech;
 class DragonDataLoggerMgr;
+class DragonSwervePoseEstimator;
 
 class Robot : public frc::TimedRobot
 {
@@ -56,15 +57,11 @@ private:
     void InitializeDriveteamFeedback();
     void InitializeDataTracing();
     void UpdateDriveTeamFeedback();
-    void LogDiagnosticData();
-    void LogSensorData();
-    void LogMotorData();
 
     TeleopControl *m_controller;
     SwerveChassis *m_chassis;
     CyclePrimitives *m_cyclePrims;
     HolonomicDrive *m_holonomic;
-    DragonPower *m_dragonPower;
 
     FMSData *m_fmsData;
     DragonField *m_field;
@@ -73,4 +70,5 @@ private:
     SomeMech *m_someMech;
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
+    DragonSwervePoseEstimator *m_dragonswerveposeestimator;
 };

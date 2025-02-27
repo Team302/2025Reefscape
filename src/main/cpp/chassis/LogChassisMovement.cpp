@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "chassis/LogChassisMovement.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using std::string;
 

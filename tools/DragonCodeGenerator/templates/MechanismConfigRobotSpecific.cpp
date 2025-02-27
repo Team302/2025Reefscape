@@ -3,11 +3,12 @@ $$_GEN_NOTICE_$$
 
 #include <string>
 
-#include "utils/PeriodicLooper.h"
-#include "utils/logging/Logger.h"
-#include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfig$$_ROBOT_NAME_$$.h"
+#include "configs/MechanismConfigMgr.h"
 #include "configs/RobotElementNames.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/PeriodicLooper.h"
+
 $$_INCLUDE_$$
 
 using std::string;

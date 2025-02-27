@@ -26,7 +26,7 @@
 // #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
 // #include "mechanisms/MechanismTypes.h"
 // #include "mechanisms/noteManager/generated/noteManagerGen.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 #include <pugixml/pugixml.hpp>
 
@@ -45,7 +45,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["HOLD_POSITION"] = HOLD_POSITION;
     primStringToEnumMap["DRIVE_PATH_PLANNER"] = DRIVE_PATH_PLANNER;
     primStringToEnumMap["RESET_POSITION_PATH_PLANNER"] = RESET_POSITION_PATH_PLANNER;
-    primStringToEnumMap["RESET_POSITION_PATH_PLANNER_NO_VISION"] = RESET_POSITION_PATH_PLANNER_NO_VISION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DRIVE_TO_NOTE"] = DRIVE_TO_NOTE;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
@@ -54,6 +53,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     map<string, ChassisOptionEnums::HeadingOption>
         headingOptionMap;
     headingOptionMap["MAINTAIN"] = ChassisOptionEnums::HeadingOption::MAINTAIN;
+    headingOptionMap["IGNORE"] = ChassisOptionEnums::HeadingOption::IGNORE;
     headingOptionMap["SPECIFIED_ANGLE"] = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
     headingOptionMap["FACE_GAME_PIECE"] = ChassisOptionEnums::HeadingOption::FACE_GAME_PIECE;
 
@@ -69,6 +69,14 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
             {"ALGAE", PrimitiveParams::VISION_ALIGNMENT::ALGAE},
             {"CORAL_STATION", PrimitiveParams::VISION_ALIGNMENT::CORAL_STATION},
             {"PROCESSOR", PrimitiveParams::VISION_ALIGNMENT::PROCESSOR}};
+
+    map<string, PATH_UPDATE_OPTION> updateOptionMap{{"RIGHT_REEF_BRANCH", PATH_UPDATE_OPTION::RIGHT_REEF_BRANCH},
+                                                    {"LEFT_REEF_BRANCH", PATH_UPDATE_OPTION::LEFT_REEF_BRANCH},
+                                                    {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                    {"CORAL_STATION", PATH_UPDATE_OPTION::CORAL_STATION},
+                                                    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                    {"NOTHING", PATH_UPDATE_OPTION::NOTHING}};
 
     /** TODO Come back to this
     map<string, ChassisOptionEnums::PathUpdateOption> pathUpdateOptionsMap{
@@ -140,7 +148,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                 {
                     auto primitiveType = UNKNOWN_PRIMITIVE;
                     units::time::second_t time = units::time::second_t(15.0);
-                    auto headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+                    auto headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
@@ -156,6 +164,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     ZoneParamsVector zones;
                     ChassisOptionEnums::PathUpdateOption updateHeadingOption = ChassisOptionEnums::PathUpdateOption::NONE;
                     DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
+
+                    PATH_UPDATE_OPTION updateOption = PATH_UPDATE_OPTION::NOTHING;
 
                     Logger::GetLogger()
                         ->LogData(LOGGER_LEVEL::PRINT, string("PrimitiveParser"), string("About to parse primitive"), (double)paramVector.size());
@@ -195,21 +205,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 hasError = true;
                             }
                         }
-                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
-                        {
-                            /** TODO come back to this
-                            auto updateHeadingItr = pathUpdateOptionsMap.find(attr.value());
-                            if (updateHeadingItr != pathUpdateOptionsMap.end())
-                            {
-                                updateHeadingOption = updateHeadingItr->second;
-                            }
-                            else
-                            {
-                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid update heading option"), attr.value());
-                                hasError = true;
-                            }
-                            **/
-                        }
                         else if (strcmp(attr.name(), "delayOption") == 0)
                         {
                             auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
@@ -220,6 +215,19 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             else
                             {
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
+                                hasError = true;
+                            }
+                        }
+                        else if (strcmp(attr.name(), "pathUpdateOption") == 0)
+                        {
+                            auto updateOptionItr = updateOptionMap.find(attr.value());
+                            if (updateOptionItr != updateOptionMap.end())
+                            {
+                                updateOption = updateOptionItr->second;
+                            }
+                            else
+                            {
+                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid path update option"), attr.value());
                                 hasError = true;
                             }
                         }
@@ -325,6 +333,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      changeTaleState,
                                                                      taleState,
                                                                      updateHeadingOption,
+                                                                     updateOption,
                                                                      pathDelayOption));
                     }
                     else
@@ -359,6 +368,7 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Path Name"), param->GetPathName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
+        logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Dragon Tale State"), param->GetTaleState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note change"), param->IsNoteStateChanging() ? string("true") : string("false"));
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("note state"), param->GetNoteState());
         // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));

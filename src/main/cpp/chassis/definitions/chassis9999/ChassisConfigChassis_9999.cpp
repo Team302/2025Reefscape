@@ -18,7 +18,7 @@
 #include "chassis/definitions/chassis9999/ChassisConfigChassis_9999.h"
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 using ctre::phoenix6::configs::MountPoseConfigs;
 using ctre::phoenix6::hardware::Pigeon2;
@@ -29,6 +29,7 @@ void ChassisConfigChassis_9999::DefinePigeon()
     string canbusName;
     canbusName.assign(TunerConstants9999::kCANBusName);
     m_pigeon2 = new Pigeon2(TunerConstants9999::kPigeonId, canbusName);
+    m_pigeon2->Reset();
 }
 
 void ChassisConfigChassis_9999::DefineChassis()

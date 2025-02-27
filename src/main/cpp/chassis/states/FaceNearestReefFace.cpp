@@ -15,6 +15,7 @@
 
 // Team302 Includes
 #include "chassis/states/FaceNearestReefFace.h"
+#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 
 FaceNearestReefFace::FaceNearestReefFace() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER)
@@ -26,12 +27,26 @@ std::string FaceNearestReefFace::GetHeadingStateName() const
     return std::string("FaceNearestReefFace");
 }
 
-units::angle::degree_t FaceNearestReefFace::DetermineReefFaceAngle(units::angle::degree_t angleToNearestFace)
-{
-
-}
-
 DragonTargetFinderTarget FaceNearestReefFace::GetTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE;
+    return DragonTargetFinderTarget::CLOSEST_REEF_ALGAE; // there is no enum for reef face, so we use reef algae instead.. which is the same thing
+}
+units::angle::degree_t FaceNearestReefFace::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(GetTarget());
+        if (info.has_value())
+        {
+            auto targetpose = get<1>(info.value());
+            DragonTargetFinderData type = get<0>(info.value());
+
+            chassisMovement.yawAngle = (type == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
+
+            return chassisMovement.yawAngle;
+        }
+    }
+
+    return units::angle::degree_t(0);
 }

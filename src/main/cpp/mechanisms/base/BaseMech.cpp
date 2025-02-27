@@ -14,9 +14,9 @@
 //====================================================================================================================================================
 
 // C++ Includes
+#include <iostream>
 #include <memory>
 #include <string>
-#include <iostream>
 
 // FRC includes
 #include "frc/Filesystem.h"
@@ -24,7 +24,7 @@
 // Team 302 includes
 #include "mechanisms/base/BaseMech.h"
 #include "mechanisms/MechanismTypes.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 #include "units/time.h"

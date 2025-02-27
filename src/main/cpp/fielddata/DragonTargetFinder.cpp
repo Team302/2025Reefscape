@@ -23,11 +23,13 @@
 #include "fielddata/CoralStationHelper.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "fielddata/FieldConstants.h"
+#include "fielddata/FieldElementCalculator.h"
 #include "fielddata/ReefHelper.h"
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Rotation3d.h"
 #include "units/angle.h"
 #include "utils/FMSData.h"
+#include "vision/DragonVisionStructLogger.h"
 
 using frc::Pose2d;
 using frc::Pose3d;
@@ -66,24 +68,31 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (taginfo.has_value())
         {
             auto tag = taginfo.value();
-            auto tagpose{fieldconst->GetAprilTagPose(tag).ToPose2d()};
+            auto tagpose{fieldconst->GetAprilTagPose(tag)};
+            auto visTagPose{m_vision->GetAprilTagPose(tag)};
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
-                auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::REEF);
-                if (visiondata.has_value())
-                {
-                    auto visiontagpose = GetVisonPose(visiondata.value());
-                    if (visiontagpose.Translation().Distance(tagpose.Translation()) < 1_m)
-                    {
-                        return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose);
-                    }
-                }
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
+                // TODO: Reevaluate vision pose
+                // if (visTagPose.has_value())
+                // {
+                //     return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
+                // }
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
-                // TODO:  implement vision when we have reef machine learning
+                // TODO:  Update when we have reef machine learning
+                // TODO: Reevaluate vision pose
+                // Have a vision pose of the tag, calculate the offset to the reef branch
+                // if (visTagPose.has_value())
+                // {
+                //     FieldElementCalculator fc;
+                //     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
+                //     return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                // }
+
+                // If no vision, then just use odometry based pose
                 auto leftbranch = ReefHelper::GetInstance()->GetNearestLeftReefBranch(tag);
                 if (leftbranch.has_value())
                 {
@@ -93,7 +102,17 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             }
             else // right branch
             {
-                // TODO:  implement vision when we have reef machine learning
+                // TODO:  Update when we have reef machine learning
+                // TODO: Reevaluate vision pose
+                //  Have a vision pose of the tag, calculate the offset to the reef branch
+                //  if (visTagPose.has_value())
+                //  {
+                //      FieldElementCalculator fc;
+                //      auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK);
+                //      return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                //  }
+
+                // If no vision, then just use odometry based pose
                 auto rightbranch = ReefHelper::GetInstance()->GetNearestRightReefBranch(tag);
                 if (rightbranch.has_value())
                 {
@@ -126,20 +145,20 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (taginfo.has_value())
         {
             auto tag = taginfo.value();
-            auto tagpose{fieldconst->GetAprilTagPose(tag).ToPose2d()};
+            auto tagpose{fieldconst->GetAprilTagPose(tag)};
             if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE)
             {
                 auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::CORAL_STATION);
                 if (visiondata.has_value())
                 {
                     auto visiontagpose = GetVisonPose(visiondata.value());
-                    if (visiontagpose.Translation().Distance(tagpose.Translation()) < 1_m)
+                    if (visiontagpose.Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
                     {
                         return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose);
                     }
                 }
 
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)
             {
@@ -209,7 +228,7 @@ std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(Drago
     }
     else if (item == DragonVision::VISION_ELEMENT::ALGAE)
     {
-        return std::nullopt; // TODO JW come back to this one
+        return std::nullopt; // TODO JW come back to this one when we have machine learning
     }
     else if (item == DragonVision::VISION_ELEMENT::BARGE)
     {
@@ -227,7 +246,7 @@ std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(Drago
     return std::nullopt;
 }
 
-frc::Pose2d DragonTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMENT item)
+frc::Pose3d DragonTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMENT item)
 {
     auto aprilTag = GetAprilTag(item);
     if (aprilTag.has_value())
@@ -235,7 +254,7 @@ frc::Pose2d DragonTargetFinder::GetAprilTagPose(DragonVision::VISION_ELEMENT ite
         auto pose = DragonVision::GetAprilTagLayout().GetTagPose(aprilTag.value());
         if (pose)
         {
-            return pose.value().ToPose2d();
+            return pose.value();
         }
     }
     return {};

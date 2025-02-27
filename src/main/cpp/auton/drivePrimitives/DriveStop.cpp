@@ -31,7 +31,7 @@
 #include "chassis/ChassisMovement.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
-#include "utils/logging/Logger.h"
+#include "utils/logging/debug/Logger.h"
 
 // Third Party Includes
 

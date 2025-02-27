@@ -24,13 +24,14 @@
 #include "units/angular_acceleration.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/DataLogManager.h"
-// #include "wpi/DataLog.h"
+#include "frc/Timer.h"
 
 // Team 302 includes
 #include "chassis/states/DriveToNote.h"
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/HoldDrive.h"
 #include "chassis/states/RobotDrive.h"
+#include "chassis/states/PolarDrive.h"
 #include "chassis/states/StopDrive.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/states/IgnoreHeading.h"
@@ -41,13 +42,18 @@
 #include "chassis/states/FaceReefCenter.h"
 #include "chassis/states/FaceNearestReefFace.h"
 #include "chassis/states/FaceNearestCoralStation.h"
+#include "chassis/states/DriveToCoralStation.h"
+#include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
-#include "utils/logging/Logger.h"
+#include "utils/DragonPower.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
+#include "chassis/states/DriveToLeftReefBranch.h"
 
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
+#include <ctre/phoenix6/StatusSignal.hpp>
 
 using std::map;
 using std::string;
@@ -82,10 +88,10 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_track(wheelTrack),
                                                                             m_maxSpeed(maxSpeed),
                                                                             m_wheelDiameter(wheelDiameter),
-                                                                            m_frontLeftLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_frontRightLocation(units::length::inch_t(22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
-                                                                            m_backLeftLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(22.5 / 2.0)),
-                                                                            m_backRightLocation(units::length::inch_t(-22.5 / 2.0), units::length::inch_t(-22.5 / 2.0)),
+                                                                            m_frontLeftLocation(wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_frontRightLocation(wheelBase / 2.0, -wheelTrack / 2.0),
+                                                                            m_backLeftLocation(-wheelBase / 2.0, wheelTrack / 2.0),
+                                                                            m_backRightLocation(-wheelBase / 2.0, -wheelTrack / 2.0),
                                                                             m_kinematics(m_frontLeftLocation,
                                                                                          m_frontRightLocation,
                                                                                          m_backLeftLocation,
@@ -93,8 +99,7 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                                             m_swervePoseEstimator(nullptr),
                                                                             m_storedYaw(units::angle::degree_t(0.0)),
                                                                             m_targetHeading(units::angle::degree_t(0.0)),
-                                                                            m_networkTableName(networkTableName),
-                                                                            m_vision(DragonVision::GetDragonVision())
+                                                                            m_networkTableName(networkTableName)
 {
     InitStates();
     ZeroAlignSwerveModules();
@@ -102,8 +107,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     ResetPose(frc::Pose2d());
     SetStoredHeading(units::angle::degree_t(0.0));
     m_maxSpeed = m_frontLeft->GetMaxSpeed();
-    m_velocityTimer.Reset();
     m_radius = m_frontLeftLocation.Norm();
+
+    ctre::phoenix6::BaseStatusSignal::SetUpdateFrequencyForAll(100_Hz, m_pigeon->GetYaw(), m_pigeon->GetPitch(), m_pigeon->GetRoll(), m_pigeon->GetAccelerationX(), m_pigeon->GetAccelerationY());
 
     m_swervePoseEstimator = new DragonSwervePoseEstimator(m_kinematics,
                                                           Rotation2d(),
@@ -113,9 +119,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                                                            SwerveModulePosition()},
                                                           Pose2d());
 
-    m_robotConfig.mass = GetMass();
-    m_robotConfig.MOI = GetMomenOfInertia();
-    m_robotConfig.moduleConfig = frontLeft->GetModuleConfig();
+    m_robotConfig = pathplanner::RobotConfig(GetMass(), GetMomenOfInertia(),
+                                             frontLeft->GetModuleConfig(), GetTrack());
+
     std::vector<frc::Translation2d> moduleLocs;
     moduleLocs.emplace_back(GetFrontLeftOffset());
     moduleLocs.emplace_back(GetFrontRightOffset());
@@ -124,6 +130,9 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
     m_robotConfig.numModules = moduleLocs.size();
     m_robotConfig.moduleLocations = moduleLocs;
     m_robotConfig.isHolonomic = true;
+    // TO DO Understand if we need these
+    // m_robotConfig.maxTorqueFriction = 50_Nm;
+    // m_robotConfig.wheelFrictionForce = 20_N;
 }
 
 //==================================================================================
@@ -133,11 +142,14 @@ void SwerveChassis::InitStates()
     auto trajectoryDrivePathPlanner = new TrajectoryDrivePathPlanner(m_robotDrive);
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::POLAR_DRIVE] = new PolarDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::HOLD_DRIVE] = new HoldDrive();
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER] = new TrajectoryDrivePathPlanner(m_robotDrive);
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_NOTE] = new DriveToNote(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
@@ -162,12 +174,11 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
+    UpdateOdometry();
+
     m_drive = moveInfo.chassisSpeeds.vx;
     m_steer = moveInfo.chassisSpeeds.vy;
     m_rotate = moveInfo.chassisSpeeds.omega;
-
-    LogInformation();
-
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
@@ -177,16 +188,14 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
         m_rotatingLatch = false;
     }
 
-    if (m_rotatingLatch)
-    {
-        SetStoredHeading(GetYaw());
-    }
-
     m_currentOrientationState = GetHeadingState(moveInfo);
     if (m_currentOrientationState != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), m_currentOrientationState->GetHeadingOption());
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
+        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT]);
+        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT]);
+        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK]);
+        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK]);
     }
     else
     {
@@ -197,19 +206,17 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     if (m_currentDriveState != nullptr)
     {
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
-
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK], GetInertialVelocity(moveInfo.chassisSpeeds.vx, moveInfo.chassisSpeeds.vy), units::degrees_per_second_t(GetRotationRateDegreesPerSecond()), m_radius);
     }
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), string("NONE"));
     }
 
-    m_rotate = moveInfo.chassisSpeeds.omega;
-    UpdateOdometry();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
+
+    // m_rotate = moveInfo.chassisSpeeds.omega TO DO this is in place for Data Logging, need to create dataLog method where we pass moveInfo to it and it handels the data logging variables
 }
 
 //==================================================================================
@@ -289,7 +296,13 @@ Pose2d SwerveChassis::GetPose() const
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
 {
-    return m_pigeon->GetYaw().WaitForUpdate(100_ms).Refresh().GetValue();
+    return m_swervePoseEstimator->GetPose().Rotation().Degrees();
+}
+
+//==================================================================================
+units::angle::degree_t SwerveChassis::GetRawYaw() const
+{
+    return m_pigeon->GetYaw().Refresh().GetValue();
 }
 
 //==================================================================================
@@ -355,7 +368,6 @@ void SwerveChassis::LogSwerveEncoderData(SwerveChassis::SWERVE_MODULES swerveMod
 void SwerveChassis::ResetPose(const Pose2d &pose)
 {
     ZeroAlignSwerveModules();
-    // Rotation2d rot2d{pose.Rotation().Degrees()};
     SetStoredHeading(pose.Rotation().Degrees());
 
     if (m_swervePoseEstimator != nullptr)
@@ -366,7 +378,7 @@ void SwerveChassis::ResetPose(const Pose2d &pose)
 //=================================================================================
 void SwerveChassis::SetYaw(units::angle::degree_t newYaw)
 {
-    m_pigeon->SetYaw(newYaw, units::time::second_t(0.1));
+    m_pigeon->SetYaw(newYaw);
     SetStoredHeading(newYaw);
 }
 
@@ -412,39 +424,6 @@ units::angular_velocity::radians_per_second_t SwerveChassis::GetMaxAngularSpeed(
 }
 
 //==================================================================================
-units::velocity::meters_per_second_t SwerveChassis::GetInertialVelocity(units::velocity::meters_per_second_t xVelocityInput, units::velocity::meters_per_second_t yVelocityInput)
-{
-    units::acceleration::meters_per_second_squared_t accelerationX = m_pigeon->GetAccelerationX().GetValue();
-    units::acceleration::meters_per_second_squared_t accelerationY = m_pigeon->GetAccelerationY().GetValue();
-
-    units::time::second_t deltaTime = m_velocityTimer.Get();
-
-    m_velocityTimer.Reset();
-    m_velocityTimer.Start();
-
-    bool noInput = (units::math::abs(xVelocityInput) < m_velocityThresold) && (units::math::abs(yVelocityInput) < m_velocityThresold);
-
-    // If both accelerations are below the threshold, set velocity to 0
-    if (((units::math::abs(accelerationX) < m_accelerationThreshold) ||
-         (units::math::abs(accelerationY) < m_accelerationThreshold)) &&
-        noInput)
-    {
-        m_currVelocity = {0_mps, 0_mps};
-    }
-    else
-    {
-        m_currVelocity.x += accelerationX * deltaTime;
-        m_currVelocity.y += accelerationY * deltaTime;
-    }
-
-    // Calculate the magnitude of the accumulated velocity vector
-    units::velocity::meters_per_second_t velocityMagnitude = units::velocity::meters_per_second_t{std::sqrt(std::pow(m_currVelocity.x.to<double>(), 2) + std::pow(m_currVelocity.y.to<double>(), 2))};
-
-    // Return the magnitude of the velocity
-    return velocityMagnitude;
-}
-
-//==================================================================================
 void SwerveChassis::LogInformation()
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Vx"), m_drive.to<double>());
@@ -454,20 +433,21 @@ void SwerveChassis::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current x position"), pose.X().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current y position"), pose.Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current rotation position"), pose.Rotation().Degrees().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
 }
 
-void SwerveChassis::DataLog()
+void SwerveChassis::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
+    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
-    LogDoubleData(DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
 
     frc::ChassisSpeeds targetSpeed;
     targetSpeed.vx = m_drive;
     targetSpeed.vy = m_steer;
     targetSpeed.omega = m_rotate;
-    LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS, targetSpeed);
+    LogChassisSpeedsData(timestamp, DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS, targetSpeed);
 
     auto currFrontLeftState = m_frontLeft->GetState();
     auto currFrontRightState = m_frontRight->GetState();
@@ -475,28 +455,93 @@ void SwerveChassis::DataLog()
     auto currBackRightState = m_backRight->GetState();
     wpi::array<frc::SwerveModuleState, 4> states = {currFrontLeftState, currFrontRightState, currBackLeftState, currBackRightState};
     auto currentSpeed = m_kinematics.ToChassisSpeeds(states);
-    LogChassisSpeedsData(DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS, currentSpeed);
+    LogChassisSpeedsData(timestamp, DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS, currentSpeed);
 
     auto optFrontLeftState = m_frontLeft->GetOptimizedState();
     auto optFrontRightState = m_frontRight->GetOptimizedState();
     auto optBackLeftState = m_backLeft->GetOptimizedState();
     auto optBackRightState = m_backRight->GetOptimizedState();
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE, optFrontLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE, optBackLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE, optFrontRightState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE, optBackRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE, optFrontLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE, optBackLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE, optFrontRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE, optBackRightState);
 
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE, currFrontLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE, currBackLeftState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE, currFrontRightState);
-    LogSwerveModuleStateData(DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE, currBackRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE, currFrontLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE, currBackLeftState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE, currFrontRightState);
+    LogSwerveModuleStateData(timestamp, DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE, currBackRightState);
 
     if (m_currentDriveState != nullptr)
     {
-        LogStringData(DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE, m_currentDriveState->GetDriveStateName());
+        LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE, m_currentDriveState->GetDriveStateName());
     }
     if (m_currentOrientationState != nullptr)
     {
-        LogStringData(DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
+        LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE, m_currentOrientationState->GetHeadingStateName());
     }
+
+    auto currTime = m_powerTimer.Get();
+
+    auto leftFrontSteerPower = m_frontLeft->CalcSteerPowerEnergy(currTime);
+    auto power = get<0>(leftFrontSteerPower);
+    auto energy = get<1>(leftFrontSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY, energy);
+
+    auto leftFrontDrivePower = m_frontLeft->CalcDrivePowerEnergy(currTime);
+    power = get<0>(leftFrontDrivePower);
+    energy = get<1>(leftFrontDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY, energy);
+
+    auto leftBackSteerPower = m_backLeft->CalcSteerPowerEnergy(currTime);
+    power = get<0>(leftBackSteerPower);
+    energy = get<1>(leftBackSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY, energy);
+
+    auto leftBackDrivePower = m_backLeft->CalcDrivePowerEnergy(currTime);
+    power = get<0>(leftBackDrivePower);
+    energy = get<1>(leftBackDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY, energy);
+
+    auto rightFrontSteerPower = m_frontRight->CalcSteerPowerEnergy(currTime);
+    power = get<0>(rightFrontSteerPower);
+    energy = get<1>(rightFrontSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY, energy);
+
+    auto rightFrontDrivePower = m_frontRight->CalcDrivePowerEnergy(currTime);
+    power = get<0>(rightFrontDrivePower);
+    energy = get<1>(rightFrontDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY, energy);
+
+    auto rightBackSteerPower = m_backRight->CalcSteerPowerEnergy(currTime);
+    power = get<0>(rightBackSteerPower);
+    energy = get<1>(rightBackSteerPower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY, energy);
+
+    auto rightBackDrivePower = m_backRight->CalcDrivePowerEnergy(currTime);
+    power = get<0>(rightBackDrivePower);
+    energy = get<1>(rightBackDrivePower);
+    m_totalEnergy += energy;
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER, power);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY, energy);
+
+    m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY, m_totalEnergy);
+    LogDoubleData(timestamp, DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS, m_totalWattHours);
+
+    m_powerTimer.Reset();
+    m_powerTimer.Start();
 }
