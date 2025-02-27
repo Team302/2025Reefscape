@@ -349,7 +349,11 @@ std::optional<VisionPose> DragonVision::GetRobotPosition()
 	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 	for (auto cam : cameras)
 	{
-		return cam->EstimatePoseOdometryLimelight(false); // false since megatag1
+		auto pose = cam->EstimatePoseOdometryLimelight(false); // false megatag1
+		if (pose.has_value())								   // if we have a valid pose, return it
+		{
+			return pose;
+		}
 	}
 
 	// if we aren't able to calculate our pose from vision, return a null optional
