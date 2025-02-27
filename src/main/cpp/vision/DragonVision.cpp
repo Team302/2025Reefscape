@@ -59,7 +59,6 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 
 bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier)
 {
-	bool isHealthy = false;
 	auto camera = GetCameras(identifier);
 	if (camera != nullptr)
 	{
@@ -566,9 +565,10 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 	std::vector<DragonLimelight *> validCameras;
 	for (auto it = m_dragonLimelightMap.begin(); it != m_dragonLimelightMap.end(); ++it)
 	{
+		bool addCam = false;
+		auto cam = (*it).second;
 		if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
 		{
-			auto cam = (*it).second;
 			if (cam->HealthCheck())
 			{
 				validCameras.emplace_back(cam);
@@ -577,8 +577,7 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 		else
 		{
 
-			auto addCam = (*it).first == usage;
-			auto cam = (*it).second;
+			addCam = (*it).first == usage;
 			if (!addCam)
 			{
 				if ((*it).first == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
@@ -594,13 +593,13 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 					}
 				}
 			}
+		}
 
-			if (addCam)
+		if (addCam)
+		{
+			if (cam->HealthCheck())
 			{
-				if (cam->HealthCheck())
-				{
-					validCameras.emplace_back(cam);
-				}
+				validCameras.emplace_back(cam);
 			}
 		}
 	}
