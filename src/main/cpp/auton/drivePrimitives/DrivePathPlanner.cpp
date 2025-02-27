@@ -230,11 +230,22 @@ bool DrivePathPlanner::IsDone()
         return true;
     }
 
+    if (m_isVisionDrive)
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", m_driveToObject->GetDriveStateName(), m_driveToObject->IsDone());
+        return m_driveToObject->IsDone();
+    }
+
     if (m_checkForDriveToUpdate && !m_isVisionDrive)
     {
         CheckForDriveTo();
     }
 
+    auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
+    if (trajDrivePathPlanner != nullptr && m_driveToObject == nullptr)
+    {
+        return trajDrivePathPlanner->IsDone();
+    }
     return false; // TODO: Add logic for IsDone() from TrajectoryDrivePathPlanner
 }
 

@@ -991,7 +991,6 @@ void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 void DragonTale::SetCurrentState(int state, bool run)
 {
 	StateMgr::SetCurrentState(state, run);
-	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void DragonTale::RunCommonTasks()

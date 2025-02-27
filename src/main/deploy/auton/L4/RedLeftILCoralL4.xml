@@ -9,7 +9,6 @@ choreoname = "BlueLeftInside_I"/>
 choreoname = "BlueLeftInside_I"
 time = "2.5">
 <zone filename = "RedReefDriveToLeft.xml"/>
-<!-- <zone filename = "RedReefPlacerZones.xml"/> -->
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -24,7 +23,6 @@ time = "4.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "5.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
@@ -40,13 +38,12 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_K2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "4.0">
+time = "2.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 <!-- </primitive> -->
 
 <primitive id = "DRIVE_STOP_MECH"
-taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "5.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"

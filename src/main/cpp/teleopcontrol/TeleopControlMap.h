@@ -169,7 +169,8 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::INTAKE, driverLBumper},
-    {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
+    // needs to be adjusted for when we have an intake
+    {TeleopControlFunctions::SLOW_MODE, driverLTriggerPressed},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
@@ -177,7 +178,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::L2_SCORING_POSITION, copilotAButton},
     {TeleopControlFunctions::L3_SCORING_POSITION, copilotXButton},
     {TeleopControlFunctions::L4_SCORING_POSITION, copilotYButton},
-    {TeleopControlFunctions::ALGAE_INTAKE, copilotLBumper},
+    {TeleopControlFunctions::ALGAE_INTAKE, copilotLTriggerPressed},
     {TeleopControlFunctions::SCORE, copilotRBumper},
     {TeleopControlFunctions::SCORING_MODE, copilotSelectButton},
     {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
