@@ -43,15 +43,6 @@ ManualClimbState::ManualClimbState(std::string stateName,
 void ManualClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Init"));
-	m_manualTarget = m_ClimberTarget;
-	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_ClimberTarget)
-	{
-		m_mechanism->UpdateTargetClimberPositionDegreeUp(m_ClimberTarget);
-	}
-	else
-	{
-		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	}
 }
 
 void ManualClimbState::InitPRACTICE_BOT9999()
@@ -66,21 +57,11 @@ void ManualClimbState::InitCOMP_BOT302()
 
 void ManualClimbState::Run()
 {
-	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ManualClimbState"), string("Run"));
-	// units::angle::turn_t TargetChange = units::angle::turn_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
-	// m_manualTarget += TargetChange;
-
-	// if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_manualTarget)
-	// {
-	// 	m_mechanism->UpdateTargetClimberPositionDegreeUp(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
-	// }
-	// else
-	// {
-	// 	m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
-	// }
 	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
 	if (abs(manualClimberPercent) > 0.1)
 		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent);
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB_DOWN))
+		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 	else
 		m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
 }
