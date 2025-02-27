@@ -230,6 +230,7 @@ bool DrivePathPlanner::IsDone()
 
     if (m_isVisionDrive)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", m_driveToObject->GetDriveStateName(), m_driveToObject->IsDone());
         return m_driveToObject->IsDone();
     }
 
