@@ -118,11 +118,9 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
         auto megaTag1Position = vision->GetRobotPosition(); // Megatag1
         if (megaTag1Position.has_value())
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PoseEst", std::string("MegaTag1 yaw"), megaTag1Position.value().estimatedPose.Rotation().Angle().value() * 2 * M_PI / 360.0);
             auto visionpose = vision->CalcVisionPose();
             if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "PoseEst", std::string("MegaTag2 yaw"), visionpose.value().Rotation().Degrees().value());
                 ResetPose(visionpose.value());
                 // ResetPosition(visionpose.value());
             }
@@ -137,6 +135,15 @@ frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
 {
     m_poseEstimator.ResetPose(pose);
+
+    // Added the following block to match what was done in 2024
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+    if (chassis != nullptr)
+    {
+        chassis->SetYaw(pose.Rotation().Degrees());
+        chassis->SetStoredHeading(pose.Rotation().Degrees());
+    }
+
     for (auto estimator : m_visionPoseEstimators)
     {
         estimator->SetRobotPose(pose);
