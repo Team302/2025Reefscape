@@ -999,6 +999,7 @@ void DragonTale::RunCommonTasks()
 	SetSensorFailSafe();
 	UpdateTarget();
 	IsElevatorInSync();
+	SetAlgaeMotor();
 	Cyclic();
 
 	// TODO: Remove this logging once we have datalogging and have both robots in a swell condition :)
@@ -1232,4 +1233,15 @@ void DragonTale::IsElevatorInSync()
 		}
 	}
 	m_elevatorRemedialAction = false;
+}
+
+void DragonTale::SetAlgaeMotor()
+{
+	if (GetAlgaeSensorState() || GetManualMode())
+	{
+		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
+			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
+		else
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.35);
+	}
 }
