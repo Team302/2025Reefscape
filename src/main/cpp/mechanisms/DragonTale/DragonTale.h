@@ -152,7 +152,7 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
 	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
-	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
+	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
@@ -218,10 +218,10 @@ private:
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(29.0);
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(13.5);
-	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(-7.0);
-	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(-7.0);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(11.0);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(4.0);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(48.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(48.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
@@ -252,6 +252,8 @@ private:
 	void InitializeTalonFXSAlgaeCOMP_BOT302();
 
 	void IsElevatorInSync();
+
+	void SetAlgaeMotor();
 
 	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};

@@ -69,7 +69,9 @@ public:
         MANUAL_OFF,
         MANUAL_IN,
         MANUAL_OUT,
-        FAILED_INTAKE_SENSOR
+        FAILED_INTAKE_SENSOR,
+        ALGAE_HIGH,
+        ALGAE_LOW
 
     };
 };

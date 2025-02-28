@@ -182,8 +182,10 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::SCORE, copilotRBumper},
     {TeleopControlFunctions::SCORING_MODE, copilotSelectButton},
     {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
-    {TeleopControlFunctions::MANUAL_ON, copilotDPad0},
-    {TeleopControlFunctions::MANUAL_OFF, copilotDPad180},
+    {TeleopControlFunctions::MANUAL_ON, copilotLStickPressed},
+    {TeleopControlFunctions::MANUAL_OFF, copilotRStickPressed},
+    {TeleopControlFunctions::ALGAE_HIGH, copilotDPad0},
+    {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };

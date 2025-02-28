@@ -54,13 +54,7 @@ void ScoreCoralState::Run()
 		else
 			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	}
-	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
-	{
-		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-			m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(0.05);
-		else
-			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.1);
-	}
+
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }
 

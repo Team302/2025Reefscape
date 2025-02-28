@@ -231,10 +231,10 @@ bool Logger::ShouldDisplayIt(LOGGER_LEVEL level, const string &group, const stri
 void Logger::PutLoggingSelectionsOnDashboard()
 {
     // set up option menu
-    // m_optionChooser.SetDefaultOption("EAT_IT", LOGGER_OPTION::EAT_IT);
-    // m_optionChooser.AddOption("DASHBOARD", LOGGER_OPTION::DASHBOARD);
-    m_optionChooser.SetDefaultOption("DASHBOARD", LOGGER_OPTION::DASHBOARD);
-    m_optionChooser.AddOption("EAT_IT", LOGGER_OPTION::EAT_IT);
+    m_optionChooser.SetDefaultOption("EAT_IT", LOGGER_OPTION::EAT_IT);
+    m_optionChooser.AddOption("DASHBOARD", LOGGER_OPTION::DASHBOARD);
+    // m_optionChooser.SetDefaultOption("DASHBOARD", LOGGER_OPTION::DASHBOARD);
+    // m_optionChooser.AddOption("EAT_IT", LOGGER_OPTION::EAT_IT);
     m_optionChooser.AddOption("CONSOLE", LOGGER_OPTION::CONSOLE);
     frc::SmartDashboard::PutData("Logging Options", &m_optionChooser);
 
@@ -368,7 +368,7 @@ void Logger::SetLoggingLevel(
     m_level = level;
 }
 
-Logger::Logger() : m_option(LOGGER_OPTION::DASHBOARD),
+Logger::Logger() : m_option(LOGGER_OPTION::EAT_IT),
                    m_level(LOGGER_LEVEL::PRINT),
                    m_alreadyDisplayed(),
                    m_cyclingCounter(0),
