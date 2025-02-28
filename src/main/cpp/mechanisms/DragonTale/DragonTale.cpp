@@ -1118,39 +1118,34 @@ void DragonTale::SetSensorFailSafe()
 
 void DragonTale::SetAlgaeReefPosition()
 {
-	// bool isBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+	bool isBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
 
-	// units::length::inch_t algeHeight = isBlue ? m_grabAlgaeLow : m_grabAlgaeHigh;
-	// units::angle::degree_t algeAngle = isBlue ? m_grabAlgaeLowAngle : m_grabAlgaeHighAngle;
-	// // Adjust the angle to the nearest 60-degree increment
-	// auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
-	// if (info)
-	// {
-	// 	frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
+	units::length::inch_t algeHeight = isBlue ? m_grabAlgaeLow : m_grabAlgaeHigh;
+	units::angle::degree_t algeAngle = isBlue ? m_grabAlgaeLowAngle : m_grabAlgaeHighAngle;
+	// Adjust the angle to the nearest 60-degree increment
+	auto info = (DragonTargetFinder::GetInstance()->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE));
+	if (info)
+	{
+		frc::Pose2d algaePose = std::get<frc::Pose2d>(info.value());
 
-	// 	int closestMultiple = static_cast<int>((algaePose.Rotation().Degrees() + 180.5_deg).value());
+		int closestMultiple = static_cast<int>((algaePose.Rotation().Degrees() + 180.5_deg).value());
 
-	// 	int multipleNumber = closestMultiple / 60;
+		int multipleNumber = closestMultiple / 60;
 
-	// 	if (multipleNumber % 2 == 0)
-	// 	{
-	// 		algeHeight = isBlue ? m_grabAlgaeHigh : m_grabAlgaeLow;
-	// 		algeAngle = isBlue ? m_grabAlgaeHighAngle : m_grabAlgaeLowAngle;
-	// 	}
+		if (multipleNumber % 2 == 0)
+		{
+			algeHeight = isBlue ? m_grabAlgaeHigh : m_grabAlgaeLow;
+			algeAngle = isBlue ? m_grabAlgaeHighAngle : m_grabAlgaeLowAngle;
+		}
+	}
 
-	// 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "algeHeight", algeHeight.value());
-	// 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "ClosestMultiple", closestMultiple);
-	// 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "multipleNumber", multipleNumber);
-	// 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Previous algeHeight", m_prevAlgaeHeight.value());
-	// }
+	if (m_prevAlgaeHeight != algeHeight)
+	{
+		SetElevatorTarget(algeHeight);
+		SetArmTarget(algeAngle);
+	}
 
-	// if (m_prevAlgaeHeight != algeHeight)
-	// {
-	// 	SetElevatorTarget(algeHeight);
-	// 	SetArmTarget(algeAngle);
-	// }
-
-	// m_prevAlgaeHeight = algeHeight;
+	m_prevAlgaeHeight = algeHeight;
 
 	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_HIGH))
 	{
