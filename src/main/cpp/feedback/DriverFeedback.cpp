@@ -146,7 +146,9 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
+        auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
         if (taleMgr != nullptr)
         {
 
@@ -160,7 +162,8 @@ void DriverFeedback::UpdateDiagnosticLEDs()
                 bool coralInSensor = taleMgr->GetCoralInSensorState();
                 bool coralOutSensor = taleMgr->GetCoralOutSensorState();
                 bool algaeSensor = taleMgr->GetAlgaeSensorState();
-                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+                bool intakeSensor = intakeMgr->GetIntakeSensorState();
+                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, questStatus, intakeSensor, ll1Status, ll2Status, pigeonfaults);
             }
         }
     }
