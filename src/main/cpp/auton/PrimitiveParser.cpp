@@ -23,8 +23,6 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "frc/Filesystem.h"
 
-// #include "mechanisms/ClimberManager/generated/ClimberManagerGen.h"
-// #include "mechanisms/MechanismTypes.h"
 #include "utils/logging/debug/Logger.h"
 
 #include <pugixml/pugixml.hpp>
