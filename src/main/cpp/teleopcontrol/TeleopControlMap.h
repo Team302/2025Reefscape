@@ -168,9 +168,9 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
     {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
-    {TeleopControlFunctions::INTAKE, driverLBumper},
-    // needs to be adjusted for when we have an intake
-    {TeleopControlFunctions::SLOW_MODE, driverLTriggerPressed},
+    {TeleopControlFunctions::EXPEL, driverLBumper},
+    {TeleopControlFunctions::INTAKE, driverLTriggerPressed},
+    {TeleopControlFunctions::SLOW_MODE, driverRTriggerPressed},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
