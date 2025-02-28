@@ -71,7 +71,7 @@ model {
             }
 
             //binaries.all {
-            //    cppCompiler.args << ''
+            //    cppCompiler.args << '-ftime-report'
             //}
 
             // Set deploy task to deploy this component

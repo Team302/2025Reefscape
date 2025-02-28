@@ -16,7 +16,6 @@
 #include <string>
 
 // FRC Includes
-#include "frc/Filesystem.h"
 #include "frc/trajectory/TrajectoryUtil.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
@@ -36,7 +35,6 @@
 #include "utils/logging/debug/Logger.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/SwerveChassis.h"
-#include "chassis/SwerveModule.h"
 
 // Thirdparty includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"

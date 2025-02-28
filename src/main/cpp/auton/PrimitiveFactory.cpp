@@ -25,7 +25,6 @@
 #include "auton/drivePrimitives/VisionDrivePrimitive.h"
 #include "auton/PrimitiveEnums.h"
 #include "auton/PrimitiveFactory.h"
-#include "auton/PrimitiveParser.h"
 
 PrimitiveFactory *PrimitiveFactory::m_instance = nullptr;
 
