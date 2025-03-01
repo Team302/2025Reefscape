@@ -1243,7 +1243,7 @@ void DragonTale::IsElevatorInSync()
 
 void DragonTale::SetAlgaeMotor()
 {
-	if (GetAlgaeSensorState() || GetManualMode())
+	if ((GetAlgaeSensorState() || GetManualMode()) && GetCurrentState() != STATE_SCORE_ALGAE)
 	{
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
