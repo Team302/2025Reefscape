@@ -53,13 +53,13 @@ void OffState::Init()
 void OffState::InitPRACTICE_BOT9999()
 {
 	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
-	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void OffState::InitCOMP_BOT302()
 {
 	m_mechanism->UpdateTargetIntakePercentOutput(m_IntakeTarget);
-	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void OffState::Run()
