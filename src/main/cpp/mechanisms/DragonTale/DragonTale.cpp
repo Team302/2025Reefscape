@@ -21,7 +21,6 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "DragonTale.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 
@@ -1190,7 +1189,9 @@ void DragonTale::UpdateTarget()
 	if (abs(armInput) > m_manualControlThreshold)
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
-		SetArmTarget(GetArmAngle());
+		units::angle::degree_t armangle = GetArmAngle();
+		SetArmTarget(armangle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle", armangle.value());
 	}
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);

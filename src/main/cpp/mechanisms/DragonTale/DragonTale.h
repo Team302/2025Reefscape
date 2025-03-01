@@ -47,6 +47,8 @@
 #include "frc/geometry/Pose2d.h"
 #include "fielddata/FieldConstants.h"
 
+#include "utils/logging/debug/Logger.h"
+
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
@@ -91,6 +93,8 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
+
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -173,7 +177,11 @@ public:
 
 	void SetAlgaeReefPosition();
 
-	void SetArmTarget(units::angle::degree_t target) { m_armTarget = std::clamp(target, m_minAngle, m_maxAngle); }
+	void SetArmTarget(units::angle::degree_t target)
+	{
+		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
+	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
 	bool GetManualMode() { return m_manualMode; }

@@ -14,6 +14,7 @@
 //====================================================================================================================================================
 #include "units/time.h"
 #include "vision/DragonQuest.h"
+#include "utils/AngleUtils.h"
 
 DragonQuest *DragonQuest::m_dragonquest = nullptr;
 DragonQuest *DragonQuest::GetDragonQuest()
@@ -50,7 +51,7 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     double pitch = rotationarray[2] + m_pitchOffset;
     double yaw = rotationarray[1] + m_yawOffset;
 
-    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(-yaw)}};
+    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), AngleUtils::GetEquivAngle(units::angle::degree_t(-yaw))}};
 }
 
 units::angle::degree_t DragonQuest::GetOculusYaw()
@@ -123,16 +124,17 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    if (!m_hasreset && !IsConnected())
+    if (!m_hasreset || !IsConnected())
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
     }
     else
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_visionPose = GetEstimatedPose().ToPose2d();
+        str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+        str.m_timeStamp = units::time::second_t(GetTimeStamp());
     }
-    str.m_visionPose = GetEstimatedPose().ToPose2d();
-    str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-    str.m_timeStamp = units::time::second_t(GetTimeStamp());
+
     return str;
 }
