@@ -943,11 +943,11 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(100);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(80);
 	configs.CurrentLimits.StatorCurrentLimitEnable = true;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
@@ -1249,6 +1249,6 @@ void DragonTale::SetAlgaeMotor()
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			UpdateTargetAlgaeTalonFXSPercentOutput(0.25);
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.15);
 	}
 }
