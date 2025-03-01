@@ -77,16 +77,15 @@ public:
 		m_IntakePercentOutput.Output = percentOut;
 		m_IntakeActiveTarget = &m_IntakePercentOutput;
 	}
-	void UpdateTargetIntakePercentOutput(double percentOut, bool enableFOC)
-	{
-		m_IntakePercentOutput.Output = percentOut;
-		m_IntakePercentOutput.EnableFOC = enableFOC;
-		m_IntakeActiveTarget = &m_IntakePercentOutput;
-	}
 	void UpdateTargetExtenderPositionDegree(units::angle::turn_t position)
 	{
 		m_ExtenderPositionDegree.Position = position;
 		m_ExtenderActiveTarget = &m_ExtenderPositionDegree;
+	}
+	void UpdateTargetExtenderPercentOutput(double percentOut)
+	{
+		m_ExtenderPercentOutput.Output = percentOut;
+		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
 	}
 
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
@@ -125,13 +124,13 @@ private:
 	ControlData *m_PercentOutput;
 	ControlData *m_PositionDegree;
 
-
 	void InitializeTalonFXSIntakePRACTICE_BOT9999();
 	void InitializeTalonFXSExtenderPRACTICE_BOT9999();
 	void InitializeTalonFXSIntakeCOMP_BOT302();
 	void InitializeTalonFXSExtenderCOMP_BOT302();
 
 	ctre::phoenix6::controls::DutyCycleOut m_IntakePercentOutput{0.0};
+	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
 	ctre::phoenix6::controls::PositionVoltage m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_IntakeActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
