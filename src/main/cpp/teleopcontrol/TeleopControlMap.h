@@ -163,14 +163,14 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_CLIMB_DOWN, driverDPad180},
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
-    {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
+    {TeleopControlFunctions::POLAR_DRIVE, driverLBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
     {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
-    {TeleopControlFunctions::EXPEL, driverLBumper},
-    {TeleopControlFunctions::INTAKE, driverLTriggerPressed},
-    {TeleopControlFunctions::SLOW_MODE, driverRTriggerPressed},
+    {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
+    {TeleopControlFunctions::INTAKE, driverRTriggerPressed},
+    {TeleopControlFunctions::SLOW_MODE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
