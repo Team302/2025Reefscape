@@ -59,8 +59,9 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 void DriveToFieldElement::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
 {
     m_trajectory = trajectory;
-    if (!m_trajectory.getStates().empty())
+    if (m_trajectory.getStates().size() > m_generatedStatesThreshold)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Drive To Field Element"), "Generated States", static_cast<int>(m_trajectory.getStates().size()));
         chassisMovement.pathplannerTrajectory = m_trajectory;
         chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
         TrajectoryDrivePathPlanner::Init(chassisMovement);

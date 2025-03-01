@@ -58,4 +58,5 @@ private:
     pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     std::optional<frc::Pose2d> m_endPose = std::nullopt;
+    const unsigned int m_generatedStatesThreshold = 1;
 };
