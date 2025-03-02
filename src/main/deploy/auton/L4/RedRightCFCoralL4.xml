@@ -2,8 +2,8 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueRightInsideF"/>
+<!-- <primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueRightInsideF"/> -->
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightInsideF"

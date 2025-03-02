@@ -173,6 +173,7 @@ public:
     units::length::inch_t GetMountingYOffset() const { return m_cameraPose.Y(); }
     units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
     std::string GetCameraName() const { return m_cameraName; }
+    DRAGON_LIMELIGHT_CAMERA_IDENTIFIER GetCameraIdentifier() { return m_identifier; }
 
     void PeriodicCacheData() override;
 

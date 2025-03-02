@@ -47,6 +47,8 @@
 #include "frc/geometry/Pose2d.h"
 #include "fielddata/FieldConstants.h"
 
+#include "utils/logging/debug/Logger.h"
+
 class DragonTale : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
 {
 public:
@@ -91,6 +93,8 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
+
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -173,7 +177,11 @@ public:
 
 	void SetAlgaeReefPosition();
 
-	void SetArmTarget(units::angle::degree_t target) { m_armTarget = std::clamp(target, m_minAngle, m_maxAngle); }
+	void SetArmTarget(units::angle::degree_t target)
+	{
+		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
+	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
 	bool GetManualMode() { return m_manualMode; }
@@ -218,8 +226,8 @@ private:
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(11.0);
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(4.0);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.0);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
 	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(48.0);
 	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(48.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
