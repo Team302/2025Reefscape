@@ -124,17 +124,17 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    if (!m_hasreset || !IsConnected())
-    {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-    }
-    else
-    {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-        str.m_visionPose = GetEstimatedPose().ToPose2d();
-        str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-        str.m_timeStamp = units::time::second_t(GetTimeStamp());
-    }
-
+    // if (!m_hasreset || !IsConnected())
+    // {
+    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    // }
+    // else
+    // {
+    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    //     str.m_visionPose = GetEstimatedPose().ToPose2d();
+    //     str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+    //     str.m_timeStamp = units::time::second_t(GetTimeStamp());
+    // }
+    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
     return str;
 }
