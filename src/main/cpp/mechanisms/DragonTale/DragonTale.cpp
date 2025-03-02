@@ -21,7 +21,6 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "DragonTale.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 
@@ -944,11 +943,11 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(80);
 	configs.CurrentLimits.StatorCurrentLimitEnable = true;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
@@ -1190,7 +1189,9 @@ void DragonTale::UpdateTarget()
 	if (abs(armInput) > m_manualControlThreshold)
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
-		SetArmTarget(GetArmAngle());
+		units::angle::degree_t armangle = GetArmAngle();
+		SetArmTarget(armangle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle", armangle.value());
 	}
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
@@ -1243,11 +1244,11 @@ void DragonTale::IsElevatorInSync()
 
 void DragonTale::SetAlgaeMotor()
 {
-	if (GetAlgaeSensorState() || GetManualMode())
+	if ((GetAlgaeSensorState() || GetManualMode()) && GetCurrentState() != STATE_SCORE_ALGAE)
 	{
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			UpdateTargetAlgaeTalonFXSPercentOutput(0.35);
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.15);
 	}
 }
