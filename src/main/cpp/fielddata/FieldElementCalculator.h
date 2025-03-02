@@ -63,14 +63,14 @@ private:
     frc::Transform3d m_calcLeftStick_Comp_offset = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-5.5),
+            units::length::inch_t(-7.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick_Comp_offset = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-5.5),
+            units::length::inch_t(-7.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
