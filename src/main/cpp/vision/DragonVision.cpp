@@ -553,10 +553,12 @@ bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const
 {
 	std::vector<DragonLimelight *> validCameras;
+
 	for (auto it = m_dragonLimelightMap.begin(); it != m_dragonLimelightMap.end(); ++it)
 	{
-		auto addCam = (*it).first == usage;
 		auto cam = (*it).second;
+		auto addCam = (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH || ((*it).first == usage));
+
 		if (!addCam)
 		{
 			if ((*it).first == DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH)
