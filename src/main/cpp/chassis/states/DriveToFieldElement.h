@@ -59,4 +59,6 @@ private:
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     std::optional<frc::Pose2d> m_endPose = std::nullopt;
     const unsigned int m_generatedStatesThreshold = 1;
+    const units::length::meter_t m_switchGainsThreshold{1.5};
+    bool m_invalidTrajectory = false;
 };

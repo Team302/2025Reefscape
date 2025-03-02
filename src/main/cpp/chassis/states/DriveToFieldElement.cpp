@@ -44,6 +44,7 @@ DriveToFieldElement::DriveToFieldElement(
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
+    m_invalidTrajectory = false;
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
@@ -51,6 +52,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     // if (!IsDone()) //TODO: don't generate if you are within a certain distance to the pose
     // {
     m_trajectory = CreateTrajectory(info);
+
     InitFromTrajectory(chassisMovement, m_trajectory);
     m_currentType = get<0>(info.value());
     // }
@@ -63,7 +65,11 @@ void DriveToFieldElement::InitFromTrajectory(ChassisMovement &chassisMovement, p
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Drive To Field Element"), "Generated States", static_cast<int>(m_trajectory.getStates().size()));
         chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
+
+        if (m_endPose.has_value())
+        {
+            chassisMovement.pathnamegains = m_chassis->GetPose().Translation().Distance(m_endPose.value().Translation()) >= m_distanceThreshold ? ChassisOptionEnums::PathGainsType::LONG : ChassisOptionEnums::PathGainsType::SHORT;
+        }
         TrajectoryDrivePathPlanner::Init(chassisMovement);
     }
 }
@@ -112,13 +118,24 @@ pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElemen
         GoalEndState(0.0_mps, endPose.Rotation()), false);
 
     path->preventFlipping = true;
-
-    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    try
+    {
+        trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
+    }
+    catch (exception e)
+    {
+        m_invalidTrajectory = true;
+        trajectory = PathPlannerTrajectory();
+    }
     return trajectory;
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
+    if (m_invalidTrajectory)
+    {
+        return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
+    }
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     frc::Pose2d newEndPose = get<1>(info.value());
     auto regenerate = false;
@@ -147,7 +164,7 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
-    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
+    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
     if (chassis != nullptr)
     {

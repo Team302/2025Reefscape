@@ -285,6 +285,9 @@ private:
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 	frc::Pose2d m_robotPose;
 
+	bool m_isArmRotating = false;
+	const units::angular_velocity::degrees_per_second_t m_dpsThreshold{5.0};
+
 	// elevator diagnostics and remedial action variables
 	bool m_elevatorDesiredDirectionUp;
 	const int m_elevatorMaxFails = 12;
