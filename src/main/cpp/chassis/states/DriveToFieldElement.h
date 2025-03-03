@@ -22,7 +22,12 @@
 
 // FRC Includes
 #include "frc/geometry/Pose2d.h"
+#include "units/length.h"
 #include "units/angle.h"
+#include "units/velocity.h"
+#include "units/angular_velocity.h"
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
@@ -55,4 +60,16 @@ private:
     const unsigned int m_generatedStatesThreshold = 1;
 
     const units::inch_t m_distanceThreshold{0.25};
+
+    static constexpr units::meters_per_second_t kMaxVelocity = 1.75_mps;
+    static constexpr units::meters_per_second_squared_t kMaxAcceleration = 0.75_mps_sq;
+
+    static constexpr double kTranslationP = 2.0;
+    static constexpr double kTranslationI = 0.0;
+    static constexpr double kTranslationD = 0.0;
+
+    frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
+
+    frc::ProfiledPIDController<units::meters> m_translationPIDX{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::meters> m_translationPIDY{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
 };

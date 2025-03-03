@@ -47,24 +47,44 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
     m_currentType = get<0>(info.value());
+    m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
+    m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-    frc::Pose2d newEndPose = get<1>(info.value());
-    auto regenerate = false;
-    if (m_endPose.has_value())
+    if (m_chassis == nullptr)
     {
-        regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-    }
+        auto chassisSpeeds = chassisMovement.chassisSpeeds;
+        frc::Pose2d currentPose = m_chassis->GetPose();
 
-    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
-    {
-        m_endPose = newEndPose;
-    }
-    m_currentType = get<0>(info.value());
+        auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
+        frc::Pose2d newEndPose = get<1>(info.value());
+        auto regenerate = false;
 
+        if (m_endPose.has_value())
+        {
+            regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+        }
+
+        if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+        {
+            m_endPose = newEndPose;
+        }
+        m_currentType = get<0>(info.value());
+
+        m_translationPIDX.SetGoal(m_endPose.value().X());
+        m_translationPIDY.SetGoal(m_endPose.value().Y());
+
+        chassisSpeeds.vx = m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X());
+        chassisSpeeds.vy = m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y());
+
+        auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+        chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                                    chassisSpeeds.vy,
+                                                                                    chassisMovement.chassisSpeeds.omega,
+                                                                                    rot2d);
+    }
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
@@ -94,8 +114,7 @@ bool DriveToFieldElement::IsDone()
 {
     if (m_endPose.has_value())
     {
-        auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
-        if (chassis != nullptr)
+        if (m_chassis != nullptr)
         {
             auto currentPose = chassis->GetPose();
             auto distance = currentPose.Translation().Distance(m_endPose.value().Translation());
