@@ -25,12 +25,11 @@
 #include "fielddata/DragonTargetFinder.h"
 
 class RobotDrive;
-class TrajectoryDrivePathPlanner;
 
 class DriveToCoralStation : public DriveToFieldElement
 {
 public:
-    DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    DriveToCoralStation(RobotDrive *robotDrive);
     std::string GetDriveStateName() const override;
 
 protected:

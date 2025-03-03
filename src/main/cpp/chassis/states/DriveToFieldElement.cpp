@@ -36,9 +36,8 @@
 using namespace pathplanner;
 using namespace std;
 
-DriveToFieldElement::DriveToFieldElement(
-    RobotDrive *robotDrive,
-    TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner) : TrajectoryDrivePathPlanner(robotDrive)
+DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
+                                                                   m_robotDrive(robotDrive)
 {
 }
 
@@ -47,74 +46,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
-
-    // if (!IsDone()) //TODO: don't generate if you are within a certain distance to the pose
-    // {
-    m_trajectory = CreateTrajectory(info);
-    InitFromTrajectory(chassisMovement, m_trajectory);
     m_currentType = get<0>(info.value());
-    // }
-}
-
-void DriveToFieldElement::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
-{
-    m_trajectory = trajectory;
-    if (m_trajectory.getStates().size() > m_generatedStatesThreshold)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Drive To Field Element"), "Generated States", static_cast<int>(m_trajectory.getStates().size()));
-        chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
-        TrajectoryDrivePathPlanner::Init(chassisMovement);
-    }
-}
-
-pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
-{
-
-    pathplanner::PathPlannerTrajectory trajectory;
-
-    if (m_chassis != nullptr)
-    {
-        if (info.has_value())
-        {
-            m_endPose = std::get<frc::Pose2d>(info.value());
-            trajectory = CreateDriveToFieldElementTrajectory(m_chassis->GetPose(), m_endPose.value()); // No need to check has_value since we just set it on the previous line
-        }
-    }
-    return trajectory;
-}
-
-pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElementTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
-{
-    PathPlannerTrajectory trajectory;
-
-    auto endheading = GetModifiedHeadingValue(targetPose.Rotation().Degrees());
-    frc::Pose2d endPose = frc::Pose2d(targetPose.Translation(), endheading);
-
-    DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("target pose", endPose);
-
-    pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, endPose};
-    std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
-    shared_ptr<PathPlannerPath> path;
-
-    auto vx = m_chassis->GetChassisSpeeds().vx.value();
-    auto vy = m_chassis->GetChassisSpeeds().vy.value();
-    auto currVel = units::velocity::meters_per_second_t(pow(pow(vx, 2) + pow(vy, 2), 0.5));
-    auto rotation = m_chassis->GetPose().Rotation();
-    pathplanner::IdealStartingState startingState{currVel, rotation};
-
-    path = std::make_shared<PathPlannerPath>(
-        waypoints,
-        constraints,
-        startingState,
-        GoalEndState(0.0_mps, endPose.Rotation()), false);
-
-    path->preventFlipping = true;
-
-    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
-    return trajectory;
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
@@ -129,12 +61,11 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
     if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
     {
-        m_trajectory = CreateTrajectory(info);
-        InitFromTrajectory(chassisMovement, m_trajectory);
+        m_endPose = newEndPose;
     }
     m_currentType = get<0>(info.value());
 
-    return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
+    return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
 void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
@@ -157,4 +88,19 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
+}
+
+bool DriveToFieldElement::IsDone()
+{
+    if (m_endPose.has_value())
+    {
+        auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
+        if (chassis != nullptr)
+        {
+            auto currentPose = chassis->GetPose();
+            auto distance = currentPose.Translation().Distance(m_endPose.value().Translation());
+            return (distance < m_distanceThreshold);
+        }
+    }
+    return false;
 }

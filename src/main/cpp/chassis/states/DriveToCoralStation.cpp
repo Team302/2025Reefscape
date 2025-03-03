@@ -24,8 +24,8 @@
 
 using std::string;
 
-DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
-    : DriveToFieldElement(robotDrive, trajectoryDrivePathPlanner)
+DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
 }
 

@@ -136,7 +136,6 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
 void SwerveChassis::InitStates()
 {
     m_robotDrive = new RobotDrive(this);
-    auto trajectoryDrivePathPlanner = new TrajectoryDrivePathPlanner(m_robotDrive);
 
     m_driveStateMap[ChassisOptionEnums::DriveStateType::FIELD_DRIVE] = new FieldDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::POLAR_DRIVE] = new PolarDrive(m_robotDrive);
@@ -144,9 +143,9 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::ROBOT_DRIVE] = m_robotDrive;
     m_driveStateMap[ChassisOptionEnums::DriveStateType::STOP_DRIVE] = new StopDrive(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER] = new TrajectoryDrivePathPlanner(m_robotDrive);
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive, trajectoryDrivePathPlanner);
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive, trajectoryDrivePathPlanner);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();

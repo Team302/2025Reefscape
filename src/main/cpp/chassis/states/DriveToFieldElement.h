@@ -28,21 +28,16 @@
 #include "chassis/states/RobotDrive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
-#include "chassis/states/TrajectoryDrivePathPlanner.h"
 
-class DriveToFieldElement : public TrajectoryDrivePathPlanner
+class DriveToFieldElement : public RobotDrive
 {
 public:
-    DriveToFieldElement(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    DriveToFieldElement(RobotDrive *robotDrive);
 
-    pathplanner::PathPlannerTrajectory
-    CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
     void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
-    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+    bool IsDone();
 
 protected:
     virtual DragonTargetFinderTarget GetDriveToTarget() const = 0;
@@ -51,12 +46,13 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
+    RobotDrive *m_robotDrive;
+
     void InitChassisMovement(ChassisMovement &chassisMovement);
 
-    pathplanner::PathPlannerTrajectory CreateDriveToFieldElementTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
-
-    pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     std::optional<frc::Pose2d> m_endPose = std::nullopt;
     const unsigned int m_generatedStatesThreshold = 1;
+
+    const units::inch_t m_distanceThreshold{0.25};
 };

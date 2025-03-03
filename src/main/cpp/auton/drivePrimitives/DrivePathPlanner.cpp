@@ -77,7 +77,7 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 }
-TrajectoryDrivePathPlanner *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType)
+DriveToFieldElement *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType)
 {
     switch (driveToType)
     {
