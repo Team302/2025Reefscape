@@ -47,8 +47,12 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
     m_currentType = get<0>(info.value());
-    m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
-    m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
+
+    if (m_chassis != nullptr)
+    {
+        m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
+        m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
+    }
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
@@ -76,8 +80,17 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         m_translationPIDX.SetGoal(m_endPose.value().X());
         m_translationPIDY.SetGoal(m_endPose.value().Y());
 
-        chassisSpeeds.vx = m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X());
-        chassisSpeeds.vy = m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y());
+        chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X()));
+        chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y()));
+
+        auto profiledVx = m_translationPIDX.GetSetpoint().velocity;
+        auto profiledVy = m_translationPIDY.GetSetpoint().velocity;
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Profiled Vx", profiledVx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Profiled Vy", profiledVy.value());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "PID Calculated Vx", chassisSpeeds.vx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "PID Calculated Vy", chassisSpeeds.vy.value());
 
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
@@ -116,7 +129,7 @@ bool DriveToFieldElement::IsDone()
     {
         if (m_chassis != nullptr)
         {
-            auto currentPose = chassis->GetPose();
+            auto currentPose = m_chassis->GetPose();
             auto distance = currentPose.Translation().Distance(m_endPose.value().Translation());
             return (distance < m_distanceThreshold);
         }

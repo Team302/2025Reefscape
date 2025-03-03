@@ -61,8 +61,8 @@ private:
 
     const units::inch_t m_distanceThreshold{0.25};
 
-    static constexpr units::meters_per_second_t kMaxVelocity = 1.75_mps;
-    static constexpr units::meters_per_second_squared_t kMaxAcceleration = 0.75_mps_sq;
+    static constexpr units::velocity::meters_per_second_t kMaxVelocity = 1.75_mps;
+    static constexpr units::acceleration::meters_per_second_squared_t kMaxAcceleration = 0.75_mps_sq;
 
     static constexpr double kTranslationP = 2.0;
     static constexpr double kTranslationI = 0.0;
@@ -70,6 +70,6 @@ private:
 
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
-    frc::ProfiledPIDController<units::meters> m_translationPIDX{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
-    frc::ProfiledPIDController<units::meters> m_translationPIDY{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
 };
