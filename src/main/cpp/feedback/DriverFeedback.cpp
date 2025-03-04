@@ -149,7 +149,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
         auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
-        if (taleMgr != nullptr)
+        if (taleMgr != nullptr && intakeMgr != nullptr)
         {
 
             if (DragonVision::GetDragonVision() != nullptr)
