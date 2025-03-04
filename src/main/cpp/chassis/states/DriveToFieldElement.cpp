@@ -43,6 +43,7 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
+    m_invalidTrajectory = false;
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_endPose = std::nullopt;
@@ -111,7 +112,7 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
-    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
+    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
     if (chassis != nullptr)
     {

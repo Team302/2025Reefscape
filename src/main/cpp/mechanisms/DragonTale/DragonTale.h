@@ -108,13 +108,13 @@ public:
 		if (position < GetElevatorHeight())
 		{
 			m_elevatorDesiredDirectionUp = false;
-			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
+			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
 			m_elevatorDesiredDirectionUp = true;
-			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
+			m_ElevatorLeaderPositionInch.Velocity = 200_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
@@ -284,6 +284,9 @@ private:
 	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 	frc::Pose2d m_robotPose;
+
+	bool m_isArmRotating = false;
+	const units::angular_velocity::degrees_per_second_t m_dpsThreshold{5.0};
 
 	// elevator diagnostics and remedial action variables
 	bool m_elevatorDesiredDirectionUp;
