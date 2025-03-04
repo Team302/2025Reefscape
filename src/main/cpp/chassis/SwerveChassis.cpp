@@ -379,7 +379,10 @@ void SwerveChassis::ResetYaw()
 //==================================================================================
 void SwerveChassis::SetStoredHeading(units::angle::degree_t heading)
 {
-    m_storedYaw = heading;
+    if (units::math::abs(heading - m_storedYaw) > m_specifiedHeadingTolerance)
+    {
+        m_storedYaw = heading;
+    }
 }
 
 //==================================================================================

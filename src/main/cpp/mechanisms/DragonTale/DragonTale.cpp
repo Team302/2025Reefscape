@@ -1185,8 +1185,8 @@ void DragonTale::UpdateTarget()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-
-	if (abs(armInput) > m_manualControlThreshold)
+	// m_isArmRotating = units::math::abs(m_ArmAngleSensor->GetVelocity().GetValue()) > m_dpsThreshold;
+	if ((abs(armInput) > m_manualControlThreshold))
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
 		units::angle::degree_t armangle = GetArmAngle();
