@@ -2,8 +2,8 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueRightInsideF"/>
+<!-- <primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueRightInsideF"/> -->
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightInsideF"
@@ -18,12 +18,11 @@ time = "3.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_F2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "4.0">
+time = "2.0">
 <zone filename = "RedRightHumanPlayerStation.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "5.0"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
@@ -44,7 +43,6 @@ time = "3.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "5.0"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
@@ -65,6 +63,5 @@ time = "3.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "5.0"/>
 </auton>

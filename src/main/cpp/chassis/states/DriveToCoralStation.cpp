@@ -36,7 +36,7 @@ string DriveToCoralStation::GetDriveStateName() const
 
 DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE;
 }
 ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() const
 {

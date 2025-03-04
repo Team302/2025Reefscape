@@ -2,8 +2,8 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
-choreoname = "BlueLeftInside_I"/>
+<!-- <primitive id= "RESET_POSITION_PATH_PLANNER"
+choreoname = "BlueLeftInside_I"/> -->
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftInside_I"
@@ -18,7 +18,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_I2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "4.0">
+time = "2.0">
 <zone filename = "RedLeftHumanPlayerStation.xml"/>
 </primitive>
 

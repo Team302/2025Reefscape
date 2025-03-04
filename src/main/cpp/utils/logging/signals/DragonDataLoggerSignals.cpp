@@ -58,30 +58,30 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_rfSteerTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/TotalPower");
     m_rfSteerWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/WattHours");
 
-    m_rfDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/Power");
-    m_rfDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/Energy");
-    m_rfDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/TotalPower");
-    m_rfDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Steer/WattHours");
+    m_rfDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Drive/Power");
+    m_rfDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Drive/Energy");
+    m_rfDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Drive/TotalPower");
+    m_rfDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/FrontRightModule/Drive/WattHours");
 
     m_lbSteerPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/Power");
     m_lbSteerEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/Energy");
     m_lbSteerTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/TotalPower");
     m_lbSteerWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/WattHours");
 
-    m_lbDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/Power");
-    m_lbDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/Energy");
-    m_lbDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/TotalPower");
-    m_lbDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Steer/WattHours");
+    m_lbDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Drive/Power");
+    m_lbDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Drive/Energy");
+    m_lbDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Drive/TotalPower");
+    m_lbDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackLeftModule/Drive/WattHours");
 
     m_rbSteerPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/Power");
     m_rbSteerEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/Energy");
     m_rbSteerTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/TotalPower");
     m_rbSteerWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/WattHours");
 
-    m_rbDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/Power");
-    m_rbDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/Energy");
-    m_rbDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/TotalPower");
-    m_rbDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Steer/WattHours");
+    m_rbDrivePower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Drive/Power");
+    m_rbDriveEnergy = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Drive/Energy");
+    m_rbDriveTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Drive/TotalPower");
+    m_rbDriveWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/BackRightModule/Drive/WattHours");
 
     m_swerveChassisTotalPower = wpi::log::DoubleLogEntry(log, "/Chassis/TotalPower");
     m_swerveChassisWattHours = wpi::log::DoubleLogEntry(log, "/Chassis/WattHours");

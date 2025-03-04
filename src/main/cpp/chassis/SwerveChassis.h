@@ -188,6 +188,8 @@ private:
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
 
+    const units::angle::degree_t m_specifiedHeadingTolerance{0.5};
+
     double m_totalEnergy = 0.0;
     double m_totalWattHours = 0.0;
     frc::Timer m_powerTimer;

@@ -43,12 +43,12 @@ TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) :
                                                                                  m_robotDrive(robotDrive),
                                                                                  // TODO need to tune this also update radius as it is probably wrong
                                                                                  m_longpathHolonomicController(pathplanner::PIDConstants(2.0, 0.0, 0.0), //(1.95, 0.95, 0.0)
-                                                                                                               pathplanner::PIDConstants(2.0, 0.0, 0.0),
+                                                                                                               pathplanner::PIDConstants(3.0, 0.0, 0.0),
                                                                                                                // robotDrive->GetChassis()->GetMaxSpeed(),
                                                                                                                // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                units::time::second_t(0.02)),
-                                                                                 m_shortpathHolonomicController(pathplanner::PIDConstants(3.0, 1.0, 0.0),
-                                                                                                                pathplanner::PIDConstants(2.0, 0.0, 0.0),
+                                                                                 m_shortpathHolonomicController(pathplanner::PIDConstants(6.0, 0.0, 0.2), //(6.0, 0.0, 0.0)
+                                                                                                                pathplanner::PIDConstants(3.0, 0.0, 0.0),
                                                                                                                 // robotDrive->GetChassis()->GetMaxSpeed(),
                                                                                                                 // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
                                                                                                                 units::time::second_t(0.02)),
@@ -132,6 +132,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         speeds.omega = units::angular_velocity::radians_per_second_t(0);
         chassisMovement.chassisSpeeds = speeds;
     }
+    m_chassis->SetStoredHeading(m_chassis->GetPose().Rotation().Degrees());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
