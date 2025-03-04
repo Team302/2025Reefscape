@@ -26,6 +26,7 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/logging/debug/Logger.h"
 #include "teleopcontrol/TeleopControl.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 // Third Party Includes
 
@@ -69,8 +70,10 @@ void L4ScoringPositionState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Run"));
 	double cappush = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::CAPPING);
+	units::angle::degree_t captargetdifference = cappush * m_cappingAngleFactor;
+	units::angle::degree_t capTarget = m_ArmTarget - captargetdifference;
 
-	m_mechanism->SetArmTarget(m_mechanism->GetArmAngle() - (cappush * cappingAngleFactor));
+	m_mechanism->SetArmTarget(capTarget);
 }
 
 void L4ScoringPositionState::Exit()
