@@ -92,6 +92,8 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
+
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -105,13 +107,13 @@ public:
 		if (position < GetElevatorHeight())
 		{
 			m_elevatorDesiredDirectionUp = false;
-			m_ElevatorLeaderPositionInch.Velocity = 50_tps;
+			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
 		}
 		else
 		{
 			m_elevatorDesiredDirectionUp = true;
-			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
+			m_ElevatorLeaderPositionInch.Velocity = 200_tps;
 			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
 		}
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
@@ -154,7 +156,7 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
 	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
-	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralOutSensor->Get() : m_CoralOutSensor->Get(); }
+	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
@@ -175,7 +177,11 @@ public:
 
 	void SetAlgaeReefPosition();
 
-	void SetArmTarget(units::angle::degree_t target) { m_armTarget = std::clamp(target, m_minAngle, m_maxAngle); }
+	void SetArmTarget(units::angle::degree_t target)
+	{
+		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
+	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
 	bool GetManualMode() { return m_manualMode; }
@@ -220,10 +226,10 @@ private:
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(29.0);
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(13.5);
-	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(-7.0);
-	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(-7.0);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.0);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(48.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(48.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
@@ -254,6 +260,8 @@ private:
 	void InitializeTalonFXSAlgaeCOMP_BOT302();
 
 	void IsElevatorInSync();
+
+	void SetAlgaeMotor();
 
 	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
 	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
@@ -298,6 +306,9 @@ private:
 	void LogAlgaeSensor(uint64_t timestamp, bool value);
 	void LogScoringMode(int value);
 	frc::Pose2d m_robotPose;
+
+	bool m_isArmRotating = false;
+	const units::angular_velocity::degrees_per_second_t m_dpsThreshold{5.0};
 
 	// elevator diagnostics and remedial action variables
 	bool m_elevatorDesiredDirectionUp;

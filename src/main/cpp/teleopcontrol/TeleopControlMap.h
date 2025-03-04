@@ -160,16 +160,17 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
     {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
-    {TeleopControlFunctions::AUTO_CLIMB, driverDPad180},
+    {TeleopControlFunctions::AUTO_CLIMB_DOWN, driverDPad180},
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
-    {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
+    {TeleopControlFunctions::POLAR_DRIVE, driverLBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
-    {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
+    {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
-    {TeleopControlFunctions::INTAKE, driverLBumper},
     {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
+    {TeleopControlFunctions::INTAKE, driverRTriggerPressed},
+    {TeleopControlFunctions::SLOW_MODE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
@@ -177,12 +178,14 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::L2_SCORING_POSITION, copilotAButton},
     {TeleopControlFunctions::L3_SCORING_POSITION, copilotXButton},
     {TeleopControlFunctions::L4_SCORING_POSITION, copilotYButton},
-    {TeleopControlFunctions::ALGAE_INTAKE, copilotLBumper},
+    {TeleopControlFunctions::ALGAE_INTAKE, copilotLTriggerPressed},
     {TeleopControlFunctions::SCORE, copilotRBumper},
     {TeleopControlFunctions::SCORING_MODE, copilotSelectButton},
     {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
-    {TeleopControlFunctions::MANUAL_ON, copilotDPad0},
-    {TeleopControlFunctions::MANUAL_OFF, copilotDPad180},
+    {TeleopControlFunctions::MANUAL_ON, copilotLStickPressed},
+    {TeleopControlFunctions::MANUAL_OFF, copilotRStickPressed},
+    {TeleopControlFunctions::ALGAE_HIGH, copilotDPad0},
+    {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };

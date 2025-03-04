@@ -21,7 +21,6 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include "DragonTale.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
 
@@ -979,11 +978,11 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 {
 	TalonFXSConfiguration configs{};
-	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(80);
 	configs.CurrentLimits.StatorCurrentLimitEnable = true;
 	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
 	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(35);
 	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
 
 	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
@@ -1026,7 +1025,6 @@ void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 void DragonTale::SetCurrentState(int state, bool run)
 {
 	StateMgr::SetCurrentState(state, run);
-	PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void DragonTale::RunCommonTasks()
@@ -1035,6 +1033,7 @@ void DragonTale::RunCommonTasks()
 	SetSensorFailSafe();
 	UpdateTarget();
 	IsElevatorInSync();
+	SetAlgaeMotor();
 	Cyclic();
 	// DataLog();
 
@@ -1173,11 +1172,6 @@ void DragonTale::SetAlgaeReefPosition()
 			algeHeight = isBlue ? m_grabAlgaeHigh : m_grabAlgaeLow;
 			algeAngle = isBlue ? m_grabAlgaeHighAngle : m_grabAlgaeLowAngle;
 		}
-
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "algeHeight", algeHeight.value());
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "ClosestMultiple", closestMultiple);
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "multipleNumber", multipleNumber);
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Previous algeHeight", m_prevAlgaeHeight.value());
 	}
 
 	if (m_prevAlgaeHeight != algeHeight)
@@ -1187,6 +1181,17 @@ void DragonTale::SetAlgaeReefPosition()
 	}
 
 	m_prevAlgaeHeight = algeHeight;
+
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_HIGH))
+	{
+		SetElevatorTarget(m_grabAlgaeHigh);
+		SetArmTarget(m_grabAlgaeHighAngle);
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_LOW))
+	{
+		SetElevatorTarget(m_grabAlgaeLow);
+		SetArmTarget(m_grabAlgaeLowAngle);
+	}
 }
 
 void DragonTale::UpdateTarget()
@@ -1216,11 +1221,13 @@ void DragonTale::UpdateTarget()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
 	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-
-	if (abs(armInput) > m_manualControlThreshold)
+	// m_isArmRotating = units::math::abs(m_ArmAngleSensor->GetVelocity().GetValue()) > m_dpsThreshold;
+	if ((abs(armInput) > m_manualControlThreshold))
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
-		SetArmTarget(GetArmAngle());
+		units::angle::degree_t armangle = GetArmAngle();
+		SetArmTarget(armangle);
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle", armangle.value());
 	}
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
@@ -1366,4 +1373,15 @@ void DragonTale::IsElevatorInSync()
 		}
 	}
 	m_elevatorRemedialAction = false;
+}
+
+void DragonTale::SetAlgaeMotor()
+{
+	if ((GetAlgaeSensorState() || GetManualMode()) && GetCurrentState() != STATE_SCORE_ALGAE)
+	{
+		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
+			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
+		else
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.15);
+	}
 }

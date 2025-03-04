@@ -28,6 +28,8 @@
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
+#include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 using frc::DriverStation;
 
@@ -120,11 +122,11 @@ void DriverFeedback::UpdateLEDStates()
                         }
                     }
                     else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
-                            taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                             taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
                     {
                         taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
                     }
@@ -144,26 +146,24 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
-        // StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
+        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
-        // auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
-
-        if (taleMgr != nullptr /* && intakeMgr != nullptr*/)
+        auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
+        if (taleMgr != nullptr)
         {
 
             if (DragonVision::GetDragonVision() != nullptr)
             {
-                // auto vision = DragonVision::GetDragonVision();
-                // vision->HealthCheck(RobotElementNames::CAMERA_USAGE::LAUNCHE);
-                bool questStatus = false;
-                bool ll1Status = false;
-                bool ll2Status = false;
+                auto vision = DragonVision::GetDragonVision();
+                bool questStatus = DragonQuest::GetDragonQuest()->IsConnected();
+                bool ll1Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA);
+                bool ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
                 bool pigeonfaults = false;
                 bool coralInSensor = taleMgr->GetCoralInSensorState();
                 bool coralOutSensor = taleMgr->GetCoralOutSensorState();
                 bool algaeSensor = taleMgr->GetAlgaeSensorState();
-                bool intsakeSensor = false; // intakeMgr->GetIntakeSensorState();
-                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intsakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+                bool intakeSensor = intakeMgr->GetIntakeSensorState();
+                m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
             }
         }
     }

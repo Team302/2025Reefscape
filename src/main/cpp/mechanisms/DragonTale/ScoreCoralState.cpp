@@ -49,15 +49,12 @@ void ScoreCoralState::Run()
 {
 	if (m_mechanism->AtTarget() || m_mechanism->IsTeleop())
 	{
-		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	}
-	if (m_mechanism->GetAlgaeSensorState() || (m_mechanism->GetManualMode()))
-	{
-		if (m_RobotId == RobotIdentifier::PRACTICE_BOT_9999)
-			m_mechanism->UpdateTargetAlgaeTalonFXPercentOutput(0.05);
+		if (m_mechanism->GetElevatorHeight() < units::length::inch_t(5))
+			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
 		else
-			m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(0.1);
+			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 	}
+
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }
 

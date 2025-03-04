@@ -93,12 +93,14 @@ public:
     void testAndLogVisionData();
 
     bool HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE position);
+    bool HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier);
 
 private:
     DragonVision();
     ~DragonVision() = default;
 
     std::vector<DragonLimelight *> GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const;
+    DragonLimelight *GetCameras(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier) const;
 
     std::optional<VisionData> GetVisionDataFromAlgae(VISION_ELEMENT element);
     std::optional<VisionData> GetVisionDataFromElement(VISION_ELEMENT element);

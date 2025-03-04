@@ -39,7 +39,6 @@
 #include "units/mass.h"
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
-#include "utils/logging/debug/LoggableItem.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 class RobotDrive;
@@ -188,6 +187,8 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
+
+    const units::angle::degree_t m_specifiedHeadingTolerance{0.5};
 
     double m_totalEnergy = 0.0;
     double m_totalWattHours = 0.0;

@@ -52,7 +52,6 @@ $$_INITIALZATION_FUNCTIONS_$$
 void $$_MECHANISM_INSTANCE_NAME_$$::SetCurrentState(int state, bool run)
 {
     StateMgr::SetCurrentState(state, run);
-    PeriodicLooper::GetInstance()->RegisterAll(this);
 }
 
 void $$_MECHANISM_INSTANCE_NAME_$$::RunCommonTasks()

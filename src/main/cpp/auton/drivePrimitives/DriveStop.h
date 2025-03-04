@@ -16,9 +16,6 @@
 
 #pragma once
 
-// C++ Includes
-#include <memory>
-
 // FRC includes
 #include "units/time.h"
 
@@ -26,7 +23,6 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/SwerveChassis.h"
 
-// Third Party Includes
 
 // forward declares
 class PrimitiveParams;
