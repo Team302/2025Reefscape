@@ -43,11 +43,10 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
-    m_invalidTrajectory = false;
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-    m_endPose = std::nullopt;
     m_currentType = get<0>(info.value());
+    m_endPose = get<1>(info.value());
 
     if (m_chassis != nullptr)
     {
@@ -58,7 +57,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    if (m_chassis == nullptr)
+    if (m_chassis != nullptr && m_endPose.has_value())
     {
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
         frc::Pose2d currentPose = m_chassis->GetPose();
@@ -67,10 +66,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         frc::Pose2d newEndPose = get<1>(info.value());
         auto regenerate = false;
 
-        if (m_endPose.has_value())
-        {
-            regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-        }
+        regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
         if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
         {
@@ -108,7 +104,10 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.rawOmega = 0.0;
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-    chassisMovement.headingOption = ChassisOptionEnums::IGNORE;
+    if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
+        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+    else
+        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER;
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;

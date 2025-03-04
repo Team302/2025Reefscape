@@ -48,7 +48,7 @@ private:
     void CheckTipping(bool tippingSelected);
     void CheckRobotOriented(bool robotOrientedSelected);
     void PolarDrive();
-    void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState);
+    void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState);
     void DriveToGamePiece(double forward, double strafe, double rot);
 
     SwerveChassis *m_swerve;
