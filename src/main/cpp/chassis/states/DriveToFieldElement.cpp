@@ -82,13 +82,17 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.value().X().value());
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.value().Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Drive State", chassisMovement.driveOption);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Heading State", chassisMovement.headingOption);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Omega", chassisSpeeds.omega.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Stored Angle", chassisMovement.yawAngle.value());
 
         chassisSpeeds.vx = pidVx;
         chassisSpeeds.vy = pidVy;
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
                                                                                     chassisSpeeds.vy,
-                                                                                    chassisMovement.chassisSpeeds.omega,
+                                                                                    chassisSpeeds.omega,
                                                                                     rot2d);
     }
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
@@ -100,7 +104,6 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.rawOmega = 0.0;
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-
     if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
     {
         chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
