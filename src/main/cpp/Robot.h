@@ -31,6 +31,7 @@ class RobotState;
 class SomeMech;
 class DragonDataLoggerMgr;
 class DragonSwervePoseEstimator;
+class DragonQuest;
 
 class Robot : public frc::TimedRobot
 {

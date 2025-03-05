@@ -48,6 +48,7 @@ void Robot::RobotInit()
     InitializeRobot();
     InitializeAutonOptions();
     InitializeDriveteamFeedback();
+    DragonQuest::GetDragonQuest();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 }

@@ -46,11 +46,11 @@ DriverFeedback *DriverFeedback::GetInstance()
 
 void DriverFeedback::UpdateFeedback()
 {
-    UpdateRumble();
-    UpdateLEDStates();
-    UpdateDiagnosticLEDs();
-    CheckControllers();
-    m_LEDStates->commitLedData();
+    // UpdateRumble();
+    // UpdateLEDStates();
+    // UpdateDiagnosticLEDs();
+    // CheckControllers();
+    // m_LEDStates->commitLedData();
 }
 
 void DriverFeedback::UpdateRumble()
