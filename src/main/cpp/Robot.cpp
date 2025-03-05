@@ -281,7 +281,7 @@ void Robot::UpdateDriveTeamFeedback()
     auto feedback = DriverFeedback::GetInstance();
     if (feedback != nullptr)
     {
-        // feedback->UpdateFeedback();
+        feedback->UpdateFeedback();
     }
 }
 
