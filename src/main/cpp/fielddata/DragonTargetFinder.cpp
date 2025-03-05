@@ -100,7 +100,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     DragonVisionStructLogger::logPose3d("Left Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Left", fieldRelativeAngle.to<double>());
 
-                    // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
                 // If no vision, then just use odometry based pose
@@ -123,7 +123,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     DragonVisionStructLogger::logPose3d("Right Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
 
-                    // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
                 // If no vision, then just use odometry based pose
@@ -174,7 +174,6 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                         }
                     }
                 }
-
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)
