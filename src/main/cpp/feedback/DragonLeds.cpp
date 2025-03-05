@@ -60,12 +60,18 @@ bool DragonLeds::IsInitialized() const
 
 void DragonLeds::setOn()
 {
-    m_addressibleLeds->Start();
+    if (IsInitialized())
+    {
+        m_addressibleLeds->Start();
+    }
 }
 
 void DragonLeds::setOff()
 {
-    m_addressibleLeds->Stop();
+    if (IsInitialized())
+    {
+        m_addressibleLeds->Stop();
+    }
 }
 void DragonLeds::ResetVariables()
 {
@@ -77,150 +83,186 @@ void DragonLeds::ResetVariables()
 
 void DragonLeds::commitLedData()
 {
-    if (m_ledBuffer.size() > 0)
+    if (m_ledBuffer.size() > 0 && IsInitialized())
     {
         m_addressibleLeds->SetData(m_ledBuffer);
     }
 }
 void DragonLeds::SetSolidColor(frc::Color color)
 {
-    frc::LEDPattern pattern = frc::LEDPattern::Solid(color);
-    pattern.ApplyTo(m_ledBuffer);
+    if (IsInitialized())
+    {
+        frc::LEDPattern pattern = frc::LEDPattern::Solid(color);
+        pattern.ApplyTo(m_ledBuffer);
+    }
 }
 
 void DragonLeds::SetAlternatingColor(frc::Color color1, frc::Color color2)
 {
-    for (unsigned int i = 0; i < m_ledBuffer.size(); i++)
+    if (IsInitialized())
     {
-        if (i % 2 == 0)
-            m_ledBuffer[i].SetLED(color1);
-        else
-            m_ledBuffer[i].SetLED(color2);
+        for (unsigned int i = 0; i < m_ledBuffer.size(); i++)
+        {
+            if (i % 2 == 0)
+                m_ledBuffer[i].SetLED(color1);
+            else
+                m_ledBuffer[i].SetLED(color2);
+        }
     }
 }
 
 void DragonLeds::SetScorllingRainbow()
 {
-    units::meter_t kLedSpacing{1 / 120.0};
-    frc::LEDPattern m_rainbow = frc::LEDPattern::Rainbow(255, 128);
-    frc::LEDPattern m_scrollingRainbow = m_rainbow.ScrollAtAbsoluteSpeed(0.25_mps, kLedSpacing);
-    m_scrollingRainbow.ApplyTo(m_ledBuffer);
+    if (IsInitialized())
+    {
+        units::meter_t kLedSpacing{1 / 120.0};
+        frc::LEDPattern m_rainbow = frc::LEDPattern::Rainbow(255, 128);
+        frc::LEDPattern m_scrollingRainbow = m_rainbow.ScrollAtAbsoluteSpeed(0.25_mps, kLedSpacing);
+        m_scrollingRainbow.ApplyTo(m_ledBuffer);
+    }
 }
 
 void DragonLeds::SetSpecificLED(int id, frc::Color color)
 {
-    m_ledBuffer[id].SetLED(color);
+    if (IsInitialized())
+    {
+        m_ledBuffer[id].SetLED(color);
+    }
 }
 
 void DragonLeds::SetBufferAllLEDsBlack()
 {
-    frc::LEDPattern pattern = frc::LEDPattern::Solid(frc::Color::kBlack);
-    pattern.ApplyTo(m_ledBuffer);
+    if (IsInitialized())
+    {
+        frc::LEDPattern pattern = frc::LEDPattern::Solid(frc::Color::kBlack);
+        pattern.ApplyTo(m_ledBuffer);
+    }
 }
 
 void DragonLeds::SetBufferAllLEDsColorBrightness(frc::Color color, double brightness)
 {
-    frc::LEDPattern base = frc::LEDPattern::Solid(color);
-    frc::LEDPattern pattern = base.AtBrightness(brightness);
+    if (IsInitialized())
+    {
+        frc::LEDPattern base = frc::LEDPattern::Solid(color);
+        frc::LEDPattern pattern = base.AtBrightness(brightness);
 
-    pattern.ApplyTo(m_ledBuffer);
+        pattern.ApplyTo(m_ledBuffer);
+    }
 }
-
 void DragonLeds::SetBreathingPattern(frc::Color color, units::time::second_t period)
 {
-    frc::LEDPattern base = frc::LEDPattern::Solid(color);
-    frc::LEDPattern pattern = base.Breathe(period);
+    if (IsInitialized())
+    {
 
-    pattern.ApplyTo(m_ledBuffer);
+        frc::LEDPattern base = frc::LEDPattern::Solid(color);
+        frc::LEDPattern pattern = base.Breathe(period);
+
+        pattern.ApplyTo(m_ledBuffer);
+    }
 }
 
 void DragonLeds::SetBlinkingPattern(frc::Color color, units::time::second_t cycleTime)
 {
-    frc::LEDPattern base = frc::LEDPattern::Solid(color);
-    frc::LEDPattern pattern = base.Blink(cycleTime);
+    if (IsInitialized())
+    {
+        frc::LEDPattern base = frc::LEDPattern::Solid(color);
+        frc::LEDPattern pattern = base.Blink(cycleTime);
 
-    pattern.ApplyTo(m_ledBuffer);
+        pattern.ApplyTo(m_ledBuffer);
+    }
 }
 
 void DragonLeds::SetAlternatingColorBlinkingPattern(frc::Color c1, frc::Color c2)
 {
-    if (m_ledBuffer.size() > 0)
+    if (IsInitialized())
     {
-        if (m_timer > 2 * m_blinkPatternPeriod)
-            m_timer = 0;
+        if (m_ledBuffer.size() > 0)
+        {
+            if (m_timer > 2 * m_blinkPatternPeriod)
+                m_timer = 0;
 
-        int blinkState = (m_timer / m_blinkPatternPeriod) % 2;
+            int blinkState = (m_timer / m_blinkPatternPeriod) % 2;
 
-        if (blinkState == 0)
-            SetAlternatingColor(c1, c2);
-        else
-            SetAlternatingColor(c2, c1);
+            if (blinkState == 0)
+                SetAlternatingColor(c1, c2);
+            else
+                SetAlternatingColor(c2, c1);
 
-        m_timer++;
+            m_timer++;
+        }
     }
 }
 
 void DragonLeds::SetChaserPattern(frc::Color c)
 {
-    if (m_ledBuffer.size() > 0)
+    if (IsInitialized())
     {
-        m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < static_cast<int>(m_ledBuffer.size()) - 1 ? 1 : -m_loopThroughIndividualLEDs;
-        if (!m_switchColor)
+        if (m_ledBuffer.size() > 0)
         {
-            m_lastColor = m_lastColor == c ? frc::Color::kBlack : c;
-        }
-        m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_ledBuffer.size()) - 1;
+            m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < static_cast<int>(m_ledBuffer.size()) - 1 ? 1 : -m_loopThroughIndividualLEDs;
+            if (!m_switchColor)
+            {
+                m_lastColor = m_lastColor == c ? frc::Color::kBlack : c;
+            }
+            m_switchColor = m_loopThroughIndividualLEDs != static_cast<int>(m_ledBuffer.size()) - 1;
 
-        SetSpecificLED(m_loopThroughIndividualLEDs, m_lastColor);
+            SetSpecificLED(m_loopThroughIndividualLEDs, m_lastColor);
+        }
     }
 }
 
 void DragonLeds::SetClosingInChaserPattern(frc::Color c)
 {
-    if (m_ledBuffer.size() > 0)
+    if (IsInitialized())
     {
-        if (m_timer == 7)
+        if (m_ledBuffer.size() > 0)
         {
-            int halfLength = (m_ledBuffer.size() - 1) / 2;
-            m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < halfLength ? 1 : -m_loopThroughIndividualLEDs;
-            int loopout = (m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
-            auto color = m_colorLoop >= 0 ? c : frc::Color::kBlack;
-            m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
-            SetSpecificLED(m_loopThroughIndividualLEDs, color);
-            SetSpecificLED(loopout, color);
+            if (m_timer == 7)
+            {
+                int halfLength = (m_ledBuffer.size() - 1) / 2;
+                m_loopThroughIndividualLEDs += m_loopThroughIndividualLEDs < halfLength ? 1 : -m_loopThroughIndividualLEDs;
+                int loopout = (m_ledBuffer.size() - 1) - m_loopThroughIndividualLEDs;
+                auto color = m_colorLoop >= 0 ? c : frc::Color::kBlack;
+                m_colorLoop += m_colorLoop < halfLength ? 1 : -((m_colorLoop * 2) + 1);
+                SetSpecificLED(m_loopThroughIndividualLEDs, color);
+                SetSpecificLED(loopout, color);
 
-            m_timer = 0;
+                m_timer = 0;
+            }
+            m_timer++;
         }
-        m_timer++;
     }
 }
 
 void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool intakeSensor, bool questStatus, bool ll1Status, bool ll2Status, bool pigeonfaults)
 {
-    auto allianceColor = alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue : frc::Color::kRed;
-    SetSpecificLED(m_allianceColorLED, allianceColor);
+    if (IsInitialized())
+    {
+        auto allianceColor = alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue : frc::Color::kRed;
+        SetSpecificLED(m_allianceColorLED, allianceColor);
 
-    auto coralInSensorcolor = coralInSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetSpecificLED(m_coralInSensorDiagnosticLED, coralInSensorcolor);
+        auto coralInSensorcolor = coralInSensor ? frc::Color::kYellow : frc::Color::kBlack;
+        SetSpecificLED(m_coralInSensorDiagnosticLED, coralInSensorcolor);
 
-    auto coralOutSensorcolor = coralOutSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetSpecificLED(m_coralOutSensorDiagnosticLED, coralOutSensorcolor);
+        auto coralOutSensorcolor = coralOutSensor ? frc::Color::kYellow : frc::Color::kBlack;
+        SetSpecificLED(m_coralOutSensorDiagnosticLED, coralOutSensorcolor);
 
-    auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetSpecificLED(m_algaeSensorDiagnosticLED, algaeSensorcolor);
+        auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
+        SetSpecificLED(m_algaeSensorDiagnosticLED, algaeSensorcolor);
 
-    auto intakesensorcolor = intakeSensor ? frc::Color::kYellow : frc::Color::kBlack;
-    SetSpecificLED(m_intakeSenorDiagnosticLED, intakesensorcolor);
+        auto intakesensorcolor = intakeSensor ? frc::Color::kYellow : frc::Color::kBlack;
+        SetSpecificLED(m_intakeSenorDiagnosticLED, intakesensorcolor);
 
-    auto questStatuscolor = questStatus ? frc::Color::kGreen : frc::Color::kDarkRed;
-    SetSpecificLED(m_questDiagnosticLED, questStatuscolor);
+        auto questStatuscolor = questStatus ? frc::Color::kGreen : frc::Color::kDarkRed;
+        SetSpecificLED(m_questDiagnosticLED, questStatuscolor);
 
-    auto ll1Statuscolor = ll1Status ? frc::Color::kGreen : frc::Color::kDarkRed;
-    SetSpecificLED(m_limeLight1diagnosticLED, ll1Statuscolor);
+        auto ll1Statuscolor = ll1Status ? frc::Color::kGreen : frc::Color::kDarkRed;
+        SetSpecificLED(m_limeLight1diagnosticLED, ll1Statuscolor);
 
-    auto ll2Statuscolor = ll2Status ? frc::Color::kGreen : frc::Color::kDarkRed;
-    SetSpecificLED(m_limeLight2diagnosticLED, ll2Statuscolor);
+        auto ll2Statuscolor = ll2Status ? frc::Color::kGreen : frc::Color::kDarkRed;
+        SetSpecificLED(m_limeLight2diagnosticLED, ll2Statuscolor);
 
-    auto pigeonfaultscolor = pigeonfaults ? frc::Color::kGreen : frc::Color::kDarkRed;
-    SetSpecificLED(m_piegonFaultDiagnosticLED, pigeonfaultscolor);
+        auto pigeonfaultscolor = pigeonfaults ? frc::Color::kGreen : frc::Color::kDarkRed;
+        SetSpecificLED(m_piegonFaultDiagnosticLED, pigeonfaultscolor);
+    }
 }
