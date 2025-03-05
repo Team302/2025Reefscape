@@ -14,6 +14,9 @@
 //====================================================================================================================================================
 #pragma once
 
+// c++ includes
+#include <map>
+
 #include <frc/geometry/Pose3d.h>
 #include <fielddata/FieldConstants.h>
 
@@ -21,6 +24,21 @@ struct TransformToPose
 {
     FieldConstants::FIELD_ELEMENT referencePose;
     frc::Transform3d transform;
+};
+enum OffsetEnums
+{
+    // Comp Red
+    COMP_RIGHT_RED,
+    COMP_LEFT_RED,
+    // Comp Blue
+    COMP_RIGHT_BLUE,
+    COMP_LEFT_BLUE,
+    // Practice Red
+    PRACTICE_LEFT_RED,
+    PRACTICE_RIGHT_RED,
+    // Practice Blue
+    PRACTICE_LEFT_BLUE,
+    PRACTICE_RIGHT_BLUE
 };
 
 class FieldElementCalculator
@@ -33,6 +51,7 @@ public:
 private:
     void InitializeTransforms();
     void UpdateReefStickRobotTransforms();
+    void InitializeReefBranchTransformsMap();
     void CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
@@ -44,35 +63,7 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-    // practice bot
-    frc::Transform3d m_calcLeftStick_Practice_offset = frc::Transform3d(
-        frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-7.5),
-            units::length::inch_t(0.0)),
-        frc::Rotation3d());
-
-    frc::Transform3d m_calcRightStick_Practice_offset = frc::Transform3d(
-        frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-7.5),
-            units::length::inch_t(0.0)),
-        frc::Rotation3d());
-
-    // comp bot offsets
-    frc::Transform3d m_calcLeftStick_Comp_offset = frc::Transform3d(
-        frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-5.5),
-            units::length::inch_t(0.0)),
-        frc::Rotation3d());
-
-    frc::Transform3d m_calcRightStick_Comp_offset = frc::Transform3d(
-        frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-5.5),
-            units::length::inch_t(0.0)),
-        frc::Rotation3d());
+    std::map<OffsetEnums, frc::Transform3d> m_reefBranchOffsetMap;
 
     // other transforms
     frc::Transform3d m_noTransform = frc::Transform3d(
