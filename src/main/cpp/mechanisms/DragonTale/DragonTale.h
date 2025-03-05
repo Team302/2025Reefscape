@@ -293,4 +293,8 @@ private:
 	const int m_elevatorMaxFails = 12;
 	int m_currElevatorFails;
 	bool m_elevatorRemedialAction = false;
+
+	units::length::inch_t m_motorCountInches;
+	double m_elevatorGearRatio;
+	double m_elevatorDiameterInch;
 };
