@@ -18,10 +18,12 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
 #include <frc/RobotController.h>
+#include "utils/FMSData.h"
 #include "RobotIdentifier.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
+    InitializeReefBranchTransformsMap();
     UpdateReefStickRobotTransforms();
     InitializeTransforms();
     CalculateCenters(fieldConstantsPoseMap);
@@ -54,23 +56,76 @@ frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &po
         transformToApply = m_calcRightStick;
     }
     return poseOfFaceTag + transformToApply + m_halfRobotTransform;
-
 }
 
 void FieldElementCalculator::UpdateReefStickRobotTransforms()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
+    bool allianceIsBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
 
     if ((RobotIdentifier)teamNumber == RobotIdentifier::COMP_BOT_302)
     {
-        m_calcLeftStick = m_calcLeftStick + m_calcLeftStick_Comp_offset;
-        m_calcRightStick = m_calcRightStick + m_calcRightStick_Comp_offset;
+        m_calcLeftStick = allianceIsBlue ? m_calcLeftStick + m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_BLUE] : m_calcLeftStick + m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_RED];
+        m_calcRightStick = allianceIsBlue ? m_calcRightStick + m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_BLUE] : m_calcRightStick + m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_RED];
     }
     else
     {
-        m_calcLeftStick = m_calcLeftStick + m_calcLeftStick_Practice_offset;
-        m_calcRightStick = m_calcRightStick + m_calcRightStick_Practice_offset;
+        m_calcLeftStick = allianceIsBlue ? m_calcLeftStick + m_reefBranchOffsetMap[PRACTICE_LEFT_BLUE] : m_calcLeftStick + m_reefBranchOffsetMap[PRACTICE_LEFT_RED];
+        m_calcRightStick = allianceIsBlue ? m_calcRightStick + m_reefBranchOffsetMap[PRACTICE_RIGHT_BLUE] : m_calcRightStick + m_reefBranchOffsetMap[PRACTICE_RIGHT_RED];
     }
+}
+void FieldElementCalculator::InitializeReefBranchTransformsMap()
+{
+    // comp bot
+    m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_BLUE] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-5.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_BLUE] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-5.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_RED] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-5.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_RED] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-5.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    // practice bot
+    m_reefBranchOffsetMap[OffsetEnums::PRACTICE_LEFT_BLUE] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::PRACTICE_RIGHT_BLUE] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::PRACTICE_LEFT_RED] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    m_reefBranchOffsetMap[OffsetEnums::PRACTICE_RIGHT_RED] = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(-7.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
 }
 
 void FieldElementCalculator::InitializeTransforms()
@@ -106,7 +161,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::BLUE_CENTER_CAGE] =
         TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_A] =
-        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick); 
+        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_B] =
         TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::BLUE_REEF_C] =
@@ -158,7 +213,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::RED_CENTER_CAGE] =
         TransformToPose(FieldConstants::RED_BARGE_FRONT, m_noTransform);
     m_transformCalculatedMap[FieldConstants::RED_REEF_A] =
-        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick); 
+        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick);
     m_transformCalculatedMap[FieldConstants::RED_REEF_B] =
         TransformToPose(FieldConstants::RED_REEF_AB, m_calcRightStick);
     m_transformCalculatedMap[FieldConstants::RED_REEF_C] =
