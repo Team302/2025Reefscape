@@ -63,16 +63,19 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         frc::Pose2d currentPose = m_chassis->GetPose();
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-        frc::Pose2d newEndPose = get<1>(info.value());
-        auto regenerate = false;
-
-        regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-
-        if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+        if (info.has_value())
         {
-            m_endPose = newEndPose;
+            frc::Pose2d newEndPose = get<1>(info.value());
+            auto regenerate = false;
+
+            regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+
+            if ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+            {
+                m_endPose = newEndPose;
+            }
+            m_currentType = get<0>(info.value());
         }
-        m_currentType = get<0>(info.value());
 
         m_translationPIDX.SetGoal(m_endPose.value().X());
         m_translationPIDY.SetGoal(m_endPose.value().Y());
@@ -89,6 +92,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
         chassisSpeeds.vx = pidVx;
         chassisSpeeds.vy = pidVy;
+        // Shouldn't we set Omega here; otherwise we are picking up what was previously set (maybe from trajectory)?
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
                                                                                     chassisSpeeds.vy,
@@ -104,19 +108,13 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.rawOmega = 0.0;
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-    if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
-    {
-        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
-    }
-    else
-    {
-        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
-    }
+    chassisMovement.headingOption = GetHeadingOption();
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
+    // Should we be getting the specified Angle based on the subclass of DriveToFieldElement?
     if (chassis != nullptr)
     {
         chassisMovement.yawAngle = chassis->GetYaw();
@@ -138,5 +136,5 @@ bool DriveToFieldElement::IsDone()
             return (distance < m_distanceThreshold);
         }
     }
-    return false;
+    return true;
 }
