@@ -53,9 +53,6 @@ void SpecifiedHeading::UpdateChassisSpeeds(ChassisMovement &chassisMovement)
         chassisMovement.chassisSpeeds.omega += correction;
 
         chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_targetAngle));
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Specified Omega", chassisMovement.chassisSpeeds.omega.value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Specified Angle", m_targetAngle.value());
     }
 }
 
