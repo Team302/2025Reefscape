@@ -92,8 +92,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
-
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -180,7 +178,6 @@ public:
 	void SetArmTarget(units::angle::degree_t target)
 	{
 		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
 	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
@@ -284,27 +281,6 @@ private:
 	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
 
-	void InitializeLogging();
-
-	wpi::log::IntegerLogEntry m_LogState;
-	wpi::log::DoubleLogEntry m_LogArmTargetAngle;
-	wpi::log::DoubleLogEntry m_LogElevatorTargetPosition;
-	wpi::log::DoubleLogEntry m_LogArmAngle;
-	wpi::log::DoubleLogEntry m_LogElevatorPosition;
-	wpi::log::BooleanLogEntry m_LogCoralInSensor;
-	wpi::log::BooleanLogEntry m_LogCoralOutSensor;
-	wpi::log::BooleanLogEntry m_LogAlgaeSensor;
-	wpi::log::IntegerLogEntry m_LogScoringMode;
-
-	void LogState(int value);
-	void LogArmTargetAngle(double value);
-	void LogElevatorTargetPosition(double value);
-	void LogArmAngle(double value);
-	void LogElevatorPosition(double value);
-	void LogCoralInSensor(bool value);
-	void LogCoralOutSensor(bool value);
-	void LogAlgaeSensor(uint64_t timestamp, bool value);
-	void LogScoringMode(int value);
 	frc::Pose2d m_robotPose;
 
 	bool m_isArmRotating = false;
@@ -315,4 +291,69 @@ private:
 	const int m_elevatorMaxFails = 12;
 	int m_currElevatorFails;
 	bool m_elevatorRemedialAction = false;
+
+	void InitializeLogging();
+
+	wpi::log::DoubleLogEntry m_ArmLogEntry;
+	wpi::log::DoubleLogEntry m_ArmTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ArmPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ArmEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorLeaderLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorLeaderTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorLeaderPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorLeaderEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXTargetLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXPowerLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorFollowerLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorFollowerTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorFollowerPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ElevatorFollowerEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_CoralLogEntry;
+	wpi::log::DoubleLogEntry m_CoralTargetLogEntry;
+	wpi::log::DoubleLogEntry m_CoralPowerLogEntry;
+	wpi::log::DoubleLogEntry m_CoralEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXSLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXSTargetLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXSPowerLogEntry;
+	wpi::log::DoubleLogEntry m_AlgaeTalonFXSEnergyLogEntry;
+	wpi::log::BooleanLogEntry m_CoralInSensorLogEntry;
+	wpi::log::BooleanLogEntry m_CoralOutSensorLogEntry;
+	wpi::log::BooleanLogEntry m_AlgaeSensorLogEntry;
+	wpi::log::DoubleLogEntry m_DragonTaleTotalEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_DragonTaleTotalWattHoursLogEntry;
+	wpi::log::IntegerLogEntry m_DragonTaleStateLogEntry;
+	frc::Timer m_powerTimer;
+	double m_power = 0.0;
+	double m_energy = 0.0;
+	double m_totalEnergy = 0.0;
+	double m_totalWattHours = 0.0;
+
+	void LogArm(uint64_t timestamp, double value) { return m_ArmLogEntry.Update(value, timestamp); }
+	void LogArmTarget(uint64_t timestamp, double value) { return m_ArmTargetLogEntry.Update(value, timestamp); }
+	void LogArmPower(uint64_t timestamp, double value) { return m_ArmPowerLogEntry.Update(value, timestamp); }
+	void LogArmEnergy(uint64_t timestamp, double value) { return m_ArmEnergyLogEntry.Update(value, timestamp); }
+	void LogElevatorLeader(uint64_t timestamp, double value) { return m_ElevatorLeaderLogEntry.Update(value, timestamp); }
+	void LogElevatorLeaderTarget(uint64_t timestamp, double value) { return m_ElevatorLeaderTargetLogEntry.Update(value, timestamp); }
+	void LogElevatorLeaderPower(uint64_t timestamp, double value) { return m_ElevatorLeaderPowerLogEntry.Update(value, timestamp); }
+	void LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return m_ElevatorLeaderEnergyLogEntry.Update(value, timestamp); }
+	void LogAlgae(uint64_t timestamp, double value) { return m_AlgaeTalonFXLogEntry.Update(value, timestamp); }
+	void LogAlgaeTarget(uint64_t timestamp, double value) { return m_AlgaeTalonFXTargetLogEntry.Update(value, timestamp); }
+	void LogAlgaePower(uint64_t timestamp, double value) { return m_AlgaeTalonFXPowerLogEntry.Update(value, timestamp); }
+	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_AlgaeTalonFXEnergyLogEntry.Update(value, timestamp); }
+	void LogElevatorFollower(uint64_t timestamp, double value) { return m_ElevatorFollowerLogEntry.Update(value, timestamp); }
+	void LogElevatorFollowerTarget(uint64_t timestamp, double value) { return m_ElevatorFollowerTargetLogEntry.Update(value, timestamp); }
+	void LogElevatorFollowerPower(uint64_t timestamp, double value) { return m_ElevatorFollowerPowerLogEntry.Update(value, timestamp); }
+	void LogElevatorFollowerEnergy(uint64_t timestamp, double value) { return m_ElevatorFollowerEnergyLogEntry.Update(value, timestamp); }
+	void LogCoral(uint64_t timestamp, double value) { return m_CoralLogEntry.Update(value, timestamp); }
+	void LogCoralTarget(uint64_t timestamp, double value) { return m_CoralTargetLogEntry.Update(value, timestamp); }
+	void LogCoralPower(uint64_t timestamp, double value) { return m_CoralPowerLogEntry.Update(value, timestamp); }
+	void LogCoralEnergy(uint64_t timestamp, double value) { return m_CoralEnergyLogEntry.Update(value, timestamp); }
+	void LogCoralInSensor(uint64_t timestamp, bool value) { return m_CoralInSensorLogEntry.Update(value, timestamp); }
+	void LogCoralOutSensor(uint64_t timestamp, bool value) { return m_CoralOutSensorLogEntry.Update(value, timestamp); }
+	void LogAlgaeSensor(uint64_t timestamp, bool value) { return m_AlgaeSensorLogEntry.Update(value, timestamp); }
+	void LogDragonTaleTotalEnergy(uint64_t timestamp, int value) { return m_DragonTaleTotalEnergyLogEntry.Update(value, timestamp); }
+	void LogDragonTaleTotalWattHours(uint64_t timestamp, int value) { return m_DragonTaleTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogDragonTaleState(uint64_t timestamp, int value) { return m_DragonTaleStateLogEntry.Update(value, timestamp); }
 };
