@@ -26,7 +26,6 @@
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/logging/debug/Logger.h"
 #include "teleopcontrol/TeleopControl.h"
-#include "utils/logging/signals/DragonDataLogger.h"
 
 // Third Party Includes
 
