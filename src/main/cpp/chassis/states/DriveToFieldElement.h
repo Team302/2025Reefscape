@@ -61,11 +61,11 @@ private:
 
     const units::inch_t m_distanceThreshold{0.25};
 
-    static constexpr units::velocity::meters_per_second_t kMaxVelocity = 1.75_mps;
-    static constexpr units::acceleration::meters_per_second_squared_t kMaxAcceleration = 0.75_mps_sq;
+    static constexpr units::velocity::meters_per_second_t kMaxVelocity = 3_mps;
+    static constexpr units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1_mps_sq;
 
-    static constexpr double kTranslationP = 2.0;
-    static constexpr double kTranslationI = 0.0;
+    static constexpr double kTranslationP = 3.0;
+    static constexpr double kTranslationI = 0.5;
     static constexpr double kTranslationD = 0.0;
 
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};

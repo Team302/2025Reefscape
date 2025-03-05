@@ -77,18 +77,14 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         m_translationPIDX.SetGoal(m_endPose.value().X());
         m_translationPIDY.SetGoal(m_endPose.value().Y());
 
-        chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X()));
-        chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y()));
+        units::velocity::meters_per_second_t pidVx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X()));
+        units::velocity::meters_per_second_t pidVy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y()));
 
-        auto profiledVx = m_translationPIDX.GetSetpoint().velocity;
-        auto profiledVy = m_translationPIDY.GetSetpoint().velocity;
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.value().X().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.value().Y().value());
 
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Profiled Vx", profiledVx.value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Profiled Vy", profiledVy.value());
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "PID Calculated Vx", chassisSpeeds.vx.value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "PID Calculated Vy", chassisSpeeds.vy.value());
-
+        chassisSpeeds.vx = pidVx;
+        chassisSpeeds.vy = pidVy;
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
                                                                                     chassisSpeeds.vy,
@@ -107,7 +103,7 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
         chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
     else
-        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER;
+        chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;

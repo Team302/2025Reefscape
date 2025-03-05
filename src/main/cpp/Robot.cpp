@@ -76,12 +76,12 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
 
-    //    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
-    //    if (!isFMSAttached)
-    //    {
-    //        LoggableItemMgr::GetInstance()->LogData();
-    //        Logger::GetLogger()->PeriodicLog();
-    //    }
+    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    if (!isFMSAttached)
+    {
+        LoggableItemMgr::GetInstance()->LogData();
+        Logger::GetLogger()->PeriodicLog();
+    }
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
@@ -281,7 +281,7 @@ void Robot::UpdateDriveTeamFeedback()
     auto feedback = DriverFeedback::GetInstance();
     if (feedback != nullptr)
     {
-        feedback->UpdateFeedback();
+        // feedback->UpdateFeedback();
     }
 }
 
