@@ -33,8 +33,8 @@ DragonQuest::DragonQuest()
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
-    ZeroHeading();
-    ZeroPosition();
+    // ZeroHeading();
+    // ZeroPosition();
 }
 
 frc::Pose3d DragonQuest::GetEstimatedPose()
@@ -67,17 +67,11 @@ units::angle::degree_t DragonQuest::GetOculusYaw()
 
 bool DragonQuest::IsConnected()
 {
-    return m_networktable.get()->GetBoolean(std::string("isconnected"), false);
-}
-
-double DragonQuest::GetBatteryPercent()
-{
-    return m_networktable.get()->GetNumber(std::string("batterypercent"), 0.0);
-}
-
-double DragonQuest::GetTimeStamp()
-{
-    return m_networktable.get()->GetNumber(std::string("timestamp"), 0.0);
+    if (m_posTopic.GetEntry(std::array<double, 3>{}).Get()[0] != 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 void DragonQuest::ZeroHeading()
@@ -107,34 +101,35 @@ void DragonQuest::RefreshNT()
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
-    frc::Pose3d p3d{frc::Pose3d(pose)};
-    m_xOffset += p3d.X().to<double>();
-    m_yOffset += p3d.Y().to<double>();
-    m_zOffset += p3d.Z().to<double>();
-    units::degree_t roll = p3d.Rotation().X();
-    units::degree_t pitch = p3d.Rotation().Y();
-    units::degree_t yaw = p3d.Rotation().Z();
+    if (!m_hasreset)
+    {
+        frc::Pose3d p3d{frc::Pose3d(pose)};
+        m_xOffset += p3d.X().to<double>();
+        m_yOffset += p3d.Y().to<double>();
+        m_zOffset += p3d.Z().to<double>();
+        units::degree_t roll = p3d.Rotation().X();
+        units::degree_t pitch = p3d.Rotation().Y();
+        units::degree_t yaw = p3d.Rotation().Z();
 
-    m_rollOffset += roll.to<double>();
-    m_pitchOffset += pitch.to<double>();
-    m_yawOffset += yaw.to<double>();
-    m_hasreset = true;
+        m_rollOffset += roll.to<double>();
+        m_pitchOffset += pitch.to<double>();
+        m_yawOffset += yaw.to<double>();
+        m_hasreset = true;
+    }
 }
 
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    // if (!m_hasreset || !IsConnected())
-    // {
-    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-    // }
-    // else
-    // {
-    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-    //     str.m_visionPose = GetEstimatedPose().ToPose2d();
-    //     str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-    //     str.m_timeStamp = units::time::second_t(GetTimeStamp());
-    // }
-    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    if (!m_hasreset || !IsConnected())
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    }
+    else
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_visionPose = GetEstimatedPose().ToPose2d();
+        str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+    }
     return str;
 }

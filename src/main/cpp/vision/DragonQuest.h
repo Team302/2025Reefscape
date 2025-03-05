@@ -51,8 +51,6 @@ public:
 private:
     DragonQuest();
     ~DragonQuest() = default;
-    double GetBatteryPercent();
-    double GetTimeStamp();
     void ZeroHeading();
     void ZeroPosition();
     units::angle::degree_t GetOculusYaw();
