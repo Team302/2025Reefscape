@@ -179,7 +179,10 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     {
         questStatus = DragonQuest::GetDragonQuest()->IsConnected();
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+    if (m_LEDStates != nullptr)
+    {
+        m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+    }
 }
 
 void DriverFeedback::ResetRequests(void)
