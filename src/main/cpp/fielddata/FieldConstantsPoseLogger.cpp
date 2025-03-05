@@ -13,14 +13,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-
+#include <fielddata/FieldConstantsPoseLogger.h>
 
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #include "wpi/DataLog.h"
 #include "frc/DataLogManager.h"
 #include "frc/geometry/Pose3d.h"
 
-#include <fielddata/FieldConstantsPoseLogger.h>
+
 
 void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
@@ -42,11 +42,12 @@ void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIE
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE] = "RED_LEFT_CAGE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] = "RED_RIGHT_CAGE";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE] = "RED_CENTER_CAGE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT] = "RED_CORAL_STATION_LEFT";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = "RED_CORAL_STATION_RIGHT_ALLIANCE";
+    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT] = "RED_CORAL_STATION_RIGHT";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] = "RED_CORAL_STATION_RIGHT_SIDEWALL";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] = "RED_CORAL_STATION_LEFT_ALLIANCE";
-    m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = "RED_CORAL_STATION_LEFT_SIDEWALL";
 
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR] = "BLUE_PROCESSOR";
     m_fieldConstantsNameMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT] = "BLUE_BARGE_FRONT";
