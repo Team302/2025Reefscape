@@ -180,6 +180,10 @@ void DrivePathPlanner::InitMoveInfo()
     {
         m_moveInfo.driveOption = m_zone->GetPathUpdateOption();
 
+        if (m_driveToObject != nullptr)
+        {
+            m_driveToObject->Init(m_moveInfo);
+        }
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Drive Option", m_zone->GetPathUpdateOption());
     }
     else
@@ -211,12 +215,6 @@ void DrivePathPlanner::Run()
     if (m_chassis != nullptr)
     {
         m_chassis->Drive(m_moveInfo);
-    }
-
-    if (m_isVisionDrive && !m_moveInfo.pathplannerTrajectory.getStates().empty() && !m_updateTimeLatch)
-    {
-        m_maxTime += m_moveInfo.pathplannerTrajectory.getTotalTime();
-        m_updateTimeLatch = true;
     }
 }
 

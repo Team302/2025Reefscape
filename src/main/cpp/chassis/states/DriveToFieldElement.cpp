@@ -100,10 +100,15 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.rawOmega = 0.0;
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
+
     if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
+    {
         chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+    }
     else
+    {
         chassisMovement.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+    }
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
