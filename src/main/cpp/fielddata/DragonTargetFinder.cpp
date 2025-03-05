@@ -315,3 +315,26 @@ void DragonTargetFinder::SetChassis()
         m_chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     }
 }
+
+void DragonTargetFinder::DataLog(uint64_t timestamp)
+{
+    std::optional<frc::Pose3d> visTagPose;
+    frc::Pose2d targetPose = visTagPose.value().ToPose2d();
+
+    // some sort of visiontagpose
+    if (visTagPose.has_value())
+    {
+        if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
+        {
+            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, targetPose);
+        }
+        else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
+        {
+            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, targetPose);
+        }
+        else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
+        {
+            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_CORAL_STATION_TARGET_POSE, targetPose);
+        }
+    }
+}

@@ -25,6 +25,7 @@
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
 #include "vision/DragonVision.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 enum class DragonTargetFinderTarget
 {
@@ -48,7 +49,7 @@ enum class DragonTargetFinderData
     VISION_ODOMETRY_FUSED = 11
 };
 
-class DragonTargetFinder
+class DragonTargetFinder : public DragonDataLogger
 {
 public:
     static DragonTargetFinder *GetInstance();
@@ -58,10 +59,12 @@ public:
 private:
     DragonTargetFinder();
     ~DragonTargetFinder() = default;
+    void DataLog(uint64_t timestamp) override;
     static DragonTargetFinder *m_instance;
 
     SwerveChassis *m_chassis;
     DragonVision *m_vision;
+    DragonTargetFinderTarget m_targetVisionTarget;
 
     std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
