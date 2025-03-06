@@ -33,8 +33,8 @@ DragonQuest::DragonQuest()
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
-    // ZeroHeading();
-    // ZeroPosition();
+    ZeroHeading();
+    ZeroPosition();
 }
 
 frc::Pose3d DragonQuest::GetEstimatedPose()
