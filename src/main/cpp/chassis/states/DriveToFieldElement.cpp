@@ -58,7 +58,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    if (m_chassis != nullptr && m_endPose.has_value())
+    if (m_chassis != nullptr)
     {
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
         frc::Pose2d currentPose = m_chassis->GetPose();
@@ -69,7 +69,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             frc::Pose2d newEndPose = get<1>(info.value());
             auto regenerate = false;
 
-            regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+            regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
             if ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
             {
@@ -78,13 +78,16 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             m_currentType = get<0>(info.value());
         }
 
-        m_translationPIDX.SetGoal(m_endPose.value().X());
-        m_translationPIDY.SetGoal(m_endPose.value().Y());
+        DragonVisionStructLogger::logPose2d("current pose", currentPose);
+        DragonVisionStructLogger::logPose2d("target pose", m_endPose);
 
-        chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.value().X()));
-        chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.value().Y()));
+        m_translationPIDX.SetGoal(m_endPose.X());
+        m_translationPIDY.SetGoal(m_endPose.Y());
 
-        units::angle::degree_t rotationError = m_endPose.value().Rotation().Degrees() - currentPose.Rotation().Degrees();
+        chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
+        chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
+
+        units::angle::degree_t rotationError = m_endPose.Rotation().Degrees() - currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
@@ -136,20 +139,17 @@ void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "raw omega", moveInfo.rawOmega);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "controller type", moveInfo.controllerType);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "no movement option", moveInfo.noMovementOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.value().X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.value().Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.Y().value());
 }
 
 bool DriveToFieldElement::IsDone()
 {
-    if (m_endPose.has_value())
+    if (m_chassis != nullptr)
     {
-        if (m_chassis != nullptr)
-        {
-            auto currentPose = m_chassis->GetPose();
-            auto distance = currentPose.Translation().Distance(m_endPose.value().Translation());
-            return (distance < m_distanceThreshold);
-        }
+        auto currentPose = m_chassis->GetPose();
+        auto distance = currentPose.Translation().Distance(m_endPose.Translation());
+        return (distance < m_distanceThreshold);
     }
     return true;
 }

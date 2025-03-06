@@ -58,7 +58,7 @@ private:
     void InitChassisMovement(ChassisMovement &chassisMovement);
 
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
-    std::optional<frc::Pose2d> m_endPose = std::nullopt;
+    frc::Pose2d m_endPose;
     const unsigned int m_generatedStatesThreshold = 1;
 
     const units::inch_t m_distanceThreshold{0.25};
