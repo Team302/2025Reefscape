@@ -66,12 +66,16 @@ private:
     static constexpr units::velocity::meters_per_second_t kMaxVelocity = 3_mps;
     static constexpr units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1_mps_sq;
 
-    static constexpr double kTranslationP = 3.0;
-    static constexpr double kTranslationI = 0.5;
-    static constexpr double kTranslationD = 0.0;
+    static constexpr units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
+
+    static constexpr double m_translationKP = 3.0;
+    static constexpr double m_translationKI = 0.5;
+    static constexpr double m_translationKD = 0.0;
+
+    static constexpr double m_rotationKP = 6.0;
 
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
 };

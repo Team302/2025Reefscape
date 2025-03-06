@@ -122,7 +122,6 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             chassisMovement.chassisSpeeds = refChassisSpeeds;
         }
-        LogMoveInfo(chassisMovement);
     }
     else // If we don't have states to run, don't move the robot
     {
