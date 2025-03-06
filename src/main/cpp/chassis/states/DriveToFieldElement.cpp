@@ -87,7 +87,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
         chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
 
-        units::angle::degree_t rotationError = m_endPose.Rotation().Degrees() - currentPose.Rotation().Degrees();
+        units::angle::degree_t rotationError = chassisMovement.yawAngle - currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
@@ -114,15 +114,10 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
 
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
-    if (chassis != nullptr)
-    {
-        chassisMovement.yawAngle = chassis->GetYaw();
-    }
     chassisMovement.checkTipping = false;
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
-    chassisMovement.yawAngle = units::angle::degree_t(0.0);
 }
 void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
 {
