@@ -56,7 +56,6 @@ private:
     void InitializeRobot();
     void InitializeAutonOptions();
     void InitializeDriveteamFeedback();
-    void InitializeDataTracing();
     void UpdateDriveTeamFeedback();
 
     TeleopControl *m_controller;

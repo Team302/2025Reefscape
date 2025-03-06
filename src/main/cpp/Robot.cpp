@@ -24,12 +24,8 @@
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
-#include "utils/logging/debug/LoggableItemMgr.h"
 #include "utils/logging/debug/Logger.h"
-#include "utils/logging/debug/LoggerData.h"
-#include "utils/logging/debug/LoggerEnums.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
-#include "utils/logging/trace/DataTrace.h"
 #include "utils/PeriodicLooper.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
@@ -42,14 +38,9 @@ using std::string;
 
 void Robot::RobotInit()
 {
-    // isFMSAttached = frc::DriverStation::IsFMSAttached();
+    isFMSAttached = frc::DriverStation::IsFMSAttached();
 
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("arrived"));
-    //     InitializeDataTracing();
-    // }
 
     m_controller = nullptr;
 
@@ -59,11 +50,6 @@ void Robot::RobotInit()
     DragonQuest::GetDragonQuest();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
-
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("RobotInit"), string("end"));
-    // }
 }
 
 /**
@@ -76,13 +62,11 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-
-    //    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
-    //    if (!isFMSAttached)
-    //    {
-    //        LoggableItemMgr::GetInstance()->LogData();
-    //        Logger::GetLogger()->PeriodicLog();
-    //    }
+    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    if (!isFMSAttached)
+    {
+        Logger::GetLogger()->PeriodicLog();
+    }
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
@@ -110,28 +94,15 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("arrived"));
-    // }
-
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Init();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousInit"), string("end"));
-    // }
 }
 
 void Robot::AutonomousPeriodic()
 {
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("arrived"));
-    // }
     SensorDataMgr::GetInstance()->CacheData();
     if (m_dragonswerveposeestimator != nullptr)
     {
@@ -143,19 +114,10 @@ void Robot::AutonomousPeriodic()
         m_cyclePrims->Run();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutonomousPeriodic"), string("end"));
-    // }
 }
 
 void Robot::TeleopInit()
 {
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("arrived"));
-    // }
-
     if (m_controller == nullptr)
     {
         m_controller = TeleopControl::GetInstance();
@@ -167,19 +129,10 @@ void Robot::TeleopInit()
     }
 
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
-
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopInit"), string("end"));
-    // }
 }
 
 void Robot::TeleopPeriodic()
 {
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("arrived"));
-    // }
     SensorDataMgr::GetInstance()->CacheData();
     if (m_dragonswerveposeestimator != nullptr)
     {
@@ -191,20 +144,10 @@ void Robot::TeleopPeriodic()
         m_holonomic->Run();
     }
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
-
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TeleopPeriodic"), string("end"));
-    // }
 }
 
 void Robot::DisabledInit()
 {
-    // if (!isFMSAttached)
-    // {
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("arrived"));
-    //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("DisabledInit"), string("end"));
-    // }
 }
 
 void Robot::DisabledPeriodic()
@@ -217,7 +160,6 @@ void Robot::DisabledPeriodic()
 
 void Robot::TestInit()
 {
-    // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("TestInit"), string("arrived"));
 }
 
 void Robot::TestPeriodic()
@@ -286,10 +228,6 @@ void Robot::UpdateDriveTeamFeedback()
     }
 }
 
-void Robot::InitializeDataTracing()
-{
-    DataTrace::GetInstance()->Connect();
-}
 #ifndef RUNNING_FRC_TESTS
 int main()
 {
