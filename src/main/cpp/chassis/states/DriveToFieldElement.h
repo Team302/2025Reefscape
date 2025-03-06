@@ -51,6 +51,8 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
+    void LogMoveInfo(ChassisMovement &moveInfo);
+
     RobotDrive *m_robotDrive;
 
     void InitChassisMovement(ChassisMovement &chassisMovement);

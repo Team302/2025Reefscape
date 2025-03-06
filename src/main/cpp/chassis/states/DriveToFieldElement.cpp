@@ -99,6 +99,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
+    LogMoveInfo(chassisMovement);
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
@@ -123,6 +124,21 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
+}
+void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
+{
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "heading option", moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "drive option", moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "vx", moveInfo.chassisSpeeds.vx.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "vy", moveInfo.chassisSpeeds.vy.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "omega", moveInfo.chassisSpeeds.omega.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "target pose x", moveInfo.targetPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "target pose y", moveInfo.targetPose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "yaw angle", moveInfo.yawAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "raw omega", moveInfo.rawOmega);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "controller type", moveInfo.controllerType);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElementLog", "no movement option", moveInfo.noMovementOption);
 }
 
 bool DriveToFieldElement::IsDone()

@@ -122,6 +122,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         {
             chassisMovement.chassisSpeeds = refChassisSpeeds;
         }
+        LogMoveInfo(chassisMovement);
     }
     else // If we don't have states to run, don't move the robot
     {
@@ -133,7 +134,24 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveMo
         chassisMovement.chassisSpeeds = speeds;
     }
     m_chassis->SetStoredHeading(m_chassis->GetPose().Rotation().Degrees());
+
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
+}
+
+void TrajectoryDrivePathPlanner::LogMoveInfo(ChassisMovement &moveInfo)
+{
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "heading option", moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "drive option", moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "vx", moveInfo.chassisSpeeds.vx.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "vy", moveInfo.chassisSpeeds.vy.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "omega", moveInfo.chassisSpeeds.omega.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "target pose x", moveInfo.targetPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "target pose y", moveInfo.targetPose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "yaw angle", moveInfo.yawAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "raw omega", moveInfo.rawOmega);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "controller type", moveInfo.controllerType);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "no movement option", moveInfo.noMovementOption);
 }
 
 bool TrajectoryDrivePathPlanner::IsDone()
