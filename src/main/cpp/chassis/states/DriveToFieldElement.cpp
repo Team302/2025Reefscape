@@ -112,8 +112,6 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
-
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
     chassisMovement.checkTipping = false;
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
     chassisMovement.tippingCorrection = -0.1;
