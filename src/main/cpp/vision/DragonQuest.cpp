@@ -127,7 +127,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose().ToPose2d();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
