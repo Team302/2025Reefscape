@@ -114,7 +114,6 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
 
     auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
-    // Should we be getting the specified Angle based on the subclass of DriveToFieldElement?
     if (chassis != nullptr)
     {
         chassisMovement.yawAngle = chassis->GetYaw();
