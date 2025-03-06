@@ -46,11 +46,11 @@ DriverFeedback *DriverFeedback::GetInstance()
 
 void DriverFeedback::UpdateFeedback()
 {
-    // UpdateRumble();
-    // UpdateLEDStates();
-    // UpdateDiagnosticLEDs();
-    // CheckControllers();
-    // m_LEDStates->commitLedData();
+    UpdateRumble();
+    UpdateLEDStates();
+    UpdateDiagnosticLEDs();
+    CheckControllers();
+    m_LEDStates->commitLedData();
 }
 
 void DriverFeedback::UpdateRumble()
@@ -179,10 +179,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     {
         questStatus = DragonQuest::GetDragonQuest()->IsConnected();
     }
-    if (m_LEDStates != nullptr)
-    {
-        m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
-    }
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
 }
 
 void DriverFeedback::ResetRequests(void)
