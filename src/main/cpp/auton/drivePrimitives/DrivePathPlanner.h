@@ -84,9 +84,7 @@ private:
 
     DriveToFieldElement *m_driveToObject;
 
-    std::tuple<TrajectoryDrivePathPlanner *,
-               ChassisOptionEnums::DriveStateType>
-        m_driveToInfo;
+    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
 
     ZoneParams *m_zone;
 };

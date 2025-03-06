@@ -51,6 +51,8 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
+    void LogMoveInfo(ChassisMovement &moveInfo);
+
     RobotDrive *m_robotDrive;
 
     void InitChassisMovement(ChassisMovement &chassisMovement);
@@ -61,15 +63,19 @@ private:
 
     const units::inch_t m_distanceThreshold{0.25};
 
-    static constexpr units::velocity::meters_per_second_t kMaxVelocity = 3_mps;
-    static constexpr units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1_mps_sq;
+    const units::velocity::meters_per_second_t kMaxVelocity = 3_mps;
+    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1_mps_sq;
 
-    static constexpr double kTranslationP = 3.0;
-    static constexpr double kTranslationI = 0.5;
-    static constexpr double kTranslationD = 0.0;
+    const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
+
+    const double m_translationKP = 3.0;
+    const double m_translationKI = 0.5;
+    const double m_translationKD = 0.0;
+
+    const double m_rotationKP = 6.0;
 
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{kTranslationP, kTranslationI, kTranslationD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
 };

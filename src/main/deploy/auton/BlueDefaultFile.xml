@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
+<primitive id = "DO_NOTHING"
+time = "10.0"
+headingOption="FACE_CORAL_STATION"
+/>
 
 </auton>

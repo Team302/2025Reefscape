@@ -57,6 +57,7 @@ protected:
     const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
 
 private:
+    void LogMoveInfo(ChassisMovement &moveInfo);
     bool IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
     void LogPose(frc::Pose2d pose) const;
