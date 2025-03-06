@@ -93,8 +93,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
-
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -147,6 +145,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void LogInformation() override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -180,7 +179,6 @@ public:
 	void SetArmTarget(units::angle::degree_t target)
 	{
 		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
 	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
