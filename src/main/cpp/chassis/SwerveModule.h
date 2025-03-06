@@ -31,7 +31,6 @@
 #include "units/angular_velocity.h"
 #include "units/dimensionless.h"
 #include "units/velocity.h"
-#include "utils/logging/debug/LoggableItem.h"
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
@@ -41,7 +40,7 @@
 #include "ctre/phoenix6/CANcoder.hpp"
 #include "pathplanner/lib/config/ModuleConfig.h"
 
-class SwerveModule : public LoggableItem
+class SwerveModule
 {
 public:
     SwerveModule() = delete;
@@ -107,7 +106,7 @@ public:
     units::current::ampere_t GetSteerCurrentLimit() const { return m_steerTalon->GetStatorCurrent().GetValue(); }
 
     void StopMotors();
-    void LogInformation() override;
+    void LogInformation();
 
     pathplanner::ModuleConfig GetModuleConfig() { return m_moduleConfig; }
 
