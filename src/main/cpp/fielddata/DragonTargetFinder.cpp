@@ -74,16 +74,16 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
-            bool switchToVision = SwitchToVision(visTagPose);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", switchToVision ? "true" : "false");
+            m_switchToVision = SwitchToVision(visTagPose);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", m_switchToVision ? "true" : "false");
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
-                if (switchToVision)
+                if (m_switchToVision)
                 {
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
-
+                    goalPose = visTagPose.value().ToPose2d();
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
@@ -92,7 +92,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             {
                 // TODO:  Update when we have reef machine learning Add another DragonTargetFinderData Enum
                 // Have a vision pose of the tag, calculate the offset to the reef branch
-                if (switchToVision)
+                if (m_switchToVision)
                 {
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
@@ -108,6 +108,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (leftbranch.has_value())
                 {
                     auto leftbranchpose = fieldconst->GetFieldElementPose(leftbranch.value()).ToPose2d();
+                    goalPose = leftbranchpose;
                     return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, leftbranchpose);
                 }
             }
@@ -115,7 +116,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             {
                 // TODO:  Update when we have reef machine learning
                 //  Have a vision pose of the tag, calculate the offset to the reef branch
-                if (switchToVision)
+                if (m_switchToVision)
                 {
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK);
@@ -131,6 +132,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (rightbranch.has_value())
                 {
                     auto rightbranchpose = fieldconst->GetFieldElementPose(rightbranch.value()).ToPose2d();
+                    goalPose = rightbranchpose;
                     return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, rightbranchpose);
                 }
             }
@@ -318,23 +320,38 @@ void DragonTargetFinder::SetChassis()
 
 void DragonTargetFinder::DataLog(uint64_t timestamp)
 {
-    std::optional<frc::Pose3d> visTagPose;
-    frc::Pose2d targetPose = visTagPose.value().ToPose2d();
 
-    // some sort of visiontagpose
-    if (visTagPose.has_value())
+    if (goalPose.has_value())
     {
-        if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
+        if (m_switchToVision)
         {
-            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, targetPose);
+            if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, goalPose.value());
+            }
+            else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, goalPose.value());
+            }
+            else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE, goalPose.value());
+            }
         }
-        else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
+        else
         {
-            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, targetPose);
-        }
-        else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
-        {
-            Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::DRIVE_TO_CORAL_STATION_TARGET_POSE, targetPose);
+            if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, goalPose.value());
+            }
+            else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, goalPose.value());
+            }
+            else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
+            {
+                Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE, goalPose.value());
+            }
         }
     }
 }

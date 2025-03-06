@@ -53,7 +53,7 @@ class DragonTargetFinder : public DragonDataLogger
 {
 public:
     static DragonTargetFinder *GetInstance();
-
+    std::optional<frc::Pose2d> goalPose;
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
 
 private:
@@ -74,6 +74,7 @@ private:
 
     void SetChassis();
 
+    bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
 };
