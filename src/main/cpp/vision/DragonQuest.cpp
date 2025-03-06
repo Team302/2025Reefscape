@@ -43,8 +43,8 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[2] + m_xOffset;
-    double y = posarray[0] + m_yOffset;
+    double x = posarray[0] + m_xOffset;
+    double y = posarray[2] + m_yOffset;
     double z = posarray[1] + m_zOffset;
 
     double roll = rotationarray[0] + m_rollOffset;
@@ -52,17 +52,6 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     double yaw = rotationarray[1] + m_yawOffset;
 
     return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)}};
-}
-
-units::angle::degree_t DragonQuest::GetOculusYaw()
-{
-    std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yaw = rotationarray[1] - m_yawoffsetzero;
-    if (m_yaw > 180)
-    {
-        m_yaw -= 360;
-    }
-    return units::angle::degree_t(m_yaw);
 }
 
 bool DragonQuest::IsConnected()
@@ -127,7 +116,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
         str.m_visionPose = GetEstimatedPose().ToPose2d();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
