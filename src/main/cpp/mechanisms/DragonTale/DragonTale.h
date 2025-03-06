@@ -338,10 +338,10 @@ private:
 	void LogElevatorLeaderTarget(uint64_t timestamp, double value) { return m_ElevatorLeaderTargetLogEntry.Update(value, timestamp); }
 	void LogElevatorLeaderPower(uint64_t timestamp, double value) { return m_ElevatorLeaderPowerLogEntry.Update(value, timestamp); }
 	void LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return m_ElevatorLeaderEnergyLogEntry.Update(value, timestamp); }
-	void LogAlgae(uint64_t timestamp, double value) { return m_AlgaeTalonFXLogEntry.Update(value, timestamp); }
-	void LogAlgaeTarget(uint64_t timestamp, double value) { return m_AlgaeTalonFXTargetLogEntry.Update(value, timestamp); }
-	void LogAlgaePower(uint64_t timestamp, double value) { return m_AlgaeTalonFXPowerLogEntry.Update(value, timestamp); }
-	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_AlgaeTalonFXEnergyLogEntry.Update(value, timestamp); }
+	void LogAlgae(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSLogEntry.Update(value, timestamp); }
+	void LogAlgaeTarget(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXTargetLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSTargetLogEntry.Update(value, timestamp); }
+	void LogAlgaePower(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXPowerLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSPowerLogEntry.Update(value, timestamp); }
+	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXEnergyLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSEnergyLogEntry.Update(value, timestamp); }
 	void LogElevatorFollower(uint64_t timestamp, double value) { return m_ElevatorFollowerLogEntry.Update(value, timestamp); }
 	void LogElevatorFollowerTarget(uint64_t timestamp, double value) { return m_ElevatorFollowerTargetLogEntry.Update(value, timestamp); }
 	void LogElevatorFollowerPower(uint64_t timestamp, double value) { return m_ElevatorFollowerPowerLogEntry.Update(value, timestamp); }

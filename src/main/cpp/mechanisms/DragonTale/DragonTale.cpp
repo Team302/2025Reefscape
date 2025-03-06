@@ -258,14 +258,6 @@ void DragonTale::InitializeLogging()
 	m_ElevatorLeaderPowerLogEntry.Append(0.0);
 	m_ElevatorLeaderEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/ElevatorLeaderEnergy");
 	m_ElevatorLeaderEnergyLogEntry.Append(0.0);
-	m_AlgaeTalonFXLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePosition");
-	m_AlgaeTalonFXLogEntry.Append(0.0);
-	m_AlgaeTalonFXTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeTarget");
-	m_AlgaeTalonFXTargetLogEntry.Append(0.0);
-	m_AlgaeTalonFXPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePower");
-	m_AlgaeTalonFXPowerLogEntry.Append(0.0);
-	m_AlgaeTalonFXEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeEnergy");
-	m_AlgaeTalonFXEnergyLogEntry.Append(0.0);
 	m_ElevatorFollowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/ElevatorFollowerPosition");
 	m_ElevatorFollowerLogEntry.Append(0.0);
 	m_ElevatorFollowerTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/ElevatorFollowerTarget");
@@ -291,6 +283,29 @@ void DragonTale::InitializeLogging()
 	m_AlgaeSensorLogEntry.Append(false);
 	m_DragonTaleStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/DragonTale/State");
 	m_DragonTaleStateLogEntry.Append(0);
+
+	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
+	{
+		m_AlgaeTalonFXLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePosition");
+		m_AlgaeTalonFXLogEntry.Append(0.0);
+		m_AlgaeTalonFXTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeTarget");
+		m_AlgaeTalonFXTargetLogEntry.Append(0.0);
+		m_AlgaeTalonFXPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePower");
+		m_AlgaeTalonFXPowerLogEntry.Append(0.0);
+		m_AlgaeTalonFXEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeEnergy");
+		m_AlgaeTalonFXEnergyLogEntry.Append(0.0);
+	}
+	else if (m_activeRobotId == RobotIdentifier::COMP_BOT_302)
+	{
+		m_AlgaeTalonFXSLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePosition");
+		m_AlgaeTalonFXSLogEntry.Append(0.0);
+		m_AlgaeTalonFXSTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeTarget");
+		m_AlgaeTalonFXSTargetLogEntry.Append(0.0);
+		m_AlgaeTalonFXSPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaePower");
+		m_AlgaeTalonFXSPowerLogEntry.Append(0.0);
+		m_AlgaeTalonFXSEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/DragonTale/AlgaeEnergy");
+		m_AlgaeTalonFXSEnergyLogEntry.Append(0.0);
+	}
 }
 
 std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEnumMap{
@@ -1321,27 +1336,32 @@ void DragonTale::SetAlgaeMotor()
 void DragonTale::DataLog(uint64_t timestamp)
 {
 	auto currTime = m_powerTimer.Get();
-	LogArm(timestamp, m_Arm->GetPosition().GetValueAsDouble());
+
+	LogArm(timestamp, GetArmAngle().value());
 	auto ArmPower = DragonPower::CalcPowerEnergy(currTime, m_Arm->GetSupplyVoltage().GetValueAsDouble(), m_Arm->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ArmPower);
 	m_energy = get<1>(ArmPower);
 	m_totalEnergy += m_energy;
 	LogArmPower(timestamp, m_power);
 	LogArmEnergy(timestamp, m_energy);
-	LogElevatorLeader(timestamp, m_ElevatorLeader->GetPosition().GetValueAsDouble());
+	LogArmTarget(timestamp, m_armTarget.value());
+
+	LogElevatorLeader(timestamp, GetElevatorHeight().value());
 	auto ElevatorLeaderPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorLeader->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorLeader->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ElevatorLeaderPower);
 	m_energy = get<1>(ElevatorLeaderPower);
 	m_totalEnergy += m_energy;
 	LogElevatorLeaderPower(timestamp, m_power);
 	LogElevatorLeaderEnergy(timestamp, m_energy);
-	LogAlgae(timestamp, m_AlgaeTalonFX->GetPosition().GetValueAsDouble());
-	auto AlgaePower = DragonPower::CalcPowerEnergy(currTime, m_AlgaeTalonFX->GetSupplyVoltage().GetValueAsDouble(), m_AlgaeTalonFX->GetSupplyCurrent().GetValueAsDouble());
+	LogElevatorLeaderTarget(timestamp, m_elevatorTarget.value());
+
+	auto AlgaePower = DragonPower::CalcPowerEnergy(currTime, m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFX->GetSupplyVoltage().GetValueAsDouble() : m_AlgaeTalonFXS->GetSupplyVoltage().GetValueAsDouble(), m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFX->GetSupplyCurrent().GetValueAsDouble() : m_AlgaeTalonFXS->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(AlgaePower);
 	m_energy = get<1>(AlgaePower);
 	m_totalEnergy += m_energy;
 	LogAlgaePower(timestamp, m_power);
 	LogAlgaeEnergy(timestamp, m_energy);
+
 	LogElevatorFollower(timestamp, m_ElevatorFollower->GetPosition().GetValueAsDouble());
 	auto ElevatorFollowerPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorFollower->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorFollower->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ElevatorFollowerPower);
@@ -1349,17 +1369,20 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_totalEnergy += m_energy;
 	LogElevatorFollowerPower(timestamp, m_power);
 	LogElevatorFollowerEnergy(timestamp, m_energy);
-	LogCoral(timestamp, m_Coral->GetPosition().GetValueAsDouble());
+
 	auto CoralPower = DragonPower::CalcPowerEnergy(currTime, m_Coral->GetSupplyVoltage().GetValueAsDouble(), m_Coral->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(CoralPower);
 	m_energy = get<1>(CoralPower);
 	m_totalEnergy += m_energy;
 	LogCoralPower(timestamp, m_power);
 	LogCoralEnergy(timestamp, m_energy);
+
 	LogCoralInSensor(timestamp, GetCoralInSensorState());
 	LogCoralOutSensor(timestamp, GetCoralOutSensorState());
 	LogAlgaeSensor(timestamp, GetAlgaeSensorState());
+
 	LogDragonTaleState(timestamp, GetCurrentState());
+
 	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	LogDragonTaleTotalEnergy(timestamp, m_totalEnergy);
 	LogDragonTaleTotalWattHours(timestamp, m_totalWattHours);
