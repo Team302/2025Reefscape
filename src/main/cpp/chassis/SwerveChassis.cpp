@@ -185,10 +185,6 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     if (m_currentOrientationState != nullptr)
     {
         m_currentOrientationState->UpdateChassisSpeeds(moveInfo);
-        m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT]);
-        m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT]);
-        m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK]);
-        m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK]);
     }
     else
     {
@@ -207,6 +203,14 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
 
     // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Drive Option"), moveInfo.driveOption);
     // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Heading Option"), moveInfo.headingOption);
+    m_drive = moveInfo.chassisSpeeds.vx;
+    m_steer = moveInfo.chassisSpeeds.vy;
+    m_rotate = moveInfo.chassisSpeeds.omega;
+
+    m_frontLeft->SetDesiredState(m_targetStates[LEFT_FRONT]);
+    m_frontRight->SetDesiredState(m_targetStates[RIGHT_FRONT]);
+    m_backLeft->SetDesiredState(m_targetStates[LEFT_BACK]);
+    m_backRight->SetDesiredState(m_targetStates[RIGHT_BACK]);
     LogInformation();
     // m_rotate = moveInfo.chassisSpeeds.omega TO DO this is in place for Data Logging, need to create dataLog method where we pass moveInfo to it and it handels the data logging variables
 }
