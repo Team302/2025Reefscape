@@ -36,6 +36,8 @@
 #include "vision/DragonVision.h"
 #include "utils/logging/debug/Logger.h"
 #include "states/FaceNearestReefFace.h"
+#include "state/RobotState.h"
+#include "state/IRobotStateChangeSubscriber.h"
 
 using std::string;
 using namespace frc;
@@ -47,6 +49,7 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
                                    m_checkTippingLatch(false)
 {
     Init();
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Int);
 }
 
 /// @brief initialize the profiles for the various gamepad inputs
@@ -224,11 +227,27 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.targetPose = frc::Pose2d();
 }
 
+void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, double value)
+{
+    if (change == RobotStateChanges::StateChange::ElevatorHeight_Int)
+    {
+        m_elevatorHeight = value;
+    }
+}
 void HolonomicDrive::InitSpeeds(double forwardScale,
                                 double strafeScale,
                                 double rotateScale)
 {
     m_moveInfo.rawOmega = rotateScale;
+
+    if (m_elevatorHeight >= m_elevatorHeightThreshold)
+    {
+        m_inputScale = m_dynamicSpeed;
+    }
+    else
+    {
+        m_inputScale = 1;
+    }
 
     forwardScale *= m_inputScale;
     strafeScale *= m_inputScale;

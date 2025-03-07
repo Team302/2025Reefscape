@@ -22,10 +22,11 @@
 // Team 302 includes
 #include "chassis/ChassisMovement.h"
 #include "state/State.h"
+#include "state/IRobotStateChangeSubscriber.h"
 
 class SwerveChassis;
 
-class HolonomicDrive : public State
+class HolonomicDrive : public State, IRobotStateChangeSubscriber
 {
 public:
     HolonomicDrive();
@@ -50,11 +51,12 @@ private:
     void PolarDrive();
     void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState);
     void DriveToGamePiece(double forward, double strafe, double rot);
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, double value) override;
 
     SwerveChassis *m_swerve;
     ChassisOptionEnums::DriveStateType m_previousDriveState;
     const double m_slowModeMultiplier = 0.25;
-    const double m_inputScale = 0.8;
+    double m_inputScale = 1.0;
     bool m_CheckTipping = false;
     bool m_checkTippingLatch = false;
     ChassisMovement m_moveInfo;
@@ -62,4 +64,7 @@ private:
     bool m_robotOrientedLatch = false;
     bool m_robotOrientedDrive = false;
     bool m_resetPathplannerTrajectory = false;
+    double m_elevatorHeight;
+    double m_elevatorHeightThreshold = 8.0;
+    double m_dynamicSpeed = 0.5;
 };
