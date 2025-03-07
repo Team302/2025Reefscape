@@ -21,14 +21,13 @@
 
 // Team 302 includes
 #include "state/State.h"
-#include "utils/logging/debug/LoggableItem.h"
 
 // forward declare
 class PrimitiveParams;
 
 // Third Party Includes
 
-class StateMgr : public LoggableItem
+class StateMgr
 {
 public:
     StateMgr();
@@ -47,7 +46,7 @@ public:
     inline State *GetSpecifiedState(unsigned int stateID) const { return stateID < m_stateVector.size() ? m_stateVector[stateID] : nullptr; };
     inline State *GetCurrentStatePtr() const { return m_stateVector[m_currentStateID]; };
 
-    void LogInformation() override;
+    void LogInformation();
 
     void SetAreGamepadTransitionsChecked(bool checkGamepadTransitions) { m_checkGamePadTransitions = checkGamepadTransitions; }
 

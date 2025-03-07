@@ -31,7 +31,6 @@
 #include "units/angular_velocity.h"
 #include "units/dimensionless.h"
 #include "units/velocity.h"
-#include "utils/logging/debug/LoggableItem.h"
 
 // Team 302 Includes
 #include "chassis/SwerveModuleConstants.h"
@@ -41,7 +40,7 @@
 #include "ctre/phoenix6/CANcoder.hpp"
 #include "pathplanner/lib/config/ModuleConfig.h"
 
-class SwerveModule : public LoggableItem
+class SwerveModule
 {
 public:
     SwerveModule() = delete;
@@ -78,7 +77,7 @@ public:
     /// @returns SwerveModuleState
     frc::SwerveModuleState GetState() const;
     frc::SwerveModuleState GetOptimizedState() const { return m_optimizedState; }
-    frc::SwerveModulePosition GetPosition() const;
+    frc::SwerveModulePosition GetPosition();
 
     /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
     /// @param [in] SwerveModuleState& referenceState:   state to set the module to
@@ -107,7 +106,7 @@ public:
     units::current::ampere_t GetSteerCurrentLimit() const { return m_steerTalon->GetStatorCurrent().GetValue(); }
 
     void StopMotors();
-    void LogInformation() override;
+    void LogInformation();
 
     pathplanner::ModuleConfig GetModuleConfig() { return m_moduleConfig; }
 
@@ -160,4 +159,7 @@ private:
     bool m_useFOC = false;
     std::string m_networkTableName;
     pathplanner::ModuleConfig m_moduleConfig;
+
+    units::velocity::meters_per_second_t m_simDriveSpeed;
+    units::length::meter_t m_simDriveDistance;
 };

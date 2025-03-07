@@ -25,6 +25,7 @@
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/DataLogManager.h"
 #include "frc/Timer.h"
+#include "frc/RobotBase.h"
 
 // Team 302 includes
 #include "chassis/states/FieldDrive.h"
@@ -76,7 +77,6 @@ SwerveChassis::SwerveChassis(SwerveModule *frontLeft,
                              units::length::inch_t wheelTrack,
                              units::length::inch_t wheelDiameter,
                              units::velocity::feet_per_second_t maxSpeed) : IChassis(),
-                                                                            LoggableItem(),
                                                                             m_frontLeft(frontLeft),
                                                                             m_frontRight(frontRight),
                                                                             m_backLeft(backLeft),
@@ -296,9 +296,17 @@ units::angle::degree_t SwerveChassis::GetYaw() const
 }
 
 //==================================================================================
-units::angle::degree_t SwerveChassis::GetRawYaw() const
+units::angle::degree_t SwerveChassis::GetRawYaw()
 {
-    return m_pigeon->GetYaw().Refresh().GetValue();
+    if (frc::RobotBase::IsSimulation())
+    {
+        m_simRotation = m_simRotation + (m_rotate * 0.02_s);
+        return m_simRotation;
+    }
+    else
+    {
+        return m_pigeon->GetYaw().Refresh().GetValue();
+    }
 }
 
 //==================================================================================
