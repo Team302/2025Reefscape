@@ -170,9 +170,7 @@ void SwerveChassis::ZeroAlignSwerveModules()
 /// @brief Drive the chassis
 void SwerveChassis::Drive(ChassisMovement &moveInfo)
 {
-    m_drive = moveInfo.chassisSpeeds.vx;
-    m_steer = moveInfo.chassisSpeeds.vy;
-    m_rotate = moveInfo.chassisSpeeds.omega;
+
     if (abs(moveInfo.rawOmega) > 0.05)
     {
         m_rotatingLatch = true;
