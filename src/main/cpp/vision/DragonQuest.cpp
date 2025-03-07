@@ -43,8 +43,8 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[0] + m_xOffset;
-    double y = posarray[2] + m_yOffset;
+    double x = posarray[2] + m_xOffset;
+    double y = posarray[0] + m_yOffset;
     double z = posarray[1] + m_zOffset;
 
     double roll = rotationarray[0] + m_rollOffset;
@@ -66,7 +66,7 @@ bool DragonQuest::IsConnected()
 void DragonQuest::ZeroHeading()
 {
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yawoffsetzero = rotationarray[2];
+    m_yawoffsetzero = rotationarray[1];
 }
 
 void DragonQuest::ZeroPosition()
@@ -98,7 +98,7 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
         m_zOffset += p3d.Z().to<double>();
         units::degree_t roll = p3d.Rotation().X();
         units::degree_t pitch = p3d.Rotation().Y();
-        units::degree_t yaw = p3d.Rotation().Z();
+        units::degree_t yaw = p3d.Rotation().Z(); // + units::degree_t(m_yawoffsetzero);
 
         m_rollOffset += roll.to<double>();
         m_pitchOffset += pitch.to<double>();
