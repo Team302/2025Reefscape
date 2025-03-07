@@ -55,7 +55,6 @@ public:
     void DataLog(uint64_t timestamp) override;
 
     static DragonTargetFinder *GetInstance();
-    std::optional<frc::Pose2d> goalPose;
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
 
 private:
@@ -75,6 +74,7 @@ private:
 
     void SetChassis();
 
+    std::optional<frc::Pose2d> m_goalPose;
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
