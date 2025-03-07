@@ -240,12 +240,8 @@ bool DrivePathPlanner::IsDone()
             return trajDrivePathPlanner->IsDone();
         }
     }
-    else
-    {
-        return true;
-    }
 
-    return false; // TODO: Add logic for IsDone() from TrajectoryDrivePathPlanner
+    return true; // TODO: Add logic for IsDone() from TrajectoryDrivePathPlanner
 }
 
 void DrivePathPlanner::CheckForDriveTo()
