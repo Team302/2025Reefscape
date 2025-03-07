@@ -37,8 +37,7 @@ using namespace std;
 /// @param [in] std::string the name of the file that will set control parameters for this mechanism
 /// @param [in] std::string the name of the network table for logging information
 BaseMech::BaseMech(MechanismTypes::MECHANISM_TYPE type,
-                   string networkTableName) : LoggableItem(),
-                                              m_type(type),
+                   string networkTableName) : m_type(type),
                                               m_ntName(networkTableName)
 {
     if (networkTableName.empty())
@@ -46,8 +45,7 @@ BaseMech::BaseMech(MechanismTypes::MECHANISM_TYPE type,
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("Mech"), string("Mech"), string("network table name is not specified"));
     }
 }
-BaseMech::BaseMech(MechanismTypes::MECHANISM_TYPE type) : LoggableItem(),
-                                                          m_type(type),
+BaseMech::BaseMech(MechanismTypes::MECHANISM_TYPE type) : m_type(type),
                                                           m_ntName()
 {
 }
