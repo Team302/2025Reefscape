@@ -145,7 +145,6 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
-	void LogInformation() override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
