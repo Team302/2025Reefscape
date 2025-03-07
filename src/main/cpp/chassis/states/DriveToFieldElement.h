@@ -71,8 +71,8 @@ private:
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
 
-    const double m_translationKP = 3.5;
-    const double m_translationKI = 0.0;
+    const double m_translationKP = 3.25;
+    const double m_translationKI = 0.1;
     const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
