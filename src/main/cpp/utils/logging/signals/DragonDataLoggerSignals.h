@@ -206,6 +206,12 @@ private:
     wpi::log::StringLogEntry m_driveState;
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionLeftReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionRightReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionCoralStationPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryLeftReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryRightReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryCoralStationPose;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;

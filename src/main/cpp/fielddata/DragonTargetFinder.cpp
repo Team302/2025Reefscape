@@ -83,7 +83,6 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 {
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
-                    goalPose = visTagPose.value().ToPose2d();
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
@@ -99,6 +98,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
                     DragonVisionStructLogger::logPose3d("Left Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Left", fieldRelativeAngle.to<double>());
+                    goalPose = pose3.ToPose2d();
 
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
@@ -123,7 +123,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
                     DragonVisionStructLogger::logPose3d("Right Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
-
+                    goalPose = pose3.ToPose2d();
                     // return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
 
@@ -172,6 +172,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     {
                         if (visiontagpose.value().Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
                         {
+                            goalPose = visiontagpose.value();
                             return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
                         }
                     }
@@ -185,6 +186,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (sidewall.has_value())
                 {
                     auto sidewallpose = fieldconst->GetFieldElementPose(sidewall.value()).ToPose2d();
+                    goalPose = sidewallpose;
                     return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, sidewallpose);
                 }
             }
@@ -194,6 +196,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (alliance.has_value())
                 {
                     auto alliancepose = fieldconst->GetFieldElementPose(alliance.value()).ToPose2d();
+                    goalPose = alliancepose;
                     return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, alliancepose);
                 }
             }
@@ -320,6 +323,8 @@ void DragonTargetFinder::SetChassis()
 
 void DragonTargetFinder::DataLog(uint64_t timestamp)
 {
+
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "GoalPose", "GoalPose has value", goalPose.has_value() ? "true" : "false");
 
     if (goalPose.has_value())
     {

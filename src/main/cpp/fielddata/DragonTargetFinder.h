@@ -52,6 +52,8 @@ enum class DragonTargetFinderData
 class DragonTargetFinder : public DragonDataLogger
 {
 public:
+    void DataLog(uint64_t timestamp) override;
+
     static DragonTargetFinder *GetInstance();
     std::optional<frc::Pose2d> goalPose;
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
@@ -59,7 +61,6 @@ public:
 private:
     DragonTargetFinder();
     ~DragonTargetFinder() = default;
-    void DataLog(uint64_t timestamp) override;
     static DragonTargetFinder *m_instance;
 
     SwerveChassis *m_chassis;
