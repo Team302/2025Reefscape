@@ -111,14 +111,12 @@ void IntakeManager::InitializeLogging()
 	m_IntakeManagerTotalEnergyLogEntry.Append(0.0);
 	m_IntakeManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalWattHours");
 	m_IntakeManagerTotalWattHoursLogEntry.Append(0.0);
-	m_IntakeLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakePosition");
-	m_IntakeLogEntry.Append(0.0);
-	m_IntakeTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakeTarget");
-	m_IntakeTargetLogEntry.Append(0.0);
+
 	m_IntakePowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakePower");
 	m_IntakePowerLogEntry.Append(0.0);
 	m_IntakeEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakeEnergy");
 	m_IntakeEnergyLogEntry.Append(0.0);
+
 	m_ExtenderLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPosition");
 	m_ExtenderLogEntry.Append(0.0);
 	m_ExtenderTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderTarget");
@@ -127,6 +125,7 @@ void IntakeManager::InitializeLogging()
 	m_ExtenderPowerLogEntry.Append(0.0);
 	m_ExtenderEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderEnergy");
 	m_ExtenderEnergyLogEntry.Append(0.0);
+
 	m_IntakeSensorLogEntry = wpi::log::BooleanLogEntry(log, "mechanisms/IntakeManager/IntakeSensor");
 	m_IntakeSensorLogEntry.Append(false);
 
@@ -564,22 +563,27 @@ ControlData *IntakeManager::GetControlData(string name)
 void IntakeManager::DataLog(uint64_t timestamp)
 {
 	auto currTime = m_powerTimer.Get();
-	LogIntake(timestamp, m_Intake->GetPosition().GetValueAsDouble());
+
 	auto IntakePower = DragonPower::CalcPowerEnergy(currTime, m_Intake->GetSupplyVoltage().GetValueAsDouble(), m_Intake->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(IntakePower);
 	m_energy = get<1>(IntakePower);
 	m_totalEnergy += m_energy;
 	LogIntakePower(timestamp, m_power);
 	LogIntakeEnergy(timestamp, m_energy);
-	LogExtender(timestamp, m_Extender->GetPosition().GetValueAsDouble());
+
+	LogExtender(timestamp, (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
+	LogExtenderTarget(timestamp, units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
 	auto ExtenderPower = DragonPower::CalcPowerEnergy(currTime, m_Extender->GetSupplyVoltage().GetValueAsDouble(), m_Extender->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ExtenderPower);
 	m_energy = get<1>(ExtenderPower);
 	m_totalEnergy += m_energy;
 	LogExtenderPower(timestamp, m_power);
 	LogExtenderEnergy(timestamp, m_energy);
+
 	LogIntakeSensor(timestamp, GetIntakeSensorState());
+
 	LogIntakeManagerState(timestamp, GetCurrentState());
+
 	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	LogIntakeManagerTotalEnergy(timestamp, m_totalEnergy);
 	LogIntakeManagerTotalWattHours(timestamp, m_totalWattHours);

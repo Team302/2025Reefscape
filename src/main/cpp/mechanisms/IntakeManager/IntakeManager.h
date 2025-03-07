@@ -142,8 +142,6 @@ private:
 
 	void InitializeLogging();
 
-	wpi::log::DoubleLogEntry m_IntakeLogEntry;
-	wpi::log::DoubleLogEntry m_IntakeTargetLogEntry;
 	wpi::log::DoubleLogEntry m_IntakePowerLogEntry;
 	wpi::log::DoubleLogEntry m_IntakeEnergyLogEntry;
 	wpi::log::DoubleLogEntry m_ExtenderLogEntry;
@@ -160,8 +158,6 @@ private:
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
 
-	void LogIntake(uint64_t timestamp, double value) { return m_IntakeLogEntry.Update(value, timestamp); }
-	void LogIntakeTarget(uint64_t timestamp, double value) { return m_IntakeTargetLogEntry.Update(value, timestamp); }
 	void LogIntakePower(uint64_t timestamp, double value) { return m_IntakePowerLogEntry.Update(value, timestamp); }
 	void LogIntakeEnergy(uint64_t timestamp, double value) { return m_IntakeEnergyLogEntry.Update(value, timestamp); }
 	void LogExtender(uint64_t timestamp, double value) { return m_ExtenderLogEntry.Update(value, timestamp); }

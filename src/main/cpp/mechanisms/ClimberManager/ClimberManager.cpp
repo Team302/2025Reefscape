@@ -98,14 +98,19 @@ void ClimberManager::InitializeLogging()
 	m_ClimberManagerTotalEnergyLogEntry.Append(0.0);
 	m_ClimberManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalWattHours");
 	m_ClimberManagerTotalWattHoursLogEntry.Append(0.0);
+
 	m_ClimberLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPosition");
 	m_ClimberLogEntry.Append(0.0);
+
 	m_ClimberTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberTarget");
 	m_ClimberTargetLogEntry.Append(0.0);
+
 	m_ClimberPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPower");
 	m_ClimberPowerLogEntry.Append(0.0);
+
 	m_ClimberEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberEnergy");
 	m_ClimberEnergyLogEntry.Append(0.0);
+
 	m_ClimberManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/ClimberManager/State");
 	m_ClimberManagerStateLogEntry.Append(0);
 }
@@ -487,14 +492,18 @@ ControlData *ClimberManager::GetControlData(string name)
 void ClimberManager::DataLog(uint64_t timestamp)
 {
 	auto currTime = m_powerTimer.Get();
-	LogClimber(timestamp, m_Climber->GetPosition().GetValueAsDouble());
+
+	LogClimber(timestamp, (units::angle::degree_t(m_Climber->GetPosition().GetValue())).value());
+	LogClimberTarget(timestamp, units::angle::degree_t(m_ClimberPositionDegree.Position).value());
 	auto ClimberPower = DragonPower::CalcPowerEnergy(currTime, m_Climber->GetSupplyVoltage().GetValueAsDouble(), m_Climber->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ClimberPower);
 	m_energy = get<1>(ClimberPower);
 	m_totalEnergy += m_energy;
 	LogClimberPower(timestamp, m_power);
 	LogClimberEnergy(timestamp, m_energy);
+
 	LogClimberManagerState(timestamp, GetCurrentState());
+
 	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	LogClimberManagerTotalEnergy(timestamp, m_totalEnergy);
 	LogClimberManagerTotalWattHours(timestamp, m_totalWattHours);
