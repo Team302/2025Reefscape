@@ -104,6 +104,8 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
 {
     // initialize the same as holonomic drive
     chassisMovement.rawOmega = 0.0;
+    chassisMovement.chassisSpeeds.vx = units::velocity::meters_per_second_t(0.0);
+    chassisMovement.chassisSpeeds.vy = units::velocity::meters_per_second_t(0.0);
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     chassisMovement.headingOption = GetHeadingOption();
