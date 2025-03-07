@@ -20,7 +20,6 @@
 #include <string>
 
 // Team 302 includes
-#include "utils/logging/debug/LoggableItem.h"
 #include "mechanisms/MechanismTypes.h"
 #include "mechanisms/controllers/ControlData.h"
 
@@ -29,7 +28,7 @@ class StateMgr;
 
 ///	 @class Mech
 ///  @brief	base mechanism class
-class BaseMech : public LoggableItem
+class BaseMech
 {
 public:
     /// @brief create the general mechanism
@@ -50,7 +49,7 @@ public:
     virtual std::string GetNetworkTableName() const;
 
     /// @brief log data to the network table if it is activated and time period has past
-    void LogInformation() override;
+    void LogInformation();
 
     void ReadConstants(std::string configfilename, int robotId);
 

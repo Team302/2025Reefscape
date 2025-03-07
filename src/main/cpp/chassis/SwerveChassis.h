@@ -43,7 +43,7 @@
 
 class RobotDrive;
 
-class SwerveChassis : public IChassis, public LoggableItem, public DragonDataLogger
+class SwerveChassis : public IChassis, public DragonDataLogger
 {
 public:
     /// @brief Construct a swerve chassis
@@ -125,7 +125,7 @@ public:
 
     bool IsRotating() const { return m_rotatingLatch; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
-    void LogInformation() override;
+    void LogInformation();
     void DataLog(uint64_t timestamp) override;
 
     units::mass::kilogram_t GetMass() const { return m_mass; }

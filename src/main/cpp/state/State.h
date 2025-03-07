@@ -18,11 +18,9 @@
 #include <string>
 #include <vector>
 
-#include "utils/logging/debug/LoggableItem.h"
-
 ///	 @interface     State
 ///  @brief      	Interface for state classes
-class State : public LoggableItem
+class State
 {
 
 public:
@@ -40,7 +38,7 @@ public:
     virtual bool IsTransitionCondition(bool considerGamepadTransitions);
     std::vector<State *> GetPossibleStateTransitions() const { return m_transitionStates; }
 
-    void LogInformation() override;
+    void LogInformation();
 
     inline std::string GetStateName() const { return m_stateName; }
     inline int GetStateId() const { return m_stateId; }
