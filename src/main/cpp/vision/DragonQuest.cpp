@@ -44,7 +44,7 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
     double x = posarray[2] + m_xOffset;
-    double y = posarray[0] + m_yOffset;
+    double y = -posarray[0] + m_yOffset;
     double z = posarray[1] + m_zOffset;
 
     double roll = rotationarray[0] + m_rollOffset;
