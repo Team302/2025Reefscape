@@ -369,5 +369,9 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
     {
         m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE; // TODO: maybe do robot drive if we can figure out how to transition it correctly
         m_moveInfo.chassisSpeeds = m_moveInfo.chassisSpeeds * m_slowModeMultiplier;
+        if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+        else
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
     }
 }

@@ -56,21 +56,24 @@ private:
     RobotDrive *m_robotDrive;
 
     void InitChassisMovement(ChassisMovement &chassisMovement);
+    void CalculateFeedForward(ChassisMovement &chassisMovement);
 
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
     frc::Pose2d m_endPose;
     const unsigned int m_generatedStatesThreshold = 1;
 
-    const units::inch_t m_distanceThreshold{0.25};
+    const units::length::inch_t m_distanceThreshold{0.25};
+    const units::length::meter_t m_ffMinRadius{0.1};
+    const units::length::meter_t m_ffMaxRadius{1.0};
 
-    const units::velocity::meters_per_second_t kMaxVelocity = 3_mps;
-    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1_mps_sq;
+    const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
+    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1.5_mps_sq;
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
 
-    const double m_translationKP = 4.0;
-    const double m_translationKI = 0.5;
-    const double m_translationKD = 0.2;
+    const double m_translationKP = 3.5;
+    const double m_translationKI = 0.0;
+    const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
 

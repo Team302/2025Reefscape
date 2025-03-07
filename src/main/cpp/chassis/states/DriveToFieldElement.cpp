@@ -54,12 +54,14 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
         m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
         m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
     }
+    CalculateFeedForward(chassisMovement);
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
     if (m_chassis != nullptr)
     {
+        CalculateFeedForward(chassisMovement);
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
         frc::Pose2d currentPose = m_chassis->GetPose();
 
@@ -84,8 +86,11 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         m_translationPIDX.SetGoal(m_endPose.X());
         m_translationPIDY.SetGoal(m_endPose.Y());
 
-        chassisSpeeds.vx = units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
-        chassisSpeeds.vy = units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
+        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
+        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
+
+        chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+        chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
 
         units::angle::degree_t rotationError = chassisMovement.yawAngle - currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
@@ -146,4 +151,28 @@ bool DriveToFieldElement::IsDone()
         return (distance < m_distanceThreshold);
     }
     return true;
+}
+
+void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
+{
+    if (m_chassis != nullptr)
+    {
+        frc::Pose2d currentPose = m_chassis->GetPose();
+        units::meter_t distance = currentPose.Translation().Distance(m_endPose.Translation());
+
+        // Calculate feedforward speed based on distance
+        units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
+        if (distance > m_ffMinRadius)
+        {
+            double feedForwardScale = std::clamp(((distance - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
+            feedforwardSpeed = kMaxVelocity * feedForwardScale;
+        }
+
+        // Apply feedforward to the desired velocity
+        frc::Translation2d translationError = m_endPose.Translation() - currentPose.Translation();
+        frc::Rotation2d angleToTarget = translationError.Angle();
+
+        chassisMovement.chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
+        chassisMovement.chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
+    }
 }
