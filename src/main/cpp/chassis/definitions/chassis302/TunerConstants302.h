@@ -96,7 +96,7 @@ public:
     // This may need to be tuned to your individual robot
     static constexpr units::scalar_t kCoupleRatio = 3.5714285714285716;
 
-    static constexpr units::scalar_t kDriveGearRatio = 8.142857142857142;
+    static constexpr units::scalar_t kDriveGearRatio = 6.75;
     static constexpr units::scalar_t kSteerGearRatio = 21.428571428571427;
     static constexpr units::inch_t kWheelRadius = 2_in;
 
