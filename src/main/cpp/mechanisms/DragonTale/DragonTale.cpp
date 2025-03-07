@@ -1247,23 +1247,30 @@ void DragonTale::IsElevatorInSync()
 	// 		}
 	// 	}
 	// }
-	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
+	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble() - 10.0;
+	double motorCountsTwo = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
+
 	double elevatorCount = (motorCounts / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi;
+	double elevatorCountTwo = (motorCountsTwo / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi - 8.0;
 
 	m_motorCountInches = units::length::inch_t(elevatorCount);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInches", m_motorCountInches.value());
-	// if (m_motorCountInches <= units::length::inch_t(-10))
-	// {
-	// 	m_elevatorRemedialAction = true;
-	// }
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInchesPiMinus", elevatorCountTwo);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInchesOrig", (elevatorCountTwo + 8.0));
 
-	// if (m_elevatorRemedialAction)
-	// {
-	// 	if (m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround)
-	// 	{
-	// 		m_elevatorRemedialAction = false;
-	// 	}
-	// }
+	if (units::length::inch_t(elevatorCountTwo + 8.0) <= units::length::inch_t(-10))
+	{
+		m_elevatorRemedialAction = true;
+	}
+
+	if (m_elevatorRemedialAction)
+	{
+		if (m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround)
+		{
+			m_elevatorRemedialAction = false;
+		}
+	}
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "remedialAction", static_cast<int>(m_elevatorRemedialAction));
 }
 
 void DragonTale::SetAlgaeMotor()
