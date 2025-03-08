@@ -81,10 +81,13 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             {
                 if (m_switchToVision)
                 {
-                    units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
+                    units::angle::degree_t fieldRelativeAngle = visTagPose.value().ToPose2d().Rotation().Degrees() - m_chassis->GetYaw(); // Need to verify if it works for Red and Blue and all the way around the reef
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
                     m_goalPose = frc::Pose2d(visTagPose.value().X(), visTagPose.value().Y(), frc::Rotation2d(fieldRelativeAngle));
-                    return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose X", visTagPose.value().X().value());
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose Y", visTagPose.value().Y().value());
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose Rotation", visTagPose.value().Rotation().Angle().value() * 180.0 / M_PI);
+                    // return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
                 }
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
             }

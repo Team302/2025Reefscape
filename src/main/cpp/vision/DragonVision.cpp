@@ -638,8 +638,10 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 			auto trans3d = visdata.value().transformToTarget;
 			auto targetPose = currentPose + trans3d;
 			units::angle::degree_t robotRelativeAngle = visdata.value().rotationToTarget.Z(); // value is robot to target
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonVision xxx"), std::string("robotRelativeAngle"), robotRelativeAngle.value());
 
 			units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonVision xxx"), std::string("fieldRelativeAngle"), fieldRelativeAngle.value());
 			auto pose = frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
 			return frc::Pose3d(pose);
 		}
