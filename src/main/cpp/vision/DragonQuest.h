@@ -64,14 +64,7 @@ private:
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
-
-    double m_xOffset = 0;
-    double m_yOffset = 0;
-    double m_zOffset = 0;
-
-    double m_rollOffset = 0;
-    double m_pitchOffset = 0;
-    double m_yawOffset = 0;
+    nt::DoubleArrayPublisher m_initialPosePublisher;
 
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
