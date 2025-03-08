@@ -1312,8 +1312,6 @@ void DragonTale::IsElevatorInSync()
 
 	m_motorCountInches = units::length::inch_t(elevatorCount);
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_elevatorCountInches", m_motorCountInches.value());
-
 	if (m_motorCountInches <= units::length::inch_t(-10))
 	{
 		m_elevatorRemedialAction = true;
@@ -1326,7 +1324,6 @@ void DragonTale::IsElevatorInSync()
 			m_elevatorRemedialAction = false;
 		}
 	}
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "remedialAction", static_cast<int>(m_elevatorRemedialAction));
 }
 
 void DragonTale::SetAlgaeMotor()
