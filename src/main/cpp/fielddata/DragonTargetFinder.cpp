@@ -126,7 +126,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
 
                     m_goalPose = pose3.ToPose2d();
-                    return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value());
                 }
 
                 // If no vision, then just use odometry based pose
@@ -175,7 +175,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                         if (visiontagpose.value().Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
                         {
                             m_goalPose = visiontagpose.value();
-                            return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
+                            return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value());
                         }
                     }
                 }
