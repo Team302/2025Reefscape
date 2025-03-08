@@ -31,12 +31,11 @@
 #include <teleopcontrol/TeleopControlButton.h>
 #include <teleopcontrol/TeleopControlFunctions.h>
 #include <teleopcontrol/TeleopControlMappingEnums.h>
-#include "utils/logging/debug/LoggableItem.h"
 
 // third part
 #include <RobinHood/robin_hood.h>
 
-class TeleopControl : LoggableItem
+class TeleopControl
 {
 public:
     //----------------------------------------------------------------------------------
@@ -79,7 +78,7 @@ public:
         bool rightRumble // <I> - rumble right
     );
 
-    void LogInformation() override;
+    void LogInformation();
 
 private:
     //----------------------------------------------------------------------------------

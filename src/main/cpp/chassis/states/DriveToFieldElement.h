@@ -22,27 +22,27 @@
 
 // FRC Includes
 #include "frc/geometry/Pose2d.h"
+#include "units/length.h"
 #include "units/angle.h"
+#include "units/velocity.h"
+#include "units/angular_velocity.h"
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
 // Team302 Includes
 #include "chassis/states/RobotDrive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
-#include "chassis/states/TrajectoryDrivePathPlanner.h"
 
-class DriveToFieldElement : public TrajectoryDrivePathPlanner
+class DriveToFieldElement : public RobotDrive
 {
 public:
-    DriveToFieldElement(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner);
+    DriveToFieldElement(RobotDrive *robotDrive);
 
-    pathplanner::PathPlannerTrajectory
-    CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info);
+    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
 
     void Init(ChassisMovement &chassisMovement) override;
-    void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) override;
-    pathplanner::PathPlannerTrajectory GetTrajectory() const { return m_trajectory; }
-    std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
+    bool IsDone();
 
 protected:
     virtual DragonTargetFinderTarget GetDriveToTarget() const = 0;
@@ -51,11 +51,34 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
+    void LogMoveInfo(ChassisMovement &moveInfo);
+
+    RobotDrive *m_robotDrive;
+
     void InitChassisMovement(ChassisMovement &chassisMovement);
+    void CalculateFeedForward(ChassisMovement &chassisMovement);
 
-    pathplanner::PathPlannerTrajectory CreateDriveToFieldElementTrajectory(frc::Pose2d currentPose, frc::Pose2d csaPose);
-
-    pathplanner::PathPlannerTrajectory m_trajectory;
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
-    std::optional<frc::Pose2d> m_endPose = std::nullopt;
+    frc::Pose2d m_endPose;
+    const unsigned int m_generatedStatesThreshold = 1;
+
+    const units::length::inch_t m_distanceThreshold{0.25};
+    const units::length::meter_t m_ffMinRadius{0.1};
+    const units::length::meter_t m_ffMaxRadius{1.0};
+
+    const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
+    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1.5_mps_sq;
+
+    const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
+
+    const double m_translationKP = 3.25;
+    const double m_translationKI = 0.1;
+    const double m_translationKD = 0.0;
+
+    const double m_rotationKP = 6.0;
+
+    frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
+
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
 };

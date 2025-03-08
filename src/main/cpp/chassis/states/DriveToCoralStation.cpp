@@ -24,8 +24,8 @@
 
 using std::string;
 
-DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
-    : DriveToFieldElement(robotDrive, trajectoryDrivePathPlanner)
+DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
 }
 
@@ -36,7 +36,7 @@ string DriveToCoralStation::GetDriveStateName() const
 
 DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE;
+    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE;
 }
 ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() const
 {

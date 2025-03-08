@@ -18,23 +18,20 @@
 #include <string>
 
 #include "configs/MechanismConfigCOMP_BOT_302.h"
-#include "configs/MechanismConfigMgr.h"
-#include "configs/RobotElementNames.h"
 #include "feedback/DragonLeds.h"
 #include "utils/logging/debug/Logger.h"
-#include "utils/PeriodicLooper.h"
 
 using std::string;
 
 void MechanismConfigCOMP_BOT_302::DefineMechanisms()
 {
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("ClimberManager"), "");
-	m_theClimberManager = new ClimberManager(RobotIdentifier::COMP_BOT_302);
-	m_theClimberManager->CreateCOMP_BOT302();
-	m_theClimberManager->CreateAndRegisterStates();
-	m_theClimberManager->InitializeCOMP_BOT302();
-	m_theClimberManager->Init(/*m_theClimberManager*/);
-	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER] = m_theClimberManager;
+	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("ClimberManager"), "");
+	// m_theClimberManager = new ClimberManager(RobotIdentifier::COMP_BOT_302);
+	// m_theClimberManager->CreateCOMP_BOT302();
+	// m_theClimberManager->CreateAndRegisterStates();
+	// m_theClimberManager->InitializeCOMP_BOT302();
+	// m_theClimberManager->Init(/*m_theClimberManager*/);
+	// m_mechanismMap[MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER] = m_theClimberManager;
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("DragonTale"), "");
 	m_theDragonTale = new DragonTale(RobotIdentifier::COMP_BOT_302);
@@ -44,13 +41,13 @@ void MechanismConfigCOMP_BOT_302::DefineMechanisms()
 	m_theDragonTale->Init(/*m_theDragonTale*/);
 	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::DRAGON_TALE] = m_theDragonTale;
 
-	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("IntakeManager"), "");
-	// m_theIntakeManager = new IntakeManager(RobotIdentifier::COMP_BOT_302);
-	// m_theIntakeManager->CreateCOMP_BOT302();
-	// m_theIntakeManager->CreateAndRegisterStates();
-	// m_theIntakeManager->InitializeCOMP_BOT302();
-	// m_theIntakeManager->Init(/*m_theIntakeManager*/);
-	// m_mechanismMap[MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER] = m_theIntakeManager;
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("IntakeManager"), "");
+	m_theIntakeManager = new IntakeManager(RobotIdentifier::COMP_BOT_302);
+	m_theIntakeManager->CreateCOMP_BOT302();
+	m_theIntakeManager->CreateAndRegisterStates();
+	m_theIntakeManager->InitializeCOMP_BOT302();
+	m_theIntakeManager->Init(/*m_theIntakeManager*/);
+	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER] = m_theIntakeManager;
 }
 
 StateMgr *MechanismConfigCOMP_BOT_302::GetMechanism(MechanismTypes::MECHANISM_TYPE mechType)

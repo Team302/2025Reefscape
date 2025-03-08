@@ -17,12 +17,9 @@
 
 #include <string>
 
-#include "configs/MechanismConfigMgr.h"
 #include "configs/MechanismConfigPRACTICE_BOT_9999.h"
-#include "configs/RobotElementNames.h"
 #include "feedback/DragonLeds.h"
 #include "utils/logging/debug/Logger.h"
-#include "utils/PeriodicLooper.h"
 
 using std::string;
 

@@ -16,15 +16,12 @@
 
 #pragma once
 
-// C++ Includes
-#include <memory>
 
 // FRC includes
 #include "units/time.h"
 
 // Team 302 includes
 #include "auton/drivePrimitives/DriveStop.h"
-#include "auton/AutonSelector.h"
 
 // Third Party Includes
 

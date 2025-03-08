@@ -14,10 +14,8 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "chassis/definitions/chassis9998/TunerConstants9998.h"
+
 #include "chassis/definitions/ChassisConfig.h"
-#include "ctre/phoenix6/Pigeon2.hpp"
-#include "units/length.h"
 
 class ChassisConfigChassis_9998 : public ChassisConfig
 {

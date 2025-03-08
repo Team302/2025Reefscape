@@ -160,29 +160,31 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
     {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
-    {TeleopControlFunctions::AUTO_CLIMB, driverDPad180},
+    {TeleopControlFunctions::AUTO_CLIMB_DOWN, driverDPad180},
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
-    {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
+    {TeleopControlFunctions::POLAR_DRIVE, driverLBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
-    {TeleopControlFunctions::AUTO_ALIGN_CENTER, driverYButton},
+    {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
-    {TeleopControlFunctions::INTAKE, driverLBumper},
     {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
+    {TeleopControlFunctions::INTAKE, driverRTriggerPressed},
+    {TeleopControlFunctions::SLOW_MODE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
-    {TeleopControlFunctions::L1_SCORING_POSITION, copilotRTriggerPressed},
     {TeleopControlFunctions::L2_SCORING_POSITION, copilotAButton},
     {TeleopControlFunctions::L3_SCORING_POSITION, copilotXButton},
     {TeleopControlFunctions::L4_SCORING_POSITION, copilotYButton},
-    {TeleopControlFunctions::ALGAE_INTAKE, copilotLBumper},
+    {TeleopControlFunctions::ALGAE_INTAKE, copilotLTriggerPressed},
     {TeleopControlFunctions::SCORE, copilotRBumper},
     {TeleopControlFunctions::SCORING_MODE, copilotSelectButton},
     {TeleopControlFunctions::HUMAN_PLAYER_STATION, copilotBButton},
-    {TeleopControlFunctions::MANUAL_ON, copilotDPad0},
-    {TeleopControlFunctions::MANUAL_OFF, copilotDPad180},
+    {TeleopControlFunctions::MANUAL_ON, copilotLStickPressed},
+    {TeleopControlFunctions::MANUAL_OFF, copilotRStickPressed},
+    {TeleopControlFunctions::ALGAE_HIGH, copilotDPad0},
+    {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };
@@ -195,7 +197,7 @@ const TeleopControlAxis driverLTrigger = {TeleopControlMappingEnums::DRIVER, Tel
 const TeleopControlAxis driverRTrigger = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::RIGHT_TRIGGER, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::SYNCED, 1.0};
 
 const TeleopControlAxis copilotLJoystickX = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::LEFT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::SYNCED, 1.0};
-const TeleopControlAxis copilotLJoystickY = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::LEFT_JOYSTICK_Y, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::REVERSED, 0.5};
+const TeleopControlAxis copilotLJoystickY = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::LEFT_JOYSTICK_Y, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::REVERSED, 1.0};
 const TeleopControlAxis copilotRJoystickX = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::RIGHT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::SYNCED, 1.0};
 const TeleopControlAxis copilotRJoystickY = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::RIGHT_JOYSTICK_Y, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::REVERSED, 1.0};
 const TeleopControlAxis copilotLTrigger = {TeleopControlMappingEnums::CO_PILOT, TeleopControlMappingEnums::LEFT_TRIGGER, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::CUBED, TeleopControlMappingEnums::SYNCED, 1.0};
@@ -237,6 +239,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlA
     {TeleopControlFunctions::ELAVATOR, copilotLJoystickY},
     {TeleopControlFunctions::ARM, copilotRJoystickY},
     {TeleopControlFunctions::MANUAL_IN, copilotLTrigger},
-    {TeleopControlFunctions::MANUAL_OUT, copilotRTrigger}
+    {TeleopControlFunctions::MANUAL_OUT, copilotRTrigger},
+    {TeleopControlFunctions::CAPPING, copilotRTrigger}
 
 };

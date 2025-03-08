@@ -39,12 +39,11 @@
 #include "units/mass.h"
 #include "units/moment_of_inertia.h"
 #include "units/velocity.h"
-#include "utils/logging/debug/LoggableItem.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 class RobotDrive;
 
-class SwerveChassis : public IChassis, public LoggableItem, public DragonDataLogger
+class SwerveChassis : public IChassis, public DragonDataLogger
 {
 public:
     /// @brief Construct a swerve chassis
@@ -77,9 +76,6 @@ public:
     /// @brief Drive the chassis
     void Drive(ChassisMovement &moveInfo) override;
 
-    /// @brief update the chassis odometry based on current states of the swerve modules and the pigeon
-    void UpdateOdometry();
-
     /// @brief Provide the current chassis speed information
     frc::ChassisSpeeds GetChassisSpeeds() const;
 
@@ -108,7 +104,7 @@ public:
     SwerveModule *GetBackRight() const { return m_backRight; }
     frc::Pose2d GetPose() const;
     units::angle::degree_t GetYaw() const override;
-    units::angle::degree_t GetRawYaw() const;
+    units::angle::degree_t GetRawYaw();
 
     units::angle::degree_t GetPitch() const;
     units::angle::degree_t GetRoll() const;
@@ -129,7 +125,7 @@ public:
 
     bool IsRotating() const { return m_rotatingLatch; }
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
-    void LogInformation() override;
+    void LogInformation();
     void DataLog(uint64_t timestamp) override;
 
     units::mass::kilogram_t GetMass() const { return m_mass; }
@@ -191,6 +187,9 @@ private:
     units::moment_of_inertia::kilogram_square_meter_t m_momentOfInertia = units::moment_of_inertia::kilogram_square_meter_t(26.0); // TODO put a real value in
     pathplanner::RobotConfig m_robotConfig;
     frc::Timer m_velocityTimer;
+
+    const units::angle::degree_t m_specifiedHeadingTolerance{0.5};
+    units::angle::degree_t m_simRotation{0.0};
 
     double m_totalEnergy = 0.0;
     double m_totalWattHours = 0.0;

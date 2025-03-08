@@ -106,7 +106,14 @@ public:
         CURRENT_CHASSIS_POSE2D,
         CURRENT_CHASSIS_LIMELIGHT_POSE3D,
         CURRENT_CHASSIS_LIMELIGHT2_POSE3D,
-        CURRENT_CHASSIS_QUEST_POSE3D
+        CURRENT_CHASSIS_QUEST_POSE3D,
+        VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE,
+        VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE,
+        VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE,
+        ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE,
+        ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE,
+        ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE
+
     };
 
     enum ChassisSpeedSignals
@@ -199,6 +206,12 @@ private:
     wpi::log::StringLogEntry m_driveState;
 
     wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionLeftReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionRightReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_visionCoralStationPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryLeftReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryRightReefBranchPose;
+    wpi::log::StructLogEntry<frc::Pose2d> m_odometryCoralStationPose;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;

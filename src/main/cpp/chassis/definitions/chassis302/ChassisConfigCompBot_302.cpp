@@ -19,6 +19,7 @@
 #include "chassis/SwerveModule.h"
 #include "chassis/SwerveModuleConstants.h"
 #include "utils/logging/debug/Logger.h"
+#include "chassis/definitions/chassis302/TunerConstants302.h"
 
 using ctre::phoenix6::configs::MountPoseConfigs;
 using ctre::phoenix6::hardware::Pigeon2;

@@ -108,7 +108,7 @@ void HolonomicDrive::Run()
         InitSpeeds(forward, strafe, rotate);
 
         // teleop buttons to check for mode changes
-        auto isResetPoseSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
+        auto isResetYawSelected = controller->IsButtonPressed(TeleopControlFunctions::RESET_POSITION);
         auto isAlignGamePieceSelected = false;
         auto isRobotOriented = controller->IsButtonPressed(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
         auto isHoldPositionSelected = controller->IsButtonPressed(TeleopControlFunctions::HOLD_POSITION);
@@ -132,22 +132,22 @@ void HolonomicDrive::Run()
         }
         else if (driveToLeftReefBranch)
         {
-            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
         }
         else if (driveToRightReefBranch)
         {
-            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH, ChassisOptionEnums::HeadingOption::FACE_REEF_FACE);
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
         }
         else if (driveToCoralStation)
         {
-            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION, ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION);
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION);
         }
         else
         {
             // Switch Heading Options
-            if (isResetPoseSelected)
+            if (isResetYawSelected)
             {
-                ResetPose();
+                ResetYaw();
             }
             else if (isFaceForward)
             {
@@ -230,6 +230,10 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
 {
     m_moveInfo.rawOmega = rotateScale;
 
+    forwardScale *= m_inputScale;
+    strafeScale *= m_inputScale;
+    rotateScale *= m_inputScale;
+
     auto maxSpeed = m_swerve->GetMaxSpeed();
     auto maxAngSpeed = m_swerve->GetMaxAngularSpeed();
     auto scale = (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue) ? 1.0 : -1.0;
@@ -245,7 +249,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 
-void HolonomicDrive::ResetPose()
+void HolonomicDrive::ResetYaw()
 {
 
     if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
@@ -354,18 +358,20 @@ bool HolonomicDrive::AtTarget()
 {
     return false;
 }
-void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState)
+void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState)
 {
     if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || m_resetPathplannerTrajectory == false)
     {
         m_moveInfo.driveOption = driveState;
-        m_moveInfo.headingOption = headingState;
         m_resetPathplannerTrajectory = false;
     }
     else
     {
         m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE; // TODO: maybe do robot drive if we can figure out how to transition it correctly
-        m_moveInfo.headingOption = headingState;
         m_moveInfo.chassisSpeeds = m_moveInfo.chassisSpeeds * m_slowModeMultiplier;
+        if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+        else
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
     }
 }

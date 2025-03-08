@@ -26,6 +26,7 @@
 #include "units/angle.h"
 #include "units/length.h"
 #include "units/velocity.h"
+#include "frc/RobotBase.h"
 
 // Team 302 includes
 #include "chassis/SwerveChassis.h"
@@ -81,8 +82,7 @@ SwerveModule::SwerveModule(std::string canbusname,
                            bool canCoderInverted,
                            const units::angle::turn_t angleOffset,
                            ctre::phoenix6::configs::Slot0Configs steerGains,
-                           std::string networkTableName) : LoggableItem(),
-                                                           m_moduleID(id),
+                           std::string networkTableName) : m_moduleID(id),
                                                            m_driveTalon(new TalonFX(driveMotorID, canbusname)),
                                                            m_steerTalon(new TalonFX(turnMotorID, canbusname)),
                                                            m_steerCancoder(new CANcoder(canCoderID, canbusname)),
@@ -97,6 +97,8 @@ SwerveModule::SwerveModule(std::string canbusname,
     Rotation2d ang{units::angle::degree_t(0.0)};
     m_activeState.angle = ang;
     m_activeState.speed = 0_mps;
+    m_simDriveDistance = 0_m;
+    m_simDriveSpeed = 0_mps;
 
     m_wheelDiameter = wheelDiameter;
     m_maxSpeed = maxSpeed;
@@ -151,12 +153,19 @@ SwerveModuleState SwerveModule::GetState() const
 //==================================================================================
 /// @brief Get the current position of the swerve module (distance and rotation)
 /// @return frc::SwerveModulePosition - current position
-frc::SwerveModulePosition SwerveModule::GetPosition() const
+frc::SwerveModulePosition SwerveModule::GetPosition()
 {
     double rotations = 0.0;
     rotations = m_driveTalon->GetPosition().GetValueAsDouble();
     units::angle::degree_t angle = m_steerCancoder->GetAbsolutePosition().GetValue();
     Rotation2d currAngle = Rotation2d(angle);
+
+    if (frc::RobotBase::IsSimulation())
+    {
+        m_simDriveDistance = m_simDriveDistance + (m_simDriveSpeed * 0.02_s);
+        currAngle = Rotation2d(m_activeState.angle.Degrees());
+        return {m_simDriveDistance, currAngle};
+    }
 
     return {rotations * m_wheelDiameter * numbers::pi, // distance travled by drive motor
             currAngle};                                // angle of the swerve module from sensor
@@ -223,6 +232,8 @@ void SwerveModule::SetDriveSpeed(units::velocity::meters_per_second_t speed)
     }
     else
         m_driveTalon->SetControl(ctre::phoenix6::controls::NeutralOut());
+
+    m_simDriveSpeed = m_activeState.speed;
 }
 
 //==================================================================================

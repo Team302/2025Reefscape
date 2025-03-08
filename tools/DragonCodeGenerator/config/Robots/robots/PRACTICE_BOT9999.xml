@@ -2487,7 +2487,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>0</value>
+              <value>1</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2511,7 +2511,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>1</value>
+              <value>0</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2814,6 +2814,7 @@
               <value>true</value>
             </enableFOC>
             <controlType>POSITION_DEGREES</controlType>
+            <GravityType>Arm_Cosine</GravityType>
           </motorControlData>
           <motorControlData>
             <name>PercentOutput</name>
@@ -3239,6 +3240,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
+                  <value>0.5</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3516,7 +3518,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>70</value>
+                  <value>73</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -3535,7 +3537,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
-                  <value>6</value>
+                  <value>6.5</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -3692,7 +3694,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>0.5</value>
+                  <value>1</value>
                 </target>
                 <motorName>Algae</motorName>
                 <Enabled>
@@ -4287,7 +4289,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>45</value>
+                  <value>73</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4306,7 +4308,7 @@
                   <name>Target</name>
                   <__units__>in</__units__>
                   <type>Double</type>
-                  <value>12</value>
+                  <value>6.5</value>
                 </target>
                 <motorName>ElevatorLeader</motorName>
                 <Enabled>
@@ -4428,7 +4430,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>61</value>
+                  <value>55</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4569,7 +4571,7 @@
                   <name>Target</name>
                   <__units__>deg</__units__>
                   <type>Double</type>
-                  <value>53</value>
+                  <value>50</value>
                 </target>
                 <motorName>Arm</motorName>
                 <Enabled>
@@ -4725,7 +4727,7 @@
                   <name>Target</name>
                   <__units__ />
                   <type>Double</type>
-                  <value>1</value>
+                  <value>0.5</value>
                 </target>
                 <motorName>Coral</motorName>
                 <Enabled>

@@ -28,6 +28,7 @@
 #include "vision/DragonVisionStructs.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "utils/AngleUtils.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -36,9 +37,8 @@
 using namespace pathplanner;
 using namespace std;
 
-DriveToFieldElement::DriveToFieldElement(
-    RobotDrive *robotDrive,
-    TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner) : TrajectoryDrivePathPlanner(robotDrive)
+DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
+                                                                   m_robotDrive(robotDrive)
 {
 }
 
@@ -46,107 +46,133 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-    m_endPose = std::nullopt;
-
-    // if (!IsDone()) //TODO: don't generate if you are within a certain distance to the pose
-    // {
-    m_trajectory = CreateTrajectory(info);
-    InitFromTrajectory(chassisMovement, m_trajectory);
     m_currentType = get<0>(info.value());
-    // }
-}
-
-void DriveToFieldElement::InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory)
-{
-    m_trajectory = trajectory;
-    if (!m_trajectory.getStates().empty())
-    {
-        chassisMovement.pathplannerTrajectory = m_trajectory;
-        chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::SHORT;
-        TrajectoryDrivePathPlanner::Init(chassisMovement);
-    }
-}
-
-pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info)
-{
-
-    pathplanner::PathPlannerTrajectory trajectory;
+    m_endPose = get<1>(info.value());
 
     if (m_chassis != nullptr)
     {
-        if (info.has_value())
-        {
-            m_endPose = std::get<frc::Pose2d>(info.value());
-            trajectory = CreateDriveToFieldElementTrajectory(m_chassis->GetPose(), m_endPose.value()); // No need to check has_value since we just set it on the previous line
-        }
+        m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
+        m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
     }
-    return trajectory;
-}
-
-pathplanner::PathPlannerTrajectory DriveToFieldElement::CreateDriveToFieldElementTrajectory(frc::Pose2d currentPose2d, frc::Pose2d targetPose)
-{
-    PathPlannerTrajectory trajectory;
-
-    auto endheading = GetModifiedHeadingValue(targetPose.Rotation().Degrees());
-    frc::Pose2d endPose = frc::Pose2d(targetPose.Translation(), endheading);
-
-    DragonVisionStructLogger::logPose2d("current pose", currentPose2d);
-    DragonVisionStructLogger::logPose2d("target pose", endPose);
-
-    pathplanner::PathConstraints constraints(m_maxVel, m_maxAccel, m_maxAngularVel, m_maxAngularAccel);
-    std::vector<frc::Pose2d> poses{currentPose2d, endPose};
-    std::vector<Waypoint> waypoints = PathPlannerPath::waypointsFromPoses(poses);
-    shared_ptr<PathPlannerPath> path;
-
-    path = std::make_shared<PathPlannerPath>(
-        waypoints,
-        constraints,
-        std::nullopt,
-        GoalEndState(0.0_mps, endPose.Rotation()), false);
-
-    path->preventFlipping = true;
-
-    trajectory = path.get()->generateTrajectory(m_chassis->GetChassisSpeeds(), currentPose2d.Rotation(), m_chassis->GetRobotConfig());
-    return trajectory;
+    CalculateFeedForward(chassisMovement);
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-    frc::Pose2d newEndPose = get<1>(info.value());
-    auto regenerate = false;
-    if (m_endPose.has_value())
+    if (m_chassis != nullptr)
     {
-        regenerate = m_endPose.value().Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-    }
+        CalculateFeedForward(chassisMovement);
+        auto chassisSpeeds = chassisMovement.chassisSpeeds;
+        frc::Pose2d currentPose = m_chassis->GetPose();
 
-    if (info && (m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
-    {
-        m_trajectory = CreateTrajectory(info);
-        InitFromTrajectory(chassisMovement, m_trajectory);
-    }
-    m_currentType = get<0>(info.value());
+        auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
+        if (info.has_value())
+        {
+            frc::Pose2d newEndPose = get<1>(info.value());
+            auto regenerate = false;
 
-    return TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(chassisMovement);
+            regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
+
+            if ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+            {
+                m_endPose = newEndPose;
+            }
+            m_currentType = get<0>(info.value());
+        }
+
+        DragonVisionStructLogger::logPose2d("current pose", currentPose);
+        DragonVisionStructLogger::logPose2d("target pose", m_endPose);
+
+        m_translationPIDX.SetGoal(m_endPose.X());
+        m_translationPIDY.SetGoal(m_endPose.Y());
+
+        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
+        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
+
+        chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+        chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+
+        units::angle::degree_t rotationError = chassisMovement.yawAngle - currentPose.Rotation().Degrees();
+        rotationError = AngleUtils::GetEquivAngle(rotationError);
+        chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+
+        auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+        chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                                    chassisSpeeds.vy,
+                                                                                    chassisSpeeds.omega,
+                                                                                    rot2d);
+    }
+    return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
 void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
 {
     // initialize the same as holonomic drive
     chassisMovement.rawOmega = 0.0;
+    chassisMovement.chassisSpeeds.vx = units::velocity::meters_per_second_t(0.0);
+    chassisMovement.chassisSpeeds.vy = units::velocity::meters_per_second_t(0.0);
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
-    chassisMovement.headingOption = ChassisOptionEnums::IGNORE;
+    chassisMovement.headingOption = GetHeadingOption();
     chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
-    if (chassis != nullptr)
-    {
-        chassisMovement.yawAngle = chassis->GetYaw();
-    }
+    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
+    chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
     chassisMovement.checkTipping = false;
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
+}
+void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
+{
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "heading option", moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "drive option", moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", moveInfo.chassisSpeeds.vx.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", moveInfo.chassisSpeeds.vy.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "omega", moveInfo.chassisSpeeds.omega.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose x", moveInfo.targetPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose y", moveInfo.targetPose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "yaw angle", moveInfo.yawAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "raw omega", moveInfo.rawOmega);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "controller type", moveInfo.controllerType);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "no movement option", moveInfo.noMovementOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.Y().value());
+}
+
+bool DriveToFieldElement::IsDone()
+{
+    if (m_chassis != nullptr)
+    {
+        auto currentPose = m_chassis->GetPose();
+        auto distance = currentPose.Translation().Distance(m_endPose.Translation());
+        return (distance < m_distanceThreshold);
+    }
+    return true;
+}
+
+void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
+{
+    if (m_chassis != nullptr)
+    {
+        frc::Pose2d currentPose = m_chassis->GetPose();
+        units::meter_t distance = currentPose.Translation().Distance(m_endPose.Translation());
+
+        // Calculate feedforward speed based on distance
+        units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
+        if (distance > m_ffMinRadius)
+        {
+            double feedForwardScale = std::clamp(((distance - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
+            feedforwardSpeed = kMaxVelocity * feedForwardScale;
+        }
+
+        // Apply feedforward to the desired velocity
+        frc::Translation2d translationError = m_endPose.Translation() - currentPose.Translation();
+        frc::Rotation2d angleToTarget = translationError.Angle();
+
+        chassisMovement.chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
+        chassisMovement.chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
+    }
 }

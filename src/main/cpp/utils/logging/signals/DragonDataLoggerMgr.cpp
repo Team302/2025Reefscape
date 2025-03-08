@@ -39,7 +39,8 @@ DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
 DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignals(), m_boolDatalogSignals(), m_stringDatalogSignals()
 {
     auto logFolder = GetLoggingDir();
-    frc::DataLogManager::Start(logFolder, CreateLogFileName());
+    // frc::DataLogManager::Start(logFolder, CreateLogFileName());
+    frc::DataLogManager::Start();
     frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
     DragonDataLoggerSignals::GetInstance();
 
