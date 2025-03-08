@@ -1081,9 +1081,6 @@ void DragonTale::RunCommonTasks()
 	IsElevatorInSync();
 	SetAlgaeMotor();
 	Cyclic();
-	// DataLog();
-
-	LogInformation();
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
