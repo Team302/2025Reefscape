@@ -13,8 +13,8 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "units/time.h"
-#include "vision/DragonQuest.h"
 #include "utils/AngleUtils.h"
+#include "vision/DragonQuest.h"
 
 DragonQuest *DragonQuest::m_dragonquest = nullptr;
 DragonQuest *DragonQuest::GetDragonQuest()
@@ -40,21 +40,70 @@ DragonQuest::DragonQuest()
 frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     RefreshNT();
+
+    /* TODO: Eventually need to addd quest into a camera config and use the camera config to set the mounting offsets
+    frc::Pose3d DragonQuest::GetEstimatedPose()
+    {
+        RefreshNT();
+        std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
+        std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
+
+        // Apply mounting transformation dynamically
+        double x = posarray[2] * cos(units::degree_t(m_yawMountOffset).to<double>()) +
+                   posarray[0] * sin(units::degree_t(m_yawMountOffset).to<double>()) +
+                   m_xOffset;
+
+        double y = -posarray[0] * cos(units::degree_t(m_yawMountOffset).to<double>()) +
+                   posarray[2] * sin(units::degree_t(m_yawMountOffset).to<double>()) +
+                   m_yOffset;
+
+        double z = posarray[1] + m_zOffset;
+
+        // Apply rotation correction
+        double roll = rotationarray[0] + m_rollMountOffset + m_rollOffset;
+        double pitch = rotationarray[2] + m_pitchMountOffset + m_pitchOffset;
+        double yaw = rotationarray[1] + m_yawMountOffset + m_yawOffset;
+
+        frc::Translation3d translation = frc::Translation3d{
+            units::length::meter_t(x),
+            units::length::meter_t(y),
+            units::length::meter_t(z)};
+
+        frc::Rotation3d rotation = frc::Rotation3d{
+            units::angle::degree_t(roll),
+            units::angle::degree_t(pitch),
+            units::angle::degree_t(yaw)};
+
+        return frc::Pose3d{translation, rotation};
+    }
+
+    void DragonQuest::SetMountingPose(double xOffset, double yOffset, double zOffset,
+                                  double rollOffset, double pitchOffset, double yawOffset) Add this method
+{
+    m_xMountOffset = xOffset;
+    m_yMountOffset = yOffset;
+    m_zMountOffset = zOffset;
+
+    m_rollMountOffset = rollOffset;
+    m_pitchMountOffset = pitchOffset;
+    m_yawMountOffset = yawOffset;
+}
+    */
+
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[2] + m_xOffset;
-    double y = -posarray[0] + m_yOffset;
-    double z = posarray[1] + m_zOffset;
+    double x = m_xOffset - posarray[2];
+    double y = m_xOffset + posarray[0];
+    double z = m_zOffset + posarray[1];
 
     double roll = rotationarray[0] + m_rollOffset;
     double pitch = rotationarray[2] + m_pitchOffset;
-    double yaw = rotationarray[1] + m_yawOffset;
+    double yaw = -rotationarray[1] + m_yawOffset;
 
     frc::Translation3d translation = frc::Translation3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z)};
 
     frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)};
-    translation.RotateBy(rotation);
     return frc::Pose3d{translation, rotation};
 }
 
