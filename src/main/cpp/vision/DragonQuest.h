@@ -52,7 +52,6 @@ public:
 private:
     DragonQuest();
     ~DragonQuest() = default;
-    void ZeroHeading();
     void ZeroPosition();
     units::angle::degree_t GetOculusYaw();
     void RefreshNT();
@@ -60,7 +59,6 @@ private:
     std::shared_ptr<nt::NetworkTable> m_networktable;
     std::shared_ptr<nt::NetworkTable> m_limelightNetworktable;
     static DragonQuest *m_dragonquest;
-    double m_yawoffsetzero = 0;
     nt::IntegerSubscriber m_questMiso;
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
@@ -68,7 +66,7 @@ private:
     nt::DoubleArrayPublisher m_initialPosePublisher;
 
     frc::Pose3d m_currentpos;
-    double m_yaw = 0;
+    double m_yawOffset = 180;
 
     bool m_hasreset = false;
 
