@@ -71,7 +71,7 @@ private:
 
     double m_rollOffset = 0;
     double m_pitchOffset = 0;
-    double m_yawOffset = 0;
+    double m_yawOffset = 180;
 
     frc::Pose3d m_currentpos;
     double m_yaw = 0;
