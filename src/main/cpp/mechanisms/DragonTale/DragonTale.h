@@ -293,6 +293,10 @@ private:
 	int m_currElevatorFails;
 	bool m_elevatorRemedialAction = false;
 
+	units::length::inch_t m_motorCountInches;
+	double m_elevatorGearRatio;
+	double m_elevatorDiameterInch;
+	
 	void InitializeLogging();
 
 	wpi::log::DoubleLogEntry m_ArmLogEntry;

@@ -28,6 +28,7 @@
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "ctre/phoenix6/TalonFXS.hpp"
+#include "ctre/phoenix6/signals/SpnEnums.hpp"
 #include <frc/DigitalInput.h>
 #include <frc/filter/Debouncer.h>
 #include <ctre/phoenix6/CANcoder.hpp>
@@ -76,6 +77,7 @@ using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
+using ctre::phoenix6::signals::ReverseLimitValue;
 using ctre::phoenix6::signals::StaticFeedforwardSignValue;
 
 using std::string;
@@ -624,6 +626,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 0.108878152421;
 
+	m_elevatorDiameterInch = 0.75;
+	m_elevatorGearRatio = 3.0;
 	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(200);
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(75);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
@@ -905,6 +909,9 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 0.1086833;
 
+	m_elevatorDiameterInch = 0.75;
+	m_elevatorGearRatio = 12.0;
+
 	configs.Slot0.kP = m_PositionInch->GetP();
 	configs.Slot0.kI = m_PositionInch->GetI();
 	configs.Slot0.kD = m_PositionInch->GetD();
@@ -1099,16 +1106,7 @@ void DragonTale::Update()
 	m_Arm->SetControl(*m_ArmActiveTarget);
 	m_Coral->SetControl(*m_CoralActiveTarget);
 
-	if (m_elevatorRemedialAction)
-	{
-		// set talonfx control to sync encoders
-		m_elevatorDesiredDirectionUp ? m_ElevatorLeader->Set(-0.05) : m_ElevatorLeader->Set(0.1);
-	}
-	else
-	{
-		// normal elevator control
-		m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
-	}
+	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
 
 	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 	{
@@ -1264,7 +1262,7 @@ void DragonTale::UpdateTarget()
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
 
-	if (abs(elevatorInput) > m_manualControlThreshold)
+	if (abs(elevatorInput) > m_manualControlThreshold || m_elevatorRemedialAction)
 	{
 		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
 		SetElevatorTarget(GetElevatorHeight());
@@ -1280,34 +1278,52 @@ bool DragonTale::AtTarget()
 
 void DragonTale::IsElevatorInSync()
 {
-	units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
-	bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
-	if (units::math::abs(cancoderVelocity) > 0.5_tps && !(units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold))
-	{
-		if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
-		{
-			m_currElevatorFails++;
-			if (m_currElevatorFails >= m_elevatorMaxFails)
-			{
-				m_elevatorRemedialAction = true;
-			}
-		}
-	}
-	else if (m_elevatorRemedialAction)
-	{
-		if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
-		{
-			if (m_currElevatorFails > 0)
-				m_currElevatorFails--;
+	// units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
+	// bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
+	// if (units::math::abs(cancoderVelocity) > 0.5_tps && !(units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold))
+	// {
+	// 	if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
+	// 	{
+	// 		m_currElevatorFails++;
+	// 		if (m_currElevatorFails >= m_elevatorMaxFails)
+	// 		{
+	// 			m_elevatorRemedialAction = true;
+	// 		}
+	// 	}
+	// }
+	// else if (m_elevatorRemedialAction)
+	// {
+	// 	if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
+	// 	{
+	// 		if (m_currElevatorFails > 0)
+	// 			m_currElevatorFails--;
 
-			if (m_currElevatorFails == 0)
-			{
-				m_elevatorRemedialAction = false;
-				SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
-			}
+	// 		if (m_currElevatorFails == 0)
+	// 		{
+	// 			m_elevatorRemedialAction = false;
+	// 			SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
+	// 		}
+	// 	}
+	// }
+
+	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
+
+	double elevatorCount = (motorCounts / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi;
+
+	m_motorCountInches = units::length::inch_t(elevatorCount);
+
+	if (m_motorCountInches <= units::length::inch_t(-10))
+	{
+		m_elevatorRemedialAction = true;
+	}
+
+	if (m_elevatorRemedialAction)
+	{
+		if (m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround)
+		{
+			m_elevatorRemedialAction = false;
 		}
 	}
-	m_elevatorRemedialAction = false;
 }
 
 void DragonTale::SetAlgaeMotor()
