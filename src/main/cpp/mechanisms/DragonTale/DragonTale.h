@@ -145,6 +145,7 @@ public:
 	void Cyclic();
 	void RunCommonTasks() override;
 	void DataLog(uint64_t timestamp) override;
+	void LogInformation();
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
