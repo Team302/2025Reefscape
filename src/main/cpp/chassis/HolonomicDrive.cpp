@@ -227,7 +227,7 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.targetPose = frc::Pose2d();
 }
 
-void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, double value)
+void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, units::length::meter_t value)
 {
     if (change == RobotStateChanges::StateChange::ElevatorHeight_Inch)
     {
@@ -248,6 +248,8 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     {
         m_inputScale = 1;
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonTale"), string("elevatorHeightHolonomic"), m_elevatorHeight.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonTale"), string("RobotSpeedInputScale"), m_inputScale);
 
     forwardScale *= m_inputScale;
     strafeScale *= m_inputScale;

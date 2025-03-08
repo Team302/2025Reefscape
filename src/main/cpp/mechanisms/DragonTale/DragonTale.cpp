@@ -1016,6 +1016,7 @@ void DragonTale::RunCommonTasks()
 	Cyclic();
 
 	LogInformation();
+	RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::ElevatorHeight_Inch, units::length::meter_t(GetElevatorHeight()));
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -1051,7 +1052,6 @@ void DragonTale::Update()
 	{
 		m_AlgaeTalonFXS->SetControl(*m_AlgaeTalonFXSActiveTarget);
 	}
-	RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::ElevatorHeight_Inch, static_cast<units::length::meter_t>(GetElevatorHeight()));
 }
 
 bool DragonTale::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const

@@ -51,7 +51,7 @@ private:
     void PolarDrive();
     void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState);
     void DriveToGamePiece(double forward, double strafe, double rot);
-    void NotifyStateUpdate(RobotStateChanges::StateChange change, double value) override;
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, units::length::meter_t value) override;
 
     SwerveChassis *m_swerve;
     ChassisOptionEnums::DriveStateType m_previousDriveState;
@@ -66,5 +66,5 @@ private:
     bool m_resetPathplannerTrajectory = false;
     units::length::inch_t m_elevatorHeight;
     units::length::inch_t m_elevatorHeightThreshold = units::length::inch_t(8.0);
-    double m_dynamicSpeed = 0.5;
+    double m_dynamicSpeed = 0.35;
 };
