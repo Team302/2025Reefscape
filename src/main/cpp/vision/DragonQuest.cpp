@@ -35,7 +35,7 @@ DragonQuest::DragonQuest()
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
     ZeroHeading();
-    ZeroPosition();
+    // ZeroPosition();
 }
 
 frc::Pose3d DragonQuest::GetEstimatedPose()
@@ -45,13 +45,13 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = -posarray[2];
-    double y = posarray[0];
+    double x = posarray[2];
+    double y = -posarray[0];
     double z = posarray[1];
 
     double roll = rotationarray[0];
     double pitch = rotationarray[2];
-    double yaw = -rotationarray[1];
+    double yaw = rotationarray[1];
     frc::Translation3d translation = frc::Translation3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z)};
 
     frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)};
@@ -96,10 +96,18 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("not hasreset"));
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("x"), pose.X().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("y"), pose.Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("rot"), pose.Rotation().Degrees().value());
+
         m_initialPosePublisher.Set(std::array<double, 3>{pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()});
+
         if (m_questMiso.Get() != 99)
         {
+            sleep(2);
             m_questMosi.Set(2);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("Resetting Pose"));
         }
         m_hasreset = true;
     }
