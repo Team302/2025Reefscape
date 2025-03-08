@@ -33,6 +33,7 @@ DragonQuest::DragonQuest()
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
+    m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
     ZeroHeading();
     ZeroPosition();
 }
@@ -41,66 +42,16 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
 {
     RefreshNT();
 
-    /* TODO: Eventually need to addd quest into a camera config and use the camera config to set the mounting offsets
-    frc::Pose3d DragonQuest::GetEstimatedPose()
-    {
-        RefreshNT();
-        std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
-        std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-
-        // Apply mounting transformation dynamically
-        double x = posarray[2] * cos(units::degree_t(m_yawMountOffset).to<double>()) +
-                   posarray[0] * sin(units::degree_t(m_yawMountOffset).to<double>()) +
-                   m_xOffset;
-
-        double y = -posarray[0] * cos(units::degree_t(m_yawMountOffset).to<double>()) +
-                   posarray[2] * sin(units::degree_t(m_yawMountOffset).to<double>()) +
-                   m_yOffset;
-
-        double z = posarray[1] + m_zOffset;
-
-        // Apply rotation correction
-        double roll = rotationarray[0] + m_rollMountOffset + m_rollOffset;
-        double pitch = rotationarray[2] + m_pitchMountOffset + m_pitchOffset;
-        double yaw = rotationarray[1] + m_yawMountOffset + m_yawOffset;
-
-        frc::Translation3d translation = frc::Translation3d{
-            units::length::meter_t(x),
-            units::length::meter_t(y),
-            units::length::meter_t(z)};
-
-        frc::Rotation3d rotation = frc::Rotation3d{
-            units::angle::degree_t(roll),
-            units::angle::degree_t(pitch),
-            units::angle::degree_t(yaw)};
-
-        return frc::Pose3d{translation, rotation};
-    }
-
-    void DragonQuest::SetMountingPose(double xOffset, double yOffset, double zOffset,
-                                  double rollOffset, double pitchOffset, double yawOffset) Add this method
-{
-    m_xMountOffset = xOffset;
-    m_yMountOffset = yOffset;
-    m_zMountOffset = zOffset;
-
-    m_rollMountOffset = rollOffset;
-    m_pitchMountOffset = pitchOffset;
-    m_yawMountOffset = yawOffset;
-}
-    */
-
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = m_xOffset - posarray[2];
-    double y = m_xOffset + posarray[0];
-    double z = m_zOffset + posarray[1];
+    double x = -posarray[2];
+    double y = posarray[0];
+    double z = posarray[1];
 
-    double roll = rotationarray[0] + m_rollOffset;
-    double pitch = rotationarray[2] + m_pitchOffset;
-    double yaw = -rotationarray[1] + m_yawOffset;
-
+    double roll = rotationarray[0];
+    double pitch = rotationarray[2];
+    double yaw = -rotationarray[1];
     frc::Translation3d translation = frc::Translation3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z)};
 
     frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(yaw)};
@@ -145,17 +96,11 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        frc::Pose3d p3d{frc::Pose3d(pose)};
-        m_xOffset += p3d.X().to<double>();
-        m_yOffset += p3d.Y().to<double>();
-        m_zOffset += p3d.Z().to<double>();
-        units::degree_t roll = p3d.Rotation().X();
-        units::degree_t pitch = p3d.Rotation().Y();
-        units::degree_t yaw = p3d.Rotation().Z(); // + units::degree_t(m_yawoffsetzero);
-
-        m_rollOffset += roll.to<double>();
-        m_pitchOffset += pitch.to<double>();
-        m_yawOffset += yaw.to<double>();
+        m_initialPosePublisher.Set(std::array<double, 3>{pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()});
+        if (m_questMiso.Get() != 99)
+        {
+            m_questMosi.Set(2);
+        }
         m_hasreset = true;
     }
 }
