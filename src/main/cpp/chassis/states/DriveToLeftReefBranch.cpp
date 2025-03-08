@@ -24,8 +24,8 @@
 
 using std::string;
 
-DriveToLeftReefBranch::DriveToLeftReefBranch(RobotDrive *robotDrive, TrajectoryDrivePathPlanner *trajectoryDrivePathPlanner)
-    : DriveToFieldElement(robotDrive, trajectoryDrivePathPlanner)
+DriveToLeftReefBranch::DriveToLeftReefBranch(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
 }
 

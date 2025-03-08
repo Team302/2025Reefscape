@@ -275,6 +275,28 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLoggerSignals
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D:
             signals->m_pose2d.Update(value, timestamp);
             break;
+        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            signals->m_visionLeftReefBranchPose.Update(value, timestamp);
+            break;
+        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            signals->m_visionRightReefBranchPose.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            signals->m_visionCoralStationPose.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            signals->m_odometryLeftReefBranchPose.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            signals->m_odometryRightReefBranchPose.Update(value, timestamp);
+            break;
+
+        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            signals->m_odometryCoralStationPose.Update(value, timestamp);
+            break;
 
         default:
             break;

@@ -1195,14 +1195,14 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </enableStatorCurrentLimit>
               <statorCurrentLimit>
                 <unitsFamily>current</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>120</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -1230,7 +1230,7 @@
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </supplyTimeThreshold>
             </theCurrentLimits>
             <PIDFs />
@@ -1761,14 +1761,14 @@
                 <name>boolParameter</name>
                 <__units__ />
                 <type>Boolean</type>
-                <value>false</value>
+                <value>true</value>
               </enableStatorCurrentLimit>
               <statorCurrentLimit>
                 <unitsFamily>current</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>0</value>
+                <value>120</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -1789,14 +1789,14 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>40</value>
+                <value>35</value>
               </supplyCurrentThreshold>
               <supplyTimeThreshold>
                 <unitsFamily>time</unitsFamily>
                 <name>doubleParameter</name>
                 <__units__>s</__units__>
                 <type>Double</type>
-                <value>0.5</value>
+                <value>0.25</value>
               </supplyTimeThreshold>
             </theCurrentLimits>
             <PIDFs />
@@ -2052,7 +2052,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>80</value>
+                <value>100</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -2336,7 +2336,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>60</value>
+                <value>100</value>
               </statorCurrentLimit>
               <enableSupplyCurrentLimit>
                 <unitsFamily>none</unitsFamily>
@@ -2350,7 +2350,7 @@
                 <name>doubleParameter</name>
                 <__units__>A</__units__>
                 <type>Double</type>
-                <value>40</value>
+                <value>60</value>
               </supplyCurrentLimit>
               <supplyCurrentThreshold>
                 <unitsFamily>current</unitsFamily>
@@ -2575,7 +2575,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.10498</value>
+              <value>0.442627</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>
