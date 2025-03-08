@@ -77,7 +77,7 @@ public:
     /// @returns SwerveModuleState
     frc::SwerveModuleState GetState() const;
     frc::SwerveModuleState GetOptimizedState() const { return m_optimizedState; }
-    frc::SwerveModulePosition GetPosition() const;
+    frc::SwerveModulePosition GetPosition();
 
     /// @brief Set the current state of the module (speed of the wheel and angle of the wheel)
     /// @param [in] SwerveModuleState& referenceState:   state to set the module to
@@ -159,4 +159,7 @@ private:
     bool m_useFOC = false;
     std::string m_networkTableName;
     pathplanner::ModuleConfig m_moduleConfig;
+
+    units::velocity::meters_per_second_t m_simDriveSpeed;
+    units::length::meter_t m_simDriveDistance;
 };

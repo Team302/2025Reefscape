@@ -25,6 +25,7 @@
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "chassis/states/DriveToFieldElement.h"
 
 // FRC,WPI Includes
 #include "frc/geometry/Pose2d.h"
@@ -50,7 +51,7 @@ public:
 
 private:
     void InitMoveInfo();
-    TrajectoryDrivePathPlanner *GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType);
+    DriveToFieldElement *GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType);
     bool IsInZone();
 
     void CheckForDriveTo();
@@ -81,11 +82,9 @@ private:
     units::time::second_t m_totalTrajectoryTime;
     frc::Pose2d m_finalPose;
 
-    TrajectoryDrivePathPlanner *m_driveToObject;
+    DriveToFieldElement *m_driveToObject;
 
-    std::tuple<TrajectoryDrivePathPlanner *,
-               ChassisOptionEnums::DriveStateType>
-        m_driveToInfo;
+    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
 
     ZoneParams *m_zone;
 };
