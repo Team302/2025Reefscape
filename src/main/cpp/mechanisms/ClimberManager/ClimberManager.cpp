@@ -24,6 +24,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
+#include "utils/DragonPower.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -32,6 +33,9 @@
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
+#include "state/RobotState.h"
+
+#include "frc/DataLogManager.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;
@@ -86,6 +90,30 @@ std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE
 	{"STATE_MANUAL_CLIMB", ClimberManager::STATE_NAMES::STATE_MANUAL_CLIMB},
 	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},
 };
+void ClimberManager::InitializeLogging()
+{
+	wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+
+	m_ClimberManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalEnergy");
+	m_ClimberManagerTotalEnergyLogEntry.Append(0.0);
+	m_ClimberManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalWattHours");
+	m_ClimberManagerTotalWattHoursLogEntry.Append(0.0);
+
+	m_ClimberLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPosition");
+	m_ClimberLogEntry.Append(0.0);
+
+	m_ClimberTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberTarget");
+	m_ClimberTargetLogEntry.Append(0.0);
+
+	m_ClimberPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPower");
+	m_ClimberPowerLogEntry.Append(0.0);
+
+	m_ClimberEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberEnergy");
+	m_ClimberEnergyLogEntry.Append(0.0);
+
+	m_ClimberManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/ClimberManager/State");
+	m_ClimberManagerStateLogEntry.Append(0);
+}
 
 void ClimberManager::CreatePRACTICE_BOT9999()
 {
@@ -459,4 +487,26 @@ ControlData *ClimberManager::GetControlData(string name)
 		return m_PositionDegreeUp;
 
 	return nullptr;
+}
+
+void ClimberManager::DataLog(uint64_t timestamp)
+{
+	auto currTime = m_powerTimer.Get();
+
+	LogClimber(timestamp, m_Climber->GetPosition().GetValueAsDouble());
+	LogClimberTarget(timestamp, m_ClimberPositionDegree.Position.value());
+	auto ClimberPower = DragonPower::CalcPowerEnergy(currTime, m_Climber->GetSupplyVoltage().GetValueAsDouble(), m_Climber->GetSupplyCurrent().GetValueAsDouble());
+	m_power = get<0>(ClimberPower);
+	m_energy = get<1>(ClimberPower);
+	m_totalEnergy += m_energy;
+	LogClimberPower(timestamp, m_power);
+	LogClimberEnergy(timestamp, m_energy);
+
+	LogClimberManagerState(timestamp, GetCurrentState());
+
+	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
+	LogClimberManagerTotalEnergy(timestamp, m_totalEnergy);
+	LogClimberManagerTotalWattHours(timestamp, m_totalWattHours);
+	m_powerTimer.Reset();
+	m_powerTimer.Start();
 }
