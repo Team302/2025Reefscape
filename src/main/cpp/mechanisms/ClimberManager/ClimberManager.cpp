@@ -493,8 +493,8 @@ void ClimberManager::DataLog(uint64_t timestamp)
 {
 	auto currTime = m_powerTimer.Get();
 
-	LogClimber(timestamp, (units::angle::degree_t(m_Climber->GetPosition().GetValue())).value());
-	LogClimberTarget(timestamp, units::angle::degree_t(m_ClimberPositionDegree.Position).value());
+	LogClimber(timestamp, m_Climber->GetPosition().GetValueAsDouble());
+	LogClimberTarget(timestamp, m_ClimberPositionDegree.Position.value());
 	auto ClimberPower = DragonPower::CalcPowerEnergy(currTime, m_Climber->GetSupplyVoltage().GetValueAsDouble(), m_Climber->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ClimberPower);
 	m_energy = get<1>(ClimberPower);

@@ -463,7 +463,7 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.ExternalFeedback.SensorToMechanismRatio = 405;
+	configs.ExternalFeedback.SensorToMechanismRatio = 225;
 
 	m_ExtenderPositionDegree.EnableFOC = true;
 

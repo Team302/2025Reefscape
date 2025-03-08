@@ -1355,6 +1355,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_totalEnergy += m_energy;
 	LogElevatorFollowerPower(timestamp, m_power);
 	LogElevatorFollowerEnergy(timestamp, m_energy);
+	LogElevatorFollowerTarget(timestamp, m_ElevatorLeader->GetRotorPosition().GetValueAsDouble());
 
 	auto CoralPower = DragonPower::CalcPowerEnergy(currTime, m_Coral->GetSupplyVoltage().GetValueAsDouble(), m_Coral->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(CoralPower);
