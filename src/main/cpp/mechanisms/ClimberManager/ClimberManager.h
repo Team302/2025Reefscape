@@ -22,6 +22,7 @@
 
 // FRC Includes
 #include <networktables/NetworkTable.h>
+#include "wpi/DataLog.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
@@ -35,10 +36,11 @@
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 #include "RobotIdentifier.h"
 
-class ClimberManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
+class ClimberManager : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -89,6 +91,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void DataLog(uint64_t timestamp) override;
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
@@ -129,4 +132,26 @@ private:
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegreeUp{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
+	void InitializeLogging();
+
+	wpi::log::DoubleLogEntry m_ClimberLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberManagerTotalEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberManagerTotalWattHoursLogEntry;
+	wpi::log::IntegerLogEntry m_ClimberManagerStateLogEntry;
+	frc::Timer m_powerTimer;
+	double m_power = 0.0;
+	double m_energy = 0.0;
+	double m_totalEnergy = 0.0;
+	double m_totalWattHours = 0.0;
+
+	void LogClimber(uint64_t timestamp, double value) { return m_ClimberLogEntry.Update(value, timestamp); }
+	void LogClimberTarget(uint64_t timestamp, double value) { return m_ClimberTargetLogEntry.Update(value, timestamp); }
+	void LogClimberPower(uint64_t timestamp, double value) { return m_ClimberPowerLogEntry.Update(value, timestamp); }
+	void LogClimberEnergy(uint64_t timestamp, double value) { return m_ClimberEnergyLogEntry.Update(value, timestamp); }
+	void LogClimberManagerTotalEnergy(uint64_t timestamp, int value) { return m_ClimberManagerTotalEnergyLogEntry.Update(value, timestamp); }
+	void LogClimberManagerTotalWattHours(uint64_t timestamp, int value) { return m_ClimberManagerTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogClimberManagerState(uint64_t timestamp, int value) { return m_ClimberManagerStateLogEntry.Update(value, timestamp); }
 };
