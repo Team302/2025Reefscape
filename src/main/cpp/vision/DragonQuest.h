@@ -33,6 +33,7 @@
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructs.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 
