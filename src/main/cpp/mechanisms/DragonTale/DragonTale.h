@@ -93,8 +93,6 @@ public:
 
 	void UpdateTargetArmPositionDegree(units::angle::turn_t position)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "UpdateTargetArmPositionDegree", units::angle::degree_t(position).value());
-
 		m_ArmPositionDegree.Position = position;
 		m_ArmActiveTarget = &m_ArmPositionDegree;
 	}
@@ -105,18 +103,18 @@ public:
 	}
 	void UpdateTargetElevatorLeaderPositionInch(units::length::inch_t position)
 	{
-		if (position < GetElevatorHeight())
-		{
-			m_elevatorDesiredDirectionUp = false;
-			m_ElevatorLeaderPositionInch.Velocity = 100_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 20_tr_per_s_sq;
-		}
-		else
-		{
-			m_elevatorDesiredDirectionUp = true;
-			m_ElevatorLeaderPositionInch.Velocity = 200_tps;
-			m_ElevatorLeaderPositionInch.Acceleration = 150_tr_per_s_sq;
-		}
+		// if (position < GetElevatorHeight())
+		// {
+		// 	m_elevatorDesiredDirectionUp = false;
+		// 	m_ElevatorLeaderPositionInch.Velocity = 200_tps;
+		// 	m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
+		// }
+		// else
+		// {
+		// 	m_elevatorDesiredDirectionUp = true;
+		// 	m_ElevatorLeaderPositionInch.Velocity = 400_tps;
+		// 	m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
+		// }
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
 	}
@@ -147,6 +145,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void LogInformation();
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -180,7 +179,6 @@ public:
 	void SetArmTarget(units::angle::degree_t target)
 	{
 		m_armTarget = std::clamp(target, m_minAngle, m_maxAngle);
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_armTarget Clamped Value", m_armTarget.value());
 	}
 	void SetElevatorTarget(units::length::inch_t target) { m_elevatorTarget = std::clamp(target, m_minHeight, m_maxHeight); }
 
@@ -263,8 +261,8 @@ private:
 
 	void SetAlgaeMotor();
 
-	ctre::phoenix6::controls::MotionMagicVoltage m_ArmPositionDegree{0_tr};
-	ctre::phoenix6::controls::DynamicMotionMagicVoltage m_ElevatorLeaderPositionInch{0_tr, 1_tps, 10_tr_per_s_sq, 100_tr_per_s_cu};
+	ctre::phoenix6::controls::MotionMagicExpoVoltage m_ArmPositionDegree{0_tr};
+	ctre::phoenix6::controls::MotionMagicExpoVoltage m_ElevatorLeaderPositionInch{0_tr};
 
 	ctre::phoenix6::controls::DutyCycleOut m_CoralPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};

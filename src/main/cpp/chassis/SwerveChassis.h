@@ -104,7 +104,7 @@ public:
     SwerveModule *GetBackRight() const { return m_backRight; }
     frc::Pose2d GetPose() const;
     units::angle::degree_t GetYaw() const override;
-    units::angle::degree_t GetRawYaw() const;
+    units::angle::degree_t GetRawYaw();
 
     units::angle::degree_t GetPitch() const;
     units::angle::degree_t GetRoll() const;
@@ -189,6 +189,7 @@ private:
     frc::Timer m_velocityTimer;
 
     const units::angle::degree_t m_specifiedHeadingTolerance{0.5};
+    units::angle::degree_t m_simRotation{0.0};
 
     double m_totalEnergy = 0.0;
     double m_totalWattHours = 0.0;

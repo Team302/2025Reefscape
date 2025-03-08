@@ -104,6 +104,13 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_pose2d = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/Pose2d");
     m_pose2d.Append(frc::Pose2d());
 
+    m_visionLeftReefBranchPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/VisionLeftReefBranchPose");
+    m_visionRightReefBranchPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/VisionRightReefBranchPose");
+    m_visionCoralStationPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/VisionCoralStationPose");
+    m_odometryLeftReefBranchPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/OdometryLeftReefBranchPose");
+    m_odometryRightReefBranchPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/OdometryRightReefBranchPose");
+    m_odometryCoralStationPose = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/OdometryCoralStationPose");
+
     m_pose3dLimelight = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight");
     m_pose3dLimelight.Append(frc::Pose3d());
 
