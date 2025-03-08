@@ -48,12 +48,12 @@ private:
     void CheckTipping(bool tippingSelected);
     void CheckRobotOriented(bool robotOrientedSelected);
     void PolarDrive();
-    void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState, ChassisOptionEnums::HeadingOption headingState);
+    void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState);
     void DriveToGamePiece(double forward, double strafe, double rot);
 
     SwerveChassis *m_swerve;
     ChassisOptionEnums::DriveStateType m_previousDriveState;
-    const double m_slowModeMultiplier = 0.25;
+    const double m_slowModeMultiplier = 0.5;
     const double m_inputScale = 0.8;
     bool m_CheckTipping = false;
     bool m_checkTippingLatch = false;
