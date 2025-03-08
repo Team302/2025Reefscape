@@ -15,6 +15,7 @@
 #include "units/time.h"
 #include "utils/AngleUtils.h"
 #include "vision/DragonQuest.h"
+#include "utils/DragonField.h"
 
 DragonQuest *DragonQuest::m_dragonquest = nullptr;
 DragonQuest *DragonQuest::GetDragonQuest()
@@ -34,7 +35,6 @@ DragonQuest::DragonQuest()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
-    ZeroHeading();
     // ZeroPosition();
 }
 
@@ -51,7 +51,7 @@ frc::Pose3d DragonQuest::GetEstimatedPose()
 
     double roll = rotationarray[0];
     double pitch = rotationarray[2];
-    double yaw = rotationarray[1];
+    double yaw = rotationarray[1] - m_yawOffset;
     frc::Translation3d translation = frc::Translation3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z)};
 
     frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(-yaw)};
@@ -67,12 +67,6 @@ bool DragonQuest::IsConnected()
     return false;
 }
 
-void DragonQuest::ZeroHeading()
-{
-    std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yawoffsetzero = rotationarray[1];
-}
-
 void DragonQuest::ZeroPosition()
 {
     if (m_questMiso.Get() != 99)
@@ -84,6 +78,8 @@ void DragonQuest::ZeroPosition()
 void DragonQuest::DataLog(uint64_t timestamp)
 {
     Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
+    auto field = DragonField::GetInstance();
+    field->AddPose("Quest", GetEstimatedPose().ToPose2d());
 }
 
 void DragonQuest::RefreshNT()
@@ -101,7 +97,7 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("y"), pose.Y().value());
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("rot"), pose.Rotation().Degrees().value());
 
-        m_initialPosePublisher.Set(std::array<double, 3>{pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()});
+        m_initialPosePublisher.Set(std::array<double, 3>{pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value() + m_yawOffset});
 
         if (m_questMiso.Get() != 99)
         {
