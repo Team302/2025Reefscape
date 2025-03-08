@@ -74,7 +74,7 @@ private:
 
     void SetChassis();
 
-    std::optional<frc::Pose2d> m_goalPose;
+    frc::Pose2d m_goalPose;
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
