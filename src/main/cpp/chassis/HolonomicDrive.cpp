@@ -49,7 +49,7 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
                                    m_checkTippingLatch(false)
 {
     Init();
-    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Int);
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Inch);
 }
 
 /// @brief initialize the profiles for the various gamepad inputs
@@ -229,9 +229,9 @@ void HolonomicDrive::InitChassisMovement()
 
 void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, double value)
 {
-    if (change == RobotStateChanges::StateChange::ElevatorHeight_Int)
+    if (change == RobotStateChanges::StateChange::ElevatorHeight_Inch)
     {
-        m_elevatorHeight = value;
+        m_elevatorHeight = units::length::inch_t(value);
     }
 }
 void HolonomicDrive::InitSpeeds(double forwardScale,

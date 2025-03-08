@@ -1049,7 +1049,7 @@ void DragonTale::Update()
 	{
 		m_AlgaeTalonFXS->SetControl(*m_AlgaeTalonFXSActiveTarget);
 	}
-	RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::ElevatorHeight_Int, static_cast<double>(GetElevatorHeight()));
+	RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::ElevatorHeight_Inch, static_cast<units::length::meter_t>(GetElevatorHeight()));
 }
 
 bool DragonTale::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
