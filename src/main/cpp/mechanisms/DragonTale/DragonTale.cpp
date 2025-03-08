@@ -1106,16 +1106,7 @@ void DragonTale::Update()
 	m_Arm->SetControl(*m_ArmActiveTarget);
 	m_Coral->SetControl(*m_CoralActiveTarget);
 
-	if (m_elevatorRemedialAction)
-	{
-		// set talonfx control to sync encoders
-		m_elevatorDesiredDirectionUp ? m_ElevatorLeader->Set(-0.05) : m_ElevatorLeader->Set(0.1);
-	}
-	else
-	{
-		// normal elevator control
-		m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
-	}
+	m_ElevatorLeader->SetControl(*m_ElevatorLeaderActiveTarget);
 
 	if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 	{
@@ -1314,18 +1305,16 @@ void DragonTale::IsElevatorInSync()
 	// 		}
 	// 	}
 	// }
-	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble() - 10.0;
-	double motorCountsTwo = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
+
+	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
 
 	double elevatorCount = (motorCounts / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi;
-	double elevatorCountTwo = (motorCountsTwo / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi - 8.0;
 
 	m_motorCountInches = units::length::inch_t(elevatorCount);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInches", m_motorCountInches.value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInchesPiMinus", elevatorCountTwo);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "m_elevatorCountInchesOrig", (elevatorCountTwo + 8.0));
 
-	if (units::length::inch_t(elevatorCountTwo + 8.0) <= units::length::inch_t(-10))
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "m_elevatorCountInches", m_motorCountInches.value());
+
+	if (m_motorCountInches <= units::length::inch_t(-10))
 	{
 		m_elevatorRemedialAction = true;
 	}
@@ -1337,7 +1326,7 @@ void DragonTale::IsElevatorInSync()
 			m_elevatorRemedialAction = false;
 		}
 	}
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "m_ElevatorLeader", "remedialAction", static_cast<int>(m_elevatorRemedialAction));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "remedialAction", static_cast<int>(m_elevatorRemedialAction));
 }
 
 void DragonTale::SetAlgaeMotor()
