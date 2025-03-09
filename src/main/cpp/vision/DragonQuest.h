@@ -47,7 +47,6 @@ public:
         units::angle::degree_t mountingRoll    /// <I> - Roll of camera
     );
     frc::Pose2d GetEstimatedPose();
-    static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
     bool IsConnected() { return m_isConnected; };
     void SetIsConnected();

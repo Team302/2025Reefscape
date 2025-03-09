@@ -17,16 +17,6 @@
 #include "vision/DragonQuest.h"
 #include "utils/DragonField.h"
 
-DragonQuest *DragonQuest::m_dragonquest = nullptr;
-DragonQuest *DragonQuest::GetDragonQuest()
-{
-    if (DragonQuest::m_dragonquest == nullptr)
-    {
-        return nullptr;
-    }
-    return DragonQuest::m_dragonquest;
-}
-
 DragonQuest::DragonQuest(
     units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
     units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
@@ -90,9 +80,6 @@ void DragonQuest::SetIsConnected()
     }
 
     m_loopCounter = (m_loopCounter > 3) ? 0 : m_loopCounter + 1;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Current Time Stamp"), currentFrameCount);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Previous Time Stamp"), m_prevFrameCount);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Loop Counter"), m_loopCounter);
 }
 
 void DragonQuest::ZeroPosition()
@@ -143,8 +130,6 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("IsConnected"), m_isConnected);
-
     if (!m_hasreset || !m_isConnected)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
