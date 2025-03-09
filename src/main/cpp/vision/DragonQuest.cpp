@@ -45,6 +45,8 @@ DragonQuest::DragonQuest(
     m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
+    m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
 
@@ -70,13 +72,27 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     return robotPose;
 }
 
-bool DragonQuest::IsConnected()
+void DragonQuest::SetIsConnected()
 {
-    if (m_posTopic.GetEntry(std::array<double, 3>{}).Get()[0] != 0)
+    double currentFrameCount = m_frameCountTopic.GetEntry(0).Get();
+    if (m_loopCounter > 3)
     {
-        return true;
+        if (currentFrameCount != m_prevFrameCount)
+        {
+            m_loopCounter = 0;
+            m_isConnected = true;
+        }
+        else
+        {
+            m_isConnected = false;
+        }
+        m_prevFrameCount = currentFrameCount;
     }
-    return false;
+
+    m_loopCounter = (m_loopCounter > 3) ? 0 : m_loopCounter + 1;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Current Time Stamp"), currentFrameCount);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Previous Time Stamp"), m_prevFrameCount);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("Loop Counter"), m_loopCounter);
 }
 
 void DragonQuest::ZeroPosition()
@@ -98,16 +114,15 @@ void DragonQuest::RefreshNT()
 {
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
+    m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+
+    SetIsConnected();
 }
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("not hasreset"));
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("x"), pose.X().value());
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("y"), pose.Y().value());
-        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("rot"), pose.Rotation().Degrees().value());
         auto x = (pose.X() + m_mountingXOffset);
         auto y = (pose.Y() + m_mountingYOffset);
         auto rot = (pose.Rotation().Degrees() + m_mountingYaw);
@@ -120,7 +135,6 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
         {
             sleep(1);
             m_questMosi.Set(2);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("Resetting Pose"));
         }
         m_hasreset = true;
     }
@@ -129,7 +143,9 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    if (!m_hasreset || !IsConnected())
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("IsConnected"), m_isConnected);
+
+    if (!m_hasreset || !m_isConnected)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
     }

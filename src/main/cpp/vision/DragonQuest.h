@@ -49,7 +49,8 @@ public:
     frc::Pose2d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
-    bool IsConnected();
+    bool IsConnected() { return m_isConnected; };
+    void SetIsConnected();
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
@@ -72,13 +73,17 @@ private:
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
+    nt::IntegerTopic m_frameCountTopic;
     nt::DoubleArrayPublisher m_initialPosePublisher;
 
     bool m_hasreset = false;
+    bool m_isConnected = false;
 
     frc::Transform2d m_questTransform;
 
     const double m_stdxy = 0.5;
     const double m_stddeg = 6.0;
-    std::vector<double> limelightpose;
+
+    double m_prevFrameCount = 0;
+    int m_loopCounter = 0;
 };
