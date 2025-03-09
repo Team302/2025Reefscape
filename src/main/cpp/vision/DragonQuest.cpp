@@ -22,12 +22,24 @@ DragonQuest *DragonQuest::GetDragonQuest()
 {
     if (DragonQuest::m_dragonquest == nullptr)
     {
-        DragonQuest::m_dragonquest = new DragonQuest();
+        return nullptr;
     }
     return DragonQuest::m_dragonquest;
 }
 
-DragonQuest::DragonQuest()
+DragonQuest::DragonQuest(
+    units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
+    units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
+    units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
+    units::angle::degree_t mountingPitch,  /// <I> - Pitch of camera
+    units::angle::degree_t mountingYaw,    /// <I> - Yaw of camera
+    units::angle::degree_t mountingRoll    /// <I> - Roll of camera
+    ) : m_mountingXOffset(mountingXOffset),
+        m_mountingYOffset(mountingYOffset),
+        m_mountingZOffset(mountingZOffset),
+        m_mountingPitch(mountingPitch),
+        m_mountingYaw(mountingYaw),
+        m_mountingRoll(mountingRoll)
 {
     m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
     m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
@@ -35,27 +47,27 @@ DragonQuest::DragonQuest()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
+
     // ZeroPosition();
 }
 
-frc::Pose3d DragonQuest::GetEstimatedPose()
+frc::Pose2d DragonQuest::GetEstimatedPose()
 {
     RefreshNT();
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[2];
-    double y = -posarray[0];
-    double z = posarray[1];
+    units::length::meter_t x{posarray[2]};
+    units::length::meter_t y{-posarray[0]};
+    units::length::meter_t z{posarray[1]};
+    units::angle::degree_t roll{rotationarray[0]};
+    units::angle::degree_t pitch{rotationarray[2]};
+    units::angle::degree_t yaw{-rotationarray[1]};
 
-    double roll = rotationarray[0];
-    double pitch = rotationarray[2];
-    double yaw = rotationarray[1] - m_yawOffset;
-    frc::Translation3d translation = frc::Translation3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z)};
-
-    frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), units::angle::degree_t(-yaw)};
-    return frc::Pose3d{translation, rotation};
+    frc::Pose2d questPose{x, y, yaw};
+    frc::Pose2d robotPose = questPose + m_questTransform;
+    return robotPose;
 }
 
 bool DragonQuest::IsConnected()
@@ -77,9 +89,9 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog(uint64_t timestamp)
 {
-    Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
+    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
     auto field = DragonField::GetInstance();
-    field->AddPose("Quest", GetEstimatedPose().ToPose2d());
+    field->AddPose("Quest", GetEstimatedPose());
 }
 
 void DragonQuest::RefreshNT()
@@ -92,16 +104,21 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("not hasreset"));
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("x"), pose.X().value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("y"), pose.Y().value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("rot"), pose.Rotation().Degrees().value());
+        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("not hasreset"));
+        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("x"), pose.X().value());
+        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("y"), pose.Y().value());
+        // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("rot"), pose.Rotation().Degrees().value());
+        auto x = (pose.X() + m_mountingXOffset);
+        auto y = (pose.Y() + m_mountingYOffset);
+        auto rot = (pose.Rotation().Degrees() + m_mountingYaw);
 
-        m_initialPosePublisher.Set(std::array<double, 3>{pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value() + m_yawOffset});
+        m_initialPosePublisher.Set(std::array<double, 3>{x.value(), y.value(), rot.value()});
+
+        m_questTransform = pose - frc::Pose2d{x, y, frc::Rotation2d(rot)};
 
         if (m_questMiso.Get() != 99)
         {
-            sleep(2);
+            sleep(1);
             m_questMosi.Set(2);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonQuest"), string("SetRobotPose"), string("Resetting Pose"));
         }
@@ -119,7 +136,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     else
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-        str.m_visionPose = GetEstimatedPose().ToPose2d();
+        str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
     return str;

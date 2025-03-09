@@ -39,6 +39,7 @@ void CameraConfig_302::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+
     DragonLimelight *back = new DragonLimelight(std::string("limelight-back"), // networkTableName
                                                 DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA,
                                                 DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,  // PIPELINE initialPipeline,
@@ -55,4 +56,12 @@ void CameraConfig_302::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+
+    new DragonQuest(units::length::meter_t(0.0), // <I> x offset of cam from robot center (forward relative to robot)
+                    units::length::meter_t(0.0), // <I> y offset of cam from robot center (left relative to robot)
+                    units::length::meter_t(0.0), // <I> z offset of cam from robot center (up relative to robot)
+                    units::angle::degree_t(0),   // <I> - Pitch of camera
+                    units::angle::degree_t(0),   // <I> - Yaw of camera
+                    units::angle::degree_t(0)    // <I> - Roll of camera
+    );
 }
