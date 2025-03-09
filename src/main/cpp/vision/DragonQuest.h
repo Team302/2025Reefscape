@@ -24,9 +24,6 @@
 
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Rotation3d.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
 #include "utils/logging/debug/Logger.h"
@@ -41,7 +38,15 @@ class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 
 {
 public:
-    frc::Pose3d GetEstimatedPose();
+    DragonQuest(
+        units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
+        units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
+        units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
+        units::angle::degree_t mountingPitch,  /// <I> - Pitch of camera
+        units::angle::degree_t mountingYaw,    /// <I> - Yaw of camera
+        units::angle::degree_t mountingRoll    /// <I> - Roll of camera
+    );
+    frc::Pose2d GetEstimatedPose();
     static DragonQuest *GetDragonQuest();
     void DataLog(uint64_t timestamp) override;
     bool IsConnected();
@@ -50,14 +55,18 @@ public:
     void SetRobotPose(const frc::Pose2d &pose) override;
 
 private:
-    DragonQuest();
     ~DragonQuest() = default;
     void ZeroPosition();
-    units::angle::degree_t GetOculusYaw();
     void RefreshNT();
 
+    units::length::inch_t m_mountingXOffset; /// <I> x offset of cam from robot center (forward relative to robot)
+    units::length::inch_t m_mountingYOffset; /// <I> y offset of cam from robot center (left relative to robot)
+    units::length::inch_t m_mountingZOffset; /// <I> z offset of cam from robot center (up relative to robot)
+    units::angle::degree_t m_mountingPitch;  /// <I> - Pitch of camera
+    units::angle::degree_t m_mountingYaw;    /// <I> - Yaw of camera
+    units::angle::degree_t m_mountingRoll;   /// <I> - Roll of camera
+
     std::shared_ptr<nt::NetworkTable> m_networktable;
-    std::shared_ptr<nt::NetworkTable> m_limelightNetworktable;
     static DragonQuest *m_dragonquest;
     nt::IntegerSubscriber m_questMiso;
     nt::IntegerPublisher m_questMosi;
@@ -65,10 +74,9 @@ private:
     nt::DoubleArrayTopic m_rotationTopic;
     nt::DoubleArrayPublisher m_initialPosePublisher;
 
-    frc::Pose3d m_currentpos;
-    double m_yawOffset = 180;
-
     bool m_hasreset = false;
+
+    frc::Transform2d m_questTransform;
 
     const double m_stdxy = 0.5;
     const double m_stddeg = 6.0;

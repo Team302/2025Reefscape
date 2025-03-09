@@ -31,7 +31,6 @@
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
-#include "vision/DragonQuest.h"
 #include "vision/DragonVision.h"
 #include "utils/RoboRio.h"
 
@@ -48,7 +47,6 @@ void Robot::RobotInit()
     InitializeRobot();
     InitializeAutonOptions();
     InitializeDriveteamFeedback();
-    DragonQuest::GetDragonQuest();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 }

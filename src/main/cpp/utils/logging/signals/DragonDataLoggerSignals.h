@@ -106,7 +106,7 @@ public:
         CURRENT_CHASSIS_POSE2D,
         CURRENT_CHASSIS_LIMELIGHT_POSE3D,
         CURRENT_CHASSIS_LIMELIGHT2_POSE3D,
-        CURRENT_CHASSIS_QUEST_POSE3D,
+        CURRENT_CHASSIS_QUEST_POSE2D,
         VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE,
         VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE,
         VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE,
@@ -214,7 +214,7 @@ private:
     wpi::log::StructLogEntry<frc::Pose2d> m_odometryCoralStationPose;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
     wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
-    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
+    wpi::log::StructLogEntry<frc::Pose2d> m_pose2dQuest;
 
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
     wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightTarget;
