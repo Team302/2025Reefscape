@@ -39,8 +39,6 @@ DragonQuest::DragonQuest(
 
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
-
-    // ZeroPosition();
 }
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
