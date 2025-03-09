@@ -2517,7 +2517,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>2</value>
+              <value>1</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2541,7 +2541,7 @@
               <name>uintParameter</name>
               <__units__ />
               <type>UInt32</type>
-              <value>1</value>
+              <value>2</value>
             </digitalId>
             <reversed>
               <unitsFamily>none</unitsFamily>
@@ -2575,7 +2575,7 @@
               <name>doubleParameter</name>
               <__units__ />
               <type>Double</type>
-              <value>0.442627</value>
+              <value>0.442383</value>
             </offset>
             <reverse>
               <unitsFamily>none</unitsFamily>

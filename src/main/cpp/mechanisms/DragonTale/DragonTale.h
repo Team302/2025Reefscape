@@ -224,17 +224,17 @@ private:
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.0);
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
-	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(48.0);
-	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(48.0);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(67.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(67.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
 	const units::angle::degree_t m_minAngle{-30.0};
-	const units::angle::degree_t m_maxAngle{90.0};
+	const units::angle::degree_t m_maxAngle{85.0};
 
 	const units::length::inch_t m_minHeight{0.0};
 	const units::length::inch_t m_maxHeight{30.0};
@@ -296,7 +296,7 @@ private:
 	units::length::inch_t m_motorCountInches;
 	double m_elevatorGearRatio;
 	double m_elevatorDiameterInch;
-	
+
 	void InitializeLogging();
 
 	wpi::log::DoubleLogEntry m_ArmLogEntry;

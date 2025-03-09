@@ -422,11 +422,11 @@ void DragonTale::CreateCOMP_BOT302()
 	m_AlgaeTalonFXS = new ctre::phoenix6::hardware::TalonFXS(19, "canivore");
 
 	m_CoralInSensor = new frc::DigitalInput(0);
-	m_CoralOutSensor = new frc::DigitalInput(2);
-	m_AlgaeSensor = new frc::DigitalInput(1);
+	m_CoralOutSensor = new frc::DigitalInput(1);
+	m_AlgaeSensor = new frc::DigitalInput(2);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442627);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -1009,7 +1009,7 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
@@ -1333,7 +1333,7 @@ void DragonTale::SetAlgaeMotor()
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			UpdateTargetAlgaeTalonFXSPercentOutput(0.15);
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.05);
 	}
 }
 
