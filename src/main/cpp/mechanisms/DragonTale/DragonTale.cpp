@@ -910,7 +910,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Feedback.SensorToMechanismRatio = 0.1086833;
 
 	m_elevatorDiameterInch = 0.75;
-	m_elevatorGearRatio = 12.0;
+	m_elevatorGearRatio = 9.0;
 
 	configs.Slot0.kP = m_PositionInch->GetP();
 	configs.Slot0.kI = m_PositionInch->GetI();
