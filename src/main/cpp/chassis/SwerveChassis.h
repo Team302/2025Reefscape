@@ -143,13 +143,13 @@ private:
     ISwerveDriveOrientation *GetHeadingState(const ChassisMovement &moveInfo);
     ISwerveDriveState *GetDriveState(ChassisMovement &moveInfo);
 
-    SwerveModule *m_frontLeft;
-    SwerveModule *m_frontRight;
-    SwerveModule *m_backLeft;
-    SwerveModule *m_backRight;
-    ctre::phoenix6::hardware::Pigeon2 *m_pigeon;
+    SwerveModule *m_frontLeft = nullptr;
+    SwerveModule *m_frontRight = nullptr;
+    SwerveModule *m_backLeft = nullptr;
+    SwerveModule *m_backRight = nullptr;
+    ctre::phoenix6::hardware::Pigeon2 *m_pigeon = nullptr;
 
-    RobotDrive *m_robotDrive;
+    RobotDrive *m_robotDrive = nullptr;
     std::map<ChassisOptionEnums::DriveStateType, ISwerveDriveState *> m_driveStateMap;
     std::map<ChassisOptionEnums::HeadingOption, ISwerveDriveOrientation *> m_headingStateMap;
 
@@ -172,11 +172,11 @@ private:
     frc::Translation2d m_backLeftLocation;
     frc::Translation2d m_backRightLocation;
     frc::SwerveDriveKinematics<4> m_kinematics;
-    DragonSwervePoseEstimator *m_swervePoseEstimator;
+    DragonSwervePoseEstimator *m_swervePoseEstimator = nullptr;
     units::angle::degree_t m_storedYaw;
     units::angle::degree_t m_targetHeading;
-    ISwerveDriveState *m_currentDriveState;
-    ISwerveDriveOrientation *m_currentOrientationState;
+    ISwerveDriveState *m_currentDriveState = nullptr;
+    ISwerveDriveOrientation *m_currentOrientationState = nullptr;
     bool m_initialized = false;
     std::string m_networkTableName;
     bool m_rotatingLatch = false;

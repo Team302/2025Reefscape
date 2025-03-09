@@ -6,11 +6,13 @@ $$_GEN_NOTICE_$$
 
 // FRC Includes
 #include <networktables/NetworkTableInstance.h>
+#include <frc/Timer.h>
 
 #include "$$_MECHANISM_INSTANCE_NAME_$$.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/PeriodicLooper.h"
 #include "state/RobotState.h"
+#include "utils/DragonPower.h"
 
 $$_INCLUDE_FILES_$$
 
@@ -29,10 +31,19 @@ $$_MECHANISM_INSTANCE_NAME_$$::$$_MECHANISM_INSTANCE_NAME_$$(RobotIdentifier act
                                                                                               m_stateMap()
 {
     PeriodicLooper::GetInstance()->RegisterAll(this);
+    InitializeLogging();
 }
 
-std::map<std::string, $$_MECHANISM_INSTANCE_NAME_$$::STATE_NAMES> $$_MECHANISM_INSTANCE_NAME_$$::stringToSTATE_NAMESEnumMap{
-    $$_STATE_MAP_$$};
+void $$_MECHANISM_INSTANCE_NAME_$$::InitializeLogging()
+{
+    wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+
+    $$_DATA_LOGGING_INITIALIZATION_$$
+}
+
+std::map<std::string, $$_MECHANISM_INSTANCE_NAME_$$::STATE_NAMES>
+    $$_MECHANISM_INSTANCE_NAME_$$::stringToSTATE_NAMESEnumMap{
+        $$_STATE_MAP_$$};
 
 $$_CREATE_FUNCTIONS_$$
 
@@ -163,4 +174,9 @@ _NT_TUNING_FUNCTIONS_END_
     $$_CONTROLDATA_NAME_TO_VARIABLE_$$
 
     return nullptr;
+}
+
+void $$_MECHANISM_INSTANCE_NAME_$$::DataLog(uint64_t timestamp)
+{
+    $$_DATALOG_METHOD_$$
 }
