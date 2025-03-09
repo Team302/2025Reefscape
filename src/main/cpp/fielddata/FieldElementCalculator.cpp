@@ -14,12 +14,13 @@
 //====================================================================================================================================================
 #include "FieldElementCalculator.h"
 
+#include <frc/RobotController.h>
+
 #include "FieldConstantsPoseLogger.h"
+#include "RobotIdentifier.h"
+#include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
-#include <frc/RobotController.h>
-#include "utils/FMSData.h"
-#include "RobotIdentifier.h"
 
 void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
@@ -49,9 +50,12 @@ void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIEL
 
 frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset)
 {
-
-    frc::Transform3d transformToApply = m_calcLeftStick;
-    if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
+    frc::Transform3d transformToApply{};
+    if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK)
+    {
+        transformToApply = m_calcLeftStick;
+    }
+    else if (offset == FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK)
     {
         transformToApply = m_calcRightStick;
     }

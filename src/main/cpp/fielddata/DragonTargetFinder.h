@@ -24,8 +24,8 @@
 #include "fielddata/FieldConstants.h"
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
-#include "vision/DragonVision.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "vision/DragonVision.h"
 
 enum class DragonTargetFinderTarget
 {
@@ -70,12 +70,12 @@ private:
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
     std::optional<frc::Pose2d> GetVisonPose(VisionData data);
-    bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
+    bool UseVisionPose(frc::Pose3d visTagPose, frc::Pose3d odomTagPose);
 
     void SetChassis();
 
     frc::Pose2d m_goalPose;
-    bool m_switchToVision = false;
-    const units::length::meter_t m_fuseTol{0.25};
-    const units::length::meter_t m_switchToVisionThreshold{1.0};
+    bool m_usingVisionPose = false;
+    const units::length::meter_t m_minDistTol{0.025};
+    const units::length::meter_t m_maxDistTol{0.5};
 };

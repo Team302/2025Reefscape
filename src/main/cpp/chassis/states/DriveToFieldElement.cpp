@@ -59,6 +59,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
+    /** TODO: TEMPORARY
     if (m_chassis != nullptr)
     {
         CalculateFeedForward(chassisMovement);
@@ -102,6 +103,11 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
+    **/
+    // TODO: TEMPORARY
+    chassisMovement.chassisSpeeds.vx = units::velocity::meters_per_second_t(0.0);
+    chassisMovement.chassisSpeeds.vy = units::velocity::meters_per_second_t(0.0);
+    chassisMovement.chassisSpeeds.omega = units::angular_velocity::turns_per_second_t(0.0);
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 

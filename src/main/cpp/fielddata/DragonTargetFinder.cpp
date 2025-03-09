@@ -28,6 +28,7 @@
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Rotation3d.h"
 #include "units/angle.h"
+#include "utils/DragonField.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
 
@@ -74,35 +75,67 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
-            m_switchToVision = SwitchToVision(visTagPose);
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", m_switchToVision ? "true" : "false");
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "tagpose x", tagpose.X().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "tagpose y", tagpose.Y().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "tagpose rotation", tagpose.Rotation().Angle().value());
+
+            if (visTagPose.has_value())
+            {
+                FieldElementCalculator fc;
+
+                auto offsetVisPose = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::ALGAE);
+                if (m_chassis != nullptr)
+                {
+                    // offsetVisPose.RotateBy(-m_chassis->GetYaw());
+                }
+
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "offset vistagpose x", offsetVisPose.X().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "offset vistagpose y", offsetVisPose.Y().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "offset vistagpose rotation", offsetVisPose.Rotation().Angle().value());
+
+                m_usingVisionPose = UseVisionPose(offsetVisPose, tagpose);
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "UseVisionPose", m_usingVisionPose ? "true" : "false");
+            }
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
-                if (m_switchToVision)
+                if (m_usingVisionPose)
                 {
                     units::angle::degree_t fieldRelativeAngle = visTagPose.value().ToPose2d().Rotation().Degrees() - m_chassis->GetYaw(); // Need to verify if it works for Red and Blue and all the way around the reef
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
-                    m_goalPose = frc::Pose2d(visTagPose.value().X(), visTagPose.value().Y(), frc::Rotation2d(fieldRelativeAngle));
+                    // m_goalPose = frc::Pose2d(visTagPose.value().X(), visTagPose.value().Y(), frc::Rotation2d(fieldRelativeAngle));
+                    m_goalPose = frc::Pose2d(visTagPose.value().X(), visTagPose.value().Y(), tagpose.ToPose2d().Rotation());
+                    // if (visTagPose.has_value())
+                    // m_goalPose = visTagPose.value().ToPose2d();
+
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose X", visTagPose.value().X().value());
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose Y", visTagPose.value().Y().value());
-                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Vision Tag Pose Rotation", visTagPose.value().Rotation().Angle().value() * 180.0 / M_PI);
-                    // return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Tag Pose X", tagpose.X().value());
+                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Tag Pose Y", tagpose.Y().value());
+                    DragonField::GetInstance()->UpdateObject("gamePiece", m_goalPose);
+
+                    // m_goalPose = frc::Pose2d(m_goalPose.X(), m_goalPose.Y(), frc::Rotation2d(fieldRelativeAngle));
+                    return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
                 }
+
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
                 // TODO:  Update when we have reef machine learning Add another DragonTargetFinderData Enum
                 // Have a vision pose of the tag, calculate the offset to the reef branch
-                if (m_switchToVision)
+                if (m_usingVisionPose)
                 {
                     FieldElementCalculator fc;
+
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::LEFT_STICK);
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
                     DragonVisionStructLogger::logPose3d("Left Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Left", fieldRelativeAngle.to<double>());
-                    m_goalPose = pose3.ToPose2d();
+                    m_goalPose = frc::Pose2d(pose3.ToPose2d().X(), pose3.ToPose2d().Y(), tagpose.ToPose2d().Rotation());
+
+                    DragonField::GetInstance()->UpdateObject("gamePiece", m_goalPose);
 
                     return make_tuple(DragonTargetFinderData::VISION_BASED, pose3.ToPose2d());
                 }
@@ -116,19 +149,21 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, leftbranchpose);
                 }
             }
-            else // right branch
+            else if (item == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
             {
                 // TODO:  Update when we have reef machine learning
                 //  Have a vision pose of the tag, calculate the offset to the reef branch
-                if (m_switchToVision)
+                if (m_usingVisionPose)
                 {
                     FieldElementCalculator fc;
                     auto pose3 = fc.CalcOffsetPositionForElement(visTagPose.value(), FieldConstants::FIELD_ELEMENT_OFFSETS::RIGHT_STICK);
                     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - pose3.ToPose2d().Rotation().Degrees();
                     DragonVisionStructLogger::logPose3d("Right Branch Vision", pose3);
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle-Right", fieldRelativeAngle.to<double>());
+                    DragonField::GetInstance()->UpdateObject("gamePiece", m_goalPose);
 
                     m_goalPose = pose3.ToPose2d();
+                    m_goalPose = frc::Pose2d(m_goalPose.X(), m_goalPose.Y(), tagpose.ToPose2d().Rotation());
                     return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose);
                 }
 
@@ -300,21 +335,12 @@ std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(VisionData data)
     return std::nullopt;
 }
 
-bool DragonTargetFinder::SwitchToVision(std::optional<frc::Pose3d> visTagPose) // TODO: Update when we switch to ML and raw vision correction on reef sticks
+bool DragonTargetFinder::UseVisionPose(frc::Pose3d visTagPose, frc::Pose3d odomTagPose)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "visTagPose has value", visTagPose.has_value() ? "true" : "false");
-
-    if (visTagPose.has_value())
-    {
-        frc::Pose2d currentPose = m_chassis->GetPose();
-        frc::Pose2d targetPose = visTagPose.value().ToPose2d();
-        units::length::meter_t distanceToTarget = targetPose.Translation().Distance(currentPose.Translation());
-        if (distanceToTarget < m_switchToVisionThreshold)
-        {
-            return true;
-        }
-    }
-    return false;
+    auto vis2d = visTagPose.ToPose2d();
+    auto odom2d = odomTagPose.ToPose2d();
+    auto dist = vis2d.Translation().Distance(odom2d.Translation());
+    return dist > m_minDistTol && dist < m_maxDistTol;
 }
 
 void DragonTargetFinder::SetChassis()
@@ -322,13 +348,14 @@ void DragonTargetFinder::SetChassis()
     if (m_chassis == nullptr)
     {
         m_chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "yaw", m_chassis->GetYaw().value());
     }
 }
 
 void DragonTargetFinder::DataLog(uint64_t timestamp)
 {
 
-    if (m_switchToVision)
+    if (m_usingVisionPose)
     {
         if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
         {

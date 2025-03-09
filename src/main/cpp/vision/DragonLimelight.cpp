@@ -40,6 +40,8 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructLogger.h"
+#include "utils/DragonField.h"
+#include "utils/AngleUtils.h"
 
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
@@ -569,9 +571,40 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
             frc::Rotation3d rotationTransform = frc::Rotation3d(units::angle::degree_t(vector[5]), units::angle::degree_t(vector[3]), -units::angle::degree_t(vector[4]));
             auto transform = frc::Transform3d(units::length::meter_t(vector[0]), units::length::meter_t(vector[1]), units::length::meter_t(vector[2]), rotationTransform);
 
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonLimelight", "X", transform.X().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonLimelight", "Y ", transform.Y().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonLimelight", "Z", transform.Z().value());
+
             frc::Rotation3d rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::math::atan2(transform.X(), transform.Z())); // roll pitch yaw
 
             return VisionData{transform, transform.Translation(), rotationToTarget, detectedTag.value()};
+        }
+    }
+
+    return std::nullopt;
+}
+
+std::optional<VisionPose> DragonLimelight::GetAprilTagPose(int id)
+{
+    std::optional<int> detectedTag = GetAprilTagID();
+    if (detectedTag.has_value())
+    {
+        if (detectedTag.value() == id && m_chassis != nullptr)
+        {
+            auto targetPose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
+
+            std::vector<double> vector = targetPose.GetEntry(std::array<double, 6>{}).Get();
+
+            // targetpose_robotspace: 3D transform of the primary in-view AprilTag in the coordinate system of the Robot (array (6)) [tx, ty, tz, pitch, yaw, roll] (meters, degrees)
+            frc::Rotation3d rotationTransform = frc::Rotation3d(units::angle::degree_t(vector[4]), units::angle::degree_t(vector[3]), -units::angle::degree_t(vector[5]));
+
+            // converting info from target space to robot space
+            auto transform = frc::Transform3d(units::length::meter_t(vector[2]), units::length::meter_t(-vector[0]), units::length::meter_t(-vector[1]), rotationTransform);
+            frc::Pose3d pose3d = frc::Pose3d(m_chassis->GetPose()) + transform;
+            // frc::Rotation3d rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::math::atan2(transform.X(), transform.Z())); // roll pitch yaw
+            // DragonField::GetInstance()->UpdateObject("visionPose", pose3d.ToPose2d());
+
+            return VisionPose{pose3d, units::time::millisecond_t(0.0)};
         }
     }
 

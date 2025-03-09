@@ -36,6 +36,8 @@ units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMoveme
     if (m_chassis != nullptr)
     {
         auto chassispose = m_chassis->GetPose();
+        return chassispose.Rotation().Degrees(); // TODO: TEMPORARY
+
         auto currentangle = m_chassis->GetStoredHeading();
 
         auto finder = DragonTargetFinder::GetInstance();
@@ -50,7 +52,7 @@ units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMoveme
                 units::length::meter_t yDiff = targetpose.Y() - chassispose.Y();
                 units::angle::degree_t angletotarget = units::math::atan2(yDiff, xDiff);
 
-                // Adjust angleToReefCenter to be between -180 and 180 degrees
+                // Adjust angle to be between -180 and 180 degrees
                 angletotarget = AngleUtils::GetEquivAngle(angletotarget);
                 chassisMovement.yawAngle = angletotarget;
                 return angletotarget;

@@ -16,8 +16,8 @@
 
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Translation3d.h"
-#include "wpi/array.h"
 #include "units/time.h"
+#include "wpi/array.h"
 
 enum PoseEstimationStrategy
 {

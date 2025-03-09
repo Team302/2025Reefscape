@@ -100,7 +100,8 @@ public:
     enum FIELD_ELEMENT_OFFSETS
     {
         LEFT_STICK,
-        RIGHT_STICK
+        RIGHT_STICK,
+        ALGAE
     };
 
     enum AprilTagIDs
