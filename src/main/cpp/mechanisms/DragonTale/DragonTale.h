@@ -242,7 +242,7 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
-	const units::angle::degree_t m_armHoldAngle{85.0};
+	const units::angle::degree_t m_armHoldAngle{83.0};
 	const units::angle::degree_t m_armGrabAlgeAngle{70.0};
 
 	const double m_manualControlThreshold = 0.1;
