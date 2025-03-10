@@ -38,6 +38,8 @@
 #include "mechanisms/IntakeManager/TransferOutState.h"
 #include "mechanisms/IntakeManager/ProcessState.h"
 #include "mechanisms/IntakeManager/ExpelState.h"
+#include "utils/DragonPower.h"
+#include "frc/DataLogManager.h"
 
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;
@@ -98,6 +100,37 @@ IntakeManager::IntakeManager(RobotIdentifier activeRobotId) : BaseMech(Mechanism
 															  m_stateMap()
 {
 	PeriodicLooper::GetInstance()->RegisterAll(this);
+	InitializeLogging();
+}
+
+void IntakeManager::InitializeLogging()
+{
+	wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+
+	m_IntakeManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalEnergy");
+	m_IntakeManagerTotalEnergyLogEntry.Append(0.0);
+	m_IntakeManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalWattHours");
+	m_IntakeManagerTotalWattHoursLogEntry.Append(0.0);
+
+	m_IntakePowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakePower");
+	m_IntakePowerLogEntry.Append(0.0);
+	m_IntakeEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakeEnergy");
+	m_IntakeEnergyLogEntry.Append(0.0);
+
+	m_ExtenderLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPosition");
+	m_ExtenderLogEntry.Append(0.0);
+	m_ExtenderTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderTarget");
+	m_ExtenderTargetLogEntry.Append(0.0);
+	m_ExtenderPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPower");
+	m_ExtenderPowerLogEntry.Append(0.0);
+	m_ExtenderEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderEnergy");
+	m_ExtenderEnergyLogEntry.Append(0.0);
+
+	m_IntakeSensorLogEntry = wpi::log::BooleanLogEntry(log, "mechanisms/IntakeManager/IntakeSensor");
+	m_IntakeSensorLogEntry.Append(false);
+
+	m_IntakeManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/IntakeManager/State");
+	m_IntakeManagerStateLogEntry.Append(0);
 }
 
 std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_NAMESEnumMap{
@@ -430,7 +463,7 @@ void IntakeManager::InitializeTalonFXSExtenderCOMP_BOT302()
 	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
 
 	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
-	configs.ExternalFeedback.SensorToMechanismRatio = 405;
+	configs.ExternalFeedback.SensorToMechanismRatio = 225;
 
 	m_ExtenderPositionDegree.EnableFOC = true;
 
@@ -525,4 +558,35 @@ ControlData *IntakeManager::GetControlData(string name)
 		return m_PositionDegree;
 
 	return nullptr;
+}
+
+void IntakeManager::DataLog(uint64_t timestamp)
+{
+	auto currTime = m_powerTimer.Get();
+
+	auto IntakePower = DragonPower::CalcPowerEnergy(currTime, m_Intake->GetSupplyVoltage().GetValueAsDouble(), m_Intake->GetSupplyCurrent().GetValueAsDouble());
+	m_power = get<0>(IntakePower);
+	m_energy = get<1>(IntakePower);
+	m_totalEnergy += m_energy;
+	LogIntakePower(timestamp, m_power);
+	LogIntakeEnergy(timestamp, m_energy);
+
+	LogExtender(timestamp, (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
+	LogExtenderTarget(timestamp, units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
+	auto ExtenderPower = DragonPower::CalcPowerEnergy(currTime, m_Extender->GetSupplyVoltage().GetValueAsDouble(), m_Extender->GetSupplyCurrent().GetValueAsDouble());
+	m_power = get<0>(ExtenderPower);
+	m_energy = get<1>(ExtenderPower);
+	m_totalEnergy += m_energy;
+	LogExtenderPower(timestamp, m_power);
+	LogExtenderEnergy(timestamp, m_energy);
+
+	LogIntakeSensor(timestamp, GetIntakeSensorState());
+
+	LogIntakeManagerState(timestamp, GetCurrentState());
+
+	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
+	LogIntakeManagerTotalEnergy(timestamp, m_totalEnergy);
+	LogIntakeManagerTotalWattHours(timestamp, m_totalWattHours);
+	m_powerTimer.Reset();
+	m_powerTimer.Start();
 }

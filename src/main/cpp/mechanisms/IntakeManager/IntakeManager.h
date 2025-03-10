@@ -34,13 +34,14 @@
 #include "state/IRobotStateChangeSubscriber.h"
 #include "mechanisms/controllers/ControlData.h"
 #include "state/RobotStateChanges.h"
+#include "utils/logging/signals/DragonDataLogger.h"
 
 #include "configs/RobotElementNames.h"
 #include "configs/MechanismConfigMgr.h"
 
 #include "RobotIdentifier.h"
 
-class IntakeManager : public BaseMech, public StateMgr, public IRobotStateChangeSubscriber
+class IntakeManager : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
 public:
 	enum STATE_NAMES
@@ -94,6 +95,7 @@ public:
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
+	void DataLog(uint64_t timestamp) override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
@@ -137,4 +139,33 @@ private:
 
 	bool m_failedSensorLatch = false;
 	bool m_manualModeButtonReleased = true;
+
+	void InitializeLogging();
+
+	wpi::log::DoubleLogEntry m_IntakePowerLogEntry;
+	wpi::log::DoubleLogEntry m_IntakeEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderEnergyLogEntry;
+	wpi::log::BooleanLogEntry m_IntakeSensorLogEntry;
+	wpi::log::DoubleLogEntry m_IntakeManagerTotalEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_IntakeManagerTotalWattHoursLogEntry;
+	wpi::log::IntegerLogEntry m_IntakeManagerStateLogEntry;
+	frc::Timer m_powerTimer;
+	double m_power = 0.0;
+	double m_energy = 0.0;
+	double m_totalEnergy = 0.0;
+	double m_totalWattHours = 0.0;
+
+	void LogIntakePower(uint64_t timestamp, double value) { return m_IntakePowerLogEntry.Update(value, timestamp); }
+	void LogIntakeEnergy(uint64_t timestamp, double value) { return m_IntakeEnergyLogEntry.Update(value, timestamp); }
+	void LogExtender(uint64_t timestamp, double value) { return m_ExtenderLogEntry.Update(value, timestamp); }
+	void LogExtenderTarget(uint64_t timestamp, double value) { return m_ExtenderTargetLogEntry.Update(value, timestamp); }
+	void LogExtenderPower(uint64_t timestamp, double value) { return m_ExtenderPowerLogEntry.Update(value, timestamp); }
+	void LogExtenderEnergy(uint64_t timestamp, double value) { return m_ExtenderEnergyLogEntry.Update(value, timestamp); }
+	void LogIntakeSensor(uint64_t timestamp, bool value) { return m_IntakeSensorLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerTotalEnergy(uint64_t timestamp, int value) { return m_IntakeManagerTotalEnergyLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerTotalWattHours(uint64_t timestamp, int value) { return m_IntakeManagerTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerState(uint64_t timestamp, int value) { return m_IntakeManagerStateLogEntry.Update(value, timestamp); }
 };
