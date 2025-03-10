@@ -39,12 +39,12 @@ class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 {
 public:
     DragonQuest(
-        units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
-        units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
-        units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-        units::angle::degree_t mountingPitch,  /// <I> - Pitch of camera
-        units::angle::degree_t mountingYaw,    /// <I> - Yaw of camera
-        units::angle::degree_t mountingRoll    /// <I> - Roll of camera
+        units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
+        units::length::inch_t mountingYOffset, /// <I> y offset of Quest from robot center (left relative to robot)
+        units::length::inch_t mountingZOffset, /// <I> z offset of Quest from robot center (up relative to robot)
+        units::angle::degree_t mountingPitch,  /// <I> - Pitch of Quest
+        units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
+        units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
     );
     frc::Pose2d GetEstimatedPose();
     void DataLog(uint64_t timestamp) override;
@@ -55,16 +55,16 @@ public:
     void SetRobotPose(const frc::Pose2d &pose) override;
 
 private:
-    ~DragonQuest() = default;
+    DragonQuest() = delete;
     void ZeroPosition();
     void RefreshNT();
 
-    units::length::inch_t m_mountingXOffset; /// <I> x offset of cam from robot center (forward relative to robot)
-    units::length::inch_t m_mountingYOffset; /// <I> y offset of cam from robot center (left relative to robot)
-    units::length::inch_t m_mountingZOffset; /// <I> z offset of cam from robot center (up relative to robot)
-    units::angle::degree_t m_mountingPitch;  /// <I> - Pitch of camera
-    units::angle::degree_t m_mountingYaw;    /// <I> - Yaw of camera
-    units::angle::degree_t m_mountingRoll;   /// <I> - Roll of camera
+    units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
+    units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
+    units::length::inch_t m_mountingZOffset; /// <I> z offset of Quest from robot center (up relative to robot)
+    units::angle::degree_t m_mountingPitch;  /// <I> - Pitch of Quest
+    units::angle::degree_t m_mountingYaw;    /// <I> - Yaw of Quest
+    units::angle::degree_t m_mountingRoll;   /// <I> - Roll of Quest
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
     static DragonQuest *m_dragonquest;
