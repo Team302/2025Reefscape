@@ -1236,7 +1236,10 @@ void DragonTale::UpdateTarget()
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = units::angle::degree_t(86.0);
+		if ((GetCurrentState() == STATE_L4SCORING_POSITION) && !GetAlgaeSensorState())
+			actualTargetAngle = m_armGrabAlgeAngle;
+		else
+			actualTargetAngle = m_armHoldAngle;
 	}
 	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
 	{
@@ -1248,16 +1251,16 @@ void DragonTale::UpdateTarget()
 		actualTargetHeight = m_climbModeHeight;
 	}
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
+	m_armLoggingTarget = actualTargetAngle.value();
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armLoggingTarget);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
-	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-	// m_isArmRotating = units::math::abs(m_ArmAngleSensor->GetVelocity().GetValue()) > m_dpsThreshold;
 	if ((abs(armInput) > m_manualControlThreshold))
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
-		units::angle::degree_t armangle = GetArmAngle();
-		SetArmTarget(armangle);
+		units::angle::degree_t armAngle = GetArmAngle();
+		SetArmTarget(armAngle);
+		m_armLoggingTarget = armAngle.value();
 	}
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
@@ -1348,7 +1351,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_totalEnergy += m_energy;
 	LogArmPower(timestamp, m_power);
 	LogArmEnergy(timestamp, m_energy);
-	LogArmTarget(timestamp, m_armTarget.value());
+	LogArmTarget(timestamp, m_armLoggingTarget);
 
 	LogElevatorLeader(timestamp, GetElevatorHeight().value());
 	auto ElevatorLeaderPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorLeader->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorLeader->GetSupplyCurrent().GetValueAsDouble());

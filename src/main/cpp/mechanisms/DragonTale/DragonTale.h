@@ -242,6 +242,9 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
+	const units::angle::degree_t m_armHoldAngle{85.0};
+	const units::angle::degree_t m_armGrabAlgeAngle{70.0};
+
 	const double m_manualControlThreshold = 0.1;
 
 	const units::length::inch_t m_climbModeHeight{15.0};
@@ -336,6 +339,7 @@ private:
 	double m_energy = 0.0;
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
+	double m_armLoggingTarget = 85.0;
 
 	void LogArm(uint64_t timestamp, double value) { return m_ArmLogEntry.Update(value, timestamp); }
 	void LogArmTarget(uint64_t timestamp, double value) { return m_ArmTargetLogEntry.Update(value, timestamp); }
