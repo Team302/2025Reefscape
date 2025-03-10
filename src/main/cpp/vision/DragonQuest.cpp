@@ -18,12 +18,12 @@
 #include "utils/DragonField.h"
 
 DragonQuest::DragonQuest(
-    units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
-    units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
-    units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-    units::angle::degree_t mountingPitch,  /// <I> - Pitch of camera
-    units::angle::degree_t mountingYaw,    /// <I> - Yaw of camera
-    units::angle::degree_t mountingRoll    /// <I> - Roll of camera
+    units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
+    units::length::inch_t mountingYOffset, /// <I> y offset of Quest from robot center (left relative to robot)
+    units::length::inch_t mountingZOffset, /// <I> z offset of Quest from robot center (up relative to robot)
+    units::angle::degree_t mountingPitch,  /// <I> - Pitch of Quest
+    units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
+    units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
     ) : m_mountingXOffset(mountingXOffset),
         m_mountingYOffset(mountingYOffset),
         m_mountingZOffset(mountingZOffset),
