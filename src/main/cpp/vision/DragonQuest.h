@@ -24,15 +24,13 @@
 
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Rotation3d.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructs.h"
+#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 
@@ -40,47 +38,51 @@ class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
 
 {
 public:
-    frc::Pose3d GetEstimatedPose();
-    static DragonQuest *GetDragonQuest();
+    DragonQuest(
+        units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
+        units::length::inch_t mountingYOffset, /// <I> y offset of Quest from robot center (left relative to robot)
+        units::length::inch_t mountingZOffset, /// <I> z offset of Quest from robot center (up relative to robot)
+        units::angle::degree_t mountingPitch,  /// <I> - Pitch of Quest
+        units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
+        units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
+    );
+    frc::Pose2d GetEstimatedPose();
     void DataLog(uint64_t timestamp) override;
-    bool IsConnected();
+    bool IsConnected() { return m_isConnected; };
+    void SetIsConnected();
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
 
 private:
-    DragonQuest();
-    ~DragonQuest() = default;
-    double GetBatteryPercent();
-    double GetTimeStamp();
-    void ZeroHeading();
+    DragonQuest() = delete;
     void ZeroPosition();
-    units::angle::degree_t GetOculusYaw();
     void RefreshNT();
 
+    units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
+    units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
+    units::length::inch_t m_mountingZOffset; /// <I> z offset of Quest from robot center (up relative to robot)
+    units::angle::degree_t m_mountingPitch;  /// <I> - Pitch of Quest
+    units::angle::degree_t m_mountingYaw;    /// <I> - Yaw of Quest
+    units::angle::degree_t m_mountingRoll;   /// <I> - Roll of Quest
+
     std::shared_ptr<nt::NetworkTable> m_networktable;
-    std::shared_ptr<nt::NetworkTable> m_limelightNetworktable;
     static DragonQuest *m_dragonquest;
-    double m_yawoffsetzero = 0;
     nt::IntegerSubscriber m_questMiso;
     nt::IntegerPublisher m_questMosi;
     nt::DoubleArrayTopic m_posTopic;
     nt::DoubleArrayTopic m_rotationTopic;
-
-    double m_xOffset = 0;
-    double m_yOffset = 0;
-    double m_zOffset = 0;
-
-    double m_rollOffset = 0;
-    double m_pitchOffset = 0;
-    double m_yawOffset = 0;
-
-    frc::Pose3d m_currentpos;
-    double m_yaw = 0;
+    nt::IntegerTopic m_frameCountTopic;
+    nt::DoubleArrayPublisher m_initialPosePublisher;
 
     bool m_hasreset = false;
+    bool m_isConnected = false;
+
+    frc::Transform2d m_questTransform;
 
     const double m_stdxy = 0.5;
     const double m_stddeg = 6.0;
-    std::vector<double> limelightpose;
+
+    double m_prevFrameCount = 0;
+    int m_loopCounter = 0;
 };
