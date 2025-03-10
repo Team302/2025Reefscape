@@ -248,9 +248,6 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     {
         m_dynamicSpeed = 1;
     }
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonTale"), string("elevatorHeightHolonomic"), m_elevatorHeight.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonTale"), string("RobotSpeedInputScale"), m_inputScale);
-
     forwardScale *= m_inputScale * m_dynamicSpeed;
     strafeScale *= m_inputScale * m_dynamicSpeed;
     rotateScale *= m_inputScale * m_dynamicSpeed;
