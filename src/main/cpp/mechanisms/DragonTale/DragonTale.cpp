@@ -835,7 +835,7 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(350);
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
-	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
+	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.05);
 	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.1);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
