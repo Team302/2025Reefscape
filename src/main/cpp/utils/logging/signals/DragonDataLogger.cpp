@@ -121,131 +121,131 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
-            dataMgr->m_lfSteerTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfSteerTotalPowerPath, value, m_lfSteerTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_WATT_HOURS:
-            dataMgr->m_lfSteerWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfSteerWattHoursPath, value, m_lfSteerWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER:
-            dataMgr->m_lfDrivePower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfDrivePowerPath, value, m_lfDrivePowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY:
-            dataMgr->m_lfDriveEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfDriveEnergyPath, value, m_lfDriveEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER:
-            dataMgr->m_lfDriveTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfDriveTotalPowerPath, value, m_lfDriveTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS:
-            dataMgr->m_lfDriveWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfDriveWattHoursPath, value, m_lfDriveWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER:
-            dataMgr->m_rfSteerPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfSteerPowerPath, value, m_rfSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY:
-            dataMgr->m_rfSteerEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfSteerEnergyPath, value, m_rfSteerEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_TOTALPOWER:
-            dataMgr->m_rfSteerTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfSteerTotalPowerPath, value, m_rfSteerTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_WATT_HOURS:
-            dataMgr->m_rfSteerWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfSteerWattHoursPath, value, m_rfSteerWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER:
-            dataMgr->m_rfDrivePower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfDrivePowerPath, value, m_rfDrivePowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY:
-            dataMgr->m_rfDriveEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfDriveEnergyPath, value, m_rfDriveEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER:
-            dataMgr->m_rfDriveTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfDriveTotalPowerPath, value, m_rfDriveTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS:
-            dataMgr->m_rfDriveWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rfDriveWattHoursPath, value, m_rfDriveWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER:
-            dataMgr->m_lbSteerPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbSteerPowerPath, value, m_lbSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY:
-            dataMgr->m_lbSteerEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbSteerEnergyPath, value, m_lbSteerEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_TOTALPOWER:
-            dataMgr->m_lbSteerTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbSteerTotalPowerPath, value, m_lbSteerTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_WATT_HOURS:
-            dataMgr->m_lbSteerWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbSteerWattHoursPath, value, m_lbSteerWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER:
-            dataMgr->m_lbDrivePower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbDrivePowerPath, value, m_lbDrivePowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY:
-            dataMgr->m_lbDriveEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbDriveEnergyPath, value, m_lbDriveEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_TOTALPOWER:
-            dataMgr->m_lbDriveTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbDriveTotalPowerPath, value, m_lbDriveTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_WATT_HOURS:
-            dataMgr->m_lbDriveWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lbDriveWattHoursPath, value, m_lbDriveWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER:
-            dataMgr->m_rbSteerPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbSteerPowerPath, value, m_rbSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY:
-            dataMgr->m_rbSteerEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbSteerEnergyPath, value, m_rbSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_TOTALPOWER:
-            dataMgr->m_rbSteerTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbSteerTotalPowerPath, value, m_rbSteerTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_WATT_HOURS:
-            dataMgr->m_rbSteerWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbSteerWattHoursPath, value, m_rbSteerWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER:
-            dataMgr->m_rbDrivePower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbDrivePowerPath, value, m_rbDrivePowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY:
-            dataMgr->m_rbDriveEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbDriveEnergyPath, value, m_rbDriveEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER:
-            dataMgr->m_rbDriveTotalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbDriveTotalPowerPath, value, m_rbDriveTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS:
-            dataMgr->m_rbDriveWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_rbDriveWattHoursPath, value, m_rbDriveWattHoursUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
-            dataMgr->m_swerveChassisTotalPower.Update(value, timestamp);
+            // SignalLogger::WriteDouble(m_swerveChassisTotalPowerPath, value, m_swerveChassisTotalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
-            dataMgr->m_swerveChassisWattHours.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_swerveChassisWattHoursPath, value, m_swerveChassisWattHoursUnits, m_latency);
             break;
 
         default:
