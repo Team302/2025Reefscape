@@ -183,7 +183,7 @@ public:
     std::string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
     std::string m_lfSteerTotalPowerUnits = "";
     std::string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
-    std::string m_lfSteerWattHoursUnits = "";
+    std::string m_lfSteerWattHoursUnits = "WattHours";
 
     std::string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
     std::string m_lfDrivePowerUnits = "";
@@ -192,7 +192,7 @@ public:
     std::string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
     std::string m_lfDriveTotalPowerUnits = "";
     std::string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
-    std::string m_lfDriveWattHoursUnits = "";
+    std::string m_lfDriveWattHoursUnits = "WattHours";
 
     std::string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
     std::string m_rfSteerPowerUnits = "";
@@ -201,7 +201,7 @@ public:
     std::string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
     std::string m_rfSteerTotalPowerUnits = "";
     std::string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
-    std::string m_rfSteerWattHoursUnits = "";
+    std::string m_rfSteerWattHoursUnits = "WattHours";
 
     std::string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
     std::string m_rfDrivePowerUnits = "";
@@ -210,7 +210,7 @@ public:
     std::string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
     std::string m_rfDriveTotalPowerUnits = "";
     std::string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
-    std::string m_rfDriveWattHoursUnits = "";
+    std::string m_rfDriveWattHoursUnits = "WattHours";
 
     std::string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
     std::string m_lbSteerPowerUnits = "";
@@ -219,7 +219,7 @@ public:
     std::string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
     std::string m_lbSteerTotalPowerUnits = "";
     std::string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
-    std::string m_lbSteerWattHoursUnits = "";
+    std::string m_lbSteerWattHoursUnits = "WattHours";
 
     std::string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
     std::string m_lbDrivePowerUnits = "";
@@ -228,16 +228,16 @@ public:
     std::string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
     std::string m_lbDriveTotalPowerUnits = "";
     std::string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
-    std::string m_lbDriveWattHoursUnits = "";
+    std::string m_lbDriveWattHoursUnits = "WattHours";
 
     std::string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
     std::string m_rbSteerPowerUnits = "";
     std::string m_rbSteerEnergyPath = "/Chassis/BackRightModule/Steer/Energy";
     std::string m_rbSteerEnergyUnits = "";
-    std::string m_rbSteerTotalPowerPath = "";
-    std::string m_rbSteerTotalPowerUnits = "/Chassis/BackRightModule/Steer/TotalPower";
-    std::string m_rbSteerWattHoursPath = "";
-    std::string m_rbSteerWattHoursUnits = "/Chassis/BackRightModule/Steer/WattHours";
+    std::string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
+    std::string m_rbSteerTotalPowerUnits = "";
+    std::string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
+    std::string m_rbSteerWattHoursUnits = "WattHours";
 
     std::string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
     std::string m_rbDrivePowerUnits = "";
@@ -246,7 +246,7 @@ public:
     std::string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
     std::string m_rbDriveTotalPowerUnits = "";
     std::string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
-    std::string m_rbDriveWattHoursUnits = "";
+    std::string m_rbDriveWattHoursUnits = "WattHours";
 
     std::string m_swerveChassisTotalPowerPath = "/Chassis/TotalPower";
     std::string m_swerveChassisTotalPowerUnits = "";
