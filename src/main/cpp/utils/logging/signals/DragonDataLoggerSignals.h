@@ -138,96 +138,66 @@ public:
 
 private:
     // initialize these signals in the constructor
-    wpi::log::BooleanLogEntry m_isBrownOut;
 
-    wpi::log::DoubleLogEntry m_storedHeading;
-    wpi::log::DoubleLogEntry m_chassisYaw;
+    std::string m_brownOutPath = "";
 
-    wpi::log::DoubleLogEntry m_electricalVoltage;
-    wpi::log::DoubleLogEntry m_electricalCurrent;
-    wpi::log::DoubleLogEntry m_electricalEnergy;
-    wpi::log::DoubleLogEntry m_electricalPower;
+    std::string m_storedHeadingPath = "";
+    std::string m_ChassisYawPath = "";
 
-    wpi::log::DoubleLogEntry m_tx;
-    wpi::log::DoubleLogEntry m_ty;
-    wpi::log::DoubleLogEntry m_tv;
-    wpi::log::DoubleLogEntry m_fiducial;
+    std::string m_electricalVoltagePath = "";
+    std::string m_electricalCurrentPath = "";
+    std::string m_electricalEnergyPath = "";
+    std::string m_electricalPowerPath = "";
 
-    wpi::log::DoubleLogEntry m_batteryVoltage;
-    wpi::log::DoubleLogEntry m_brownoutVoltage;
-    wpi::log::DoubleLogEntry m_inputVoltage;
-    wpi::log::DoubleLogEntry m_inputCurrent;
-    wpi::log::DoubleLogEntry m_cpuTemp;
+    std::string m_txPath = "";
+    std::string m_tyPath = "";
+    std::string m_tvPath = "";
+    std::string m_fiducialPath = "";
 
-    wpi::log::DoubleLogEntry m_lfSteerPower;
-    wpi::log::DoubleLogEntry m_lfSteerEnergy;
-    wpi::log::DoubleLogEntry m_lfSteerTotalPower;
-    wpi::log::DoubleLogEntry m_lfSteerWattHours;
+    std::string m_batteryVoltagePath = "";
+    std::string m_brownoutVoltagePath = "";
+    std::string m_inputVoltagePath = "";
+    std::string m_inputCurrentPath = "";
+    std::string m_cpuTempPath = "";
 
-    wpi::log::DoubleLogEntry m_lfDrivePower;
-    wpi::log::DoubleLogEntry m_lfDriveEnergy;
-    wpi::log::DoubleLogEntry m_lfDriveTotalPower;
-    wpi::log::DoubleLogEntry m_lfDriveWattHours;
+    std::string m_lfSteerPowerPath = "";
+    std::string m_lfSteerEnergyPath = "";
+    std::string m_lfSteerTotalPowerPath = "";
+    std::string m_lfSteerWattHoursPath = "";
 
-    wpi::log::DoubleLogEntry m_rfSteerPower;
-    wpi::log::DoubleLogEntry m_rfSteerEnergy;
-    wpi::log::DoubleLogEntry m_rfSteerTotalPower;
-    wpi::log::DoubleLogEntry m_rfSteerWattHours;
+    std::string m_lfDrivePowerPath = "";
+    std::string m_lfDriveEnergyPath = "";
+    std::string m_lfDriveTotalPowerPath = "";
+    std::string m_lfDriveWattHoursPath = "";
+    std::string m_rfSteerPowerPath = "";
+    std::string m_rfSteerEnergyPath = "";
+    std::string m_rfSteerTotalPowerPath = "";
+    std::string m_rfSteerWattHoursPath = "";
+    std::string m_rfDrivePowerPath = "";
+    std::string m_rfDriveEnergyPath = "";
+    std::string m_rfDriveTotalPowerPath = "";
+    std::string m_rfDriveWattHoursPath = "";
 
-    wpi::log::DoubleLogEntry m_rfDrivePower;
-    wpi::log::DoubleLogEntry m_rfDriveEnergy;
-    wpi::log::DoubleLogEntry m_rfDriveTotalPower;
-    wpi::log::DoubleLogEntry m_rfDriveWattHours;
-
-    wpi::log::DoubleLogEntry m_lbSteerPower;
-    wpi::log::DoubleLogEntry m_lbSteerEnergy;
-    wpi::log::DoubleLogEntry m_lbSteerTotalPower;
-    wpi::log::DoubleLogEntry m_lbSteerWattHours;
-
-    wpi::log::DoubleLogEntry m_lbDrivePower;
-    wpi::log::DoubleLogEntry m_lbDriveEnergy;
-    wpi::log::DoubleLogEntry m_lbDriveTotalPower;
-    wpi::log::DoubleLogEntry m_lbDriveWattHours;
-
-    wpi::log::DoubleLogEntry m_rbSteerPower;
-    wpi::log::DoubleLogEntry m_rbSteerEnergy;
-    wpi::log::DoubleLogEntry m_rbSteerTotalPower;
-    wpi::log::DoubleLogEntry m_rbSteerWattHours;
-
-    wpi::log::DoubleLogEntry m_rbDrivePower;
-    wpi::log::DoubleLogEntry m_rbDriveEnergy;
-    wpi::log::DoubleLogEntry m_rbDriveTotalPower;
-    wpi::log::DoubleLogEntry m_rbDriveWattHours;
-
-    wpi::log::DoubleLogEntry m_swerveChassisTotalPower;
-    wpi::log::DoubleLogEntry m_swerveChassisWattHours;
-
-    wpi::log::StringLogEntry m_headingState;
-    wpi::log::StringLogEntry m_driveState;
-
-    wpi::log::StructLogEntry<frc::Pose2d> m_pose2d;
-    wpi::log::StructLogEntry<frc::Pose2d> m_visionLeftReefBranchPose;
-    wpi::log::StructLogEntry<frc::Pose2d> m_visionRightReefBranchPose;
-    wpi::log::StructLogEntry<frc::Pose2d> m_visionCoralStationPose;
-    wpi::log::StructLogEntry<frc::Pose2d> m_odometryLeftReefBranchPose;
-    wpi::log::StructLogEntry<frc::Pose2d> m_odometryRightReefBranchPose;
-    wpi::log::StructLogEntry<frc::Pose2d> m_odometryCoralStationPose;
-    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight;
-    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dLimelight2;
-    wpi::log::StructLogEntry<frc::Pose3d> m_pose3dQuest;
-
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftTarget;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightTarget;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftTarget;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightTarget;
-
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftActual;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightActual;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftActual;
-    wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightActual;
-
-    wpi::log::StructLogEntry<frc::ChassisSpeeds> m_targetSpeeds;
-    wpi::log::StructLogEntry<frc::ChassisSpeeds> m_actualSpeeds;
+    std::string m_lbSteerPowerPath = "";
+    std::string m_lbSteerEnergyPath = "";
+    std::string m_lbSteerTotalPowerPath = "";
+    std::string m_lbSteerWattHoursPath = "";
+    std::string m_lbDrivePowerPath = "";
+    std::string m_lbDriveEnergyPath = "";
+    std::string m_lbDriveTotalPowerPath = "";
+    std::string m_lbDriveWattHoursPath = "";
+    std::string m_rbSteerPowerPath = "";
+    std::string m_rbSteerEnergyPath = "";
+    std::string m_rbSteerTotalPowerPath = "";
+    std::string m_rbSteerWattHoursPath = "";
+    std::string m_rbDrivePowerPath = "";
+    std::string m_rbDriveEnergyPath = "";
+    std::string m_rbDriveTotalPowerPath = "";
+    std::string m_rbDriveWattHoursPath = "";
+    std::string m_swerveChassisTotalPowerPath = "";
+    std::string m_swerveChassisWattHoursPath = "";
+    std::string m_headingStatePath = "";
+    std::string m_driveStatePath = "";
 
     DragonDataLoggerSignals();
     virtual ~DragonDataLoggerSignals() = delete;

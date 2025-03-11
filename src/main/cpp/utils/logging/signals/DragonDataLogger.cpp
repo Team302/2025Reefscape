@@ -14,11 +14,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#include "ctre/phoenix6/SignalLogger.hpp"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
+
+using ctre::phoenix6::SignalLogger;
 
 DragonDataLogger::DragonDataLogger()
 {
@@ -44,12 +47,13 @@ void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLoggerSignals::
 void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value)
 {
     auto signals = DragonDataLoggerSignals::GetInstance();
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
     if (signals != nullptr)
     {
         switch (signalID)
         {
         case DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES:
-            signals->m_storedHeading.Update(value, timestamp);
+
             break;
         case DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES:
             signals->m_chassisYaw.Update(value, timestamp);

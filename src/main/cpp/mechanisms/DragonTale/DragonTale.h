@@ -32,6 +32,7 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/configs/Configurator.hpp>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
+#include "ctre/phoenix6/SignalLogger.hpp"
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -47,6 +48,8 @@
 
 #include "frc/geometry/Pose2d.h"
 #include "fielddata/FieldConstants.h"
+
+using ctre::phoenix6::SignalLogger;
 
 class DragonTale : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
@@ -296,7 +299,7 @@ private:
 	units::length::inch_t m_motorCountInches;
 	double m_elevatorGearRatio;
 	double m_elevatorDiameterInch;
-	
+
 	void InitializeLogging();
 
 	wpi::log::DoubleLogEntry m_ArmLogEntry;
@@ -337,33 +340,33 @@ private:
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
 
-	void LogArm(uint64_t timestamp, double value) { return m_ArmLogEntry.Update(value, timestamp); }
-	void LogArmTarget(uint64_t timestamp, double value) { return m_ArmTargetLogEntry.Update(value, timestamp); }
-	void LogArmPower(uint64_t timestamp, double value) { return m_ArmPowerLogEntry.Update(value, timestamp); }
-	void LogArmEnergy(uint64_t timestamp, double value) { return m_ArmEnergyLogEntry.Update(value, timestamp); }
+	void LogArm(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	void LogArmTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogArmPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogArmEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogElevatorLeader(uint64_t timestamp, double value) { return m_ElevatorLeaderLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderTarget(uint64_t timestamp, double value) { return m_ElevatorLeaderTargetLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderPower(uint64_t timestamp, double value) { return m_ElevatorLeaderPowerLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return m_ElevatorLeaderEnergyLogEntry.Update(value, timestamp); }
+	void LogElevatorLeader(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorLeaderTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorLeaderPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogAlgaePower(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXPowerLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSPowerLogEntry.Update(value, timestamp); }
-	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXEnergyLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSEnergyLogEntry.Update(value, timestamp); }
+	void LogAlgaePower(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(value, timestamp) : SignalLogger::WriteDouble(value, timestamp); }
+	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(value, timestamp) : SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogElevatorFollower(uint64_t timestamp, double value) { return m_ElevatorFollowerLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerTarget(uint64_t timestamp, double value) { return m_ElevatorFollowerTargetLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerPower(uint64_t timestamp, double value) { return m_ElevatorFollowerPowerLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerEnergy(uint64_t timestamp, double value) { return m_ElevatorFollowerEnergyLogEntry.Update(value, timestamp); }
+	void LogElevatorFollower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorFollowerTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorFollowerPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogElevatorFollowerEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogCoralPower(uint64_t timestamp, double value) { return m_CoralPowerLogEntry.Update(value, timestamp); }
-	void LogCoralEnergy(uint64_t timestamp, double value) { return m_CoralEnergyLogEntry.Update(value, timestamp); }
+	void LogCoralPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogCoralEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogCoralInSensor(uint64_t timestamp, bool value) { return m_CoralInSensorLogEntry.Update(value, timestamp); }
-	void LogCoralOutSensor(uint64_t timestamp, bool value) { return m_CoralOutSensorLogEntry.Update(value, timestamp); }
-	void LogAlgaeSensor(uint64_t timestamp, bool value) { return m_AlgaeSensorLogEntry.Update(value, timestamp); }
+	void LogCoralInSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogCoralOutSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogAlgaeSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogDragonTaleTotalEnergy(uint64_t timestamp, int value) { return m_DragonTaleTotalEnergyLogEntry.Update(value, timestamp); }
-	void LogDragonTaleTotalWattHours(uint64_t timestamp, int value) { return m_DragonTaleTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogDragonTaleTotalEnergy(uint64_t timestamp, int value) { return SignalLogger::WriteDouble(value, timestamp); }
+	void LogDragonTaleTotalWattHours(uint64_t timestamp, int value) { return SignalLogger::WriteDouble(value, timestamp); }
 
-	void LogDragonTaleState(uint64_t timestamp, int value) { return m_DragonTaleStateLogEntry.Update(value, timestamp); }
+	void LogDragonTaleState(uint64_t timestamp, int value) { return SignalLogger::WriteDouble(value, timestamp); }
 };
