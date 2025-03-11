@@ -422,11 +422,11 @@ void DragonTale::CreateCOMP_BOT302()
 	m_AlgaeTalonFXS = new ctre::phoenix6::hardware::TalonFXS(19, "canivore");
 
 	m_CoralInSensor = new frc::DigitalInput(0);
-	m_CoralOutSensor = new frc::DigitalInput(2);
-	m_AlgaeSensor = new frc::DigitalInput(1);
+	m_CoralOutSensor = new frc::DigitalInput(1);
+	m_AlgaeSensor = new frc::DigitalInput(2);
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442627);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -832,10 +832,10 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(300);
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(100);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(350);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
-	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
+	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.05);
 	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.1);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
@@ -899,10 +899,10 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(500);
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(100);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(75);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
-	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
+	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.08);
 	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.1);
 
 	configs.Feedback.FeedbackRemoteSensorID = 4;
@@ -910,7 +910,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Feedback.SensorToMechanismRatio = 0.1086833;
 
 	m_elevatorDiameterInch = 0.75;
-	m_elevatorGearRatio = 12.0;
+	m_elevatorGearRatio = 9.0;
 
 	configs.Slot0.kP = m_PositionInch->GetP();
 	configs.Slot0.kI = m_PositionInch->GetI();
@@ -1009,7 +1009,7 @@ void DragonTale::InitializeTalonFXSCoralCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
@@ -1237,7 +1237,10 @@ void DragonTale::UpdateTarget()
 
 	if (elevatorError > m_elevatorErrorThreshold)
 	{
-		actualTargetAngle = units::angle::degree_t(86.0);
+		if ((GetCurrentState() == STATE_L4SCORING_POSITION) && !GetAlgaeSensorState())
+			actualTargetAngle = m_armGrabAlgeAngle;
+		else
+			actualTargetAngle = m_armHoldAngle;
 	}
 	else if (GetElevatorHeight() < m_elevatorProtectionHeight && m_armTarget < m_armProtectionAngle)
 	{
@@ -1249,16 +1252,16 @@ void DragonTale::UpdateTarget()
 		actualTargetHeight = m_climbModeHeight;
 	}
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", actualTargetAngle.value());
+	m_armLoggingTarget = actualTargetAngle.value();
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armLoggingTarget);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
 
-	// TODO: Add logic to determine to not raise the elevator until we are close to scoring using chassis pose (Potentially)
-	// m_isArmRotating = units::math::abs(m_ArmAngleSensor->GetVelocity().GetValue()) > m_dpsThreshold;
 	if ((abs(armInput) > m_manualControlThreshold))
 	{
 		UpdateTargetArmPercentOutput(armInput * m_changeRate);
-		units::angle::degree_t armangle = GetArmAngle();
-		SetArmTarget(armangle);
+		units::angle::degree_t armAngle = GetArmAngle();
+		SetArmTarget(armAngle);
+		m_armLoggingTarget = armAngle.value();
 	}
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
@@ -1334,7 +1337,7 @@ void DragonTale::SetAlgaeMotor()
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
 		else
-			UpdateTargetAlgaeTalonFXSPercentOutput(0.15);
+			UpdateTargetAlgaeTalonFXSPercentOutput(0.05);
 	}
 }
 
@@ -1349,7 +1352,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_totalEnergy += m_energy;
 	LogArmPower(timestamp, m_power);
 	LogArmEnergy(timestamp, m_energy);
-	LogArmTarget(timestamp, m_armTarget.value());
+	LogArmTarget(timestamp, m_armLoggingTarget);
 
 	LogElevatorLeader(timestamp, GetElevatorHeight().value());
 	auto ElevatorLeaderPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorLeader->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorLeader->GetSupplyCurrent().GetValueAsDouble());

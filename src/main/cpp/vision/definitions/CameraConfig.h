@@ -16,14 +16,13 @@
 
 #pragma once
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 class CameraConfig
 {
 public:
-
     CameraConfig();
     ~CameraConfig();
 
     virtual void BuildCameraConfig();
-
 };

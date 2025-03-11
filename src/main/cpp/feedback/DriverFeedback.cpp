@@ -175,10 +175,6 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
         pigeonfaults = false;
     }
-    if (DragonQuest::GetDragonQuest() != nullptr)
-    {
-        questStatus = DragonQuest::GetDragonQuest()->IsConnected();
-    }
     m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
 }
 
