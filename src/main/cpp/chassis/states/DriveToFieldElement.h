@@ -33,6 +33,7 @@
 #include "chassis/states/RobotDrive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "state/RobotState.h"
 
 class DriveToFieldElement : public RobotDrive
 {

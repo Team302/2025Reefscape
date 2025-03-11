@@ -104,6 +104,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int, IsDone());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "IsDone", IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
