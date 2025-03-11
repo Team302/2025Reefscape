@@ -36,7 +36,7 @@ void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSig
         switch (signalID)
         {
         case DragonDataLogger::BoolSignals::IS_BROWNOUT:
-            dataMgr->m_isBrownOut.Update(value, timestamp);
+            SignalLogger::WriteBoolean(m_brownOutPath, value, m_latency);
             break;
         default:
             break;
@@ -52,26 +52,32 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
         switch (signalID)
         {
         case DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES:
-            SignalLogger::WriteDouble(m_storedHeadingPath, value, m_storedHeadingUnits, 0);
+            SignalLogger::WriteDouble(m_storedHeadingPath, value, m_storedHeadingUnits, m_latency);
             break;
+
         case DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES:
-            dataMgr->m_chassisYaw.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_ChassisYawPath, value, m_ChassisYawUnits, m_latency);
             break;
+
         case DragonDataLogger::DoubleSignals::ELECTRICAL_VOLTAGE:
-            dataMgr->m_electricalVoltage.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_electricalEnergyPath, value, m_electricalVoltageUnits, m_latency);
             break;
+
         case DragonDataLogger::DoubleSignals::ELECTRICAL_CURRENT:
-            dataMgr->m_electricalCurrent.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_electricalCurrentPath, value, m_electricalCurrentUnits, m_latency);
             break;
+
         case DragonDataLogger::DoubleSignals::ELECTRICAL_ENERGY:
-            dataMgr->m_electricalEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_electricalEnergyPath, value, m_electricalEnergyUnits, m_latency);
             break;
+
         case DragonDataLogger::DoubleSignals::ELECTRICAL_POWER:
-            dataMgr->m_electricalPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_electricalPowerPath, value, m_electricalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TV_1:
-            dataMgr->m_tv.Update(value, timestamp);
+            // SignalLogger::WriteDouble(m_storedHeadingPath, value, m_storedHeadingUnits, m_latency);
+
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TX_1:
@@ -83,35 +89,35 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
-            dataMgr->m_fiducial.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_fiducialPath, value, m_fiducialUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::BATTERY_VOLTAGE:
-            dataMgr->m_batteryVoltage.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_batteryVoltagePath, value, m_batteryVoltageUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::BROWNOUT_VOLTAGE:
-            dataMgr->m_brownoutVoltage.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_brownoutVoltagePath, value, m_brownoutVoltageUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::INPUT_VOLTAGE:
-            dataMgr->m_inputVoltage.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_inputVoltagePath, value, m_inputVoltageUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::INPUT_CURRENT:
-            dataMgr->m_inputCurrent.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_inputCurrentPath, value, m_inputCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::CPU_TEMP:
-            dataMgr->m_cpuTemp.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_cpuTempPath, value, m_cpuTempUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER:
-            dataMgr->m_lfSteerPower.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfSteerPowerPath, value, m_lfSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY:
-            dataMgr->m_lfSteerEnergy.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_lfSteerEnergyPath, value, m_lfSteerEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
