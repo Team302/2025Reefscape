@@ -28,219 +28,218 @@ DragonDataLogger::DragonDataLogger()
     DragonDataLoggerMgr::GetInstance()->RegisterItem(this);
 }
 
-void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLoggerSignals::BoolSignals signalID, bool value)
+void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSignals signalID, bool value)
 {
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
-    {
-        switch (signalID)
-        {
-        case DragonDataLoggerSignals::BoolSignals::IS_BROWNOUT:
-            signals->m_isBrownOut.Update(value, timestamp);
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals::DoubleSignals signalID, double value)
-{
-    auto signals = DragonDataLoggerSignals::GetInstance();
     auto dataMgr = DragonDataLoggerMgr::GetInstance();
-    if (signals != nullptr)
+    if (dataMgr != nullptr)
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES:
+        case DragonDataLogger::BoolSignals::IS_BROWNOUT:
+            dataMgr->m_isBrownOut.Update(value, timestamp);
+            break;
+        default:
+            break;
+        }
+    }
+}
 
+void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value)
+{
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
+    {
+        switch (signalID)
+        {
+        case DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES:
+            SignalLogger::WriteDouble(m_storedHeadingPath, value, m_storedHeadingUnits, 0);
             break;
-        case DragonDataLoggerSignals::DoubleSignals::CHASSIS_YAW_DEGREES:
-            signals->m_chassisYaw.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES:
+            dataMgr->m_chassisYaw.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_VOLTAGE:
-            signals->m_electricalVoltage.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::ELECTRICAL_VOLTAGE:
+            dataMgr->m_electricalVoltage.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_CURRENT:
-            signals->m_electricalCurrent.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::ELECTRICAL_CURRENT:
+            dataMgr->m_electricalCurrent.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_ENERGY:
-            signals->m_electricalEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::ELECTRICAL_ENERGY:
+            dataMgr->m_electricalEnergy.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::DoubleSignals::ELECTRICAL_POWER:
-            signals->m_electricalPower.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TV_1:
-            signals->m_tv.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TX_1:
-            signals->m_tx.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_TY_1:
-            signals->m_ty.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
-            signals->m_fiducial.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::DoubleSignals::BATTERY_VOLTAGE:
-            signals->m_batteryVoltage.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::ELECTRICAL_POWER:
+            dataMgr->m_electricalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::BROWNOUT_VOLTAGE:
-            signals->m_brownoutVoltage.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LIMELIGHT_TV_1:
+            dataMgr->m_tv.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::INPUT_VOLTAGE:
-            signals->m_inputVoltage.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LIMELIGHT_TX_1:
+            dataMgr->m_tx.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::INPUT_CURRENT:
-            signals->m_inputCurrent.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LIMELIGHT_TY_1:
+            dataMgr->m_ty.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::CPU_TEMP:
-            signals->m_cpuTemp.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
+            dataMgr->m_fiducial.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER:
-            signals->m_lfSteerPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::BATTERY_VOLTAGE:
+            dataMgr->m_batteryVoltage.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY:
-            signals->m_lfSteerEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::BROWNOUT_VOLTAGE:
+            dataMgr->m_brownoutVoltage.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
-            signals->m_lfSteerTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::INPUT_VOLTAGE:
+            dataMgr->m_inputVoltage.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_STEER_WATT_HOURS:
-            signals->m_lfSteerWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::INPUT_CURRENT:
+            dataMgr->m_inputCurrent.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER:
-            signals->m_lfDrivePower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::CPU_TEMP:
+            dataMgr->m_cpuTemp.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY:
-            signals->m_lfDriveEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER:
+            dataMgr->m_lfSteerPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER:
-            signals->m_lfDriveTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY:
+            dataMgr->m_lfSteerEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS:
-            signals->m_lfDriveWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
+            dataMgr->m_lfSteerTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER:
-            signals->m_rfSteerPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_WATT_HOURS:
+            dataMgr->m_lfSteerWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY:
-            signals->m_rfSteerEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER:
+            dataMgr->m_lfDrivePower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_TOTALPOWER:
-            signals->m_rfSteerTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY:
+            dataMgr->m_lfDriveEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_WATT_HOURS:
-            signals->m_rfSteerWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER:
+            dataMgr->m_lfDriveTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER:
-            signals->m_rfDrivePower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS:
+            dataMgr->m_lfDriveWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY:
-            signals->m_rfDriveEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER:
+            dataMgr->m_rfSteerPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER:
-            signals->m_rfDriveTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY:
+            dataMgr->m_rfSteerEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS:
-            signals->m_rfDriveWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_TOTALPOWER:
+            dataMgr->m_rfSteerTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER:
-            signals->m_lbSteerPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_WATT_HOURS:
+            dataMgr->m_rfSteerWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY:
-            signals->m_lbSteerEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER:
+            dataMgr->m_rfDrivePower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_TOTALPOWER:
-            signals->m_lbSteerTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY:
+            dataMgr->m_rfDriveEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_STEER_WATT_HOURS:
-            signals->m_lbSteerWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER:
+            dataMgr->m_rfDriveTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER:
-            signals->m_lbDrivePower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS:
+            dataMgr->m_rfDriveWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY:
-            signals->m_lbDriveEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER:
+            dataMgr->m_lbSteerPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_TOTALPOWER:
-            signals->m_lbDriveTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY:
+            dataMgr->m_lbSteerEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_WATT_HOURS:
-            signals->m_lbDriveWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_TOTALPOWER:
+            dataMgr->m_lbSteerTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER:
-            signals->m_rbSteerPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_WATT_HOURS:
+            dataMgr->m_lbSteerWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY:
-            signals->m_rbSteerEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER:
+            dataMgr->m_lbDrivePower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_TOTALPOWER:
-            signals->m_rbSteerTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY:
+            dataMgr->m_lbDriveEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_STEER_WATT_HOURS:
-            signals->m_rbSteerWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_TOTALPOWER:
+            dataMgr->m_lbDriveTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER:
-            signals->m_rbDrivePower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_WATT_HOURS:
+            dataMgr->m_lbDriveWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY:
-            signals->m_rbDriveEnergy.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER:
+            dataMgr->m_rbSteerPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER:
-            signals->m_rbDriveTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY:
+            dataMgr->m_rbSteerEnergy.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS:
-            signals->m_rbDriveWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_TOTALPOWER:
+            dataMgr->m_rbSteerTotalPower.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
-            signals->m_swerveChassisTotalPower.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_WATT_HOURS:
+            dataMgr->m_rbSteerWattHours.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
-            signals->m_swerveChassisWattHours.Update(value, timestamp);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER:
+            dataMgr->m_rbDrivePower.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY:
+            dataMgr->m_rbDriveEnergy.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER:
+            dataMgr->m_rbDriveTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS:
+            dataMgr->m_rbDriveWattHours.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
+            dataMgr->m_swerveChassisTotalPower.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
+            dataMgr->m_swerveChassisWattHours.Update(value, timestamp);
             break;
 
         default:
@@ -249,19 +248,19 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLoggerSignals
     }
 }
 
-void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLoggerSignals::StringSignals signalID, std::string value)
+void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, std::string value)
 {
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::StringSignals::CHASSIS_DRIVE_STATE:
-            signals->m_driveState.Update(value, timestamp);
+        case DragonDataLogger::StringSignals::CHASSIS_DRIVE_STATE:
+            dataMgr->m_driveState.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::StringSignals::CHASSIS_HEADING_STATE:
-            signals->m_headingState.Update(value, timestamp);
+        case DragonDataLogger::StringSignals::CHASSIS_HEADING_STATE:
+            dataMgr->m_headingState.Update(value, timestamp);
             break;
 
         default:
@@ -269,62 +268,37 @@ void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLoggerSignals
         }
     }
 }
-void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose2d value)
+void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose2d value)
 {
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_POSE2D:
-            signals->m_pose2d.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D:
+            dataMgr->m_pose2d.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            signals->m_visionLeftReefBranchPose.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            dataMgr->m_visionLeftReefBranchPose.Update(value, timestamp);
             break;
-        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            signals->m_visionRightReefBranchPose.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            signals->m_visionCoralStationPose.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            dataMgr->m_visionRightReefBranchPose.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            signals->m_odometryLeftReefBranchPose.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            dataMgr->m_visionCoralStationPose.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            signals->m_odometryRightReefBranchPose.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            dataMgr->m_odometryLeftReefBranchPose.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            signals->m_odometryCoralStationPose.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            dataMgr->m_odometryRightReefBranchPose.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D:
-            signals->m_pose2dQuest.Update(value, timestamp);
-            break;
-
-        default:
-            break;
-        }
-    }
-}
-
-void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLoggerSignals::PoseSingals signalID, frc::Pose3d value)
-{
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
-    {
-        switch (signalID)
-        {
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
-            signals->m_pose3dLimelight.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
-            signals->m_pose3dLimelight2.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            dataMgr->m_odometryCoralStationPose.Update(value, timestamp);
             break;
 
         default:
@@ -333,43 +307,23 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLoggerSignals
     }
 }
 
-void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLoggerSignals::SwerveStateSingals signalID, frc::SwerveModuleState value)
+void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose3d value)
 {
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
     {
         switch (signalID)
         {
-        case DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
-            signals->m_frontLeftTarget.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
+            dataMgr->m_pose3dLimelight.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
-            signals->m_backLeftTarget.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
+            dataMgr->m_pose3dLimelight2.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
-            signals->m_frontRightTarget.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
-            signals->m_backRightTarget.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
-            signals->m_frontLeftActual.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
-            signals->m_backLeftActual.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
-            signals->m_frontRightActual.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
-            signals->m_backRightActual.Update(value, timestamp);
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
+            dataMgr->m_pose3dQuest.Update(value, timestamp);
             break;
 
         default:
@@ -378,20 +332,65 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
     }
 }
 
-void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLoggerSignals::ChassisSpeedSignals signalID, frc::ChassisSpeeds value)
+void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLogger::SwerveStateSingals signalID, frc::SwerveModuleState value)
 {
-    auto signals = DragonDataLoggerSignals::GetInstance();
-    if (signals != nullptr)
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
+    {
+        switch (signalID)
+        {
+        case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
+            dataMgr->m_frontLeftTarget.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
+            dataMgr->m_backLeftTarget.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
+            dataMgr->m_frontRightTarget.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
+            dataMgr->m_backRightTarget.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
+            dataMgr->m_frontLeftActual.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
+            dataMgr->m_backLeftActual.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
+            dataMgr->m_frontRightActual.Update(value, timestamp);
+            break;
+
+        case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
+            dataMgr->m_backRightActual.Update(value, timestamp);
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger::ChassisSpeeddataMgr signalID, frc::ChassisSpeeds value)
+{
+    auto dataMgr = DragonDataLoggerMgr::GetInstance();
+    if (dataMgr != nullptr)
     {
         // TODO:  need to compare/store; need to do element by element
         switch (signalID)
         {
-        case DragonDataLoggerSignals::ChassisSpeedSignals::ACTUAL_SPEEDS:
-            signals->m_actualSpeeds.Update(value, timestamp);
+        case DragonDataLogger::ChassisSpeeddataMgr::ACTUAL_SPEEDS:
+            dataMgr->m_actualSpeeds.Update(value, timestamp);
             break;
 
-        case DragonDataLoggerSignals::ChassisSpeedSignals::TARGET_SPEEDS:
-            signals->m_targetSpeeds.Update(value, timestamp);
+        case DragonDataLogger::ChassisSpeeddataMgr::TARGET_SPEEDS:
+            dataMgr->m_targetSpeeds.Update(value, timestamp);
             break;
 
         default:
