@@ -262,11 +262,11 @@ void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::Strin
         switch (signalID)
         {
         case DragonDataLogger::StringSignals::CHASSIS_DRIVE_STATE:
-            dataMgr->m_driveState.Update(value, timestamp);
+            SignalLogger::WriteString(m_driveStatePath, value);
             break;
 
         case DragonDataLogger::StringSignals::CHASSIS_HEADING_STATE:
-            dataMgr->m_headingState.Update(value, timestamp);
+            SignalLogger::WriteString(m_headingStatePath, value);
             break;
 
         default:
