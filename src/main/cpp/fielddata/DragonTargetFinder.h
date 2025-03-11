@@ -62,6 +62,8 @@ private:
     ~DragonTargetFinder() = default;
     static DragonTargetFinder *m_instance;
 
+    frc::Pose2d GetPoseFromTagPose(DragonTargetFinderTarget item, frc::Pose2d &pose);
+
     SwerveChassis *m_chassis;
     DragonVision *m_vision;
     DragonTargetFinderTarget m_targetVisionTarget;
@@ -70,7 +72,7 @@ private:
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
     std::optional<frc::Pose2d> GetVisonPose(VisionData data);
-    bool UseVisionPose(frc::Pose3d visTagPose, frc::Pose3d odomTagPose);
+    bool UseVisionPose(frc::Pose2d visTagPose, frc::Pose2d odomTagPose);
 
     void SetChassis();
 

@@ -114,6 +114,23 @@ void DragonLimelight::PeriodicCacheData()
 
 bool DragonLimelight::HealthCheck()
 {
+    auto fiducials = LimelightHelpers::getRawFiducials(std::string("limelight-front"));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("number"), static_cast<int>(fiducials.size()));
+
+    auto pos = 0;
+    for (auto fiducial : fiducials)
+    {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("ID") + std::to_string(pos), fiducial.id);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("txnc") + std::to_string(pos), fiducial.txnc);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("tync") + std::to_string(pos), fiducial.tync);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("ta") + std::to_string(pos), fiducial.ta);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("distToCamera") + std::to_string(pos), fiducial.distToCamera);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("distToRobot") + std::to_string(pos), fiducial.distToRobot);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("ambiguity") + std::to_string(pos), fiducial.ambiguity);
+
+        pos++;
+    }
+
     auto nt = m_networktable.get();
     if (nt != nullptr)
     {
@@ -549,8 +566,7 @@ std::optional<VisionData> DragonLimelight::GetDataToNearestAprilTag()
         frc::Rotation3d rotation = frc::Rotation3d(units::angle::degree_t(vector[5]), units::angle::degree_t(vector[3]), units::angle::degree_t(vector[4]));
         auto transform = frc::Transform3d(units::length::meter_t(vector[0]), units::length::meter_t(vector[1]), units::length::meter_t(vector[2]), rotation);
 
-        return VisionData{
-            transform, transform.Translation(), rotation, tagId.value()};
+        return VisionData{transform, transform.Translation(), rotation, tagId.value()};
     }
 
     return std::nullopt;
