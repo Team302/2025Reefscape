@@ -29,8 +29,8 @@ public:
         GameState_Int,
         CompressorChange_Int,
         ChassisPose_Pose2D,
-        LoopCounterEnd // Must be last Enum for the loop counter
-
+        ElevatorHeight_Inch,
+        LoopCounterEnd,
     };
 
     enum ScoringMode
