@@ -69,8 +69,8 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
         units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
-        // Reset the PID if 1 second has passed since the last reset
-        if (0.5_s <= (currentTime - m_lastResetTime))
+        // Reset the PID if resetTime in second has passed since the last reset
+        if (m_resetTime <= (currentTime - m_lastResetTime))
         {
             m_translationPIDX.Reset(currentPose.X(), chassisMovement.chassisSpeeds.vx);
             m_translationPIDY.Reset(currentPose.Y(), chassisMovement.chassisSpeeds.vy);
