@@ -73,7 +73,7 @@ private:
 
     units::time::second_t m_lastResetTime = 0_s;
 
-    const double m_translationKP = 6.0;
+    const double m_translationKP = 10.0;
     const double m_translationKI = 2.5;
     const double m_translationKD = 0.0;
 

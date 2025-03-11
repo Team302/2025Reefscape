@@ -40,8 +40,8 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
-    m_translationPIDX.SetIZone(0.25);
-    m_translationPIDY.SetIZone(0.25);
+    m_translationPIDX.SetIZone(0.05);
+    m_translationPIDY.SetIZone(0.05);
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
