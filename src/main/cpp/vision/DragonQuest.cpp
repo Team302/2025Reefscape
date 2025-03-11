@@ -13,77 +13,71 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "units/time.h"
-#include "vision/DragonQuest.h"
 #include "utils/AngleUtils.h"
+#include "vision/DragonQuest.h"
+#include "utils/DragonField.h"
 
-DragonQuest *DragonQuest::m_dragonquest = nullptr;
-DragonQuest *DragonQuest::GetDragonQuest()
-{
-    if (DragonQuest::m_dragonquest == nullptr)
-    {
-        DragonQuest::m_dragonquest = new DragonQuest();
-    }
-    return DragonQuest::m_dragonquest;
-}
-
-DragonQuest::DragonQuest()
+DragonQuest::DragonQuest(
+    units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
+    units::length::inch_t mountingYOffset, /// <I> y offset of Quest from robot center (left relative to robot)
+    units::length::inch_t mountingZOffset, /// <I> z offset of Quest from robot center (up relative to robot)
+    units::angle::degree_t mountingPitch,  /// <I> - Pitch of Quest
+    units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
+    units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
+    ) : m_mountingXOffset(mountingXOffset),
+        m_mountingYOffset(mountingYOffset),
+        m_mountingZOffset(mountingZOffset),
+        m_mountingPitch(mountingPitch),
+        m_mountingYaw(mountingYaw),
+        m_mountingRoll(mountingRoll)
 {
     m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
     m_questMosi = m_networktable.get()->GetIntegerTopic("mosi").Publish();
     m_questMiso = m_networktable.get()->GetIntegerTopic("miso").Subscribe(0);
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
+    m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
-    ZeroHeading();
-    ZeroPosition();
+    m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
 }
 
-frc::Pose3d DragonQuest::GetEstimatedPose()
+frc::Pose2d DragonQuest::GetEstimatedPose()
 {
     RefreshNT();
+
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    double x = posarray[2] + m_xOffset;
-    double y = posarray[0] + m_yOffset;
-    double z = posarray[1] + m_zOffset;
+    units::length::meter_t x{posarray[2]};
+    units::length::meter_t y{-posarray[0]};
+    units::length::meter_t z{posarray[1]};
+    units::angle::degree_t roll{rotationarray[0]};
+    units::angle::degree_t pitch{rotationarray[2]};
+    units::angle::degree_t yaw{-rotationarray[1]};
 
-    double roll = rotationarray[0] + m_rollOffset;
-    double pitch = rotationarray[2] + m_pitchOffset;
-    double yaw = rotationarray[1] + m_yawOffset;
-
-    return frc::Pose3d{units::length::meter_t(x), units::length::meter_t(y), units::length::meter_t(z), frc::Rotation3d{units::angle::degree_t(roll), units::angle::degree_t(pitch), AngleUtils::GetEquivAngle(units::angle::degree_t(-yaw))}};
+    frc::Pose2d questPose{x, y, yaw};
+    frc::Pose2d robotPose = questPose + m_questTransform;
+    return robotPose;
 }
 
-units::angle::degree_t DragonQuest::GetOculusYaw()
+void DragonQuest::SetIsConnected()
 {
-    std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yaw = rotationarray[1] - m_yawoffsetzero;
-    if (m_yaw > 180)
+    double currentFrameCount = m_frameCountTopic.GetEntry(0).Get();
+    if (m_loopCounter > 3)
     {
-        m_yaw -= 360;
+        if (currentFrameCount != m_prevFrameCount)
+        {
+            m_loopCounter = 0;
+            m_isConnected = true;
+        }
+        else
+        {
+            m_isConnected = false;
+        }
+        m_prevFrameCount = currentFrameCount;
     }
-    return units::angle::degree_t(m_yaw);
-}
 
-bool DragonQuest::IsConnected()
-{
-    return m_networktable.get()->GetBoolean(std::string("isconnected"), false);
-}
-
-double DragonQuest::GetBatteryPercent()
-{
-    return m_networktable.get()->GetNumber(std::string("batterypercent"), 0.0);
-}
-
-double DragonQuest::GetTimeStamp()
-{
-    return m_networktable.get()->GetNumber(std::string("timestamp"), 0.0);
-}
-
-void DragonQuest::ZeroHeading()
-{
-    std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
-    m_yawoffsetzero = rotationarray[2];
+    m_loopCounter = (m_loopCounter > 3) ? 0 : m_loopCounter + 1;
 }
 
 void DragonQuest::ZeroPosition()
@@ -96,45 +90,53 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog(uint64_t timestamp)
 {
-    Log3DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D, GetEstimatedPose());
+    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
+    auto field = DragonField::GetInstance();
+    field->AddPose("Quest", GetEstimatedPose());
 }
 
 void DragonQuest::RefreshNT()
 {
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
+    m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+
+    SetIsConnected();
 }
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
-    frc::Pose3d p3d{frc::Pose3d(pose)};
-    m_xOffset += p3d.X().to<double>();
-    m_yOffset += p3d.Y().to<double>();
-    m_zOffset += p3d.Z().to<double>();
-    units::degree_t roll = p3d.Rotation().X();
-    units::degree_t pitch = p3d.Rotation().Y();
-    units::degree_t yaw = p3d.Rotation().Z();
+    if (!m_hasreset)
+    {
+        auto x = (pose.X() + m_mountingXOffset);
+        auto y = (pose.Y() + m_mountingYOffset);
+        auto rot = (pose.Rotation().Degrees() + m_mountingYaw);
 
-    m_rollOffset += roll.to<double>();
-    m_pitchOffset += pitch.to<double>();
-    m_yawOffset += yaw.to<double>();
-    m_hasreset = true;
+        m_initialPosePublisher.Set(std::array<double, 3>{x.value(), y.value(), rot.value()});
+
+        m_questTransform = pose - frc::Pose2d{x, y, frc::Rotation2d(rot)};
+
+        if (m_questMiso.Get() != 99)
+        {
+            sleep(1);
+            m_questMosi.Set(2);
+        }
+        m_hasreset = true;
+    }
 }
 
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    // if (!m_hasreset || !IsConnected())
-    // {
-    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-    // }
-    // else
-    // {
-    //     str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
-    //     str.m_visionPose = GetEstimatedPose().ToPose2d();
-    //     str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-    //     str.m_timeStamp = units::time::second_t(GetTimeStamp());
-    // }
-    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    if (!m_hasreset || !m_isConnected)
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+    }
+    else
+    {
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_visionPose = GetEstimatedPose();
+        str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+    }
     return str;
 }

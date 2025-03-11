@@ -227,17 +227,17 @@ private:
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.0);
-	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(0.0);
-	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(48.0);
-	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(48.0);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
+	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
+	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(67.0);
+	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(67.0);
 	units::length::inch_t m_prevAlgaeHeight{0.0};
 
 	units::angle::degree_t m_armTarget = units::angle::degree_t(90.0);
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
 	const units::angle::degree_t m_minAngle{-30.0};
-	const units::angle::degree_t m_maxAngle{90.0};
+	const units::angle::degree_t m_maxAngle{85.0};
 
 	const units::length::inch_t m_minHeight{0.0};
 	const units::length::inch_t m_maxHeight{30.0};
@@ -245,6 +245,9 @@ private:
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
 	const units::angle::degree_t m_armProtectionAngle{10.0};
+	const units::angle::degree_t m_armHoldAngle{83.0};
+	const units::angle::degree_t m_armGrabAlgeAngle{70.0};
+
 	const double m_manualControlThreshold = 0.1;
 
 	const units::length::inch_t m_climbModeHeight{15.0};
@@ -339,6 +342,7 @@ private:
 	double m_energy = 0.0;
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
+	double m_armLoggingTarget = 85.0;
 
 	void LogArm(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
 	void LogArmTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble(value, timestamp); }
