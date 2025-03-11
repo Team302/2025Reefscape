@@ -29,6 +29,7 @@ public:
         GameState_Int,
         CompressorChange_Int,
         ChassisPose_Pose2D,
+        DriveToFieldElementIsDone_Int,
         LoopCounterEnd // Must be last Enum for the loop counter
 
     };
