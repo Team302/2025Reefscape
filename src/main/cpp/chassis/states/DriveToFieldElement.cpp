@@ -40,6 +40,8 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
+    m_translationPIDX.SetIZone(0.25);
+    m_translationPIDY.SetIZone(0.25);
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
@@ -102,6 +104,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "IsDone", IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
