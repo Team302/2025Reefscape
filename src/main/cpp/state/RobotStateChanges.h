@@ -30,6 +30,7 @@ public:
         CompressorChange_Int,
         ChassisPose_Pose2D,
         DriveToFieldElementIsDone_Int,
+        DriveStateType_Int,
         LoopCounterEnd // Must be last Enum for the loop counter
 
     };
