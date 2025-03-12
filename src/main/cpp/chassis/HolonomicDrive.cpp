@@ -36,6 +36,8 @@
 #include "vision/DragonVision.h"
 #include "utils/logging/debug/Logger.h"
 #include "states/FaceNearestReefFace.h"
+#include "state/RobotState.h"
+#include "state/IRobotStateChangeSubscriber.h"
 
 using std::string;
 using namespace frc;
@@ -47,6 +49,7 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
                                    m_checkTippingLatch(false)
 {
     Init();
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Inch);
 }
 
 /// @brief initialize the profiles for the various gamepad inputs
@@ -224,15 +227,30 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.targetPose = frc::Pose2d();
 }
 
+void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, units::length::meter_t value)
+{
+    if (change == RobotStateChanges::StateChange::ElevatorHeight_Inch)
+    {
+        m_elevatorHeight = units::length::inch_t(value);
+    }
+}
 void HolonomicDrive::InitSpeeds(double forwardScale,
                                 double strafeScale,
                                 double rotateScale)
 {
     m_moveInfo.rawOmega = rotateScale;
 
-    forwardScale *= m_inputScale;
-    strafeScale *= m_inputScale;
-    rotateScale *= m_inputScale;
+    if (m_elevatorHeight >= m_elevatorHeightThreshold)
+    {
+        m_dynamicSpeed = 0.35;
+    }
+    else
+    {
+        m_dynamicSpeed = 1;
+    }
+    forwardScale *= m_inputScale * m_dynamicSpeed;
+    strafeScale *= m_inputScale * m_dynamicSpeed;
+    rotateScale *= m_inputScale * m_dynamicSpeed;
 
     auto maxSpeed = m_swerve->GetMaxSpeed();
     auto maxAngSpeed = m_swerve->GetMaxAngularSpeed();

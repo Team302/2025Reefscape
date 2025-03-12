@@ -31,8 +31,8 @@ public:
         ChassisPose_Pose2D,
         DriveToFieldElementIsDone_Int,
         DriveStateType_Int,
-        LoopCounterEnd // Must be last Enum for the loop counter
-
+        ElevatorHeight_Inch,
+        LoopCounterEnd  // Must be last Enum for the loop counter
     };
 
     enum ScoringMode
