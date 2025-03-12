@@ -71,6 +71,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         auto taginfo = ReefHelper::GetInstance()->GetNearestReefTag();
         if (taginfo.has_value())
         {
+            auto taginfo2 = taginfo2.has_value();
             auto tag = taginfo.value();
             auto tagpose{fieldconst->GetAprilTagPose(tag)};
             auto visTagPose{m_vision->GetAprilTagPose(tag)};
