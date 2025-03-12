@@ -29,6 +29,7 @@
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/AngleUtils.h"
+#include "state/RobotState.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -40,6 +41,9 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
+    m_translationPIDX.SetIZone(0.05);
+    m_translationPIDY.SetIZone(0.05);
+    m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
@@ -48,11 +52,12 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_currentType = get<0>(info.value());
     m_endPose = get<1>(info.value());
+    m_currentPose = m_chassis->GetPose();
 
     if (m_chassis != nullptr)
     {
-        m_translationPIDX.Reset(m_chassis->GetPose().X(), chassisMovement.chassisSpeeds.vx);
-        m_translationPIDY.Reset(m_chassis->GetPose().Y(), chassisMovement.chassisSpeeds.vy);
+        m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+        m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
     }
     CalculateFeedForward(chassisMovement);
 }
@@ -62,9 +67,23 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
     /** TODO: TEMPORARY **/
     if (m_chassis != nullptr)
     {
+        m_currentPose = m_chassis->GetPose();
         CalculateFeedForward(chassisMovement);
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
-        frc::Pose2d currentPose = m_chassis->GetPose();
+
+        units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
+
+        // Reset the PID if resetTime in second has passed since the last reset
+        if (m_resetTime <= (currentTime - m_lastResetTime))
+        {
+            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+            m_lastResetTime = currentTime;
+        }
+        else
+        {
+            m_lastResetTime = currentTime;
+        }
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
         if (info.has_value())
@@ -81,19 +100,19 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             m_currentType = get<0>(info.value());
         }
 
-        DragonVisionStructLogger::logPose2d("current pose", currentPose);
+        DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
         DragonVisionStructLogger::logPose2d("target pose", m_endPose);
 
         m_translationPIDX.SetGoal(m_endPose.X());
         m_translationPIDY.SetGoal(m_endPose.Y());
 
-        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(currentPose.X(), m_endPose.X()));
-        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(currentPose.Y(), m_endPose.Y()));
+        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
 
         chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
         chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
 
-        units::angle::degree_t rotationError = chassisMovement.yawAngle - currentPose.Rotation().Degrees();
+        units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
@@ -105,13 +124,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
-    /**/
-    // TODO: TEMPORARY
-    /**
-    chassisMovement.chassisSpeeds.vx = units::velocity::meters_per_second_t(0.0);
-    chassisMovement.chassisSpeeds.vy = units::velocity::meters_per_second_t(0.0);
-    chassisMovement.chassisSpeeds.omega = units::angular_velocity::turns_per_second_t(0.0);
-    **/
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Int, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
@@ -154,21 +167,36 @@ void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
 
 bool DriveToFieldElement::IsDone()
 {
+    bool isDone = false;
+    bool isSamePose = false;
     if (m_chassis != nullptr)
     {
-        auto currentPose = m_chassis->GetPose();
-        auto distance = currentPose.Translation().Distance(m_endPose.Translation());
-        return (distance < m_distanceThreshold);
+        auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
+
+        if (m_currentPose.Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
+        {
+            m_samePoseCount++;
+            isSamePose = m_samePoseCount > m_samePoseCountThreshold;
+        }
+        else
+        {
+            m_samePoseCount = 0;
+        }
+
+        isDone = distance < m_distanceThreshold;
+        m_prevPose = m_currentPose;
     }
-    return true;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
+
+    return (isDone || isSamePose);
 }
 
 void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
 {
     if (m_chassis != nullptr)
     {
-        frc::Pose2d currentPose = m_chassis->GetPose();
-        units::meter_t distance = currentPose.Translation().Distance(m_endPose.Translation());
+        units::meter_t distance = m_currentPose.Translation().Distance(m_endPose.Translation());
 
         // Calculate feedforward speed based on distance
         units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
@@ -179,7 +207,7 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
         }
 
         // Apply feedforward to the desired velocity
-        frc::Translation2d translationError = m_endPose.Translation() - currentPose.Translation();
+        frc::Translation2d translationError = m_endPose.Translation() - m_currentPose.Translation();
         frc::Rotation2d angleToTarget = translationError.Angle();
 
         chassisMovement.chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();

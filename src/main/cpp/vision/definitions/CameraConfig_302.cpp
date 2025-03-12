@@ -27,18 +27,19 @@ void CameraConfig_302::BuildCameraConfig()
                                                  DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,  // PIPELINE initialPipeline,
                                                  DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS, // PIPELINE initialPipeline,
-                                                 units::length::meter_t(0.2032),            // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
+                                                 units::length::meter_t(0.224),             // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
                                                  units::length::meter_t(-0.08255),          // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
-                                                 units::length::meter_t(0.775),             // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-                                                 units::angle::degree_t(0),                 // units::angle::degree_t pitch,          /// <I> - Pitch of camera
-                                                 units::angle::degree_t(0),                 // units::angle::degree_t yaw,            /// <I> - Yaw of camera
-                                                 units::angle::degree_t(0),                 // units::angle::degree_t roll,           /// <I> - Roll of camera
+                                                 units::length::meter_t(0.802),             // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
+                                                 units::angle::degree_t(-37.0),             // units::angle::degree_t pitch,          /// <I> - Pitch of Camera
+                                                 units::angle::degree_t(0),                 // units::angle::degree_t yaw,            /// <I> - Yaw of Camera
+                                                 units::angle::degree_t(0),                 // units::angle::degree_t roll,           /// <I> - Roll of Camera
                                                  DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG,      /// <I> enum for starting pipeline
                                                  DRAGON_LIMELIGHT_LED_MODE::LED_OFF,        // DRAGON_LIMELIGHT_LED_MODE ledMode,
                                                  DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION      // CAM_MODE camMode,
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+
     DragonLimelight *back = new DragonLimelight(std::string("limelight-back"), // networkTableName
                                                 DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA,
                                                 DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,  // PIPELINE initialPipeline,
@@ -46,13 +47,21 @@ void CameraConfig_302::BuildCameraConfig()
                                                 units::length::meter_t(-0.2159),           // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
                                                 units::length::meter_t(0.2286),            // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
                                                 units::length::meter_t(0.6096),            // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-                                                units::angle::degree_t(-90),               // units::angle::degree_t pitch,          /// <I> - Pitch of camera
-                                                units::angle::degree_t(0),                 // units::angle::degree_t yaw,            /// <I> - Yaw of camera
-                                                units::angle::degree_t(1.5),               // units::angle::degree_t roll,           /// <I> - Roll of camera
+                                                units::angle::degree_t(-90),               // units::angle::degree_t pitch,          /// <I> - Pitch of Camera
+                                                units::angle::degree_t(0),                 // units::angle::degree_t yaw,            /// <I> - Yaw of Camera
+                                                units::angle::degree_t(1.5),               // units::angle::degree_t roll,           /// <I> - Roll of Camera
                                                 DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG,      /// <I> enum for starting pipeline
                                                 DRAGON_LIMELIGHT_LED_MODE::LED_OFF,        // DRAGON_LIMELIGHT_LED_MODE ledMode,
                                                 DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION      // CAM_MODE camMode,
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+
+    new DragonQuest(units::length::meter_t(0.0), // <I> x offset of Quest from robot center (forward relative to robot)
+                    units::length::meter_t(0.0), // <I> y offset of Quest from robot center (left relative to robot)
+                    units::length::meter_t(0.0), // <I> z offset of Quest from robot center (up relative to robot)
+                    units::angle::degree_t(0),   // <I> - Pitch of Quest
+                    units::angle::degree_t(0),   // <I> - Yaw of Quest
+                    units::angle::degree_t(0)    // <I> - Roll of Quest
+    );
 }

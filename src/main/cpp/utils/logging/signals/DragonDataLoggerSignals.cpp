@@ -117,8 +117,8 @@ DragonDataLoggerSignals::DragonDataLoggerSignals()
     m_pose3dLimelight2 = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dLimelight2");
     m_pose3dLimelight2.Append(frc::Pose3d());
 
-    m_pose3dQuest = wpi::log::StructLogEntry<frc::Pose3d>(log, "/Robot/Pose3dQuest");
-    m_pose3dQuest.Append(frc::Pose3d());
+    m_pose2dQuest = wpi::log::StructLogEntry<frc::Pose2d>(log, "/Robot/Pose3dQuest");
+    m_pose2dQuest.Append(frc::Pose2d());
 
     m_frontLeftTarget = wpi::log::StructLogEntry<frc::SwerveModuleState>(log, "/Chassis/FrontLeftModule/TargetState");
     m_frontLeftTarget.Append(frc::SwerveModuleState());

@@ -84,18 +84,22 @@ void DriverFeedback::UpdateLEDStates()
             else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
             {
                 currentState = frc::Color::kRed;
-                if (oldState != currentState)
-                {
-                    m_LEDStates->ResetVariables();
-                }
                 m_LEDStates->SetSolidColor(currentState);
+            }
+            else if ((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION))
+            {
+                currentState = frc::Color::kGreen;
+                if (m_DriveToIsDone)
+                {
+                    m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
+                }
+                else
+                {
+                    m_LEDStates->SetSolidColor(currentState);
+                }
             }
             else
             {
-                if (oldState != currentState)
-                {
-                    m_LEDStates->ResetVariables();
-                }
                 if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
                 {
                     currentState = frc::Color::kGhostWhite;
@@ -104,39 +108,40 @@ void DriverFeedback::UpdateLEDStates()
                 {
                     currentState = frc::Color::kAqua;
                 }
-                if (taleMgr != nullptr)
+                if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
                 {
-                    if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
+                    m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
+                }
+                else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+                {
+                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
                     {
-                        m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
+                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
                     }
-                    else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
+                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
-                        if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
-                        {
-                            m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
-                        }
-                        else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
-                        {
-                            m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
-                        }
+                        m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
                     }
-                    else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
-                             taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
-                             taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
-                             taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
-                             taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
-                             taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
-                    {
-                        taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
-                    }
-                    else
-                    {
-                        m_LEDStates->SetSolidColor(currentState);
-                    }
+                }
+                else if (taleMgr->GetCurrentState() == taleMgr->STATE_L1SCORING_POSITION ||
+                         taleMgr->GetCurrentState() == taleMgr->STATE_L2SCORING_POSITION ||
+                         taleMgr->GetCurrentState() == taleMgr->STATE_L3SCORING_POSITION ||
+                         taleMgr->GetCurrentState() == taleMgr->STATE_L4SCORING_POSITION ||
+                         taleMgr->GetCurrentState() == taleMgr->STATE_NET ||
+                         taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS)
+                {
+                    taleMgr->AtTarget() ? m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod) : m_LEDStates->SetSolidColor(currentState); // TODO: add vision alignment to this condition
+                }
+                else
+                {
+                    m_LEDStates->SetSolidColor(currentState);
                 }
             }
         }
+    }
+    if (oldState != currentState)
+    {
+        m_LEDStates->ResetVariables();
     }
 }
 
@@ -175,10 +180,6 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
         pigeonfaults = false;
     }
-    if (DragonQuest::GetDragonQuest() != nullptr)
-    {
-        questStatus = DragonQuest::GetDragonQuest()->IsConnected();
-    }
     m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
 }
 
@@ -192,6 +193,8 @@ DriverFeedback::DriverFeedback() : IRobotStateChangeSubscriber()
     RobotState *RobotStates = RobotState::GetInstance();
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveStateType_Int);
 }
 void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
 {
@@ -200,6 +203,12 @@ void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, in
 
     else if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
+
+    else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int == change)
+        m_DriveToIsDone = value;
+
+    else if (RobotStateChanges::StateChange::DriveStateType_Int == change)
+        m_driveStateType = static_cast<ChassisOptionEnums::DriveStateType>(value);
 }
 
 void DriverFeedback::CheckControllers()

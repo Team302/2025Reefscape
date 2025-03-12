@@ -298,6 +298,10 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLoggerSignals
             signals->m_odometryCoralStationPose.Update(value, timestamp);
             break;
 
+        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D:
+            signals->m_pose2dQuest.Update(value, timestamp);
+            break;
+
         default:
             break;
         }
@@ -317,10 +321,6 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLoggerSignals
 
         case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
             signals->m_pose3dLimelight2.Update(value, timestamp);
-            break;
-
-        case DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
-            signals->m_pose3dQuest.Update(value, timestamp);
             break;
 
         default:
