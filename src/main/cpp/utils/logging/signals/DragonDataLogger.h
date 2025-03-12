@@ -272,7 +272,8 @@ public:
     string m_odometryDriveRBranchPose2dUnits = "X, Y, Rotation";
     string m_odometryDriveCoralStationPose2dPath = "/Odometry/DriveToCoralStationPose2d";
     string m_odometryDriveCoralStationPose2dUnits = "X, Y, Rotation";
-    string m_questpose2dPath = "/Chassis/QuestPose2d";
+    string m_questPose2dPath = "/Chassis/QuestPose2d";
+    string m_questPose2dUnits = "X, Y, Rotation";
 
     string m_limelight1Pose3dPath = "LL1/Pose3d";
     string m_limelight2Pose3dPath = "LL2/Pose3d";
