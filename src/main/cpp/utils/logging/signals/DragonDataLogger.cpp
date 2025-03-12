@@ -314,7 +314,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
             double y = value.Y().value();
             double rot = value.Rotation().Degrees().value();
             std::vector<double> pose = {x, y, rot};
-            SignalLogger::WriteDoubleArray(m_visionCoralStationPath, pose, m_visionCoralStationUnits, m_latency);
+            SignalLogger::WriteDoubleArray(m_visionDriveCoralStationPose2dPath, pose, m_visionDriveCoralStationPose2dUnits, m_latency);
             break;
             ;
         }
@@ -325,7 +325,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
             double y = value.Y().value();
             double rot = value.Rotation().Degrees().value();
             std::vector<double> pose = {x, y, rot};
-            SignalLogger::WriteDoubleArray(m_odometryLeftReefBranchPosePath, pose, m_odometryLeftReefBranchPoseUnits, m_latency);
+            SignalLogger::WriteDoubleArray(m_odometryLeftReefBranchPose2dPath, pose, m_odometryLeftReefBranchPose2dUnits, m_latency);
             break;
         }
         case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
