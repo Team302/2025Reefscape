@@ -166,6 +166,8 @@ bool DriveToFieldElement::IsDone()
     {
         auto currentPose = m_chassis->GetPose();
         auto distance = currentPose.Translation().Distance(m_endPose.Translation());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", distance < m_distanceThreshold);
+
         return (distance < m_distanceThreshold);
     }
     return true;
