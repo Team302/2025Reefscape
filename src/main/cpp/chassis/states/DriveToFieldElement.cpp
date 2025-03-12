@@ -169,7 +169,6 @@ bool DriveToFieldElement::IsDone()
     if (m_chassis != nullptr)
     {
         auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", distance < m_distanceThreshold);
 
         if (m_currentPose.Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
         {
@@ -182,8 +181,11 @@ bool DriveToFieldElement::IsDone()
         }
 
         isDone = distance < m_distanceThreshold;
+        m_prevPose = m_currentPose;
     }
-    m_prevPose = m_currentPose;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
+
     return (isDone || isSamePose);
 }
 
