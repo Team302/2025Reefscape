@@ -23,6 +23,8 @@
 #include "units/time.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
 
+using namespace std;
+
 class DragonDataLogger
 {
 public:
@@ -137,132 +139,142 @@ public:
 
     // initialize these signals in the constructor
 
-    std::string m_brownOutPath = "/RoboRio/IsBrownOut";
+    string m_brownOutPath = "/RoboRio/IsBrownOut";
 
-    std::string m_storedHeadingPath = "/Chassis/StoredHeading";
-    std::string m_storedHeadingUnits = "Degrees";
+    string m_storedHeadingPath = "/Chassis/StoredHeading";
+    string m_storedHeadingUnits = "Degrees";
 
-    std::string m_ChassisYawPath = "/Chassis/Yaw";
-    std::string m_ChassisYawUnits = "Degrees";
-    std::string m_electricalVoltagePath = "/Electrical/Voltage";
+    string m_ChassisYawPath = "/Chassis/Yaw";
+    string m_ChassisYawUnits = "Degrees";
+    string m_electricalVoltagePath = "/Electrical/Voltage";
 
-    std::string m_electricalVoltageUnits = "";
-    std::string m_electricalCurrentPath = "";
-    std::string m_electricalCurrentUnits = "";
-    std::string m_electricalEnergyPath = "";
-    std::string m_electricalEnergyUnits = "";
-    std::string m_electricalPowerPath = "";
-    std::string m_electricalPowerUnits = "";
+    string m_electricalVoltageUnits = "";
+    string m_electricalCurrentPath = "";
+    string m_electricalCurrentUnits = "";
+    string m_electricalEnergyPath = "";
+    string m_electricalEnergyUnits = "";
+    string m_electricalPowerPath = "";
+    string m_electricalPowerUnits = "";
 
-    std::string m_txPath = "LL1/tx";
-    std::string m_txUnits = "";
-    std::string m_tyPath = "LL1/ty";
-    std::string m_tyUnits = "";
-    std::string m_tvPath = "LL1/tv";
-    std::string m_tvUnits = "";
-    std::string m_fiducialPath = "";
-    std::string m_fiducialUnits = "";
+    string m_txPath = "LL1/tx";
+    string m_txUnits = "";
+    string m_tyPath = "LL1/ty";
+    string m_tyUnits = "";
+    string m_tvPath = "LL1/tv";
+    string m_tvUnits = "";
+    string m_fiducialPath = "";
+    string m_fiducialUnits = "";
 
     // RIO
 
-    std::string m_batteryVoltagePath = "/RoboRio/BatteryVoltage";
-    std::string m_batteryVoltageUnits = "Volts";
-    std::string m_brownoutVoltagePath = "/RoboRio/BrownoutVoltage";
-    std::string m_brownoutVoltageUnits = "Volts";
-    std::string m_inputVoltagePath = "/RoboRio/InputVoltage";
-    std::string m_inputVoltageUnits = "Volts";
-    std::string m_inputCurrentPath = "/RoboRio/InputCurrent";
-    std::string m_inputCurrentUnits = "Amps?";
-    std::string m_cpuTempPath = "/RoboRio/CPUTemp";
-    std::string m_cpuTempUnits = "Degrees C";
+    string m_batteryVoltagePath = "/RoboRio/BatteryVoltage";
+    string m_batteryVoltageUnits = "Volts";
+    string m_brownoutVoltagePath = "/RoboRio/BrownoutVoltage";
+    string m_brownoutVoltageUnits = "Volts";
+    string m_inputVoltagePath = "/RoboRio/InputVoltage";
+    string m_inputVoltageUnits = "Volts";
+    string m_inputCurrentPath = "/RoboRio/InputCurrent";
+    string m_inputCurrentUnits = "Amps?";
+    string m_cpuTempPath = "/RoboRio/CPUTemp";
+    string m_cpuTempUnits = "Degrees C";
 
-    std::string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
-    std::string m_lfSteerPowerUnits = "";
-    std::string m_lfSteerEnergyPath = "/Chassis/FrontLeftModule/Steer/Energy";
-    std::string m_lfSteerEnergyUnits = "";
-    std::string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
-    std::string m_lfSteerTotalPowerUnits = "";
-    std::string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
-    std::string m_lfSteerWattHoursUnits = "WattHours";
+    string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
+    string m_lfSteerPowerUnits = "";
+    string m_lfSteerEnergyPath = "/Chassis/FrontLeftModule/Steer/Energy";
+    string m_lfSteerEnergyUnits = "";
+    string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
+    string m_lfSteerTotalPowerUnits = "";
+    string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
+    string m_lfSteerWattHoursUnits = "WattHours";
 
-    std::string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
-    std::string m_lfDrivePowerUnits = "";
-    std::string m_lfDriveEnergyPath = "/Chassis/FrontLeftModule/Drive/Energy";
-    std::string m_lfDriveEnergyUnits = "";
-    std::string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
-    std::string m_lfDriveTotalPowerUnits = "";
-    std::string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
-    std::string m_lfDriveWattHoursUnits = "WattHours";
+    string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
+    string m_lfDrivePowerUnits = "";
+    string m_lfDriveEnergyPath = "/Chassis/FrontLeftModule/Drive/Energy";
+    string m_lfDriveEnergyUnits = "";
+    string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
+    string m_lfDriveTotalPowerUnits = "";
+    string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
+    string m_lfDriveWattHoursUnits = "WattHours";
 
-    std::string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
-    std::string m_rfSteerPowerUnits = "";
-    std::string m_rfSteerEnergyPath = "/Chassis/FrontRightModule/Steer/Energy";
-    std::string m_rfSteerEnergyUnits = "";
-    std::string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
-    std::string m_rfSteerTotalPowerUnits = "";
-    std::string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
-    std::string m_rfSteerWattHoursUnits = "WattHours";
+    string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
+    string m_rfSteerPowerUnits = "";
+    string m_rfSteerEnergyPath = "/Chassis/FrontRightModule/Steer/Energy";
+    string m_rfSteerEnergyUnits = "";
+    string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
+    string m_rfSteerTotalPowerUnits = "";
+    string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
+    string m_rfSteerWattHoursUnits = "WattHours";
 
-    std::string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
-    std::string m_rfDrivePowerUnits = "";
-    std::string m_rfDriveEnergyPath = "/Chassis/FrontRightModule/Drive/Energy";
-    std::string m_rfDriveEnergyUnits = "";
-    std::string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
-    std::string m_rfDriveTotalPowerUnits = "";
-    std::string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
-    std::string m_rfDriveWattHoursUnits = "WattHours";
+    string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
+    string m_rfDrivePowerUnits = "";
+    string m_rfDriveEnergyPath = "/Chassis/FrontRightModule/Drive/Energy";
+    string m_rfDriveEnergyUnits = "";
+    string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
+    string m_rfDriveTotalPowerUnits = "";
+    string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
+    string m_rfDriveWattHoursUnits = "WattHours";
 
-    std::string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
-    std::string m_lbSteerPowerUnits = "";
-    std::string m_lbSteerEnergyPath = "/Chassis/BackLeftModule/Steer/Energy";
-    std::string m_lbSteerEnergyUnits = "";
-    std::string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
-    std::string m_lbSteerTotalPowerUnits = "";
-    std::string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
-    std::string m_lbSteerWattHoursUnits = "WattHours";
+    string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
+    string m_lbSteerPowerUnits = "";
+    string m_lbSteerEnergyPath = "/Chassis/BackLeftModule/Steer/Energy";
+    string m_lbSteerEnergyUnits = "";
+    string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
+    string m_lbSteerTotalPowerUnits = "";
+    string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
+    string m_lbSteerWattHoursUnits = "WattHours";
 
-    std::string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
-    std::string m_lbDrivePowerUnits = "";
-    std::string m_lbDriveEnergyPath = "/Chassis/BackLeftModule/Drive/Energy";
-    std::string m_lbDriveEnergyUnits = "";
-    std::string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
-    std::string m_lbDriveTotalPowerUnits = "";
-    std::string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
-    std::string m_lbDriveWattHoursUnits = "WattHours";
+    string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
+    string m_lbDrivePowerUnits = "";
+    string m_lbDriveEnergyPath = "/Chassis/BackLeftModule/Drive/Energy";
+    string m_lbDriveEnergyUnits = "";
+    string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
+    string m_lbDriveTotalPowerUnits = "";
+    string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
+    string m_lbDriveWattHoursUnits = "WattHours";
 
-    std::string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
-    std::string m_rbSteerPowerUnits = "";
-    std::string m_rbSteerEnergyPath = "/Chassis/BackRightModule/Steer/Energy";
-    std::string m_rbSteerEnergyUnits = "";
-    std::string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
-    std::string m_rbSteerTotalPowerUnits = "";
-    std::string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
-    std::string m_rbSteerWattHoursUnits = "WattHours";
+    string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
+    string m_rbSteerPowerUnits = "";
+    string m_rbSteerEnergyPath = "/Chassis/BackRightModule/Steer/Energy";
+    string m_rbSteerEnergyUnits = "";
+    string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
+    string m_rbSteerTotalPowerUnits = "";
+    string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
+    string m_rbSteerWattHoursUnits = "WattHours";
 
-    std::string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
-    std::string m_rbDrivePowerUnits = "";
-    std::string m_rbDriveEnergyPath = "/Chassis/BackRightModule/Drive/Energy";
-    std::string m_rbDriveEnergyUnits = "";
-    std::string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
-    std::string m_rbDriveTotalPowerUnits = "";
-    std::string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
-    std::string m_rbDriveWattHoursUnits = "WattHours";
+    string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
+    string m_rbDrivePowerUnits = "";
+    string m_rbDriveEnergyPath = "/Chassis/BackRightModule/Drive/Energy";
+    string m_rbDriveEnergyUnits = "";
+    string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
+    string m_rbDriveTotalPowerUnits = "";
+    string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
+    string m_rbDriveWattHoursUnits = "WattHours";
 
-    std::string m_swerveChassisTotalPowerPath = "/Chassis/TotalPower";
-    std::string m_swerveChassisTotalPowerUnits = "";
-    std::string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
-    std::string m_swerveChassisWattHoursUnits = "";
-    std::string m_swerveChassisTotalEnergyPath = "/Chassis/TotalEnergy";
-    std::string m_swerveChassisTotalEnergyUnits = "";
-    std::string m_headingStatePath = "/Chassis/HeadingState";
-    std::string m_driveStatePath = "/Chassis/DriveState";
+    string m_swerveChassisTotalPowerPath = "/Chassis/TotalPower";
+    string m_swerveChassisTotalPowerUnits = "";
+    string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
+    string m_swerveChassisWattHoursUnits = "";
+    string m_swerveChassisTotalEnergyPath = "/Chassis/TotalEnergy";
+    string m_swerveChassisTotalEnergyUnits = "";
+    string m_headingStatePath = "/Chassis/HeadingState";
+    string m_driveStatePath = "/Chassis/DriveState";
 
+    string m_chassisPose2dPath = "/Chassis/Pose2d";
+    string m_visionDriveLBranchPose2dPath = "";
+    string m_visionDriveRBranchPose2dPath = "";
+    string m_visionDriveCoralStationPose2dPath = "";
+    string m_odometryDriveLBranchPose2dPath = "";
+    string m_odometryDriveRBranchPose2dPath = "";
+    string m_odometryDriveCoralStationPose2dPath = "";
+    string m_questpose2dPath = "";
+
+    string m_pose2dUnits = "X, Y, Rotation";
     units::time::second_t m_latency = units::time::second_t(0);
 
 protected:
     void LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSignals signalID, bool value);
     void LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value);
-    void LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, std::string value);
+    void LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, string value);
     void Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose2d value);
     void Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose3d value);
 

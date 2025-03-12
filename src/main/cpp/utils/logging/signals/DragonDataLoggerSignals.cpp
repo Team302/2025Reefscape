@@ -29,7 +29,7 @@ DragonDataLoggerSignals *DragonDataLoggerSignals::GetInstance()
 
 DragonDataLoggerSignals::DragonDataLoggerSignals()
 {
-    wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+    // wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
     // m_isBrownOut = wpi::log::BooleanLogEntry(log, "/RoboRio/IsBrownOut");
     // m_batteryVoltage = wpi::log::DoubleLogEntry(log, "/RoboRio/BatteryVoltage");

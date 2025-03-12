@@ -261,11 +261,11 @@ void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::Strin
         switch (signalID)
         {
         case DragonDataLogger::StringSignals::CHASSIS_DRIVE_STATE:
-            SignalLogger::WriteString(m_driveStatePath, value);
+            SignalLogger::WriteString(m_driveStatePath, value, m_latency);
             break;
 
         case DragonDataLogger::StringSignals::CHASSIS_HEADING_STATE:
-            SignalLogger::WriteString(m_headingStatePath, value);
+            SignalLogger::WriteString(m_headingStatePath, value, m_latency);
             break;
 
         default:
@@ -280,32 +280,54 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
     {
         switch (signalID)
         {
-            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D:
-            //     dataMgr->m_pose2d.Update(value, timestamp);
-            //     break;
-            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            //     dataMgr->m_visionLeftReefBranchPose.Update(value, timestamp);
-            //     break;
-            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            //     dataMgr->m_visionRightReefBranchPose.Update(value, timestamp);
-            //     break;
-
-            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            //     dataMgr->m_visionCoralStationPose.Update(value, timestamp);
-            //     break;
-
-            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            //     dataMgr->m_odometryLeftReefBranchPose.Update(value, timestamp);
-            //     break;
-
-            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            //     dataMgr->m_odometryRightReefBranchPose.Update(value, timestamp);
-            //     break;
-
-            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            //     dataMgr->m_odometryCoralStationPose.Update(value, timestamp);
-            //     break;
-
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D:
+        {
+            double x = value.X().value();
+            double y = value.Y().value();
+            double rot = value.Rotation().Degrees().value();
+            std::vector<double> pose = {x, y, rot};
+            SignalLogger::WriteDoubleArray(m_chassisPose2dPath, pose, m_pose2dUnits, m_latency);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+        {
+            double x = value.X().value();
+            double y = value.Y().value();
+            double rot = value.Rotation().Degrees().value();
+            std::vector<double> pose = {x, y, rot};
+            SignalLogger::WriteDoubleArray(m_chassisPose2dPath, pose, m_pose2dUnits, m_latency);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+        {
+            // dataMgr->m_visionRightReefBranchPose.Update(value, timestamp);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+        {
+            // dataMgr->m_visionCoralStationPose.Update(value, timestamp);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+        {
+            // dataMgr->m_odometryLeftReefBranchPose.Update(value, timestamp);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+        {
+            // dataMgr->m_odometryRightReefBranchPose.Update(value, timestamp);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+        {
+            // dataMgr->m_odometryCoralStationPose.Update(value, timestamp);
+            break;
+        }
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D:
+        {
+            // dataMgr->m_pose3dQuest.Update(value, timestamp);
+            break;
+        }
         default:
             break;
         }
@@ -319,17 +341,13 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
     {
         switch (signalID)
         {
-            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
-            //     dataMgr->m_pose3dLimelight.Update(value, timestamp);
-            //     break;
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
+            // dataMgr->m_pose3dLimelight.Update(value, timestamp);
+            break;
 
-            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
-            //     dataMgr->m_pose3dLimelight2.Update(value, timestamp);
-            //     break;
-
-            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
-            //     dataMgr->m_pose3dQuest.Update(value, timestamp);
-            //     break;
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
+            // dataMgr->m_pose3dLimelight2.Update(value, timestamp);
+            break;
 
         default:
             break;
