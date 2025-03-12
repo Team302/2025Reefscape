@@ -50,6 +50,7 @@
 #include "fielddata/FieldConstants.h"
 
 using ctre::phoenix6::SignalLogger;
+using namespace std;
 
 class DragonTale : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
@@ -344,33 +345,33 @@ private:
 	double m_totalWattHours = 0.0;
 	double m_armLoggingTarget = 85.0;
 	// WriteDouble returns a type of error if there are proble
-	auto LogArm(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogArmTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogArmPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogArmEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	auto LogArm(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	auto LogArmTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogArmPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogArmEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogElevatorLeader(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorLeaderTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorLeaderPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	auto LogElevatorLeader(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorLeaderTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorLeaderPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorLeaderEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogAlgaePower(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)) : SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogAlgaeEnergy(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)) : SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	auto LogAlgaePower(string name, uint64_t timestamp, string units, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)) : SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogAlgaeEnergy(string name, uint64_t timestamp, string units, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)) : SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogElevatorFollower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorFollowerTarget(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorFollowerPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogElevatorFollowerEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	auto LogElevatorFollower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorFollowerTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorFollowerPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogElevatorFollowerEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogCoralPower(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
-	auto LogCoralEnergy(uint64_t timestamp, double value) { return SignalLogger::WriteDouble("name", value, "units", units::time::second_t(0.0)); }
+	auto LogCoralPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogCoralEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogCoralInSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean("name", value, units::time::second_t(0.0)); }
-	auto LogCoralOutSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean("name", value, units::time::second_t(0.0)); }
-	auto LogAlgaeSensor(uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean("name", value, units::time::second_t(0.0)); }
+	auto LogCoralInSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
+	auto LogCoralOutSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
+	auto LogAlgaeSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
 
-	auto LogDragonTaleTotalEnergy(uint64_t timestamp, int value) { return SignalLogger::WriteInteger("name", value, "units", units::time::second_t(0.0)); }
-	auto LogDragonTaleTotalWattHours(uint64_t timestamp, int value) { return SignalLogger::WriteInteger("name", value, "units", units::time::second_t(0.0)); }
+	auto LogDragonTaleTotalEnergy(string name, uint64_t timestamp, string units, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
+	auto LogDragonTaleTotalWattHours(string name, uint64_t timestamp, string units, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
 
-	auto LogDragonTaleState(uint64_t timestamp, int value) { return SignalLogger::WriteInteger("name", value, "units", units::time::second_t(0.0)); }
+	auto LogDragonTaleState(string name, uint64_t timestamp, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
 };

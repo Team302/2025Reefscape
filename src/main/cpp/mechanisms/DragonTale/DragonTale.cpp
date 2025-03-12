@@ -1367,7 +1367,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_energy = get<1>(AlgaePower);
 	m_totalEnergy += m_energy;
 	LogAlgaePower("AlgaePower", timestamp, "double", m_power);
-	LogAlgaeEnergy("AlgaeEnergy", timestamp, "double" m_energy);
+	LogAlgaeEnergy("AlgaeEnergy", timestamp, "double", m_energy);
 
 	LogElevatorFollower("ElevatorFollower", timestamp, "inches", units::length::inch_t(m_ElevatorFollower->GetPosition().GetValueAsDouble()).value());
 	auto ElevatorFollowerPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorFollower->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorFollower->GetSupplyCurrent().GetValueAsDouble());
@@ -1389,11 +1389,11 @@ void DragonTale::DataLog(uint64_t timestamp)
 	LogCoralOutSensor("CoralOutSensor", timestamp, GetCoralOutSensorState());
 	LogAlgaeSensor("ALgaeSensor", timestamp, GetAlgaeSensorState());
 
-	LogDragonTaleState("DragonTaleState", timestamp, "int" GetCurrentState());
+	LogDragonTaleState("DragonTaleState", timestamp, GetCurrentState());
 
 	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
-	LogDragonTaleTotalEnergy("DragonTaleTotalEnergy", timestamp, "int" m_totalEnergy);
-	LogDragonTaleTotalWattHours("DragonTaleTotalWattHours", timestamp, "int" m_totalWattHours);
+	LogDragonTaleTotalEnergy("DragonTaleTotalEnergy", timestamp, "int", m_totalEnergy);
+	LogDragonTaleTotalWattHours("DragonTaleTotalWattHours", timestamp, "int", m_totalWattHours);
 	m_powerTimer.Reset();
 	m_powerTimer.Start();
 }
