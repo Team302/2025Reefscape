@@ -81,31 +81,32 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "tagpose y", tagpose.Y().value());
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "tagpose rotation", tagpose.Rotation().Degrees().value());
 
-        if (!visTagPose.has_value())
+        if (!visTagPose.has_value() || m_chassis == nullptr)
         {
             m_goalPose = GetPoseFromTagPose(item, tagpose);
             m_usingVisionPose = false;
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, m_goalPose);
         }
 
-        if (m_chassis != nullptr)
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "vistagpose x", visTagPose.value().ToPose2d().X().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "vistagpose y", visTagPose.value().ToPose2d().Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "vistagpose rotation", visTagPose.value().ToPose2d().Rotation().Degrees().value());
+
+        auto pose2 = visTagPose.value().ToPose2d();
+        auto elementPoseFromVision = GetPoseFromTagPose(item, pose2);
+
+        auto rot = elementPoseFromVision.Rotation() - frc::Rotation2d(m_chassis->GetYaw());
+        auto comparePose = frc::Pose2d(elementPoseFromVision.X(), elementPoseFromVision.Y(), rot);
+        m_usingVisionPose = UseVisionPose(comparePose, tagpose);
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose x", comparePose.X().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose y", comparePose.Y().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose rotation", comparePose.Rotation().Degrees().value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "UseVisionPose", m_usingVisionPose ? "true" : "false");
+
+        if (m_usingVisionPose)
         {
-            auto pose2 = visTagPose.value().ToPose2d();
-            auto elementPoseFromVision = GetPoseFromTagPose(item, pose2);
-
-            auto rot = elementPoseFromVision.Rotation() - frc::Rotation2d(m_chassis->GetYaw());
-            auto comparePose = frc::Pose2d(elementPoseFromVision.X(), elementPoseFromVision.Y(), rot);
-            m_usingVisionPose = UseVisionPose(comparePose, tagpose);
-
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose x", comparePose.X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose y", comparePose.Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "compare vistagpose rotation", comparePose.Rotation().Degrees().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "UseVisionPose", m_usingVisionPose ? "true" : "false");
-
-            if (m_usingVisionPose)
-            {
-                m_goalPose = GetPoseFromTagPose(item, tagpose);
-            }
+            m_goalPose = GetPoseFromTagPose(item, tagpose);
         }
 
         /**

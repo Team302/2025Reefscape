@@ -22,6 +22,7 @@
 // FRC includes
 
 #include "frc/Timer.h"
+#include "frc/geometry/Pose2d.h"
 #include "networktables/NetworkTable.h"
 #include "units/angle.h"
 #include "units/length.h"
@@ -36,6 +37,7 @@
 #include "vision/DragonVisionStructs.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
 
 // Third Party Includes
 
@@ -146,7 +148,7 @@ public:
 
     std::optional<VisionData> GetDataToNearestAprilTag();
     std::optional<VisionData> GetDataToSpecifiedTag(int id);
-    std::optional<VisionPose> GetAprilTagPose(int id);
+    std::optional<frc::Pose2d> GetAprilTagPose(FieldConstants::AprilTagIDs id);
 
     std::optional<units::length::inch_t> EstimateTargetXDistance();
     std::optional<units::length::inch_t> EstimateTargetYDistance();

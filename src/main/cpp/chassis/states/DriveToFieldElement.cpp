@@ -59,7 +59,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    /** TODO: TEMPORARY
+    /** TODO: TEMPORARY **/
     if (m_chassis != nullptr)
     {
         CalculateFeedForward(chassisMovement);
@@ -97,17 +97,21 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
+        // m_chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_chassis->GetYaw()));
+
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
                                                                                     chassisSpeeds.vy,
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
-    **/
+    /**/
     // TODO: TEMPORARY
+    /**
     chassisMovement.chassisSpeeds.vx = units::velocity::meters_per_second_t(0.0);
     chassisMovement.chassisSpeeds.vy = units::velocity::meters_per_second_t(0.0);
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::turns_per_second_t(0.0);
+    **/
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 

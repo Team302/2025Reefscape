@@ -600,8 +600,32 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
     return std::nullopt;
 }
 
-std::optional<VisionPose> DragonLimelight::GetAprilTagPose(int id)
+std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::AprilTagIDs id)
 {
+    auto fiducials = LimelightHelpers::getRawFiducials(GetCameraName());
+    for (auto fiducial : fiducials)
+    {
+        if (fiducial.id == id)
+        {
+            auto distToTarget = units::length::meter_t(fiducial.distToRobot);
+            auto angleToTarget = units::angle::degree_t(fiducial.txnc);
+
+            auto xOffset = distToTarget * cos(-angleToTarget.value() * M_PI / 180.0);
+            auto yOffset = distToTarget * sin(-angleToTarget.value() * M_PI / 180.0);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("xOffset"), xOffset.value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("yOffset"), yOffset.value());
+
+            auto robotPose = m_chassis->GetPose();
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("robotPose x"), robotPose.X().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("robotPose y"), robotPose.Y().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("robotPose omega"), robotPose.Rotation().Degrees().value());
+
+            auto odomPose = FieldConstants::GetInstance()->GetAprilTagPose(id).ToPose2d();
+            return frc::Pose2d(robotPose.X() - xOffset, robotPose.Y() - yOffset, odomPose.Rotation().Degrees());
+        }
+    }
+
+    /**
     std::optional<int> detectedTag = GetAprilTagID();
     if (detectedTag.has_value())
     {
@@ -623,7 +647,7 @@ std::optional<VisionPose> DragonLimelight::GetAprilTagPose(int id)
             return VisionPose{pose3d, units::time::millisecond_t(0.0)};
         }
     }
-
+    **/
     return std::nullopt;
 }
 
