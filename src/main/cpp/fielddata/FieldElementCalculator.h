@@ -97,7 +97,7 @@ private:
     frc::Transform3d m_calcCoralRightSidewall = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0),
-            units::length::inch_t(-30.0),
+            units::length::inch_t(-22.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
