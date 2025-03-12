@@ -32,6 +32,7 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
+#include "utils/RoboRio.h"
 
 using std::string;
 
@@ -178,6 +179,7 @@ void Robot::InitializeRobot()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
     FieldConstants::GetInstance();
+    RoboRio::GetInstance();
 
     ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
     auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
