@@ -261,15 +261,24 @@ public:
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
+    string m_visionDriveLBranchPose2dUnits = "X, Y, Rotation";
     string m_visionDriveRBranchPose2dPath = "/Vision/DriveToRightReefBranchPose2d";
+    string m_visionDriveRBranchPose2dUnits = "X, Y, Rotation";
     string m_visionDriveCoralStationPose2dPath = "/Vision/DriveToCoralStationPose2d";
+    string m_visionDriveCoralStationPose2dUnits = "X, Y, Rotation";
     string m_odometryDriveLBranchPose2dPath = "/Odometry/DriveToLeftReefBranchPose2d";
+    string m_odometryDriveLBranchPose2dUnits = "X, Y, Rotation";
     string m_odometryDriveRBranchPose2dPath = "/Odometry/DriveToRightReefBranchPose2d";
+    string m_odometryDriveRBranchPose2dUnits = "X, Y, Rotation";
     string m_odometryDriveCoralStationPose2dPath = "/Odometry/DriveToCoralStationPose2d";
-    string m_questpose2dPath = "/Chassis/QuestPose2d";
+    string m_odometryDriveCoralStationPose2dUnits = "X, Y, Rotation";
+    string m_questPose2dPath = "/Chassis/QuestPose2d";
+    string m_questPose2dUnits = "X, Y, Rotation";
 
     string m_limelight1Pose3dPath = "LL1/Pose3d";
+    string m_limelight1Pose3dUnits = "LL1/ X, Y, Rotation";
     string m_limelight2Pose3dPath = "LL2/Pose3d";
+    string m_limelight2Pose3dUnits = "LL2/ X, Y, Rotation";
     string m_pose2dUnits = "X, Y, Rotation";
     units::time::second_t m_latency = units::time::second_t(0);
 
