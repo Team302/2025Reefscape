@@ -122,8 +122,8 @@ public:
     static constexpr bool kFrontLeftSteerMotorInverted = true;
     static constexpr bool kFrontLeftEncoderInverted = false;
 
-    static constexpr units::inch_t kFrontLeftXPos = 11.375_in;
-    static constexpr units::inch_t kFrontLeftYPos = 12.375_in;
+    static constexpr units::inch_t kFrontLeftXPos = 11.25_in;
+    static constexpr units::inch_t kFrontLeftYPos = 12.25_in;
 
     // Front Right
     static constexpr int kFrontRightDriveMotorId = 20;
@@ -133,8 +133,8 @@ public:
     static constexpr bool kFrontRightSteerMotorInverted = true;
     static constexpr bool kFrontRightEncoderInverted = false;
 
-    static constexpr units::inch_t kFrontRightXPos = 11.375_in;
-    static constexpr units::inch_t kFrontRightYPos = -12.375_in;
+    static constexpr units::inch_t kFrontRightXPos = 11.25_in;
+    static constexpr units::inch_t kFrontRightYPos = -12.25_in;
 
     // Back Left
     static constexpr int kBackLeftDriveMotorId = 0;
@@ -144,8 +144,8 @@ public:
     static constexpr bool kBackLeftSteerMotorInverted = true;
     static constexpr bool kBackLeftEncoderInverted = false;
 
-    static constexpr units::inch_t kBackLeftXPos = -11.375_in;
-    static constexpr units::inch_t kBackLeftYPos = 12.375_in;
+    static constexpr units::inch_t kBackLeftXPos = -11.25_in;
+    static constexpr units::inch_t kBackLeftYPos = 12.25_in;
 
     // Back Right
     static constexpr int kBackRightDriveMotorId = 1;
@@ -155,6 +155,6 @@ public:
     static constexpr bool kBackRightSteerMotorInverted = true;
     static constexpr bool kBackRightEncoderInverted = false;
 
-    static constexpr units::inch_t kBackRightXPos = -11.375_in;
-    static constexpr units::inch_t kBackRightYPos = -12.375_in;
+    static constexpr units::inch_t kBackRightXPos = -11.25_in;
+    static constexpr units::inch_t kBackRightYPos = -12.25_in;
 };
