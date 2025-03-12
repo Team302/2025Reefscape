@@ -159,7 +159,7 @@ void DrivePathPlanner::LogMoveInfo()
 }
 void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
-    LogStringData(timestamp, DragonDataLoggerSignals::StringSignals::AUTON_PATH_NAME, m_pathname);
+    LogStringData(timestamp, DragonDataLogger::StringSignals::AUTON_PATH_NAME, m_pathname);
 }
 
 void DrivePathPlanner::InitMoveInfo()

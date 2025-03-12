@@ -154,11 +154,11 @@ public:
     std::string m_electricalPowerPath = "";
     std::string m_electricalPowerUnits = "";
 
-    std::string m_txPath = "";
+    std::string m_txPath = "LL1/tx";
     std::string m_txUnits = "";
-    std::string m_tyPath = "";
+    std::string m_tyPath = "LL1/ty";
     std::string m_tyUnits = "";
-    std::string m_tvPath = "";
+    std::string m_tvPath = "LL1/tv";
     std::string m_tvUnits = "";
     std::string m_fiducialPath = "";
     std::string m_fiducialUnits = "";
@@ -252,6 +252,8 @@ public:
     std::string m_swerveChassisTotalPowerUnits = "";
     std::string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
     std::string m_swerveChassisWattHoursUnits = "";
+    std::string m_swerveChassisTotalEnergyPath = "/Chassis/TotalEnergy";
+    std::string m_swerveChassisTotalEnergyUnits = "";
     std::string m_headingStatePath = "/Chassis/HeadingState";
     std::string m_driveStatePath = "/Chassis/DriveState";
 

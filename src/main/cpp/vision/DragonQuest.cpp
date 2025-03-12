@@ -90,7 +90,7 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
+    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
 }

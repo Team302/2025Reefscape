@@ -76,16 +76,15 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TV_1:
-            // SignalLogger::WriteDouble(m_storedHeadingPath, value, m_storedHeadingUnits, m_latency);
-
+            SignalLogger::WriteDouble(m_tvPath, value, m_tvUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TX_1:
-            dataMgr->m_tx.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_txPath, value, m_txUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TY_1:
-            dataMgr->m_ty.Update(value, timestamp);
+            SignalLogger::WriteDouble(m_tyPath, value, m_tyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_FIDUCIAL_ID_1:
@@ -241,7 +240,7 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             break;
 
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
-            // SignalLogger::WriteDouble(m_swerveChassisTotalPowerPath, value, m_swerveChassisTotalPowerUnits, m_latency);
+            SignalLogger::WriteDouble(m_swerveChassisTotalEnergyPath, value, m_swerveChassisTotalEnergyUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
@@ -281,31 +280,31 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
     {
         switch (signalID)
         {
-        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D:
-            dataMgr->m_pose2d.Update(value, timestamp);
-            break;
-        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            dataMgr->m_visionLeftReefBranchPose.Update(value, timestamp);
-            break;
-        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            dataMgr->m_visionRightReefBranchPose.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D:
+            //     dataMgr->m_pose2d.Update(value, timestamp);
+            //     break;
+            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            //     dataMgr->m_visionLeftReefBranchPose.Update(value, timestamp);
+            //     break;
+            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            //     dataMgr->m_visionRightReefBranchPose.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            dataMgr->m_visionCoralStationPose.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            //     dataMgr->m_visionCoralStationPose.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
-            dataMgr->m_odometryLeftReefBranchPose.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
+            //     dataMgr->m_odometryLeftReefBranchPose.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
-            dataMgr->m_odometryRightReefBranchPose.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE:
+            //     dataMgr->m_odometryRightReefBranchPose.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
-            dataMgr->m_odometryCoralStationPose.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE:
+            //     dataMgr->m_odometryCoralStationPose.Update(value, timestamp);
+            //     break;
 
         default:
             break;
@@ -320,17 +319,17 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
     {
         switch (signalID)
         {
-        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
-            dataMgr->m_pose3dLimelight.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D:
+            //     dataMgr->m_pose3dLimelight.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
-            dataMgr->m_pose3dLimelight2.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D:
+            //     dataMgr->m_pose3dLimelight2.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
-            dataMgr->m_pose3dQuest.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE3D:
+            //     dataMgr->m_pose3dQuest.Update(value, timestamp);
+            //     break;
 
         default:
             break;
@@ -345,37 +344,37 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
     {
         switch (signalID)
         {
-        case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
-            dataMgr->m_frontLeftTarget.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
+            //     dataMgr->m_frontLeftTarget.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
-            dataMgr->m_backLeftTarget.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
+            //     dataMgr->m_backLeftTarget.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
-            dataMgr->m_frontRightTarget.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
+            //     dataMgr->m_frontRightTarget.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
-            dataMgr->m_backRightTarget.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
+            //     dataMgr->m_backRightTarget.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
-            dataMgr->m_frontLeftActual.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
+            //     dataMgr->m_frontLeftActual.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
-            dataMgr->m_backLeftActual.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
+            //     dataMgr->m_backLeftActual.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
-            dataMgr->m_frontRightActual.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
+            //     dataMgr->m_frontRightActual.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
-            dataMgr->m_backRightActual.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
+            //     dataMgr->m_backRightActual.Update(value, timestamp);
+            //     break;
 
         default:
             break;
@@ -383,7 +382,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
     }
 }
 
-void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger::ChassisSpeeddataMgr signalID, frc::ChassisSpeeds value)
+void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger::ChassisSpeedSignals signalID, frc::ChassisSpeeds value)
 {
     auto dataMgr = DragonDataLoggerMgr::GetInstance();
     if (dataMgr != nullptr)
@@ -391,13 +390,13 @@ void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger
         // TODO:  need to compare/store; need to do element by element
         switch (signalID)
         {
-        case DragonDataLogger::ChassisSpeeddataMgr::ACTUAL_SPEEDS:
-            dataMgr->m_actualSpeeds.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::ChassisSpeeddataMgr::ACTUAL_SPEEDS:
+            //     dataMgr->m_actualSpeeds.Update(value, timestamp);
+            //     break;
 
-        case DragonDataLogger::ChassisSpeeddataMgr::TARGET_SPEEDS:
-            dataMgr->m_targetSpeeds.Update(value, timestamp);
-            break;
+            // case DragonDataLogger::ChassisSpeeddataMgr::TARGET_SPEEDS:
+            //     dataMgr->m_targetSpeeds.Update(value, timestamp);
+            //     break;
 
         default:
             break;
