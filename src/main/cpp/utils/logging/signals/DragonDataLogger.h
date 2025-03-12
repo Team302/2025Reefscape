@@ -146,10 +146,10 @@ public:
 
     string m_ChassisYawPath = "/Chassis/Yaw";
     string m_ChassisYawUnits = "Degrees";
-    string m_electricalVoltagePath = "/Electrical/Voltage";
 
-    string m_electricalVoltageUnits = "";
-    string m_electricalCurrentPath = "";
+    string m_electricalVoltagePath = "/Electrical/Voltage";
+    string m_electricalVoltageUnits = "volts";
+    string m_electricalCurrentPath = "/Electrical/Current";
     string m_electricalCurrentUnits = "";
     string m_electricalEnergyPath = "";
     string m_electricalEnergyUnits = "";
@@ -162,7 +162,7 @@ public:
     string m_tyUnits = "";
     string m_tvPath = "LL1/tv";
     string m_tvUnits = "";
-    string m_fiducialPath = "";
+    string m_fiducialPath = "LL1/fiducial";
     string m_fiducialUnits = "";
 
     // RIO
@@ -179,18 +179,18 @@ public:
     string m_cpuTempUnits = "Degrees C";
 
     string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
-    string m_lfSteerPowerUnits = "Watts";
+    string m_lfSteerPowerUnits = "Amps";
     string m_lfSteerEnergyPath = "/Chassis/FrontLeftModule/Steer/Energy";
-    string m_lfSteerEnergyUnits = "";
+    string m_lfSteerEnergyUnits = "Watts";
     string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
     string m_lfSteerTotalPowerUnits = "";
     string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
     string m_lfSteerWattHoursUnits = "WattHours";
 
     string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
-    string m_lfDrivePowerUnits = "Watts";
+    string m_lfDrivePowerUnits = "Amps";
     string m_lfDriveEnergyPath = "/Chassis/FrontLeftModule/Drive/Energy";
-    string m_lfDriveEnergyUnits = "";
+    string m_lfDriveEnergyUnits = "Watts";
     string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
     string m_lfDriveTotalPowerUnits = "";
     string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
@@ -260,14 +260,16 @@ public:
     string m_driveStatePath = "/Chassis/DriveState";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
-    string m_visionDriveLBranchPose2dPath = "";
-    string m_visionDriveRBranchPose2dPath = "";
-    string m_visionDriveCoralStationPose2dPath = "";
-    string m_odometryDriveLBranchPose2dPath = "";
-    string m_odometryDriveRBranchPose2dPath = "";
-    string m_odometryDriveCoralStationPose2dPath = "";
-    string m_questpose2dPath = "";
+    string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
+    string m_visionDriveRBranchPose2dPath = "/Vision/DriveToRightReefBranchPose2d";
+    string m_visionDriveCoralStationPose2dPath = "/Vision/DriveToCoralStationPose2d";
+    string m_odometryDriveLBranchPose2dPath = "/Odometry/DriveToLeftReefBranchPose2d";
+    string m_odometryDriveRBranchPose2dPath = "/Odometry/DriveToRightReefBranchPose2d";
+    string m_odometryDriveCoralStationPose2dPath = "/Odometry/DriveToCoralStationPose2d";
+    string m_questpose2dPath = "/Chassis/QuestPose2d";
 
+    string m_limelight1Pose3dPath = "LL1/Pose3d";
+    string m_limelight2Pose3dPath = "LL2/Pose3d";
     string m_pose2dUnits = "X, Y, Rotation";
     units::time::second_t m_latency = units::time::second_t(0);
 
