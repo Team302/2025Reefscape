@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "zone.dtd">
+
+<auton>
+    <zone 
+        circlex="8.775"
+        circley="6.183"
+        radius="78.74" 
+        taleOption="STATE_NET"/>
+</auton>

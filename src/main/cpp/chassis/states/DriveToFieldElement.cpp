@@ -41,6 +41,8 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
+    m_translationPIDX.SetIZone(0.05);
+    m_translationPIDY.SetIZone(0.05);
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
@@ -65,6 +67,20 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         CalculateFeedForward(chassisMovement);
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
         frc::Pose2d currentPose = m_chassis->GetPose();
+
+        units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
+
+        // Reset the PID if resetTime in second has passed since the last reset
+        if (m_resetTime <= (currentTime - m_lastResetTime))
+        {
+            m_translationPIDX.Reset(currentPose.X(), chassisMovement.chassisSpeeds.vx);
+            m_translationPIDY.Reset(currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+            m_lastResetTime = currentTime;
+        }
+        else
+        {
+            m_lastResetTime = currentTime;
+        }
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
         if (info.has_value())
@@ -150,6 +166,8 @@ bool DriveToFieldElement::IsDone()
     {
         auto currentPose = m_chassis->GetPose();
         auto distance = currentPose.Translation().Distance(m_endPose.Translation());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", distance < m_distanceThreshold);
+
         return (distance < m_distanceThreshold);
     }
     return true;
