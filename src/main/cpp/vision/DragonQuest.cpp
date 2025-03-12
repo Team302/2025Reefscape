@@ -118,7 +118,9 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 
         if (m_questMiso.Get() != 99)
         {
+#ifndef _WIN32
             sleep(1);
+#endif
             m_questMosi.Set(2);
         }
         m_hasreset = true;

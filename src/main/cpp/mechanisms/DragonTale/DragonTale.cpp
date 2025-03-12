@@ -1090,6 +1090,7 @@ void DragonTale::RunCommonTasks()
 	Cyclic();
 
 	LogInformation();
+	RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::ElevatorHeight_Inch, units::length::meter_t(GetElevatorHeight()));
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).

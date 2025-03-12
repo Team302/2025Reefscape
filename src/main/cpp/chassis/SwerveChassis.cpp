@@ -50,6 +50,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
+#include "state/RobotState.h"
 
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
@@ -194,6 +195,7 @@ void SwerveChassis::Drive(ChassisMovement &moveInfo)
     if (m_currentDriveState != nullptr)
     {
         m_targetStates = m_currentDriveState->UpdateSwerveModuleStates(moveInfo);
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveStateType_Int, moveInfo.driveOption);
     }
     else
     {

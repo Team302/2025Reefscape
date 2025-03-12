@@ -29,6 +29,7 @@
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/AngleUtils.h"
+#include "state/RobotState.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -102,6 +103,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     chassisSpeeds.omega,
                                                                                     rot2d);
     }
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Int, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
