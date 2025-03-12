@@ -59,8 +59,13 @@ private:
     void CalculateFeedForward(ChassisMovement &chassisMovement);
 
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
+
     frc::Pose2d m_endPose;
-    const unsigned int m_generatedStatesThreshold = 1;
+    frc::Pose2d m_prevPose;
+    frc::Pose2d m_currentPose;
+
+    int m_samePoseCount = 0;
+    const int m_samePoseCountThreshold = 25;
 
     const units::length::inch_t m_distanceThreshold{0.25};
     const units::length::meter_t m_ffMinRadius{0.05};
