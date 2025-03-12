@@ -16,6 +16,7 @@
 
 #pragma once
 #include <feedback/DragonLeds.h>
+#include "chassis/ChassisOptionEnums.h"
 #include <state/IRobotStateChangeSubscriber.h>
 
 class DriverFeedback : public IRobotStateChangeSubscriber
@@ -66,4 +67,6 @@ private:
     static DriverFeedback *m_instance;
     RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+    bool m_DriveToIsDone = false;
+    ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
 };
