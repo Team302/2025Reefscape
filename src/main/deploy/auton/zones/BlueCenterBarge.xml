@@ -6,5 +6,5 @@
         circlex="8.775"
         circley="6.183"
         radius="78.74" 
-        taleOption="STATE_L4SCORING_POSITION"/>
+        taleOption="STATE_NET"/>
 </auton>
