@@ -170,17 +170,8 @@ bool DriveToFieldElement::IsDone()
     {
         auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
 
-        if (m_currentPose.Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
-        {
-            m_samePoseCount++;
-            isSamePose = m_samePoseCount > m_samePoseCountThreshold;
-        }
-        else
-        {
-            m_samePoseCount = 0;
-        }
-
         isDone = distance < m_distanceThreshold;
+        isSamePose = m_chassis->IsSamePose();
         m_prevPose = m_currentPose;
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
