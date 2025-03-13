@@ -164,6 +164,7 @@ void DragonTale::CreateAndRegisterStates()
 	HoldStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
+	HoldStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(HoldStateInst);
