@@ -273,6 +273,9 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 
     if (!m_initialized && state != nullptr)
     {
+        // not sure if this is the right spot, but it should work for now.
+        m_samePoseCount = 0;
+
         state->Init(moveInfo);
         m_initialized = true;
     }
@@ -433,6 +436,26 @@ void SwerveChassis::LogInformation()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("current rotation position"), pose.Rotation().Degrees().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_networkTableName, string("Stored Heading"), GetStoredHeading().value());
 }
+//==================================================================================
+bool SwerveChassis::IsSamePose()
+{
+    bool isSamePose = false;
+
+    if (GetPose().Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
+    {
+        m_samePoseCount++;
+        isSamePose = m_samePoseCount > m_samePoseCountThreshold;
+    }
+    else
+    {
+        m_samePoseCount = 0;
+    }
+
+    m_prevPose = GetPose();
+
+    return isSamePose;
+}
+//==================================================================================
 
 void SwerveChassis::DataLog(uint64_t timestamp)
 {

@@ -19,7 +19,7 @@ time = "2.5"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_F2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "2.5">
+time = "3.0">
 <zone filename="BlueRightHumanPlayerStation.xml"/>
 </primitive>
 
@@ -39,7 +39,7 @@ time = "2.5"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "2.5">
+time = "3.0">
 <zone filename="BlueRightHumanPlayerStation.xml"/>
 </primitive>
 

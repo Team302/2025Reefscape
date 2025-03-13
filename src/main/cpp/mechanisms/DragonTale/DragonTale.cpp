@@ -164,6 +164,7 @@ void DragonTale::CreateAndRegisterStates()
 	HoldStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
+	HoldStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(HoldStateInst);
@@ -836,7 +837,7 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.05);
-	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.1);
+	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.08);
 	configs.Feedback.FeedbackRemoteSensorID = 17;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::FusedCANcoder;
 	configs.Feedback.SensorToMechanismRatio = 1;
@@ -1084,6 +1085,12 @@ void DragonTale::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	SetSensorFailSafe();
+
+	if ((m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround) && (units::math::abs(GetElevatorHeight()) > 1_in))
+	{
+		m_ElevatorHeightSensor->SetPosition(0_tr);
+	}
+
 	UpdateTarget();
 	IsElevatorInSync();
 	SetAlgaeMotor();

@@ -80,7 +80,7 @@ private:
     units::time::second_t m_resetTime = 0.5_s;
 
     const double m_translationKP = 6.0;
-    const double m_translationKI = 4;
+    const double m_translationKI = 4.5;
     const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
