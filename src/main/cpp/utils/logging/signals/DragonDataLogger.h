@@ -280,6 +280,35 @@ public:
     string m_limelight2Pose3dPath = "LL2/Pose3d";
     string m_limelight2Pose3dUnits = "LL2/ X, Y, Rotation";
     string m_pose2dUnits = "X, Y, Rotation";
+
+    string m_frontLeftTargetSpeedPath = "/Chassis/FrontLeftModule/TargetState/Speed";
+    string m_frontLeftTargetAnglePath;
+    string m_frontRightTargetSpeedPath = "/Chassis/FrontRighttModule/TargetState/Speed";
+    string m_frontRightTargetAnglePath;
+    string m_backLeftTargetSpeedPath = "/Chassis/BackLeftModule/TargetState/Speed";
+    string m_backLeftTargetAnglePath = "/Chassis/BackLeftModule/TargetState/Angle";
+    string m_backRightTargetSpeedPath = "/Chassis/BackRightModule/TargetState/Speed";
+    string m_backRightTargetAnglePath = "/Chassis/BackRightModule/TargetState/Angle";
+    string m_frontLeftActualSpeedPath = "/Chassis/FrontLeftModule/ActualState/Speed";
+    string m_frontLeftActualAnglePath = "/Chassis/FrontLeftModule/ActualState/Angle";
+    string m_frontRightActualSpeedPath = "/Chassis/FrontRighttModule/ActualState/Speed";
+    string m_frontRightActualAnglePath = "/Chassis/FrontRighttModule/ActualState/Angle";
+    string m_backLeftActualSpeedPath = "/Chassis/BackLeftModule/ActualState/Speed";
+    string m_backLeftActualAnglePath = "/Chassis/BackLeftModule/ActualState/Angle";
+    string m_backRightActualSpeedPath = "/Chassis/BackRightModule/ActualState/Speed";
+    string m_backRightActualAnglePath = "/Chassis/BackRightModule/ActualState/Angle";
+
+    string m_swerveTargetvxPath = "/Chassis/TargetSpeeds/Vx";
+    string m_swerveTargetvyPath = "/Chassis/TargetSpeeds/Vy";
+    string m_swerveTargetOmegaPath = "/Chassis/TargetSpeeds/Omega";
+
+    string m_swerveActualvxPath = "/Chassis/ActualSpeeds/Vx";
+    string m_swerveActualvyPath = "/Chassis/ActualSpeeds/Vy";
+    string m_swerveActualOmegaPath = "/Chassis/ActualSpeeds/Omega";
+
+    string m_swerveModuleStateUnits = "Speed, Angle";
+    string m_swerveChassisSpeedUnits = "Vx, Vy, Omega";
+
     units::time::second_t m_latency = units::time::second_t(0);
 
 protected:
