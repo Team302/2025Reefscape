@@ -291,8 +291,8 @@ public:
     string m_backRightTargetAnglePath = "/Chassis/BackRightModule/TargetState/Angle";
     string m_frontLeftActualSpeedPath = "/Chassis/FrontLeftModule/ActualState/Speed";
     string m_frontLeftActualAnglePath = "/Chassis/FrontLeftModule/ActualState/Angle";
-    string m_frontRightActualSpeedPath = "/Chassis/FrontRighttModule/ActualState/Speed";
-    string m_frontRightActualAnglePath = "/Chassis/FrontRighttModule/ActualState/Angle";
+    string m_frontRightActualSpeedPath = "/Chassis/FrontRightModule/ActualState/Speed";
+    string m_frontRightActualAnglePath = "/Chassis/FrontRightModule/ActualState/Angle";
     string m_backLeftActualSpeedPath = "/Chassis/BackLeftModule/ActualState/Speed";
     string m_backLeftActualAnglePath = "/Chassis/BackLeftModule/ActualState/Angle";
     string m_backRightActualSpeedPath = "/Chassis/BackRightModule/ActualState/Speed";

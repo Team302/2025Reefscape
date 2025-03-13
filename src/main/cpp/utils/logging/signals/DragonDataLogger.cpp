@@ -284,7 +284,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_chassisPose2dPath, pose, m_pose2dUnits, m_latency);
             break;
@@ -293,7 +293,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_visionDriveLBranchPose2dPath, pose, m_visionDriveLBranchPose2dPath, m_latency);
             break;
@@ -302,7 +302,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_visionDriveRBranchPose2dPath, pose, m_visionDriveRBranchPose2dPath, m_latency);
             break;
@@ -311,7 +311,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_visionDriveCoralStationPose2dPath, pose, m_visionDriveCoralStationPose2dUnits, m_latency);
             break;
@@ -321,7 +321,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_odometryDriveLBranchPose2dPath, pose, m_odometryDriveLBranchPose2dUnits, m_latency);
             break;
@@ -330,7 +330,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_odometryDriveRBranchPose2dPath, pose, m_odometryDriveRBranchPose2dUnits, m_latency);
             break;
@@ -339,7 +339,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_odometryDriveCoralStationPose2dPath, pose, m_odometryDriveCoralStationPose2dUnits, m_latency);
             break;
@@ -348,7 +348,7 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.X().value();
             double y = value.Y().value();
-            double rot = value.Rotation().Degrees().value();
+            double rot = value.Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_questPose2dPath, pose, m_questPose2dUnits, m_latency);
             break;
@@ -370,7 +370,7 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.ToPose2d().X().value();
             double y = value.ToPose2d().Y().value();
-            double rot = value.ToPose2d().Rotation().Degrees().value();
+            double rot = value.ToPose2d().Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_limelight1Pose3dPath, pose, m_limelight2Pose3dPath, m_latency);
             break;
@@ -379,7 +379,7 @@ void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
         {
             double x = value.ToPose2d().X().value();
             double y = value.ToPose2d().Y().value();
-            double rot = value.ToPose2d().Rotation().Degrees().value();
+            double rot = value.ToPose2d().Rotation().Radians().value();
             std::vector<double> pose = {x, y, rot};
             SignalLogger::WriteDoubleArray(m_limelight2Pose3dPath, pose, m_limelight2Pose3dPath, m_latency);
             break;
@@ -400,7 +400,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_FRONT_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_frontLeftTargetSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_frontLeftTargetAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -409,7 +409,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::TARGET_LEFT_BACK_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_backLeftTargetSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_backLeftTargetAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -418,7 +418,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_FRONT_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_frontRightTargetSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_frontRightTargetAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -427,7 +427,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::TARGET_RIGHT_BACK_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_backRightTargetSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_backRightTargetAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -436,7 +436,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_FRONT_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_frontLeftActualSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_frontLeftActualAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -445,7 +445,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::ACTUAL_LEFT_BACK_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_backLeftActualSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_backLeftActualAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -454,7 +454,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_FRONT_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_frontRightActualSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_frontRightActualAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;
@@ -463,7 +463,7 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
         case DragonDataLogger::SwerveStateSingals::ACTUAL_RIGHT_BACK_STATE:
         {
             double speed = value.speed.value();
-            double angle = value.angle.Degrees().value();
+            double angle = value.angle.Radians().value();
             SignalLogger::WriteDouble(m_backRightActualSpeedPath, speed, m_swerveModuleStateUnits, m_latency);
             SignalLogger::WriteDouble(m_backRightActualAnglePath, angle, m_swerveModuleStateUnits, m_latency);
             break;

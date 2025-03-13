@@ -1384,17 +1384,17 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_energy = get<1>(CoralPower);
 	m_totalEnergy += m_energy;
 	LogCoralPower("/DragonTale/Coral/CoralPower", timestamp, "double", m_power);
-	LogCoralEnergy("CoralEergy", timestamp, "double", m_energy);
+	LogCoralEnergy("/DragonTale/Coral/CoralEergy", timestamp, "double", m_energy);
 
 	LogCoralInSensor("/DragonTale/Coral/CoralInSensor", timestamp, GetCoralInSensorState());
 	LogCoralOutSensor("/DragonTale/Coral/CoralOutSensor", timestamp, GetCoralOutSensorState());
 	LogAlgaeSensor("/DragonTale/Algae/ALgaeSensor", timestamp, GetAlgaeSensorState());
 
-	LogDragonTaleState("/DrgaonTale/DragonTaleState", timestamp, GetCurrentState());
+	LogDragonTaleState("/DragonTale/DragonTaleState", timestamp, GetCurrentState());
 
 	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
-	LogDragonTaleTotalEnergy("/DrgaonTale/DragonTaleTotalEnergy", timestamp, "int", m_totalEnergy);
-	LogDragonTaleTotalWattHours("/DrgaonTale/DragonTaleTotalWattHours", timestamp, "int", m_totalWattHours);
+	LogDragonTaleTotalEnergy("/DragonTale/DragonTaleTotalEnergy", timestamp, "int", m_totalEnergy);
+	LogDragonTaleTotalWattHours("/DragonTale/DragonTaleTotalWattHours", timestamp, "int", m_totalWattHours);
 	m_powerTimer.Reset();
 	m_powerTimer.Start();
 }
