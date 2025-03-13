@@ -101,6 +101,6 @@ void DragonDataLoggerMgr::PeriodicDataLog() const
     {
         item->DataLog(timestamp);
     }
-    wpi::log::DataLog &log = frc::DataLogManager::GetLog();
-    log.Flush();
+    // wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+    // log.Flush();
 }

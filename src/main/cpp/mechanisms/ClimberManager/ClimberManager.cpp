@@ -92,27 +92,27 @@ std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE
 };
 void ClimberManager::InitializeLogging()
 {
-	wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+	// wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
-	m_ClimberManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalEnergy");
-	m_ClimberManagerTotalEnergyLogEntry.Append(0.0);
-	m_ClimberManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalWattHours");
-	m_ClimberManagerTotalWattHoursLogEntry.Append(0.0);
+	// m_ClimberManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalEnergy");
+	// m_ClimberManagerTotalEnergyLogEntry.Append(0.0);
+	// m_ClimberManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalWattHours");
+	// m_ClimberManagerTotalWattHoursLogEntry.Append(0.0);
 
-	m_ClimberLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPosition");
-	m_ClimberLogEntry.Append(0.0);
+	// m_ClimberLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPosition");
+	// m_ClimberLogEntry.Append(0.0);
 
-	m_ClimberTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberTarget");
-	m_ClimberTargetLogEntry.Append(0.0);
+	// m_ClimberTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberTarget");
+	// m_ClimberTargetLogEntry.Append(0.0);
 
-	m_ClimberPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPower");
-	m_ClimberPowerLogEntry.Append(0.0);
+	// m_ClimberPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPower");
+	// m_ClimberPowerLogEntry.Append(0.0);
 
-	m_ClimberEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberEnergy");
-	m_ClimberEnergyLogEntry.Append(0.0);
+	// m_ClimberEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberEnergy");
+	// m_ClimberEnergyLogEntry.Append(0.0);
 
-	m_ClimberManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/ClimberManager/State");
-	m_ClimberManagerStateLogEntry.Append(0);
+	// m_ClimberManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/ClimberManager/State");
+	// m_ClimberManagerStateLogEntry.Append(0);
 }
 
 void ClimberManager::CreatePRACTICE_BOT9999()

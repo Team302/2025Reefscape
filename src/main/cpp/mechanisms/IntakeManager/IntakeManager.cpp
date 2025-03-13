@@ -105,32 +105,32 @@ IntakeManager::IntakeManager(RobotIdentifier activeRobotId) : BaseMech(Mechanism
 
 void IntakeManager::InitializeLogging()
 {
-	wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+	// wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
-	m_IntakeManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalEnergy");
-	m_IntakeManagerTotalEnergyLogEntry.Append(0.0);
-	m_IntakeManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalWattHours");
-	m_IntakeManagerTotalWattHoursLogEntry.Append(0.0);
+	// m_IntakeManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalEnergy");
+	// m_IntakeManagerTotalEnergyLogEntry.Append(0.0);
+	// m_IntakeManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/TotalWattHours");
+	// m_IntakeManagerTotalWattHoursLogEntry.Append(0.0);
 
-	m_IntakePowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakePower");
-	m_IntakePowerLogEntry.Append(0.0);
-	m_IntakeEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakeEnergy");
-	m_IntakeEnergyLogEntry.Append(0.0);
+	// m_IntakePowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakePower");
+	// m_IntakePowerLogEntry.Append(0.0);
+	// m_IntakeEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/IntakeEnergy");
+	// m_IntakeEnergyLogEntry.Append(0.0);
 
-	m_ExtenderLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPosition");
-	m_ExtenderLogEntry.Append(0.0);
-	m_ExtenderTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderTarget");
-	m_ExtenderTargetLogEntry.Append(0.0);
-	m_ExtenderPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPower");
-	m_ExtenderPowerLogEntry.Append(0.0);
-	m_ExtenderEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderEnergy");
-	m_ExtenderEnergyLogEntry.Append(0.0);
+	// m_ExtenderLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPosition");
+	// m_ExtenderLogEntry.Append(0.0);
+	// m_ExtenderTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderTarget");
+	// m_ExtenderTargetLogEntry.Append(0.0);
+	// m_ExtenderPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderPower");
+	// m_ExtenderPowerLogEntry.Append(0.0);
+	// m_ExtenderEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/IntakeManager/ExtenderEnergy");
+	// m_ExtenderEnergyLogEntry.Append(0.0);
 
-	m_IntakeSensorLogEntry = wpi::log::BooleanLogEntry(log, "mechanisms/IntakeManager/IntakeSensor");
-	m_IntakeSensorLogEntry.Append(false);
+	// m_IntakeSensorLogEntry = wpi::log::BooleanLogEntry(log, "mechanisms/IntakeManager/IntakeSensor");
+	// m_IntakeSensorLogEntry.Append(false);
 
-	m_IntakeManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/IntakeManager/State");
-	m_IntakeManagerStateLogEntry.Append(0);
+	// m_IntakeManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/IntakeManager/State");
+	// m_IntakeManagerStateLogEntry.Append(0);
 }
 
 std::map<std::string, IntakeManager::STATE_NAMES> IntakeManager::stringToSTATE_NAMESEnumMap{
