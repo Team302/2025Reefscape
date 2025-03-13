@@ -306,38 +306,6 @@ private:
 
 	void InitializeLogging();
 
-	wpi::log::DoubleLogEntry m_ArmLogEntry;
-	wpi::log::DoubleLogEntry m_ArmTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ArmPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ArmEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_ElevatorLeaderLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXPowerLogEntry;
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_ElevatorFollowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_CoralPowerLogEntry;
-	wpi::log::DoubleLogEntry m_CoralEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXSPowerLogEntry;
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXSEnergyLogEntry;
-
-	wpi::log::BooleanLogEntry m_CoralInSensorLogEntry;
-	wpi::log::BooleanLogEntry m_CoralOutSensorLogEntry;
-	wpi::log::BooleanLogEntry m_AlgaeSensorLogEntry;
-
-	wpi::log::DoubleLogEntry m_DragonTaleTotalEnergyLogEntry;
-	wpi::log::DoubleLogEntry m_DragonTaleTotalWattHoursLogEntry;
-
-	wpi::log::IntegerLogEntry m_DragonTaleStateLogEntry;
 	frc::Timer m_powerTimer;
 	double m_power = 0.0;
 	double m_energy = 0.0;
