@@ -1085,7 +1085,7 @@ void DragonTale::RunCommonTasks()
 	// This function is called once per loop before the current state Run()
 	SetSensorFailSafe();
 
-	if (m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround)
+	if ((m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround) && (GetElevatorHeight() > 1_in))
 	{
 		m_ElevatorHeightSensor->SetPosition(0_tr);
 	}
