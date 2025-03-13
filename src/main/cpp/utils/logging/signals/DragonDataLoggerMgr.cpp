@@ -48,7 +48,7 @@ DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignal
     // SignalLogger::EnableAutoLogging(true);
     // SignalLogger::Start();
 
-    SignalLogger::SetPath("/media/sda1/logs/");
+    // SignalLogger::SetPath("/media/sda1/logs/");
     SignalLogger::EnableAutoLogging(true);
     SignalLogger::Start();
 }
