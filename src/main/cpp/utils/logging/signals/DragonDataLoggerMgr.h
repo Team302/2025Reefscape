@@ -36,7 +36,7 @@ private:
 
     std::vector<DragonDataLogger *> m_items;
     frc::Timer m_timer;
-    int m_lastIndex = -1;
+    unsigned int m_lastIndex = 0;
 
     const units::time::second_t m_period{0.0025};
 
