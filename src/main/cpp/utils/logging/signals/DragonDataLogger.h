@@ -150,8 +150,6 @@ public:
     string m_electricalVoltageUnits = "volts";
     string m_electricalCurrentPath = "/Electrical/Current";
     string m_electricalCurrentUnits = "";
-    string m_electricalCurrentPath = "";
-    string m_electricalCurrentUnits = "";
     string m_electricalPowerPath = "";
     string m_electricalPowerUnits = "";
 
