@@ -283,7 +283,7 @@ public:
 
     string m_frontLeftTargetSpeedPath = "/Chassis/FrontLeftModule/TargetState/Speed";
     string m_frontLeftTargetAnglePath;
-    string m_frontRightTargetSpeedPath = "/Chassis/FrontRighttModule/TargetState/Speed";
+    string m_frontRightTargetSpeedPath = "/Chassis/FrontRightModule/TargetState/Speed";
     string m_frontRightTargetAnglePath;
     string m_backLeftTargetSpeedPath = "/Chassis/BackLeftModule/TargetState/Speed";
     string m_backLeftTargetAnglePath = "/Chassis/BackLeftModule/TargetState/Angle";
