@@ -93,14 +93,25 @@ void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
     m_items.emplace_back(item);
 }
 
-void DragonDataLoggerMgr::PeriodicDataLog() const
+void DragonDataLoggerMgr::PeriodicDataLog()
 {
     uint64_t timestamp = frc::RobotController::GetFPGATime();
 
-    for (auto item : m_items)
+    m_timer.Reset();
+    while (m_timer.Get() < m_period)
     {
+        auto item = m_items[m_lastIndex];
         item->DataLog(timestamp);
+        m_lastIndex++;
+        if (m_lastIndex >= m_items.size())
+        {
+            m_lastIndex = 0;
+        }
     }
-    // wpi::log::DataLog &log = frc::DataLogManager::GetLog();
-    // log.Flush();
+    // for (auto item : m_items)
+    //{
+    //     item->DataLog(timestamp);
+    // }
+    //  wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+    //  log.Flush();
 }
