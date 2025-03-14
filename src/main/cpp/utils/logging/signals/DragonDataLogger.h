@@ -174,12 +174,12 @@ public:
     string m_inputVoltagePath = "/RoboRio/InputVoltage";
     string m_inputVoltageUnits = "Volts";
     string m_inputCurrentPath = "/RoboRio/InputCurrent";
-    string m_inputCurrentUnits = "Amps";
+    string m_inputCurrentUnits = "Amps?";
     string m_cpuTempPath = "/RoboRio/CPUTemp";
     string m_cpuTempUnits = "Degrees C";
 
     string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
-    string m_lfSteerPowerUnits = "Watts";
+    string m_lfSteerPowerUnits = "Amps";
     string m_lfSteerEnergyPath = "/Chassis/FrontLeftModule/Steer/Energy";
     string m_lfSteerEnergyUnits = "Watts";
     string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
@@ -188,7 +188,7 @@ public:
     string m_lfSteerWattHoursUnits = "WattHours";
 
     string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
-    string m_lfDrivePowerUnits = "Watts";
+    string m_lfDrivePowerUnits = "Amps";
     string m_lfDriveEnergyPath = "/Chassis/FrontLeftModule/Drive/Energy";
     string m_lfDriveEnergyUnits = "Watts";
     string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
