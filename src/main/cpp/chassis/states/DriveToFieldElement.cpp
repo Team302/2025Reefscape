@@ -64,7 +64,6 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    /** TODO: TEMPORARY **/
     if (m_chassis != nullptr)
     {
         m_currentPose = m_chassis->GetPose();
@@ -115,8 +114,6 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
-
-        // m_chassis->SetStoredHeading(AngleUtils::GetEquivAngle(m_chassis->GetYaw()));
 
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,

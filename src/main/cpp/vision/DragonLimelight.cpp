@@ -42,6 +42,7 @@
 #include "vision/DragonVisionStructLogger.h"
 #include "utils/DragonField.h"
 #include "utils/AngleUtils.h"
+#include "utils/FMSData.h"
 
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
@@ -610,8 +611,18 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
             auto distToTarget = units::length::meter_t(fiducial.distToRobot);
             auto angleToTarget = units::angle::degree_t(fiducial.txnc);
 
+            // TODO: switch to chassis yaw to determine flip
+            auto flip = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+
             auto xOffset = distToTarget * cos(-angleToTarget.value() * M_PI / 180.0);
             auto yOffset = distToTarget * sin(-angleToTarget.value() * M_PI / 180.0);
+
+            if (flip)
+            {
+                xOffset *= -1.0;
+                yOffset *= -1.0;
+            }
+
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("xOffset"), xOffset.value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("yOffset"), yOffset.value());
 

@@ -15,8 +15,8 @@
 #pragma once
 
 // FRC Includes
-#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/DriverStation.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 class FMSData
 {
@@ -27,9 +27,6 @@ public:
         RED,
         INVALID
     };
-
-    FMSData();
-    ~FMSData() = default;
 
     /// @brief Get the alliance color from dashboard or FMS when available
     /// @return the current alliance
@@ -43,6 +40,9 @@ public:
 
 private:
     static FMSData *m_instance;
+
+    FMSData();
+    ~FMSData() = default;
 
     frc::SendableChooser<std::string> m_allianceColorChooser;
     std::unordered_map<frc::DriverStation::Alliance, ALLIANCE_COLOR> m_colorMap;

@@ -36,10 +36,7 @@ units::angle::degree_t FaceTarget::GetTargetAngle(ChassisMovement &chassisMoveme
     if (m_chassis != nullptr)
     {
         auto chassispose = m_chassis->GetPose();
-        return chassispose.Rotation().Degrees(); // TODO: TEMPORARY
-
         auto currentangle = m_chassis->GetStoredHeading();
-
         auto finder = DragonTargetFinder::GetInstance();
         if (finder != nullptr)
         {
