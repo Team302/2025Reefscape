@@ -114,11 +114,7 @@ void DriverFeedback::UpdateLEDStates()
                 }
                 else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
                 {
-                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
-                    {
-                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
-                    }
-                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
+                    if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
                         m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
                     }

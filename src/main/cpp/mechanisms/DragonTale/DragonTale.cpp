@@ -1259,6 +1259,14 @@ void DragonTale::UpdateTarget()
 		actualTargetHeight = m_climbModeHeight;
 	}
 
+	// units::angle::degree_t armError = units::math::abs(actualTargetAngle - GetArmAngle());
+
+	// if ((GetElevatorHeight() >= m_elevatorPreventionHeight) && (actualTargetHeight < m_elevatorPreventionHeight) && (armError > m_armErrorThreshold))
+	// {
+	// 	actualTargetAngle = m_armHoldAngle;
+	// 	actualTargetHeight = GetElevatorHeight();
+	// }
+
 	m_armLoggingTarget = actualTargetAngle.value();
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armLoggingTarget);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
