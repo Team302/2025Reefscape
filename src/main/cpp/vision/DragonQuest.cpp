@@ -48,8 +48,8 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
-    units::length::meter_t x{-posarray[2]};
-    units::length::meter_t y{posarray[0]};
+    units::length::meter_t x{posarray[2]};
+    units::length::meter_t y{-posarray[0]};
     units::length::meter_t z{posarray[1]};
     units::angle::degree_t roll{rotationarray[0]};
     units::angle::degree_t pitch{rotationarray[2]};
@@ -90,7 +90,7 @@ void DragonQuest::ZeroPosition()
 
 void DragonQuest::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(timestamp, DragonDataLoggerSignals::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
+    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
 }
