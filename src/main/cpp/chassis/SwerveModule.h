@@ -105,6 +105,9 @@ public:
     units::current::ampere_t GetDriveCurrentLimit() const { return m_driveTalon->GetStatorCurrent().GetValue(); }
     units::current::ampere_t GetSteerCurrentLimit() const { return m_steerTalon->GetStatorCurrent().GetValue(); }
 
+    units::current::ampere_t GetDriveCurrent() const { return m_driveTalon->GetSupplyCurrent().GetValue(); }
+    units::current::ampere_t GetSteerCurrent() const { return m_steerTalon->GetSupplyCurrent().GetValue(); }
+
     void StopMotors();
     void LogInformation();
 
