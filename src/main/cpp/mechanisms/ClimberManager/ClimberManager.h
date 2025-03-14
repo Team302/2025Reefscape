@@ -27,7 +27,6 @@
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
-#include "ctre/phoenix6/SignalLogger.hpp"
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -40,8 +39,6 @@
 #include "utils/logging/signals/DragonDataLogger.h"
 
 #include "RobotIdentifier.h"
-
-using ctre::phoenix6::SignalLogger;
 
 class ClimberManager : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
@@ -137,17 +134,24 @@ private:
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 	void InitializeLogging();
 
+	wpi::log::DoubleLogEntry m_ClimberLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberManagerTotalEnergyLogEntry;
+	wpi::log::DoubleLogEntry m_ClimberManagerTotalWattHoursLogEntry;
+	wpi::log::IntegerLogEntry m_ClimberManagerStateLogEntry;
 	frc::Timer m_powerTimer;
 	double m_power = 0.0;
 	double m_energy = 0.0;
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
 
-	auto LogClimber(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberTarget(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberPower(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberEnergy(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerTotalEnergy(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerTotalWattHours(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerState(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	void LogClimber(uint64_t timestamp, double value) { return m_ClimberLogEntry.Update(value, timestamp); }
+	void LogClimberTarget(uint64_t timestamp, double value) { return m_ClimberTargetLogEntry.Update(value, timestamp); }
+	void LogClimberPower(uint64_t timestamp, double value) { return m_ClimberPowerLogEntry.Update(value, timestamp); }
+	void LogClimberEnergy(uint64_t timestamp, double value) { return m_ClimberEnergyLogEntry.Update(value, timestamp); }
+	void LogClimberManagerTotalEnergy(uint64_t timestamp, int value) { return m_ClimberManagerTotalEnergyLogEntry.Update(value, timestamp); }
+	void LogClimberManagerTotalWattHours(uint64_t timestamp, int value) { return m_ClimberManagerTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogClimberManagerState(uint64_t timestamp, int value) { return m_ClimberManagerStateLogEntry.Update(value, timestamp); }
 };

@@ -26,8 +26,6 @@
 #include "ctre/phoenix6/TalonFXS.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
-#include "ctre/phoenix6/SignalLogger.hpp"
-#include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include <frc/DigitalInput.h>
 #include <frc/filter/Debouncer.h>
 
@@ -42,8 +40,6 @@
 #include "configs/MechanismConfigMgr.h"
 
 #include "RobotIdentifier.h"
-
-using ctre::phoenix6::SignalLogger;
 
 class IntakeManager : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
@@ -162,14 +158,14 @@ private:
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
 
-	ctre::phoenix::StatusCode LogIntakePower(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogIntakeEnergy(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogExtender(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogExtenderTarget(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogExtenderPower(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogExtenderEnergy(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogIntakeSensor(string name, string units, bool value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogIntakeManagerTotalEnergy(string name, string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogIntakeManagerTotalWattHours(string name, string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	ctre::phoenix::StatusCode LogIntakeManagerState(string name, string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	void LogIntakePower(uint64_t timestamp, double value) { return m_IntakePowerLogEntry.Update(value, timestamp); }
+	void LogIntakeEnergy(uint64_t timestamp, double value) { return m_IntakeEnergyLogEntry.Update(value, timestamp); }
+	void LogExtender(uint64_t timestamp, double value) { return m_ExtenderLogEntry.Update(value, timestamp); }
+	void LogExtenderTarget(uint64_t timestamp, double value) { return m_ExtenderTargetLogEntry.Update(value, timestamp); }
+	void LogExtenderPower(uint64_t timestamp, double value) { return m_ExtenderPowerLogEntry.Update(value, timestamp); }
+	void LogExtenderEnergy(uint64_t timestamp, double value) { return m_ExtenderEnergyLogEntry.Update(value, timestamp); }
+	void LogIntakeSensor(uint64_t timestamp, bool value) { return m_IntakeSensorLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerTotalEnergy(uint64_t timestamp, int value) { return m_IntakeManagerTotalEnergyLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerTotalWattHours(uint64_t timestamp, int value) { return m_IntakeManagerTotalWattHoursLogEntry.Update(value, timestamp); }
+	void LogIntakeManagerState(uint64_t timestamp, int value) { return m_IntakeManagerStateLogEntry.Update(value, timestamp); }
 };
