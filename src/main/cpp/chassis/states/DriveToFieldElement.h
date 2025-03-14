@@ -85,6 +85,8 @@ private:
 
     const double m_rotationKP = 6.0;
 
+    units::angle::degree_t m_sweepDelta{90.0};
+
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
     frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};

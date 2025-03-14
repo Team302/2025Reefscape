@@ -57,13 +57,13 @@ void ManualClimbState::InitCOMP_BOT302()
 
 void ManualClimbState::Run()
 {
-	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
-	if (abs(manualClimberPercent) > 0.1)
-		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent);
-	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB_DOWN))
-		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	else
-		m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
+	// double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
+	// if (abs(manualClimberPercent) > 0.1)
+	// 	m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent);
+	// else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB_DOWN))
+	// 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	// else
+	// 	m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
 }
 
 void ManualClimbState::Exit()
