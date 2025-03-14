@@ -50,7 +50,6 @@ public:
         CHASSIS_YAW_DEGREES,
         ELECTRICAL_VOLTAGE,
         ELECTRICAL_CURRENT,
-        ELECTRICAL_ENERGY,
         ELECTRICAL_POWER,
         LIMELIGHT_TV_1,
         LIMELIGHT_TX_1,
@@ -62,38 +61,38 @@ public:
         INPUT_CURRENT,
         CPU_TEMP,
         LEFT_FRONT_SWERVE_STEER_POWER,
-        LEFT_FRONT_SWERVE_STEER_ENERGY,
+        LEFT_FRONT_SWERVE_STEER_CURRENT,
         LEFT_FRONT_SWERVE_STEER_TOTALPOWER,
         LEFT_FRONT_SWERVE_STEER_WATT_HOURS,
         LEFT_FRONT_SWERVE_DRIVE_POWER,
-        LEFT_FRONT_SWERVE_DRIVE_ENERGY,
+        LEFT_FRONT_SWERVE_DRIVE_CURRENT,
         LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER,
         LEFT_FRONT_SWERVE_DRIVE_WATT_HOURS,
         RIGHT_FRONT_SWERVE_STEER_POWER,
-        RIGHT_FRONT_SWERVE_STEER_ENERGY,
+        RIGHT_FRONT_SWERVE_STEER_CURRENT,
         RIGHT_FRONT_SWERVE_STEER_TOTALPOWER,
         RIGHT_FRONT_SWERVE_STEER_WATT_HOURS,
         RIGHT_FRONT_SWERVE_DRIVE_POWER,
-        RIGHT_FRONT_SWERVE_DRIVE_ENERGY,
+        RIGHT_FRONT_SWERVE_DRIVE_CURRENT,
         RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_FRONT_SWERVE_DRIVE_WATT_HOURS,
         LEFT_BACK_SWERVE_STEER_POWER,
-        LEFT_BACK_SWERVE_STEER_ENERGY,
+        LEFT_BACK_SWERVE_STEER_CURRENT,
         LEFT_BACK_SWERVE_STEER_TOTALPOWER,
         LEFT_BACK_SWERVE_STEER_WATT_HOURS,
         LEFT_BACK_SWERVE_DRIVE_POWER,
-        LEFT_BACK_SWERVE_DRIVE_ENERGY,
+        LEFT_BACK_SWERVE_DRIVE_CURRENT,
         LEFT_BACK_SWERVE_DRIVE_TOTALPOWER,
         LEFT_BACK_SWERVE_DRIVE_WATT_HOURS,
         RIGHT_BACK_SWERVE_STEER_POWER,
-        RIGHT_BACK_SWERVE_STEER_ENERGY,
+        RIGHT_BACK_SWERVE_STEER_CURRENT,
         RIGHT_BACK_SWERVE_STEER_TOTALPOWER,
         RIGHT_BACK_SWERVE_STEER_WATT_HOURS,
         RIGHT_BACK_SWERVE_DRIVE_POWER,
-        RIGHT_BACK_SWERVE_DRIVE_ENERGY,
+        RIGHT_BACK_SWERVE_DRIVE_CURRENT,
         RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
-        SWERVE_CHASSIS_TOTAL_ENERGY,
+        SWERVE_CHASSIS_TOTAL_CURRENT,
         SWERVE_CHASSIS_WATT_HOURS
     };
 
@@ -151,8 +150,8 @@ public:
     string m_electricalVoltageUnits = "volts";
     string m_electricalCurrentPath = "/Electrical/Current";
     string m_electricalCurrentUnits = "";
-    string m_electricalEnergyPath = "";
-    string m_electricalEnergyUnits = "";
+    string m_electricalCurrentPath = "";
+    string m_electricalCurrentUnits = "";
     string m_electricalPowerPath = "";
     string m_electricalPowerUnits = "";
 
@@ -180,8 +179,8 @@ public:
 
     string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
     string m_lfSteerPowerUnits = "Watts";
-    string m_lfSteerEnergyPath = "/Chassis/FrontLeftModule/Steer/Energy";
-    string m_lfSteerEnergyUnits = "Watts";
+    string m_lfSteerCurrentPath = "/Chassis/FrontLeftModule/Steer/Current";
+    string m_lfSteerCurrentUnits = "Watts";
     string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
     string m_lfSteerTotalPowerUnits = "";
     string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
@@ -189,8 +188,8 @@ public:
 
     string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
     string m_lfDrivePowerUnits = "Watts";
-    string m_lfDriveEnergyPath = "/Chassis/FrontLeftModule/Drive/Energy";
-    string m_lfDriveEnergyUnits = "Watts";
+    string m_lfDriveCurrentPath = "/Chassis/FrontLeftModule/Drive/Current";
+    string m_lfDriveCurrentUnits = "Watts";
     string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
     string m_lfDriveTotalPowerUnits = "";
     string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
@@ -198,8 +197,8 @@ public:
 
     string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
     string m_rfSteerPowerUnits = "";
-    string m_rfSteerEnergyPath = "/Chassis/FrontRightModule/Steer/Energy";
-    string m_rfSteerEnergyUnits = "Watts";
+    string m_rfSteerCurrentPath = "/Chassis/FrontRightModule/Steer/Current";
+    string m_rfSteerCurrentUnits = "Watts";
     string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
     string m_rfSteerTotalPowerUnits = "";
     string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
@@ -207,8 +206,8 @@ public:
 
     string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
     string m_rfDrivePowerUnits = "";
-    string m_rfDriveEnergyPath = "/Chassis/FrontRightModule/Drive/Energy";
-    string m_rfDriveEnergyUnits = "Watts";
+    string m_rfDriveCurrentPath = "/Chassis/FrontRightModule/Drive/Current";
+    string m_rfDriveCurrentUnits = "Watts";
     string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
     string m_rfDriveTotalPowerUnits = "";
     string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
@@ -216,8 +215,8 @@ public:
 
     string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
     string m_lbSteerPowerUnits = "";
-    string m_lbSteerEnergyPath = "/Chassis/BackLeftModule/Steer/Energy";
-    string m_lbSteerEnergyUnits = "Watts";
+    string m_lbSteerCurrentPath = "/Chassis/BackLeftModule/Steer/Current";
+    string m_lbSteerCurrentUnits = "Watts";
     string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
     string m_lbSteerTotalPowerUnits = "";
     string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
@@ -225,8 +224,8 @@ public:
 
     string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
     string m_lbDrivePowerUnits = "";
-    string m_lbDriveEnergyPath = "/Chassis/BackLeftModule/Drive/Energy";
-    string m_lbDriveEnergyUnits = "Watts";
+    string m_lbDriveCurrentPath = "/Chassis/BackLeftModule/Drive/Current";
+    string m_lbDriveCurrentUnits = "Watts";
     string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
     string m_lbDriveTotalPowerUnits = "";
     string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
@@ -234,8 +233,8 @@ public:
 
     string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
     string m_rbSteerPowerUnits = "";
-    string m_rbSteerEnergyPath = "/Chassis/BackRightModule/Steer/Energy";
-    string m_rbSteerEnergyUnits = "Watts";
+    string m_rbSteerCurrentPath = "/Chassis/BackRightModule/Steer/Current";
+    string m_rbSteerCurrentUnits = "Watts";
     string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
     string m_rbSteerTotalPowerUnits = "";
     string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
@@ -243,8 +242,8 @@ public:
 
     string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
     string m_rbDrivePowerUnits = "";
-    string m_rbDriveEnergyPath = "/Chassis/BackRightModule/Drive/Energy";
-    string m_rbDriveEnergyUnits = "Watts";
+    string m_rbDriveCurrentPath = "/Chassis/BackRightModule/Drive/Current";
+    string m_rbDriveCurrentUnits = "Watts";
     string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
     string m_rbDriveTotalPowerUnits = "";
     string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
@@ -254,8 +253,8 @@ public:
     string m_swerveChassisTotalPowerUnits = "";
     string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
     string m_swerveChassisWattHoursUnits = "";
-    string m_swerveChassisTotalEnergyPath = "/Chassis/TotalEnergy";
-    string m_swerveChassisTotalEnergyUnits = "Watts";
+    string m_swerveChassisTotalCurrentPath = "/Chassis/TotalCurrent";
+    string m_swerveChassisTotalCurrentUnits = "Watts";
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
 
