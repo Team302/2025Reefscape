@@ -1088,7 +1088,7 @@ void DragonTale::RunCommonTasks()
 
 	if ((m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround) && (units::math::abs(GetElevatorHeight()) > 1_in))
 	{
-		m_ElevatorHeightSensor->SetPosition(0_tr);
+		m_ElevatorHeightSensor->SetPosition(0_tr, 5_ms);
 	}
 
 	UpdateTarget();
