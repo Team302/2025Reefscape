@@ -49,7 +49,7 @@ void ScoreCoralState::Run()
 {
 	if (m_mechanism->AtTarget() || m_mechanism->IsTeleop())
 	{
-		if (m_mechanism->GetElevatorHeight() < units::length::inch_t(5))
+		if (m_mechanism->GetElevatorHeight() < units::length::inch_t(28))
 			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
 		else
 			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
