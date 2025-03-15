@@ -18,6 +18,7 @@
 #include <array>
 #include <vector>
 
+#include "frc/Timer.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 
 class DragonDataLoggerMgr
@@ -25,7 +26,7 @@ class DragonDataLoggerMgr
 public:
     static DragonDataLoggerMgr *GetInstance();
     void RegisterItem(DragonDataLogger *item);
-    void PeriodicDataLog() const;
+    void PeriodicDataLog();
 
 private:
     DragonDataLoggerMgr();
@@ -34,6 +35,10 @@ private:
     std::string GetLoggingDir();
 
     std::vector<DragonDataLogger *> m_items;
+    frc::Timer m_timer;
+    unsigned int m_lastIndex = 0;
+
+    const units::time::second_t m_period{0.001};
 
     static DragonDataLoggerMgr *m_instance;
 };
