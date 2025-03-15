@@ -432,7 +432,7 @@ void DragonTale::CreateCOMP_BOT302()
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.116699);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.11669922);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
@@ -908,7 +908,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 
 	configs.Feedback.FeedbackRemoteSensorID = 4;
 	configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue::RemoteCANcoder;
-	configs.Feedback.SensorToMechanismRatio = 0.1086833;
+	configs.Feedback.SensorToMechanismRatio = 0.134535;
 
 	m_elevatorDiameterInch = 0.75;
 	m_elevatorGearRatio = 9.0;

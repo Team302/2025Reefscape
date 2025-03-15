@@ -38,7 +38,7 @@ private:
     frc::Timer m_timer;
     unsigned int m_lastIndex = 0;
 
-    const units::time::second_t m_period{0.0025};
+    const units::time::second_t m_period{0.00075};
 
     static DragonDataLoggerMgr *m_instance;
 };

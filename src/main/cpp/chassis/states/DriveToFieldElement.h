@@ -68,7 +68,7 @@ private:
     const int m_samePoseCountThreshold = 25;
 
     const units::length::inch_t m_distanceThreshold{0.25};
-    const units::length::meter_t m_ffMinRadius{0.05};
+    const units::length::meter_t m_ffMinRadius{0.10};
     const units::length::meter_t m_ffMaxRadius{2.0};
 
     const units::velocity::meters_per_second_t kMaxVelocity = 2.5_mps;
