@@ -55,7 +55,7 @@ void CameraConfig_302::BuildCameraConfig()
                                                 DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION      // CAM_MODE camMode,
 
     ); // additional parameter
-    DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    // DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 
     new DragonQuest(units::length::meter_t(-.319),  // <I> x offset of Quest from robot center (forward relative to robot)
                     units::length::meter_t(0.0384), // <I> y offset of Quest from robot center (left relative to robot)

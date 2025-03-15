@@ -270,13 +270,10 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
 void HolonomicDrive::ResetYaw()
 {
 
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+    auto swervePoseEstimator = m_swerve->GetSwervePoseEstimator();
+    if (swervePoseEstimator != nullptr)
     {
-        m_swerve->SetYaw(units::angle::degree_t(0.0));
-    }
-    else
-    {
-        m_swerve->SetYaw(units::angle::degree_t(180.0));
+        swervePoseEstimator->ZeroYaw();
     }
 }
 void HolonomicDrive::AlignGamePiece()

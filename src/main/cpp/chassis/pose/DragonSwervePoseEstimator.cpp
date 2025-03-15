@@ -26,6 +26,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "wpi/array.h"
+#include "utils/FMSData.h"
 
 DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
                                                      const frc::Rotation2d &gyroAngle,
@@ -130,6 +131,17 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
 frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 {
     return m_poseEstimator.GetEstimatedPosition();
+}
+void DragonSwervePoseEstimator::ZeroYaw()
+{
+    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+    {
+        ResetPose(frc::Pose2d(GetPose().X(), GetPose().Y(), frc::Rotation2d(0.0_deg)));
+    }
+    else
+    {
+        ResetPose(frc::Pose2d(GetPose().X(), GetPose().Y(), frc::Rotation2d(180.0_deg)));
+    }
 }
 
 void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
