@@ -51,6 +51,7 @@ DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignal
     SignalLogger::SetPath(GetLoggingDir().c_str());
     SignalLogger::EnableAutoLogging(true);
     SignalLogger::Start();
+    m_timer.Start();
 }
 
 DragonDataLoggerMgr::~DragonDataLoggerMgr()
@@ -102,11 +103,7 @@ void DragonDataLoggerMgr::PeriodicDataLog()
     {
         auto item = m_items[m_lastIndex];
         item->DataLog(timestamp);
-        m_lastIndex++;
-        if (m_lastIndex >= m_items.size())
-        {
-            m_lastIndex = 0;
-        }
+        m_lastIndex += ((m_lastIndex >= (m_items.size() - 1)) ? -m_lastIndex : 1);
     }
     // for (auto item : m_items)
     //{
