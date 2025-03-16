@@ -17,6 +17,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/Timer.h>
 
 #include "frc/geometry/Pose2d.h"
 
@@ -70,4 +71,5 @@ private:
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
     DragonSwervePoseEstimator *m_dragonswerveposeestimator;
+    frc::Timer m_timer;
 };

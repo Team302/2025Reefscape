@@ -61,6 +61,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+    m_timer.Start();
+
     isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)
     {
@@ -69,7 +71,9 @@ void Robot::RobotPeriodic()
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
-        // m_datalogger->PeriodicDataLog();
+        m_timer.Reset();
+        m_datalogger->PeriodicDataLog();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TeleopPeriodicTime", "data log time", units::time::millisecond_t(m_timer.Get()).value());
     }
 
     if (m_robotState != nullptr)
@@ -132,17 +136,25 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
+    m_timer.Reset();
     SensorDataMgr::GetInstance()->CacheData();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TeleopPeriodicTime", "time to cache sensor data", units::time::millisecond_t(m_timer.Get()).value());
+
     if (m_dragonswerveposeestimator != nullptr)
     {
+        m_timer.Reset();
         m_dragonswerveposeestimator->Update();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TeleopPeriodicTime", "time to update pose estimator", units::time::millisecond_t(m_timer.Get()).value());
     }
-
     if (m_chassis != nullptr && m_controller != nullptr && m_holonomic != nullptr)
     {
+        m_timer.Reset();
         m_holonomic->Run();
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TeleopPeriodicTime", "time to run holonomic drive", units::time::millisecond_t(m_timer.Get()).value());
     }
+    m_timer.Reset();
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TeleopPeriodicTime", "time to run current state", units::time::millisecond_t(m_timer.Get()).value());
 }
 
 void Robot::DisabledInit()
