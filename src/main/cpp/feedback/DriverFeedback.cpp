@@ -79,7 +79,7 @@ void DriverFeedback::UpdateLEDStates()
         {
             if (taleMgr->GetRemedialActionStatus())
             {
-                m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, units::time::millisecond_t(50));
+                m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, m_blinkingPeriod);
             }
             else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
             {
@@ -100,21 +100,26 @@ void DriverFeedback::UpdateLEDStates()
             }
             else
             {
-                if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
-                {
-                    currentState = frc::Color::kGhostWhite;
-                }
-                else
+                if (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR || taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF || taleMgr->GetCurrentState() == taleMgr->STATE_NET || taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS || (taleMgr->GetCurrentState() == taleMgr->STATE_SCORE_ALGAE))
                 {
                     currentState = frc::Color::kAqua;
                 }
+                else
+                {
+                    currentState = frc::Color::kGhostWhite;
+                }
+
                 if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
                 {
                     m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
                 }
                 else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
                 {
-                    if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
+                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
+                    {
+                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
+                    }
+                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
                         m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
                     }

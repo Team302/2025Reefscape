@@ -177,28 +177,17 @@ void RobotState::PublishGameStateChanges()
         PublishStateChange(RobotStateChanges::GameState_Int, gameState);
     }
 }
+
 void RobotState::PublishScoringMode(TeleopControl *controller)
 {
-    if (controller->IsButtonPressed(TeleopControlFunctions::SCORING_MODE))
-    {
-        if (m_scoringModeButtonReleased)
-        {
-            m_scoringMode = (m_scoringMode == RobotStateChanges::ScoringMode::Coral) ? RobotStateChanges::ScoringMode::Algae : RobotStateChanges::ScoringMode::Coral;
-            PublishStateChange(RobotStateChanges::StateChange::DesiredScoringMode_Int, m_scoringMode);
-        }
-    }
-    else if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
-    {
+    auto scoringMode = m_scoringMode;
 
-        if (MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE) != nullptr)
-        {
-            if (MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE)->GetCurrentState() == DragonTale::STATE_NAMES::STATE_GRAB_ALGAE_REEF)
-            {
-                m_scoringMode = RobotStateChanges::Algae;
-            }
-        }
+    m_scoringMode = controller->IsButtonPressed(TeleopControlFunctions::SCORING_MODE) ? RobotStateChanges::ScoringMode::Algae : RobotStateChanges::ScoringMode::Coral;
+
+    if (scoringMode != m_scoringMode)
+    {
+        PublishStateChange(RobotStateChanges::StateChange::DesiredScoringMode_Int, m_scoringMode);
     }
-    m_scoringModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::SCORING_MODE);
 }
 
 void RobotState::PublishClimbMode(TeleopControl *controller)
