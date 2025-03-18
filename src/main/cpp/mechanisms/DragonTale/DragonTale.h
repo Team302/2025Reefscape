@@ -175,6 +175,7 @@ public:
 
 	bool IsCoralMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Coral; }
 	bool IsAlgaeMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Algae; }
+	bool IsDriveToDone() const { return m_DriveToIsDone; }
 
 	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
@@ -224,9 +225,11 @@ private:
 	ControlData *m_PositionInch;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOutput;
+
 	RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+	bool m_DriveToIsDone = false;
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
@@ -290,8 +293,6 @@ private:
 
 	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
 	units::angle::degree_t m_ArmAtTargetThreshold{2.0}; // 1.0
-
-	frc::Pose2d m_robotPose;
 
 	bool m_isArmRotating = false;
 	const units::angular_velocity::degrees_per_second_t m_dpsThreshold{5.0};

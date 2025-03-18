@@ -249,6 +249,8 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int);
+
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -1192,6 +1194,9 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 
 	else if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
 		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
+
+	else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int == change)
+		m_DriveToIsDone = value;
 }
 
 void DragonTale::SetSensorFailSafe()
