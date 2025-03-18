@@ -425,6 +425,8 @@ void DragonTale::CreateCOMP_BOT302()
 	m_CoralInSensor = new frc::DigitalInput(0);
 	m_CoralOutSensor = new frc::DigitalInput(1);
 	m_AlgaeSensor = new frc::DigitalInput(2);
+	// m_ElevatorCANRange = new ctre::phoenix6::hardware::CANrange(); so uhhhh we gotta get these values...
+	// m_BranchCANRange = new ctre::phoenix6::hardware::CANrange();
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);

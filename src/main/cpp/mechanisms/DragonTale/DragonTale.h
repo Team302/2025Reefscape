@@ -33,6 +33,7 @@
 #include <ctre/phoenix6/configs/Configurator.hpp>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include "ctre/phoenix6/SignalLogger.hpp"
+#include <ctre/phoenix6/CANrange.hpp>
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -162,6 +163,8 @@ public:
 	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
+	bool GetBranchCANRangeState() const { return m_BranchCANRange->GetIsDetected().GetValue(); }
+	units::length::inch_t GetElevatorCANRangeHeight() { return units::length::inch_t(m_ElevatorCANRange->GetDistance().GetValue()); }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
 	ControlData *GetPositionInch() const { return m_PositionInch; }
@@ -219,6 +222,8 @@ private:
 	frc::DigitalInput *m_CoralInSensor;
 	frc::DigitalInput *m_CoralOutSensor;
 	frc::DigitalInput *m_AlgaeSensor;
+	ctre::phoenix6::hardware::CANrange *m_BranchCANRange;
+	ctre::phoenix6::hardware::CANrange *m_ElevatorCANRange;
 	ctre::phoenix6::hardware::CANcoder *m_ArmAngleSensor;
 	ctre::phoenix6::hardware::CANcoder *m_ElevatorHeightSensor;
 	ControlData *m_PositionInch;
