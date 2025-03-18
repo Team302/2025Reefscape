@@ -48,7 +48,7 @@ time = "5.0"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_C1"
-time = "2.5">
+time = "3.0">
 <zone filename="BlueReefDriveToLeft.xml"/>
 </primitive>
 
