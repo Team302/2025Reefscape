@@ -60,19 +60,15 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             break;
 
         case DragonDataLogger::DoubleSignals::ELECTRICAL_VOLTAGE:
-            SignalLogger::WriteDouble(m_electricalEnergyPath, value, m_electricalVoltageUnits, m_latency);
+            SignalLogger::WriteDouble(m_electricalVoltagePath, value, m_electricalVoltageUnits, m_latency);
+            break;
+
+        case DragonDataLogger::DoubleSignals::ELECTRICAL_POWER:
+            SignalLogger::WriteDouble(m_electricalPowerPath, value, m_electricalCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::ELECTRICAL_CURRENT:
             SignalLogger::WriteDouble(m_electricalCurrentPath, value, m_electricalCurrentUnits, m_latency);
-            break;
-
-        case DragonDataLogger::DoubleSignals::ELECTRICAL_ENERGY:
-            SignalLogger::WriteDouble(m_electricalEnergyPath, value, m_electricalEnergyUnits, m_latency);
-            break;
-
-        case DragonDataLogger::DoubleSignals::ELECTRICAL_POWER:
-            SignalLogger::WriteDouble(m_electricalPowerPath, value, m_electricalPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LIMELIGHT_TV_1:
@@ -115,8 +111,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_lfSteerPowerPath, value, m_lfSteerPowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_ENERGY:
-            SignalLogger::WriteDouble(m_lfSteerEnergyPath, value, m_lfSteerEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_CURRENT:
+            SignalLogger::WriteDouble(m_lfSteerCurrentPath, value, m_lfSteerCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_TOTALPOWER:
@@ -131,8 +127,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_lfDrivePowerPath, value, m_lfDrivePowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_ENERGY:
-            SignalLogger::WriteDouble(m_lfDriveEnergyPath, value, m_lfDriveEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_CURRENT:
+            SignalLogger::WriteDouble(m_lfDriveCurrentPath, value, m_lfDriveCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_TOTALPOWER:
@@ -147,8 +143,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_rfSteerPowerPath, value, m_rfSteerPowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_ENERGY:
-            SignalLogger::WriteDouble(m_rfSteerEnergyPath, value, m_rfSteerEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_CURRENT:
+            SignalLogger::WriteDouble(m_rfSteerCurrentPath, value, m_rfSteerCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_TOTALPOWER:
@@ -163,8 +159,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_rfDrivePowerPath, value, m_rfDrivePowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_ENERGY:
-            SignalLogger::WriteDouble(m_rfDriveEnergyPath, value, m_rfDriveEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_CURRENT:
+            SignalLogger::WriteDouble(m_rfDriveCurrentPath, value, m_rfDriveCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_TOTALPOWER:
@@ -179,8 +175,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_lbSteerPowerPath, value, m_lbSteerPowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_ENERGY:
-            SignalLogger::WriteDouble(m_lbSteerEnergyPath, value, m_lbSteerEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_CURRENT:
+            SignalLogger::WriteDouble(m_lbSteerCurrentPath, value, m_lbSteerCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_TOTALPOWER:
@@ -195,8 +191,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_lbDrivePowerPath, value, m_lbDrivePowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_ENERGY:
-            SignalLogger::WriteDouble(m_lbDriveEnergyPath, value, m_lbDriveEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_CURRENT:
+            SignalLogger::WriteDouble(m_lbDriveCurrentPath, value, m_lbDriveCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_TOTALPOWER:
@@ -211,8 +207,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_rbSteerPowerPath, value, m_rbSteerPowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_ENERGY:
-            SignalLogger::WriteDouble(m_rbSteerEnergyPath, value, m_rbSteerPowerUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_CURRENT:
+            SignalLogger::WriteDouble(m_rbSteerCurrentPath, value, m_rbSteerPowerUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_TOTALPOWER:
@@ -227,8 +223,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_rbDrivePowerPath, value, m_rbDrivePowerUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_ENERGY:
-            SignalLogger::WriteDouble(m_rbDriveEnergyPath, value, m_rbDriveEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_CURRENT:
+            SignalLogger::WriteDouble(m_rbDriveCurrentPath, value, m_rbDriveCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER:
@@ -239,8 +235,8 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
             SignalLogger::WriteDouble(m_rbDriveWattHoursPath, value, m_rbDriveWattHoursUnits, m_latency);
             break;
 
-        case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_ENERGY:
-            SignalLogger::WriteDouble(m_swerveChassisTotalEnergyPath, value, m_swerveChassisTotalEnergyUnits, m_latency);
+        case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_CURRENT:
+            SignalLogger::WriteDouble(m_swerveChassisTotalCurrentPath, value, m_swerveChassisTotalCurrentUnits, m_latency);
             break;
 
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:

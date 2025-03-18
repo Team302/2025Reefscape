@@ -27,12 +27,12 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLoggerMgr.h"
 #include "utils/PeriodicLooper.h"
+#include "utils/RoboRio.h"
 #include "utils/sensors/SensorData.h"
 #include "utils/sensors/SensorDataMgr.h"
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
-#include "utils/RoboRio.h"
 
 using std::string;
 
@@ -67,10 +67,10 @@ void Robot::RobotPeriodic()
         Logger::GetLogger()->PeriodicLog();
     }
 
-    // if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
-    // {
-    //     m_datalogger->PeriodicDataLog();
-    // }
+    if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
+    {
+        // m_datalogger->PeriodicDataLog();
+    }
 
     if (m_robotState != nullptr)
     {
