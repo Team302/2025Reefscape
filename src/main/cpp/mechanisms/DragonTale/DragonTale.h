@@ -238,7 +238,7 @@ private:
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
 	const units::angle::degree_t m_minAngle{-30.0};
-	const units::angle::degree_t m_maxAngle{85.0};
+	const units::angle::degree_t m_maxAngle{89.0};
 
 	const units::length::inch_t m_minHeight{0.0};
 	const units::length::inch_t m_maxHeight{30.0};
@@ -289,7 +289,7 @@ private:
 	bool m_manualMode = false;
 
 	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
-	units::angle::degree_t m_ArmAtTargetThreshold{1.5}; // 1.0
+	units::angle::degree_t m_ArmAtTargetThreshold{2.0}; // 1.0
 
 	frc::Pose2d m_robotPose;
 
