@@ -38,6 +38,7 @@
 #include "states/FaceNearestReefFace.h"
 #include "state/RobotState.h"
 #include "state/IRobotStateChangeSubscriber.h"
+#include "fielddata/ReefHelper.h"
 
 using std::string;
 using namespace frc;
@@ -194,7 +195,7 @@ void HolonomicDrive::Run()
             SlowMode();
         }
 
-        if (abs(rotate) > 0.05)
+        if (m_previousDriveState == (ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH))
         {
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
         }
@@ -377,6 +378,24 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
 {
     if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || m_resetPathplannerTrajectory == false)
     {
+
+        DriverStation::Alliance allianceC = FMSData::GetInstance()->GetAllianceColor();
+        auto nearestReefTag = ReefHelper::GetInstance()->GetNearestReefTag();
+
+        if (nearestReefTag.has_value() && driveState == (ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH))
+        {
+            if (((allianceC == frc::DriverStation::Alliance::kBlue) && (nearestReefTag == (22 || 21 || 20))) || (((allianceC == frc::DriverStation::Alliance::kRed) && (nearestReefTag == (9 || 11 || 10)))))
+            {
+                if ((driveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH))
+                {
+                    driveState = ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH;
+                }
+                else if ((driveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH))
+                {
+                    driveState = ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH;
+                }
+            }
+        }
         m_moveInfo.driveOption = driveState;
         m_resetPathplannerTrajectory = false;
     }
