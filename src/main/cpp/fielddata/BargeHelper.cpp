@@ -60,7 +60,7 @@ void BargeHelper::CalculateZones()
 
 std::optional<BargeZones> BargeHelper::GetClosestZone()
 {
-    BargeZones closestZone;
+    BargeZones closestZone = BargeZones::NO_ZONE;
     if (!m_zonesVector.empty())
     {
         auto closestTranslation = m_zonesVector[0].Translation().Distance(m_chassis->GetPose().Translation());
