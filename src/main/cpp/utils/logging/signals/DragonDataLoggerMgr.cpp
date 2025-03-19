@@ -38,17 +38,10 @@ DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
 
 DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignals(), m_boolDatalogSignals(), m_stringDatalogSignals()
 {
-    // auto logFolder = GetLoggingDir();
-    // // frc::DataLogManager::Start(logFolder, CreateLogFileName());
-    // frc::DataLogManager::Start();
-    // frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
-    // DragonDataLoggerSignals::GetInstance();
+    auto logFolder = GetLoggingDir();
+    frc::DataLogManager::Start(logFolder, CreateLogFileName());
 
-    // SignalLogger::SetPath(logFolder.c_str());
-    // SignalLogger::EnableAutoLogging(true);
-    // SignalLogger::Start();
-
-    SignalLogger::SetPath(GetLoggingDir().c_str());
+    SignalLogger::SetPath(logFolder.c_str());
     SignalLogger::EnableAutoLogging(true);
     SignalLogger::Start();
     m_timer.Start();
