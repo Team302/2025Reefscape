@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,70 +16,49 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// C++ includes
+#include <optional>
+#include <vector>
+// 302 includes
+#include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/DriverStation.h"
+#include "frc/geometry/Pose2d.h"
+
+enum class BargeZones
+{
+    FAR_LEFT_ZONE,
+    CLOSE_LEFT_ZONE,
+    CLOSE_RIGHT_ZONE,
+    FAR_RIGHT_ZONE,
+    NO_ZONE
+};
+class BargeHelper
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        FACE_BARGE,
-        IGNORE
-    };
+    static BargeHelper *GetInstance();
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        DRIVE_TO_BARGE,
-        STOP_DRIVE
-    };
+private:
+    BargeHelper();
+    ~BargeHelper() = default;
+    static BargeHelper *m_instance;
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
+    std::optional<BargeZones> GetClosestZone();
+    void CalculateZones();
 
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
+    SwerveChassis *m_chassis;
+    frc::DriverStation::Alliance m_allianceColor;
+    FieldConstants *m_fieldConstants;
 
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
+    // blue
+    const frc::Pose2d m_blueCenterOfBarge{8.225_m, 6.161_m, 0_deg};
+    const frc::Pose2d m_blueLeftBargePose{8.225_m, 8.033_m, 0_deg};
+    const frc::Pose2d m_blueRightBargePose{8.225_m, 4.329_m, 0_deg};
+    // red
+    const frc::Pose2d m_redLeftBargePose{9.358_m, 0.5_m, 0_deg};
+    const frc::Pose2d m_redCenterOfBarge{9.358_m, 1.904_m, 0_deg};
+    const frc::Pose2d m_redRightBargePose{9.358_m, 3.723_m, 0_deg};
 
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+    const unsigned int m_numOfZones = 4;
+    std::vector<frc::Pose2d> m_zonesVector;
 };

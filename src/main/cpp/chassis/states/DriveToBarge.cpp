@@ -11,74 +11,39 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//=====================================================================================================================================================
 
-#pragma once
+// C++ Includes
+#include <string>
 
-class ChassisOptionEnums
+// FRC Includes
+
+// Team302 Includes
+#include "chassis/states/DriveToBarge.h"
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+using std::string;
+
+DriveToBarge::DriveToBarge(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
-public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        FACE_BARGE,
-        IGNORE
-    };
+}
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        DRIVE_TO_BARGE,
-        STOP_DRIVE
-    };
+string DriveToBarge::GetDriveStateName() const
+{
+    return std::string("DriveToBarge");
+}
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
-
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
-
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
-};
+DragonTargetFinderTarget DriveToBarge::GetDriveToTarget() const
+{
+    return DragonTargetFinderTarget::LEFT_BARGE;
+}
+ChassisOptionEnums::DriveStateType DriveToBarge::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE;
+}
+ChassisOptionEnums::HeadingOption DriveToBarge::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
+}

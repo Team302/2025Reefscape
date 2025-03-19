@@ -15,70 +15,31 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// C++ Includes
+#include <string>
+#include <vector>
+
+// FRC Includes
+
+// Team302 Includes
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class RobotDrive;
+
+class DriveToBarge : public DriveToFieldElement // will utilize a helper class for barge
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        FACE_BARGE,
-        IGNORE
-    };
+    DriveToBarge(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        DRIVE_TO_BARGE,
-        STOP_DRIVE
-    };
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
-
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
-
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+private:
+    std::vector<unsigned int> m_numberOfAlgaeVector;
+    DragonTargetFinderTarget m_currentTarget = DragonTargetFinderTarget::CENTER_BARGE;
 };
