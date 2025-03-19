@@ -210,6 +210,7 @@ void HolonomicDrive::Run()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Run"), string("nullptr"));
     }
+    m_previousDriveState = m_moveInfo.driveOption;
 }
 
 void HolonomicDrive::InitChassisMovement()
