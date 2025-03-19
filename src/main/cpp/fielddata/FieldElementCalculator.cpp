@@ -132,129 +132,128 @@ void FieldElementCalculator::InitializeTransforms()
 {
 
     // no transforms for april tags on blue side
-    // TODO: can these all be null and then not use the values in the 2nd formula?
-    m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_LEFT];
-    m_transformTagsMap[FieldConstants::BLUE_CORAL_STATION_RIGHT];
-    m_transformTagsMap[FieldConstants::BLUE_PROCESSOR];
-    m_transformTagsMap[FieldConstants::BLUE_BARGE_FRONT];
-    m_transformTagsMap[FieldConstants::BLUE_BARGE_BACK];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_AB];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_CD];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_EF];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_GH];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_IJ];
-    m_transformTagsMap[FieldConstants::BLUE_REEF_KL];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL];
 
     // Blue Calculated Positions
-    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_LEFT_ALLIANCE] =
-        TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
-    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_LEFT_SIDEWALL] =
-        TransformToPose(FieldConstants::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
-    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_ALLIANCE] =
-        TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
-    m_transformCalculatedMap[FieldConstants::BLUE_CORAL_STATION_RIGHT_SIDEWALL] =
-        TransformToPose(FieldConstants::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
-    m_transformCalculatedMap[FieldConstants::BLUE_LEFT_CAGE] =
-        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_calcCageLeft);
-    m_transformCalculatedMap[FieldConstants::BLUE_RIGHT_CAGE] =
-        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_calcCageRight);
-    m_transformCalculatedMap[FieldConstants::BLUE_CENTER_CAGE] =
-        TransformToPose(FieldConstants::BLUE_BARGE_FRONT, m_noTransform);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_A] =
-        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_B] =
-        TransformToPose(FieldConstants::BLUE_REEF_AB, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_C] =
-        TransformToPose(FieldConstants::BLUE_REEF_CD, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_D] =
-        TransformToPose(FieldConstants::BLUE_REEF_CD, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_E] =
-        TransformToPose(FieldConstants::BLUE_REEF_EF, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_F] =
-        TransformToPose(FieldConstants::BLUE_REEF_EF, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_G] =
-        TransformToPose(FieldConstants::BLUE_REEF_GH, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_H] =
-        TransformToPose(FieldConstants::BLUE_REEF_GH, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_I] =
-        TransformToPose(FieldConstants::BLUE_REEF_IJ, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_J] =
-        TransformToPose(FieldConstants::BLUE_REEF_IJ, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_K] =
-        TransformToPose(FieldConstants::BLUE_REEF_KL, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::BLUE_REEF_L] =
-        TransformToPose(FieldConstants::BLUE_REEF_KL, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_ALLIANCE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_LEFT_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_calcCageLeft);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_calcCageRight);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_noTransform);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_A] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_B] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_C] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_D] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_E] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_F] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_G] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_H] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_I] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_J] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_K] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_L] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL, m_calcRightStick);
 
     // no transforms for april tags on red side
-    m_transformTagsMap[FieldConstants::RED_CORAL_STATION_LEFT];
-    m_transformTagsMap[FieldConstants::RED_CORAL_STATION_RIGHT];
-    m_transformTagsMap[FieldConstants::RED_BARGE_FRONT];
-    m_transformTagsMap[FieldConstants::RED_BARGE_BACK];
-    m_transformTagsMap[FieldConstants::RED_REEF_AB];
-    m_transformTagsMap[FieldConstants::RED_REEF_CD];
-    m_transformTagsMap[FieldConstants::RED_REEF_EF];
-    m_transformTagsMap[FieldConstants::RED_REEF_GH];
-    m_transformTagsMap[FieldConstants::RED_REEF_IJ];
-    m_transformTagsMap[FieldConstants::RED_REEF_KL];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_AB];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CD];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_EF];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_GH];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_IJ];
+    m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_REEF_KL];
 
     // Red Calculated Positions
-    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_LEFT_ALLIANCE] =
-        TransformToPose(FieldConstants::RED_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
-    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_LEFT_SIDEWALL] =
-        TransformToPose(FieldConstants::RED_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
-    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_RIGHT_ALLIANCE] =
-        TransformToPose(FieldConstants::RED_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
-    m_transformCalculatedMap[FieldConstants::RED_CORAL_STATION_RIGHT_SIDEWALL] =
-        TransformToPose(FieldConstants::RED_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
-    m_transformCalculatedMap[FieldConstants::RED_LEFT_CAGE] =
-        TransformToPose(FieldConstants::RED_BARGE_FRONT, m_calcCageLeft);
-    m_transformCalculatedMap[FieldConstants::RED_RIGHT_CAGE] =
-        TransformToPose(FieldConstants::RED_BARGE_FRONT, m_calcCageRight);
-    m_transformCalculatedMap[FieldConstants::RED_CENTER_CAGE] =
-        TransformToPose(FieldConstants::RED_BARGE_FRONT, m_noTransform);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_A] =
-        TransformToPose(FieldConstants::RED_REEF_AB, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_B] =
-        TransformToPose(FieldConstants::RED_REEF_AB, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_C] =
-        TransformToPose(FieldConstants::RED_REEF_CD, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_D] =
-        TransformToPose(FieldConstants::RED_REEF_CD, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_E] =
-        TransformToPose(FieldConstants::RED_REEF_EF, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_F] =
-        TransformToPose(FieldConstants::RED_REEF_EF, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_G] =
-        TransformToPose(FieldConstants::RED_REEF_GH, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_H] =
-        TransformToPose(FieldConstants::RED_REEF_GH, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_I] =
-        TransformToPose(FieldConstants::RED_REEF_IJ, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_J] =
-        TransformToPose(FieldConstants::RED_REEF_IJ, m_calcRightStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_K] =
-        TransformToPose(FieldConstants::RED_REEF_KL, m_calcLeftStick);
-    m_transformCalculatedMap[FieldConstants::RED_REEF_L] =
-        TransformToPose(FieldConstants::RED_REEF_KL, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT, m_calcCoralLeftAlliance);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT, m_calcCoralLeftSidewall);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcCageLeft);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcCageRight);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_noTransform);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_A] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_AB, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_B] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_AB, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_C] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CD, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_D] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CD, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_E] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_EF, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_F] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_EF, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_G] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_GH, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_H] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_GH, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_I] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_IJ, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_J] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_IJ, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_K] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_KL, m_calcLeftStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_L] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_KL, m_calcRightStick);
 }
 
 void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    fieldConstantsPoseMap[FieldConstants::RED_REEF_CENTER] = AverageHexagonPose(
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_AB],
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_CD],
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_EF],
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_GH],
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_IJ],
-        fieldConstantsPoseMap[FieldConstants::RED_REEF_KL]);
+    fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_KL]);
 
-    fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CENTER] = AverageHexagonPose(
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_AB],
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_CD],
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_EF],
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_GH],
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_IJ],
-        fieldConstantsPoseMap[FieldConstants::BLUE_REEF_KL]);
+    fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL]);
 }
 
 frc::Pose3d FieldElementCalculator::AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6)

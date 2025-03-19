@@ -27,7 +27,7 @@ class FieldConstants
 {
 public:
     static FieldConstants *GetInstance();
-    enum FIELD_ELEMENT
+    enum class FIELD_ELEMENT
     {
         // 2025 - BLUE APRIL TAGS
         BLUE_CORAL_STATION_LEFT,
