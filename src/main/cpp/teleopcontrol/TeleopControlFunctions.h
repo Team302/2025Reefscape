@@ -72,7 +72,8 @@ public:
         FAILED_INTAKE_SENSOR,
         ALGAE_HIGH,
         ALGAE_LOW,
-        CAPPING
+        CAPPING,
+        FORCE_ELEVATOR
 
     };
 };

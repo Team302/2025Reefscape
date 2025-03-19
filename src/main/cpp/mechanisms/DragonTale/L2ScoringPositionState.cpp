@@ -86,5 +86,5 @@ bool L2ScoringPositionState::IsTransitionCondition(bool considerGamepadTransitio
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L2_SCORING_POSITION)) && m_mechanism->IsCoralMode());
+	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L2_SCORING_POSITION)) && m_mechanism->IsCoralMode() && (m_mechanism->IsInReefZone() || TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_ELEVATOR)));
 }
