@@ -425,8 +425,8 @@ void DragonTale::CreateCOMP_BOT302()
 	m_CoralInSensor = new frc::DigitalInput(0);
 	m_CoralOutSensor = new frc::DigitalInput(1);
 	m_AlgaeSensor = new frc::DigitalInput(2);
-	// m_ElevatorCANRange = new ctre::phoenix6::hardware::CANrange(); so uhhhh we gotta get these values...
-	// m_BranchCANRange = new ctre::phoenix6::hardware::CANrange();
+	m_ElevatorCANRange = new ctre::phoenix6::hardware::CANrange(31, "canivore");
+	m_BranchCANRange = new ctre::phoenix6::hardware::CANrange(32, "canivore");
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);
@@ -438,6 +438,8 @@ void DragonTale::CreateCOMP_BOT302()
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
+
+	ctre::phoenix6::configs::CANrangeConfiguration ElevatorCANRangeConfigs{};
 
 	m_PositionInch = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
@@ -925,6 +927,11 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Slot0.GravityType = m_PositionInch->GetGravityType();
 	configs.Slot0.StaticFeedforwardSign = m_PositionInch->GetStaticFeedforwardSign();
 
+	m_elevatorFeedForwardVoltage = units::voltage::volt_t(m_PositionInch->GetF());
+	m_elevatorKP = m_PositionInch->GetP();
+	m_elevatorKI = m_PositionInch->GetI();
+	m_elevatorKD = m_PositionInch->GetD();
+
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -1283,6 +1290,7 @@ void DragonTale::UpdateTarget()
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
 
+	units::voltage::volt_t elevatorPIDOutput{m_elevatorController.Calculate(GetElevatorCANRangeHeight(), actualTargetHeight)};
 	if (abs(elevatorInput) > m_manualControlThreshold || m_elevatorRemedialAction)
 	{
 		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
@@ -1290,6 +1298,7 @@ void DragonTale::UpdateTarget()
 	}
 	else
 		UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+	// UpdateTargetElevatorLeaderVoltage(elevatorPIDOutput);
 }
 
 bool DragonTale::AtTarget()
@@ -1430,5 +1439,6 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Fail Counts", m_currElevatorFails);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
 }

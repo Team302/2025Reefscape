@@ -34,6 +34,7 @@
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include "ctre/phoenix6/SignalLogger.hpp"
 #include <ctre/phoenix6/CANrange.hpp>
+#include <frc/controller/ProfiledPIDController.h>
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -107,20 +108,13 @@ public:
 	}
 	void UpdateTargetElevatorLeaderPositionInch(units::length::inch_t position)
 	{
-		// if (position < GetElevatorHeight())
-		// {
-		// 	m_elevatorDesiredDirectionUp = false;
-		// 	m_ElevatorLeaderPositionInch.Velocity = 200_tps;
-		// 	m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
-		// }
-		// else
-		// {
-		// 	m_elevatorDesiredDirectionUp = true;
-		// 	m_ElevatorLeaderPositionInch.Velocity = 400_tps;
-		// 	m_ElevatorLeaderPositionInch.Acceleration = 50_tr_per_s_sq;
-		// }
 		m_ElevatorLeaderPositionInch.Position = units::angle::turn_t(position.value());
 		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderPositionInch;
+	}
+	void UpdateTargetElevatorLeaderVoltage(units::voltage::volt_t volts)
+	{
+		m_ElevatorLeaderVoltageOutput.Output = volts + m_elevatorFeedForwardVoltage;
+		m_ElevatorLeaderActiveTarget = &m_ElevatorLeaderVoltageOutput;
 	}
 	void UpdateTargetCoralPercentOutput(double percentOut)
 	{
@@ -260,6 +254,17 @@ private:
 
 	const units::length::inch_t m_climbModeHeight{15.0};
 
+	double m_elevatorKP = 0.0; // all of these will be tuned :)
+	double m_elevatorKI = 0.0;
+	double m_elevatorKD = 0.0;
+	units::voltage::volt_t m_elevatorFeedForwardVoltage = 0.0_V;
+	const units::velocity::feet_per_second_t kMaxElevatorVelocity = 2.5_fps;
+	const units::acceleration::feet_per_second_squared_t kMaxElevatorAcceleration = 5.0_fps_sq;
+
+	frc::TrapezoidProfile<units::length::inch>::Constraints m_elevatorConstraints{kMaxElevatorVelocity, kMaxElevatorAcceleration};
+
+	frc::ProfiledPIDController<units::length::inch> m_elevatorController{m_elevatorKP, m_elevatorKI, m_elevatorKD, m_elevatorConstraints, 20_ms};
+
 	void InitializeTalonFXArmPRACTICE_BOT9999();
 	void InitializeTalonFXElevatorLeaderPRACTICE_BOT9999();
 	void InitializeTalonFXAlgaePRACTICE_BOT9999();
@@ -282,6 +287,7 @@ private:
 	ctre::phoenix6::controls::DutyCycleOut m_AlgaePercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_ElevatorLeaderPercentOutput{0.0};
 	ctre::phoenix6::controls::DutyCycleOut m_ArmPercentOutput{0.0};
+	ctre::phoenix6::controls::VoltageOut m_ElevatorLeaderVoltageOutput{0.0_V};
 
 	ctre::phoenix6::controls::ControlRequest *m_ArmActiveTarget;
 	ctre::phoenix6::controls::ControlRequest *m_ElevatorLeaderActiveTarget;
