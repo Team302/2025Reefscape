@@ -382,9 +382,9 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
         DriverStation::Alliance allianceC = FMSData::GetInstance()->GetAllianceColor();
         auto nearestReefTag = ReefHelper::GetInstance()->GetNearestReefTag();
 
-        if (nearestReefTag.has_value() && driveState == (ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH))
+        if (nearestReefTag.has_value() && ((driveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (driveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)))
         {
-            if (((allianceC == frc::DriverStation::Alliance::kBlue) && (nearestReefTag == (22 || 21 || 20))) || (((allianceC == frc::DriverStation::Alliance::kRed) && (nearestReefTag == (9 || 11 || 10)))))
+            if ((allianceC == frc::DriverStation::Alliance::kBlue) && ((nearestReefTag == 22) || (nearestReefTag == 21) || (nearestReefTag == 20)) || ((allianceC == frc::DriverStation::Alliance::kRed) && ((nearestReefTag == 9) || (nearestReefTag == 10) || (nearestReefTag == 11))))
             {
                 if ((driveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH))
                 {
