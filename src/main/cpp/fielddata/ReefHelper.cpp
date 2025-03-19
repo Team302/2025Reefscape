@@ -241,6 +241,23 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
     }
     return std::nullopt;
 }
+bool ReefHelper::IsBackHalfReef()
+{
+    frc::DriverStation::Alliance allianceC = FMSData::GetInstance()->GetAllianceColor();
+    auto nearestReefTag = GetNearestReefTag();
+
+    if (nearestReefTag.has_value())
+    {
+        if (((allianceC == frc::DriverStation::Alliance::kBlue) && ((nearestReefTag == 22) || (nearestReefTag == 21) || (nearestReefTag == 20))) || ((allianceC == frc::DriverStation::Alliance::kRed) && ((nearestReefTag == 9) || (nearestReefTag == 10) || (nearestReefTag == 11))))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
 
 units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose)
 {

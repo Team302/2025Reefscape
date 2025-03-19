@@ -31,6 +31,7 @@ public:
     std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
+    bool IsBackHalfReef();
 
 private:
     ReefHelper();
