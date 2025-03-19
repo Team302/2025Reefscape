@@ -178,17 +178,9 @@ bool TrajectoryDrivePathPlanner::IsDone()
 
             isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
         }
-        else
+        else if (m_chassis != nullptr)
         {
-            if (currentPose.Translation().Distance(m_prevPose.Translation()) < units::length::inch_t(0.25))
-            {
-                m_samePoseCount++;
-                isDone = m_samePoseCount > m_samePoseCountThreshold;
-            }
-            else
-            {
-                m_samePoseCount = 0;
-            }
+            isDone = m_chassis->IsSamePose();
         }
     }
     else

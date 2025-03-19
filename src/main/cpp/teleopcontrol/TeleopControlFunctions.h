@@ -44,6 +44,7 @@ public:
         SLOW_MODE,
         HOLD_POSITION,
         MANUAL_CLIMB,
+        SWEEP,
 
         // tip correction controls
         TIPCORRECTION_TOGGLE,
@@ -52,7 +53,6 @@ public:
         MANUAL_LAUNCH_DEC,
         CLIMB_MODE,
         AUTO_CLIMB,
-        AUTO_CLIMB_DOWN,
         INTAKE,
         ELAVATOR,
         ARM,

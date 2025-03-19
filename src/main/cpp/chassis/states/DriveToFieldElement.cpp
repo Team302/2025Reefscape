@@ -111,6 +111,11 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
         chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
 
+        if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
+        {
+            chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
+        }
+
         units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
@@ -170,17 +175,8 @@ bool DriveToFieldElement::IsDone()
     {
         auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
 
-        if (m_currentPose.Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
-        {
-            m_samePoseCount++;
-            isSamePose = m_samePoseCount > m_samePoseCountThreshold;
-        }
-        else
-        {
-            m_samePoseCount = 0;
-        }
-
         isDone = distance < m_distanceThreshold;
+        isSamePose = m_chassis->IsSamePose();
         m_prevPose = m_currentPose;
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);

@@ -160,7 +160,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
     {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
-    {TeleopControlFunctions::AUTO_CLIMB_DOWN, driverDPad180},
+    {TeleopControlFunctions::SWEEP, driverDPad180},
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
     {TeleopControlFunctions::POLAR_DRIVE, driverLBumper},
@@ -174,6 +174,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
     {TeleopControlFunctions::READY, copilotStartButton},
+    {TeleopControlFunctions::L1_SCORING_POSITION, copilotRTriggerPressed},
     {TeleopControlFunctions::L2_SCORING_POSITION, copilotAButton},
     {TeleopControlFunctions::L3_SCORING_POSITION, copilotXButton},
     {TeleopControlFunctions::L4_SCORING_POSITION, copilotYButton},

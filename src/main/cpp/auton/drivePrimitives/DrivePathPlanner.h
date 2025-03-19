@@ -58,7 +58,7 @@ private:
     void LogMoveInfo();
     SwerveChassis *m_chassis;
 
-    int currentPrim = 0;
+    int m_currentPrim = 0;
 
     TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
     std::unique_ptr<frc::Timer> m_timer;

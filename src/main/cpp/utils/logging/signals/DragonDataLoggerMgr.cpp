@@ -38,20 +38,24 @@ DragonDataLoggerMgr *DragonDataLoggerMgr::GetInstance()
 
 DragonDataLoggerMgr::DragonDataLoggerMgr() : m_items() //, m_doubleDatalogSignals(), m_boolDatalogSignals(), m_stringDatalogSignals()
 {
-    auto logFolder = GetLoggingDir();
-    // frc::DataLogManager::Start(logFolder, CreateLogFileName());
-    frc::DataLogManager::Start();
-    frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
-    DragonDataLoggerSignals::GetInstance();
+    // auto logFolder = GetLoggingDir();
+    // // frc::DataLogManager::Start(logFolder, CreateLogFileName());
+    // frc::DataLogManager::Start();
+    // frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+    // DragonDataLoggerSignals::GetInstance();
 
-    SignalLogger::SetPath(logFolder.c_str());
+    // SignalLogger::SetPath(logFolder.c_str());
+    // SignalLogger::EnableAutoLogging(true);
+    // SignalLogger::Start();
+
+    SignalLogger::SetPath(GetLoggingDir().c_str());
     SignalLogger::EnableAutoLogging(true);
     SignalLogger::Start();
+    m_timer.Start();
 }
 
 DragonDataLoggerMgr::~DragonDataLoggerMgr()
 {
-    frc::DataLogManager::Stop();
     SignalLogger::Stop();
 }
 
@@ -90,14 +94,21 @@ void DragonDataLoggerMgr::RegisterItem(DragonDataLogger *item)
     m_items.emplace_back(item);
 }
 
-void DragonDataLoggerMgr::PeriodicDataLog() const
+void DragonDataLoggerMgr::PeriodicDataLog()
 {
     uint64_t timestamp = frc::RobotController::GetFPGATime();
 
-    for (auto item : m_items)
+    m_timer.Reset();
+    while (m_timer.Get() < m_period)
     {
+        auto item = m_items[m_lastIndex];
         item->DataLog(timestamp);
+        m_lastIndex += ((m_lastIndex >= (m_items.size() - 1)) ? -m_lastIndex : 1);
     }
-    wpi::log::DataLog &log = frc::DataLogManager::GetLog();
-    log.Flush();
+    // for (auto item : m_items)
+    //{
+    //     item->DataLog(timestamp);
+    // }
+    //  wpi::log::DataLog &log = frc::DataLogManager::GetLog();
+    //  log.Flush();
 }

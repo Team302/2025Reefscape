@@ -32,6 +32,7 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/configs/Configurator.hpp>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
+#include "ctre/phoenix6/SignalLogger.hpp"
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -47,6 +48,9 @@
 
 #include "frc/geometry/Pose2d.h"
 #include "fielddata/FieldConstants.h"
+
+using ctre::phoenix6::SignalLogger;
+using namespace std;
 
 class DragonTale : public BaseMech, public StateMgr, public DragonDataLogger, public IRobotStateChangeSubscriber
 {
@@ -234,16 +238,18 @@ private:
 	units::length::inch_t m_elevatorTarget = units::length::inch_t(0.0);
 
 	const units::angle::degree_t m_minAngle{-30.0};
-	const units::angle::degree_t m_maxAngle{85.0};
+	const units::angle::degree_t m_maxAngle{89.0};
 
 	const units::length::inch_t m_minHeight{0.0};
 	const units::length::inch_t m_maxHeight{30.0};
 
 	const units::length::inch_t m_elevatorErrorThreshold{4.0};
 	const units::length::inch_t m_elevatorProtectionHeight{5.0};
+	const units::length::inch_t m_elevatorPreventionHeight{15.5}; // L3 height
 	const units::angle::degree_t m_armProtectionAngle{10.0};
 	const units::angle::degree_t m_armHoldAngle{83.0};
 	const units::angle::degree_t m_armGrabAlgeAngle{70.0};
+	const units::angle::degree_t m_armErrorThreshold{15.0};
 
 	const double m_manualControlThreshold = 0.1;
 
@@ -283,7 +289,7 @@ private:
 	bool m_manualMode = false;
 
 	units::length::inch_t m_elevatorAtTargetThreshold{1.0};
-	units::angle::degree_t m_ArmAtTargetThreshold{1.0};
+	units::angle::degree_t m_ArmAtTargetThreshold{2.0}; // 1.0
 
 	frc::Pose2d m_robotPose;
 
@@ -302,72 +308,33 @@ private:
 
 	void InitializeLogging();
 
-	wpi::log::DoubleLogEntry m_ArmLogEntry;
-	wpi::log::DoubleLogEntry m_ArmTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ArmPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ArmEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_ElevatorLeaderLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorLeaderEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXPowerLogEntry;
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_ElevatorFollowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerTargetLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerPowerLogEntry;
-	wpi::log::DoubleLogEntry m_ElevatorFollowerEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_CoralPowerLogEntry;
-	wpi::log::DoubleLogEntry m_CoralEnergyLogEntry;
-
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXSPowerLogEntry;
-	wpi::log::DoubleLogEntry m_AlgaeTalonFXSEnergyLogEntry;
-
-	wpi::log::BooleanLogEntry m_CoralInSensorLogEntry;
-	wpi::log::BooleanLogEntry m_CoralOutSensorLogEntry;
-	wpi::log::BooleanLogEntry m_AlgaeSensorLogEntry;
-
-	wpi::log::DoubleLogEntry m_DragonTaleTotalEnergyLogEntry;
-	wpi::log::DoubleLogEntry m_DragonTaleTotalWattHoursLogEntry;
-
-	wpi::log::IntegerLogEntry m_DragonTaleStateLogEntry;
 	frc::Timer m_powerTimer;
 	double m_power = 0.0;
 	double m_energy = 0.0;
 	double m_totalEnergy = 0.0;
 	double m_totalWattHours = 0.0;
 	double m_armLoggingTarget = 85.0;
-
-	void LogArm(uint64_t timestamp, double value) { return m_ArmLogEntry.Update(value, timestamp); }
-	void LogArmTarget(uint64_t timestamp, double value) { return m_ArmTargetLogEntry.Update(value, timestamp); }
-	void LogArmPower(uint64_t timestamp, double value) { return m_ArmPowerLogEntry.Update(value, timestamp); }
-	void LogArmEnergy(uint64_t timestamp, double value) { return m_ArmEnergyLogEntry.Update(value, timestamp); }
-
-	void LogElevatorLeader(uint64_t timestamp, double value) { return m_ElevatorLeaderLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderTarget(uint64_t timestamp, double value) { return m_ElevatorLeaderTargetLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderPower(uint64_t timestamp, double value) { return m_ElevatorLeaderPowerLogEntry.Update(value, timestamp); }
-	void LogElevatorLeaderEnergy(uint64_t timestamp, double value) { return m_ElevatorLeaderEnergyLogEntry.Update(value, timestamp); }
-
-	void LogAlgaePower(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXPowerLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSPowerLogEntry.Update(value, timestamp); }
-	void LogAlgaeEnergy(uint64_t timestamp, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFXEnergyLogEntry.Update(value, timestamp) : m_AlgaeTalonFXSEnergyLogEntry.Update(value, timestamp); }
-
-	void LogElevatorFollower(uint64_t timestamp, double value) { return m_ElevatorFollowerLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerTarget(uint64_t timestamp, double value) { return m_ElevatorFollowerTargetLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerPower(uint64_t timestamp, double value) { return m_ElevatorFollowerPowerLogEntry.Update(value, timestamp); }
-	void LogElevatorFollowerEnergy(uint64_t timestamp, double value) { return m_ElevatorFollowerEnergyLogEntry.Update(value, timestamp); }
-
-	void LogCoralPower(uint64_t timestamp, double value) { return m_CoralPowerLogEntry.Update(value, timestamp); }
-	void LogCoralEnergy(uint64_t timestamp, double value) { return m_CoralEnergyLogEntry.Update(value, timestamp); }
-
-	void LogCoralInSensor(uint64_t timestamp, bool value) { return m_CoralInSensorLogEntry.Update(value, timestamp); }
-	void LogCoralOutSensor(uint64_t timestamp, bool value) { return m_CoralOutSensorLogEntry.Update(value, timestamp); }
-	void LogAlgaeSensor(uint64_t timestamp, bool value) { return m_AlgaeSensorLogEntry.Update(value, timestamp); }
-
-	void LogDragonTaleTotalEnergy(uint64_t timestamp, int value) { return m_DragonTaleTotalEnergyLogEntry.Update(value, timestamp); }
-	void LogDragonTaleTotalWattHours(uint64_t timestamp, int value) { return m_DragonTaleTotalWattHoursLogEntry.Update(value, timestamp); }
-
-	void LogDragonTaleState(uint64_t timestamp, int value) { return m_DragonTaleStateLogEntry.Update(value, timestamp); }
+	// WriteDouble returns a type of error if there are proble
+	ctre::phoenix::StatusCode LogArm(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogArmTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogArmPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogArmEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorLeader(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorLeaderTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorLeaderPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorLeaderEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogAlgaePower(string name, uint64_t timestamp, string units, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)) : SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogAlgaeEnergy(string name, uint64_t timestamp, string units, double value) { return m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)) : SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorFollower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorFollowerTarget(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorFollowerPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogElevatorFollowerEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogCoralPower(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogCoralEnergy(string name, uint64_t timestamp, string units, double value) { return SignalLogger::WriteDouble(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogCoralInSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogCoralOutSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogAlgaeSensor(string name, uint64_t timestamp, bool value) { return SignalLogger::WriteBoolean(name, value, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogDragonTaleTotalEnergy(string name, uint64_t timestamp, string units, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogDragonTaleTotalWattHours(string name, uint64_t timestamp, string units, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogDragonTaleState(string name, uint64_t timestamp, int value) { return SignalLogger::WriteInteger(name, value, "units", units::time::second_t(0.0_s)); }
 };

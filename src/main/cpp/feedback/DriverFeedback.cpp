@@ -86,7 +86,7 @@ void DriverFeedback::UpdateLEDStates()
                 currentState = frc::Color::kRed;
                 m_LEDStates->SetSolidColor(currentState);
             }
-            else if ((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION))
+            else if (((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)) && frc::DriverStation::IsAutonomous())
             {
                 currentState = frc::Color::kGreen;
                 if (m_DriveToIsDone)
@@ -114,11 +114,7 @@ void DriverFeedback::UpdateLEDStates()
                 }
                 else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
                 {
-                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
-                    {
-                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
-                    }
-                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
+                    if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
                         m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
                     }

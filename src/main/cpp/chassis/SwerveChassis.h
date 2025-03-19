@@ -124,6 +124,7 @@ public:
     ISwerveDriveState *GetSpecifiedDriveState(ChassisOptionEnums::DriveStateType driveOption);
 
     bool IsRotating() const { return m_rotatingLatch; }
+    bool IsSamePose();
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation();
     void DataLog(uint64_t timestamp) override;
@@ -140,6 +141,11 @@ public:
     DragonSwervePoseEstimator *GetSwervePoseEstimator() { return m_swervePoseEstimator; }
 
 private:
+    int m_samePoseCount;
+    const int m_samePoseCountThreshold = 25;
+    const units::length::inch_t m_distanceThreshold{0.25};
+    frc::Pose2d m_prevPose;
+
     ISwerveDriveOrientation *GetHeadingState(const ChassisMovement &moveInfo);
     ISwerveDriveState *GetDriveState(ChassisMovement &moveInfo);
 
