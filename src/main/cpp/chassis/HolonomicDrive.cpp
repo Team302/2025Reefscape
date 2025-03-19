@@ -195,7 +195,7 @@ void HolonomicDrive::Run()
             SlowMode();
         }
 
-        if (m_previousDriveState == (ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH))
+        if (abs(rotate) > 0.05 || ((m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION) || (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)))
         {
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
         }
