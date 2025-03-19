@@ -25,11 +25,6 @@ class FieldConstantsPoseLogger
     public :
         void LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
 
-    private :
-        std::map<FieldConstants::FIELD_ELEMENT, std::string> m_fieldConstantsNameMap;
-
-
-
 };
 
 #endif 

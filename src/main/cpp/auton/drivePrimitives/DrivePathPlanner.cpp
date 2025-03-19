@@ -152,10 +152,10 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
 void DrivePathPlanner::LogMoveInfo()
 {
-    currentPrim++;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Drive Option", m_moveInfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Gain Type", m_moveInfo.pathnamegains);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(currentPrim), "Heading Option", m_moveInfo.headingOption);
+    m_currentPrim++;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Drive Option", m_moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Gain Type", m_moveInfo.pathnamegains);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Heading Option", m_moveInfo.headingOption);
 }
 void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
