@@ -261,22 +261,22 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 {
                     radius = attr.as_double();
                 }
-                if (strcmp(attr.name(), "x1rect") == 0)
+                if (strcmp(attr.name(), "x1_rect") == 0)
                 {
                     zoneMode = AutonGrid::RECTANGLE;
                     xgrid1rect = units::length::meter_t(attr.as_double());
                 }
-                else if (strcmp(attr.name(), "y1rect") == 0)
+                else if (strcmp(attr.name(), "y1_rect") == 0)
                 {
                     zoneMode = AutonGrid::RECTANGLE;
                     ygrid1rect = units::length::meter_t(attr.as_double());
                 }
-                else if (strcmp(attr.name(), "x2rect") == 0)
+                else if (strcmp(attr.name(), "x2_rect") == 0)
                 {
                     zoneMode = AutonGrid::RECTANGLE;
                     xgrid2rect = units::length::meter_t(attr.as_double());
                 }
-                else if (strcmp(attr.name(), "y2rect") == 0)
+                else if (strcmp(attr.name(), "y2_rect") == 0)
                 {
                     zoneMode = AutonGrid::RECTANGLE;
                     ygrid2rect = units::length::meter_t(attr.as_double());
