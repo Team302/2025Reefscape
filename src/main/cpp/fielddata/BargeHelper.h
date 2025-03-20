@@ -24,6 +24,10 @@
 #include "fielddata/FieldConstants.h"
 #include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
+#include "state/RobotState.h"
+#include "auton/AutonGrid.h"
+#include "auton/ZoneParser.h"
+#include "auton/ZoneParams.h"
 
 enum class BargeZones
 {
@@ -37,6 +41,8 @@ class BargeHelper
 {
 public:
     static BargeHelper *GetInstance();
+    bool isInZone();
+    void GetMechanismZone();
 
 private:
     BargeHelper();
@@ -54,6 +60,7 @@ private:
     const frc::Pose2d m_blueCenterOfBarge{8.225_m, 6.161_m, 0_deg};
     const frc::Pose2d m_blueLeftBargePose{8.225_m, 8.033_m, 0_deg};
     const frc::Pose2d m_blueRightBargePose{8.225_m, 4.329_m, 0_deg};
+
     // red
     const frc::Pose2d m_redLeftBargePose{9.358_m, 0.5_m, 0_deg};
     const frc::Pose2d m_redCenterOfBarge{9.358_m, 1.904_m, 0_deg};
@@ -61,4 +68,6 @@ private:
 
     const unsigned int m_numOfZones = 4;
     std::vector<frc::Pose2d> m_zonesVector;
+    ZoneParams *m_bargeZones;
+    AutonGrid *autongridptr;
 };
