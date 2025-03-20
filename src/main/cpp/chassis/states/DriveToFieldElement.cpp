@@ -127,6 +127,11 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                     rot2d);
     }
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Int, IsDone());
+
+    // TODO Temporary
+    chassisMovement.chassisSpeeds.vx = 0.0_mps;
+    chassisMovement.chassisSpeeds.vy = 0.0_mps;
+    chassisMovement.chassisSpeeds.omega = 0.0_tps;
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 

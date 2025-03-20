@@ -614,14 +614,8 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
                 auto distToTarget = units::length::meter_t(fiducial.distToRobot);
                 auto angleToTarget = units::angle::degree_t(fiducial.txnc);
 
-                // TODO: switch to chassis yaw to determine flip
-                auto fieldconst = FieldConstants::GetInstance();
-                auto redreef = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER);
-                auto bluereef = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER);
-                auto pose = m_chassis->GetPose();
-                if (pose.Y() >)
-
-                    auto flip = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+                auto yaw = m_chassis->GetYaw();
+                auto flip = (yaw > -90_deg && yaw < 90_deg);
 
                 auto xOffset = distToTarget * cos(-angleToTarget.value() * M_PI / 180.0);
                 auto yOffset = distToTarget * sin(-angleToTarget.value() * M_PI / 180.0);
