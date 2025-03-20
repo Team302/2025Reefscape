@@ -472,8 +472,8 @@ void SwerveChassis::DataLog(uint64_t timestamp)
 {
     Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
 
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value(), "Degrees");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value(), "Degrees");
 
     frc::ChassisSpeeds targetSpeed;
     targetSpeed.vx = m_drive;
@@ -518,61 +518,61 @@ void SwerveChassis::DataLog(uint64_t timestamp)
     auto power = get<0>(leftFrontSteerPower);
     auto energy = get<1>(leftFrontSteerPower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_CURRENT, m_backLeft->GetSteerCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_STEER_CURRENT, m_backLeft->GetSteerCurrent().value(), "Amps");
 
     auto leftFrontDrivePower = m_frontLeft->CalcDrivePowerEnergy(currTime);
     power = get<0>(leftFrontDrivePower);
     energy = get<1>(leftFrontDrivePower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_CURRENT, m_frontLeft->GetDriveCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_FRONT_SWERVE_DRIVE_CURRENT, m_frontLeft->GetDriveCurrent().value(), "Amps");
 
     auto leftBackSteerPower = m_backLeft->CalcSteerPowerEnergy(currTime);
     power = get<0>(leftBackSteerPower);
     energy = get<1>(leftBackSteerPower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_CURRENT, m_backLeft->GetSteerCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_STEER_CURRENT, m_backLeft->GetSteerCurrent().value(), "Amps");
 
     auto leftBackDrivePower = m_backLeft->CalcDrivePowerEnergy(currTime);
     power = get<0>(leftBackDrivePower);
     energy = get<1>(leftBackDrivePower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_CURRENT, m_backLeft->GetDriveCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LEFT_BACK_SWERVE_DRIVE_CURRENT, m_backLeft->GetDriveCurrent().value(), "Amps");
 
     auto rightFrontSteerPower = m_frontRight->CalcSteerPowerEnergy(currTime);
     power = get<0>(rightFrontSteerPower);
     energy = get<1>(rightFrontSteerPower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_CURRENT, m_frontRight->GetSteerCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_STEER_CURRENT, m_frontRight->GetSteerCurrent().value(), "Amps");
 
     auto rightFrontDrivePower = m_frontRight->CalcDrivePowerEnergy(currTime);
     power = get<0>(rightFrontDrivePower);
     energy = get<1>(rightFrontDrivePower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_CURRENT, m_frontRight->GetDriveCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_FRONT_SWERVE_DRIVE_CURRENT, m_frontRight->GetDriveCurrent().value(), "Amps");
 
     auto rightBackSteerPower = m_backRight->CalcSteerPowerEnergy(currTime);
     power = get<0>(rightBackSteerPower);
     energy = get<1>(rightBackSteerPower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_CURRENT, m_backRight->GetSteerCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_STEER_CURRENT, m_backRight->GetSteerCurrent().value(), "Amps");
 
     auto rightBackDrivePower = m_backRight->CalcDrivePowerEnergy(currTime);
     power = get<0>(rightBackDrivePower);
     energy = get<1>(rightBackDrivePower);
     m_totalEnergy += energy;
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER, power);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_CURRENT, m_backRight->GetDriveCurrent().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_POWER, power, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIGHT_BACK_SWERVE_DRIVE_CURRENT, m_backRight->GetDriveCurrent().value(), "Amps");
 
     m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_CURRENT, m_totalEnergy);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS, m_totalWattHours);
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_TOTAL_CURRENT, m_totalEnergy, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS, m_totalWattHours, "Watt Hours");
 
     m_powerTimer.Reset();
     m_powerTimer.Start();

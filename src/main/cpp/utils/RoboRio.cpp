@@ -30,10 +30,10 @@ RoboRio *RoboRio::GetInstance()
 
 void RoboRio::DataLog(uint64_t timestamp)
 {
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::BATTERY_VOLTAGE, frc::RobotController::GetBatteryVoltage().value());
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_VOLTAGE, frc::RobotController::GetInputVoltage());
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_CURRENT, frc::RobotController::GetInputCurrent());
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CPU_TEMP, frc::RobotController::GetCPUTemp().value());
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::BATTERY_VOLTAGE, frc::RobotController::GetBatteryVoltage().value(), "Volts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_VOLTAGE, frc::RobotController::GetInputVoltage(), "Volts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_CURRENT, frc::RobotController::GetInputCurrent(), "Amps");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CPU_TEMP, frc::RobotController::GetCPUTemp().value(), "Degrees C");
 
     LogBoolData(timestamp, DragonDataLogger::BoolSignals::IS_BROWNOUT, frc::RobotController::IsBrownedOut());
 
