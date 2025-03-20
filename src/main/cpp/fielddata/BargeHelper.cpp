@@ -19,6 +19,8 @@
 #include "fielddata/BargeHelper.h"
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
+#include "frc/Filesystem.h"
+#include "auton/ZoneParser.h"
 
 BargeHelper *BargeHelper::m_instance = nullptr;
 BargeHelper *BargeHelper::GetInstance()
@@ -76,4 +78,18 @@ std::optional<BargeZones> BargeHelper::GetClosestZone()
         return closestZone;
     }
     return std::nullopt;
+}
+
+void GetMechanismZone()
+{
+    frc::DriverStation::Alliance m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
+
+    if (m_allianceColor == frc::DriverStation::Alliance::kRed)
+    {
+        auto m_bargeZones = ZoneParser::ParseXML("RedBarge.xml");
+    }
+    else
+    {
+        ZoneParams *ParseXML(std::string fulldirfile);
+    }
 }

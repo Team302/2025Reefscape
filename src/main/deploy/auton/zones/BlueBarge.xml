@@ -3,8 +3,9 @@
 
 <auton>
     <zone 
-        circlex="8.775"
-        circley="6.183"
-        radius="78.74" 
+        x1rect = "7.598"
+        y1rect = "8.010"
+        x2rect = "9.993"
+        y2rect = "4.332"
         taleOption="STATE_NET"/>
 </auton>
