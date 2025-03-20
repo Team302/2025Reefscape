@@ -85,17 +85,17 @@ void BargeHelper::GetMechanismZone()
 
     if (m_allianceColor == frc::DriverStation::Alliance::kRed)
     {
-        auto m_bargeZones = ZoneParser::ParseXML("RedBarge.xml");
+        m_bargeZones = ZoneParser::ParseXML("RedBarge.xml");
     }
     else
     {
-        auto m_bargeZones = ZoneParser::ParseXML("BlueBarge.xml");
+        m_bargeZones = ZoneParser::ParseXML("BlueBarge.xml");
     }
 }
 
 bool BargeHelper::isInZone()
 {
-    bool intheZone = autongridptr->IsPoseInZone(m_bargeZones->GetX1Rect(), m_bargeZones->GetX2Rect(), m_bargeZones->GetY1Rect(), m_bargeZones->GetY2Rect(), m_chassis->GetPose());
+    bool isInZone = autongridptr->IsPoseInZone(m_bargeZones->GetX1Rect(), m_bargeZones->GetX2Rect(), m_bargeZones->GetY1Rect(), m_bargeZones->GetY2Rect(), m_chassis->GetPose());
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, isInZone);
-    return intheZone;
+    return isInZone;
 }
