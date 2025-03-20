@@ -22,6 +22,7 @@
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "units/time.h"
 #include "utils/logging/signals/DragonDataLoggerSignals.h"
+#include "magic_enum/magic_enum.hpp"
 
 using namespace std;
 
@@ -138,144 +139,6 @@ public:
 
     // initialize these signals in the constructor
 
-    string m_brownOutPath = "/RoboRio/IsBrownOut";
-
-    string m_storedHeadingPath = "/Chassis/StoredHeading";
-    string m_storedHeadingUnits = "Degrees";
-
-    string m_ChassisYawPath = "/Chassis/Yaw";
-    string m_ChassisYawUnits = "Degrees";
-
-    string m_electricalVoltagePath = "/Electrical/Voltage";
-    string m_electricalVoltageUnits = "volts";
-    string m_electricalCurrentPath = "/Electrical/Current";
-    string m_electricalCurrentUnits = "";
-    string m_electricalPowerPath = "";
-    string m_electricalPowerUnits = "";
-
-    string m_txPath = "LL1/tx";
-    string m_txUnits = "";
-    string m_tyPath = "LL1/ty";
-    string m_tyUnits = "";
-    string m_tvPath = "LL1/tv";
-    string m_tvUnits = "";
-    string m_fiducialPath = "LL1/fiducial";
-    string m_fiducialUnits = "";
-
-    // RIO
-
-    string m_batteryVoltagePath = "/RoboRio/BatteryVoltage";
-    string m_batteryVoltageUnits = "Volts";
-    string m_brownoutVoltagePath = "/RoboRio/BrownoutVoltage";
-    string m_brownoutVoltageUnits = "Volts";
-    string m_inputVoltagePath = "/RoboRio/InputVoltage";
-    string m_inputVoltageUnits = "Volts";
-    string m_inputCurrentPath = "/RoboRio/InputCurrent";
-    string m_inputCurrentUnits = "Amps";
-    string m_cpuTempPath = "/RoboRio/CPUTemp";
-    string m_cpuTempUnits = "Degrees C";
-
-    string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
-    string m_lfSteerPowerUnits = "Watts";
-    string m_lfSteerCurrentPath = "/Chassis/FrontLeftModule/Steer/Current";
-    string m_lfSteerCurrentUnits = "Watts";
-    string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
-    string m_lfSteerTotalPowerUnits = "";
-    string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
-    string m_lfSteerWattHoursUnits = "WattHours";
-
-    string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
-    string m_lfDrivePowerUnits = "Watts";
-    string m_lfDriveCurrentPath = "/Chassis/FrontLeftModule/Drive/Current";
-    string m_lfDriveCurrentUnits = "Watts";
-    string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
-    string m_lfDriveTotalPowerUnits = "";
-    string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
-    string m_lfDriveWattHoursUnits = "WattHours";
-
-    string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
-    string m_rfSteerPowerUnits = "";
-    string m_rfSteerCurrentPath = "/Chassis/FrontRightModule/Steer/Current";
-    string m_rfSteerCurrentUnits = "Watts";
-    string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
-    string m_rfSteerTotalPowerUnits = "";
-    string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
-    string m_rfSteerWattHoursUnits = "WattHours";
-
-    string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
-    string m_rfDrivePowerUnits = "";
-    string m_rfDriveCurrentPath = "/Chassis/FrontRightModule/Drive/Current";
-    string m_rfDriveCurrentUnits = "Watts";
-    string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
-    string m_rfDriveTotalPowerUnits = "";
-    string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
-    string m_rfDriveWattHoursUnits = "WattHours";
-
-    string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
-    string m_lbSteerPowerUnits = "";
-    string m_lbSteerCurrentPath = "/Chassis/BackLeftModule/Steer/Current";
-    string m_lbSteerCurrentUnits = "Watts";
-    string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
-    string m_lbSteerTotalPowerUnits = "";
-    string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
-    string m_lbSteerWattHoursUnits = "WattHours";
-
-    string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
-    string m_lbDrivePowerUnits = "";
-    string m_lbDriveCurrentPath = "/Chassis/BackLeftModule/Drive/Current";
-    string m_lbDriveCurrentUnits = "Watts";
-    string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
-    string m_lbDriveTotalPowerUnits = "";
-    string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
-    string m_lbDriveWattHoursUnits = "WattHours";
-
-    string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
-    string m_rbSteerPowerUnits = "";
-    string m_rbSteerCurrentPath = "/Chassis/BackRightModule/Steer/Current";
-    string m_rbSteerCurrentUnits = "Watts";
-    string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
-    string m_rbSteerTotalPowerUnits = "";
-    string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
-    string m_rbSteerWattHoursUnits = "WattHours";
-
-    string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
-    string m_rbDrivePowerUnits = "";
-    string m_rbDriveCurrentPath = "/Chassis/BackRightModule/Drive/Current";
-    string m_rbDriveCurrentUnits = "Watts";
-    string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
-    string m_rbDriveTotalPowerUnits = "";
-    string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
-    string m_rbDriveWattHoursUnits = "WattHours";
-
-    string m_swerveChassisTotalPowerPath = "/Chassis/TotalPower";
-    string m_swerveChassisTotalPowerUnits = "";
-    string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
-    string m_swerveChassisWattHoursUnits = "";
-    string m_swerveChassisTotalCurrentPath = "/Chassis/TotalCurrent";
-    string m_swerveChassisTotalCurrentUnits = "Watts";
-    string m_headingStatePath = "/Chassis/HeadingState";
-    string m_driveStatePath = "/Chassis/DriveState";
-
-    string m_chassisPose2dPath = "/Chassis/Pose2d";
-    string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
-    string m_visionDriveLBranchPose2dUnits = "X, Y, Rotation";
-    string m_visionDriveRBranchPose2dPath = "/Vision/DriveToRightReefBranchPose2d";
-    string m_visionDriveRBranchPose2dUnits = "X, Y, Rotation";
-    string m_visionDriveCoralStationPose2dPath = "/Vision/DriveToCoralStationPose2d";
-    string m_visionDriveCoralStationPose2dUnits = "X, Y, Rotation";
-    string m_odometryDriveLBranchPose2dPath = "/Odometry/DriveToLeftReefBranchPose2d";
-    string m_odometryDriveLBranchPose2dUnits = "X, Y, Rotation";
-    string m_odometryDriveRBranchPose2dPath = "/Odometry/DriveToRightReefBranchPose2d";
-    string m_odometryDriveRBranchPose2dUnits = "X, Y, Rotation";
-    string m_odometryDriveCoralStationPose2dPath = "/Odometry/DriveToCoralStationPose2d";
-    string m_odometryDriveCoralStationPose2dUnits = "X, Y, Rotation";
-    string m_questPose2dPath = "/Chassis/QuestPose2d";
-    string m_questPose2dUnits = "X, Y, Rotation";
-
-    string m_limelight1Pose3dPath = "LL1/Pose3d";
-    string m_limelight1Pose3dUnits = "LL1/ X, Y, Rotation";
-    string m_limelight2Pose3dPath = "LL2/Pose3d";
-    string m_limelight2Pose3dUnits = "LL2/ X, Y, Rotation";
     string m_pose2dUnits = "X, Y, Rotation";
 
     string m_frontLeftTargetSpeedPath = "/Chassis/FrontLeftModule/TargetState/Speed";
@@ -303,14 +166,14 @@ public:
     string m_swerveActualvyPath = "/Chassis/ActualSpeeds/Vy";
     string m_swerveActualOmegaPath = "/Chassis/ActualSpeeds/Omega";
 
-    string m_swerveModuleStateUnits = "Speed, Angle";
+    string m_swerveModuleStateUnits = "m/s, Degrees";
     string m_swerveChassisSpeedUnits = "Vx, Vy, Omega";
 
     units::time::second_t m_latency = units::time::second_t(0);
 
 protected:
     void LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSignals signalID, bool value);
-    void LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value);
+    void LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value, string units);
     void LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, string value);
     void Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose2d value);
     void Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose3d value);
