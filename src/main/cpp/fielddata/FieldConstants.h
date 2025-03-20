@@ -101,7 +101,7 @@ public:
     {
         LEFT_STICK,
         RIGHT_STICK,
-        ALGAE
+        REEF_ALGAE
     };
 
     enum AprilTagIDs
