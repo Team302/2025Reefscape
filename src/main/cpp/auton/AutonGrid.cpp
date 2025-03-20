@@ -49,6 +49,19 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
     return ((robotPose.X().value() >= units::length::meter_t(x1 * m_gridRes).value()) && (robotPose.X().value() <= units::length::meter_t(x2 * m_gridRes).value()) &&
             (robotPose.Y().value() >= units::length::meter_t(y1 * m_gridRes).value()) && (robotPose.Y().value() <= units::length::meter_t(y2 * m_gridRes).value()));
 }
+bool AutonGrid::IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose)
+// defining IsPoseInZone bool method and pulling in the arguements
+{
+    // cast the enums xgrid1, etc to doubles
+    units::length::meter_t x1 = xgrid1;
+    units::length::meter_t y1 = ygrid1;
+    units::length::meter_t x2 = xgrid2;
+    units::length::meter_t y2 = ygrid2;
+
+    // then it is determined wether or not the robotPose is in the zone defined by the 2 grids.
+    return ((robotPose.X().value() >= x1.value()) && (robotPose.X().value() <= x2.value()) &&
+            (robotPose.Y().value() >= y1.value()) && (robotPose.Y().value() <= y2.value()));
+}
 bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
 {
     auto translationToCenter = circleZonePose.Translation().Distance(robotPose.Translation());

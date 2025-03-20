@@ -29,6 +29,10 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 					   AutonGrid::YGRID ygrid2,
 					   frc::Pose2d circlePose,
 					   units::inch_t radius,
+					   units::length::meter_t m_xgrid1rect,
+					   units::length::meter_t m_xgrid2rect,
+					   units::length::meter_t m_ygrid1rect,
+					   units::length::meter_t m_ygrid2rect,
 					   bool isTaleStateChanging,
 					   bool isIntakeStateChanging,
 					   IntakeManager::STATE_NAMES intakeOption,
@@ -50,6 +54,11 @@ ZoneParams::ZoneParams(AutonGrid::XGRID xgrid1,
 																											   m_pathUpdateOption(pathUpdateOption),
 																											   m_zoneMode(zoneMode),
 																											   m_circlePose(circlePose),
-																											   m_radius(radius)
+																											   m_radius(radius),
+																											   m_xgrid1rect(m_xgrid1rect),
+																											   m_xgrid2rect(m_xgrid2rect),
+																											   m_ygrid1rect(m_ygrid1rect),
+																											   m_ygrid2rect(m_ygrid2rect)
+
 {
 }
