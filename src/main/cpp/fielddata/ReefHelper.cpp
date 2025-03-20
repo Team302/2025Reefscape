@@ -189,6 +189,8 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
 {
     if (m_allianceColor == frc::DriverStation::Alliance::kRed)
     {
+        m_zoneParamsptr = ZoneParser::ParseXML("RedReefPlacerZones.xml");
+
         switch (tag) // nearest april
         {
         case FieldConstants::AprilTagIDs::RED_REEF_AB_TAG:
@@ -215,6 +217,8 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
     }
     else
     {
+        m_zoneParamsptr = ZoneParser::ParseXML("BlueReefPlacerZones.xml");
+
         switch (tag) // nearest april
         {
         case FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG:
@@ -246,4 +250,11 @@ units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilT
 {
     auto aprilTagPose = m_fieldConstants->GetAprilTagPose(tag).ToPose2d();
     return currentPose.Translation().Distance(aprilTagPose.Translation());
+}
+
+bool ReefHelper::IsPoseInZone()
+{
+    bool intheZone = autongridptr->IsPoseInZone(m_zoneParamsptr->GetXGrid1(), m_zoneParamsptr->GetXGrid2(), m_zoneParamsptr->GetYGrid1(), m_zoneParamsptr->GetYGrid2(), m_chassis->GetPose());
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
+    return intheZone;
 }
