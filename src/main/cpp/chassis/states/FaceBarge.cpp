@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,67 +13,40 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-// C++ Includes
-
-// FRC includes
-
-// Team 302 includes
-
-class TeleopControlFunctions
+// Team302 Includes
+#include "chassis/states/FaceBarge.h"
+#include "vision/DragonVision.h"
+#include "utils/AngleUtils.h"
+#include "utils/FMSData.h"
+FaceBarge::FaceBarge() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
 {
-public:
-    enum FUNCTION
+}
+
+std::string FaceBarge::GetHeadingStateName() const
+{
+    return std::string("FaceBarge");
+}
+
+DragonTargetFinderTarget FaceBarge::GetTarget() const
+{
+    return DragonTargetFinderTarget::BARGE;
+}
+
+units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
     {
-        READY,
-        ROBOT_ORIENTED_DRIVE,
-        HOLONOMIC_DRIVE_FORWARD,
-        HOLONOMIC_DRIVE_ROTATE,
-        HOLONOMIC_DRIVE_STRAFE,
-        AUTO_TURN_FORWARD,
-        AUTO_TURN_BACKWARD,
-        AUTO_ALIGN_LEFT,
-        AUTO_ALIGN_RIGHT,
-        AUTO_ALIGN_CENTER,
-        AUTO_ALIGN_HUMAN_PLAYER_STATION,
-        AUTO_ALIGN_BARGE,
-        ALIGN_FLOOR_GAME_PIECE,
-        RESET_POSITION,
-        POLAR_DRIVE,
-        SLOW_MODE,
-        HOLD_POSITION,
-        MANUAL_CLIMB,
-        SWEEP,
+        auto info = finder->GetPose(GetTarget());
+        if (info.has_value())
+        {
+            auto targetpose = get<1>(info.value());
 
-        // tip correction controls
-        TIPCORRECTION_TOGGLE,
+            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
 
-        MANUAL_LAUNCH_INC,
-        MANUAL_LAUNCH_DEC,
-        CLIMB_MODE,
-        AUTO_CLIMB,
-        INTAKE,
-        ELAVATOR,
-        ARM,
-        L1_SCORING_POSITION,
-        L2_SCORING_POSITION,
-        L3_SCORING_POSITION,
-        L4_SCORING_POSITION,
-        SCORE,
-        SCORING_MODE,
-        HUMAN_PLAYER_STATION,
-        ALGAE_INTAKE,
-        EXPEL,
-        MANUAL_ON,
-        MANUAL_OFF,
-        MANUAL_IN,
-        MANUAL_OUT,
-        FAILED_INTAKE_SENSOR,
-        ALGAE_HIGH,
-        ALGAE_LOW,
-        CAPPING,
-        FORCE_ELEVATOR
+            return chassisMovement.yawAngle;
+        }
+    }
 
-    };
-};
+    return units::angle::degree_t(0);
+}

@@ -20,7 +20,6 @@
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
 #include "frc/Filesystem.h"
-#include "auton/ZoneParser.h"
 
 BargeHelper *BargeHelper::m_instance = nullptr;
 BargeHelper *BargeHelper::GetInstance()
@@ -80,7 +79,7 @@ std::optional<BargeZones> BargeHelper::GetClosestZone()
     return std::nullopt;
 }
 
-void GetMechanismZone()
+void BargeHelper::GetMechanismZone()
 {
     frc::DriverStation::Alliance m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
 
@@ -90,6 +89,13 @@ void GetMechanismZone()
     }
     else
     {
-        ZoneParams *ParseXML(std::string fulldirfile);
+        auto m_bargeZones = ZoneParser::ParseXML("BlueBarge.xml");
     }
+}
+
+bool BargeHelper::isInZone()
+{
+    bool intheZone = autongridptr->IsPoseInZone(m_bargeZones->GetX1Rect(), m_bargeZones->GetX2Rect(), m_bargeZones->GetY1Rect(), m_bargeZones->GetY2Rect(), m_chassis->GetPose());
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, isInZone);
+    return intheZone;
 }

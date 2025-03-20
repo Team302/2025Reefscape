@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,58 +15,19 @@
 
 #pragma once
 
-// C++ includes
-#include <optional>
-#include <vector>
-// 302 includes
-#include "chassis/SwerveChassis.h"
-#include "fielddata/FieldConstants.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose2d.h"
-#include "state/RobotState.h"
-#include "auton/AutonGrid.h"
-#include "auton/ZoneParser.h"
-#include "auton/ZoneParams.h"
+// Team302 Includes
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
-enum class BargeZones
-{
-    FAR_LEFT_ZONE,
-    CLOSE_LEFT_ZONE,
-    CLOSE_RIGHT_ZONE,
-    FAR_RIGHT_ZONE,
-    NO_ZONE
-};
-class BargeHelper
+class FaceBarge : public FaceTarget
 {
 public:
-    static BargeHelper *GetInstance();
-    bool isInZone();
-    void GetMechanismZone();
+    FaceBarge();
+    ~FaceBarge() = default;
 
-private:
-    BargeHelper();
-    ~BargeHelper() = default;
-    static BargeHelper *m_instance;
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 
-    std::optional<BargeZones> GetClosestZone();
-    void CalculateZones();
-
-    SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
-    FieldConstants *m_fieldConstants;
-
-    // blue
-    const frc::Pose2d m_blueCenterOfBarge{8.225_m, 6.161_m, 0_deg};
-    const frc::Pose2d m_blueLeftBargePose{8.225_m, 8.033_m, 0_deg};
-    const frc::Pose2d m_blueRightBargePose{8.225_m, 4.329_m, 0_deg};
-
-    // red
-    const frc::Pose2d m_redLeftBargePose{9.358_m, 0.5_m, 0_deg};
-    const frc::Pose2d m_redCenterOfBarge{9.358_m, 1.904_m, 0_deg};
-    const frc::Pose2d m_redRightBargePose{9.358_m, 3.723_m, 0_deg};
-
-    const unsigned int m_numOfZones = 4;
-    std::vector<frc::Pose2d> m_zonesVector;
-    ZoneParams *m_bargeZones;
-    AutonGrid *autongridptr;
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
 };
