@@ -60,10 +60,10 @@ public:
     AutonGrid::YGRID GetYGrid1() const { return m_ygrid1; }
     AutonGrid::YGRID GetYGrid2() const { return m_ygrid2; }
 
-    units::length::meter_t GetXGrid1rect() const { return m_xgrid1rect; }
-    units::length::meter_t GetXGrid2rect() const { return m_xgrid2rect; }
-    units::length::meter_t GetYGrid1rect() const { return m_ygrid1rect; }
-    units::length::meter_t GetYGrid2rect() const { return m_ygrid2rect; }
+    units::length::meter_t GetX1Rect() const { return m_xgrid1rect; }
+    units::length::meter_t GetX2Rect() const { return m_xgrid2rect; }
+    units::length::meter_t GetY1Rect() const { return m_ygrid1rect; }
+    units::length::meter_t GetY2Rect() const { return m_ygrid2rect; }
 
     AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
 

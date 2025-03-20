@@ -41,5 +41,4 @@ protected:
 
 private:
     std::vector<unsigned int> m_numberOfAlgaeVector;
-    DragonTargetFinderTarget m_currentTarget = DragonTargetFinderTarget::CENTER_BARGE;
 };

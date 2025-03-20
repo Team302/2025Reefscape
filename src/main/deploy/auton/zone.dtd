@@ -21,10 +21,10 @@
                                10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 
                                19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27) "1"
 
-    x1rect CDATA #IMPLIED
-    y1rect CDATA #IMPLIED
-    x2rect CDATA #IMPLIED
-    y2rect CDATA #IMPLIED
+    x1_rect CDATA #IMPLIED
+    y1_rect CDATA #IMPLIED
+    x2_rect CDATA #IMPLIED
+    y2_rect CDATA #IMPLIED
 
 
     circlex                 CDATA #IMPLIED

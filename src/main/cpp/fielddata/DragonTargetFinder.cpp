@@ -150,6 +150,30 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d());
         }
     }
+    else if (item == DragonTargetFinderTarget::BARGE)
+    {
+        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        if (allianceColor == frc::DriverStation::Alliance::kRed)
+        {
+            // will check if the chassis Y is within the bounds of the red barge with barge helper
+            auto pose2d = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT).ToPose2d();
+            pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            // //Barge Helper will handle this check
+            // if(m_chassis->GetPose().Y()>)
+            // {
+
+            // }
+
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
+        }
+        else
+        {
+            // will check if the chassis Y is within the bounds of the blue barge with barge helper
+            auto pose2d = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT).ToPose2d();
+            pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
+        }
+    }
 
     else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE ||
              item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE ||

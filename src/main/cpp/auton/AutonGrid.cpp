@@ -59,8 +59,8 @@ bool AutonGrid::IsPoseInZone(units::length::meter_t xgrid1, units::length::meter
     units::length::meter_t y2 = ygrid2;
 
     // then it is determined wether or not the robotPose is in the zone defined by the 2 grids.
-    return ((robotPose.X().value() >= x1.value()) && (robotPose.X().value() <= x2.value()) &&
-            (robotPose.Y().value() >= y1.value()) && (robotPose.Y().value() <= y2.value()));
+    return ((robotPose.X() >= xgrid1) && (robotPose.X() <= xgrid2) &&
+            (robotPose.Y() >= ygrid1) && (robotPose.Y() <= ygrid2));
 }
 bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose)
 {

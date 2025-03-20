@@ -37,7 +37,7 @@ string DriveToBarge::GetDriveStateName() const
 
 DragonTargetFinderTarget DriveToBarge::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::LEFT_BARGE;
+    return DragonTargetFinderTarget::BARGE;
 }
 ChassisOptionEnums::DriveStateType DriveToBarge::GetDriveStateType() const
 {
