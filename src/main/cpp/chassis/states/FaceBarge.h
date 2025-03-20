@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,65 +15,19 @@
 
 #pragma once
 
-// C++ Includes
+// Team302 Includes
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
-// FRC includes
-
-// Team 302 includes
-
-class TeleopControlFunctions
+class FaceBarge : public FaceTarget
 {
 public:
-    enum FUNCTION
-    {
-        READY,
-        ROBOT_ORIENTED_DRIVE,
-        HOLONOMIC_DRIVE_FORWARD,
-        HOLONOMIC_DRIVE_ROTATE,
-        HOLONOMIC_DRIVE_STRAFE,
-        AUTO_TURN_FORWARD,
-        AUTO_TURN_BACKWARD,
-        AUTO_ALIGN_LEFT,
-        AUTO_ALIGN_RIGHT,
-        AUTO_ALIGN_CENTER,
-        AUTO_ALIGN_HUMAN_PLAYER_STATION,
-        AUTO_ALIGN_BARGE,
-        ALIGN_FLOOR_GAME_PIECE,
-        RESET_POSITION,
-        POLAR_DRIVE,
-        SLOW_MODE,
-        HOLD_POSITION,
-        MANUAL_CLIMB,
-        SWEEP,
+    FaceBarge();
+    ~FaceBarge() = default;
 
-        // tip correction controls
-        TIPCORRECTION_TOGGLE,
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 
-        MANUAL_LAUNCH_INC,
-        MANUAL_LAUNCH_DEC,
-        CLIMB_MODE,
-        AUTO_CLIMB,
-        INTAKE,
-        ELAVATOR,
-        ARM,
-        L1_SCORING_POSITION,
-        L2_SCORING_POSITION,
-        L3_SCORING_POSITION,
-        L4_SCORING_POSITION,
-        SCORE,
-        SCORING_MODE,
-        HUMAN_PLAYER_STATION,
-        ALGAE_INTAKE,
-        EXPEL,
-        MANUAL_ON,
-        MANUAL_OFF,
-        MANUAL_IN,
-        MANUAL_OUT,
-        FAILED_INTAKE_SENSOR,
-        ALGAE_HIGH,
-        ALGAE_LOW,
-        CAPPING,
-        FORCE_ELEVATOR
-
-    };
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
 };

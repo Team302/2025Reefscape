@@ -169,7 +169,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         else
         {
             // will check if the chassis Y is within the bounds of the blue barge with barge helper
-            auto pose2d = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT).ToPose2d();
+            auto pose2d = fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT).ToPose2d();
             pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
         }
