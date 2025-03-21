@@ -232,7 +232,6 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
-	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -642,7 +641,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 
 	m_elevatorDiameterInch = 0.75;
 	m_elevatorGearRatio = 3.0;
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(200);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(100);
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(75);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
@@ -1191,9 +1190,6 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 
 	else if (RobotStateChanges::StateChange::GameState_Int == change)
 		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
-
-	else if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
-		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
 
 void DragonTale::SetSensorFailSafe()
@@ -1272,19 +1268,6 @@ void DragonTale::UpdateTarget()
 		actualTargetAngle = m_armProtectionAngle;
 	}
 
-	if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
-	{
-		actualTargetHeight = m_climbModeHeight;
-	}
-
-	// units::angle::degree_t armError = units::math::abs(actualTargetAngle - GetArmAngle());
-
-	// if ((GetElevatorHeight() >= m_elevatorPreventionHeight) && (actualTargetHeight < m_elevatorPreventionHeight) && (armError > m_armErrorThreshold))
-	// {
-	// 	actualTargetAngle = m_armHoldAngle;
-	// 	actualTargetHeight = GetElevatorHeight();
-	// }
-
 	m_armLoggingTarget = actualTargetAngle.value();
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armLoggingTarget);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
@@ -1299,7 +1282,7 @@ void DragonTale::UpdateTarget()
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
 
-	units::voltage::volt_t elevatorPIDOutput{m_elevatorController.Calculate(GetElevatorCANRangeHeight(), actualTargetHeight)};
+	// units::voltage::volt_t elevatorPIDOutput{m_elevatorController.Calculate(GetElevatorCANRangeHeight(), actualTargetHeight)};
 	if (abs(elevatorInput) > m_manualControlThreshold || m_elevatorRemedialAction)
 	{
 		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
@@ -1317,36 +1300,7 @@ bool DragonTale::AtTarget()
 
 void DragonTale::IsElevatorInSync()
 {
-	// units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
-	// bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
-	// if (units::math::abs(cancoderVelocity) > 0.5_tps && !(units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold))
-	// {
-	// 	if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
-	// 	{
-	// 		m_currElevatorFails++;
-	// 		if (m_currElevatorFails >= m_elevatorMaxFails)
-	// 		{
-	// 			m_elevatorRemedialAction = true;
-	// 		}
-	// 	}
-	// }
-	// else if (m_elevatorRemedialAction)
-	// {
-	// 	if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
-	// 	{
-	// 		if (m_currElevatorFails > 0)
-	// 			m_currElevatorFails--;
-
-	// 		if (m_currElevatorFails == 0)
-	// 		{
-	// 			m_elevatorRemedialAction = false;
-	// 			SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
-	// 		}
-	// 	}
-	// }
-
 	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
-
 	double elevatorCount = (motorCounts / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi;
 
 	m_motorCountInches = units::length::inch_t(elevatorCount);
@@ -1442,11 +1396,8 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());

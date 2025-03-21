@@ -225,7 +225,6 @@ private:
 	ControlData *m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
-	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
@@ -251,8 +250,6 @@ private:
 	const units::angle::degree_t m_armErrorThreshold{15.0};
 
 	const double m_manualControlThreshold = 0.1;
-
-	const units::length::inch_t m_climbModeHeight{15.0};
 
 	double m_elevatorKP = 0.0; // all of these will be tuned :)
 	double m_elevatorKI = 0.0;
