@@ -439,7 +439,16 @@ void DragonTale::CreateCOMP_BOT302()
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
 
+	ctre::phoenix6::configs::CANrangeConfiguration BranchCANRangeConfigs{};
+	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 12.0_in;
+	BranchCANRangeConfigs.FovParams.FOVRangeX = 15_deg;
+	BranchCANRangeConfigs.FovParams.FOVRangeY = 15_deg;
+	m_BranchCANRange->GetConfigurator().Apply(BranchCANRangeConfigs);
+
 	ctre::phoenix6::configs::CANrangeConfiguration ElevatorCANRangeConfigs{};
+	ElevatorCANRangeConfigs.FovParams.FOVRangeX = 3.75_deg;
+	ElevatorCANRangeConfigs.FovParams.FOVRangeY = 3.75_deg;
+	m_ElevatorCANRange->GetConfigurator().Apply(ElevatorCANRangeConfigs);
 
 	m_PositionInch = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
