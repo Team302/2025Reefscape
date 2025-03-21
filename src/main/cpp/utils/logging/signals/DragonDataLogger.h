@@ -42,25 +42,33 @@ public:
 
     enum BoolSignals
     {
-        IS_BROWNOUT
+        IS_BROWNOUT,
+
+        TALE_CORAL_IN_SENSOR,
+        TALE_CORAL_OUT_SENSOR,
+        TALE_ALGAE_SENSOR
     };
 
     enum DoubleSignals
     {
         CHASSIS_STORED_HEADING_DEGREES,
         CHASSIS_YAW_DEGREES,
+
         ELECTRICAL_VOLTAGE,
         ELECTRICAL_CURRENT,
         ELECTRICAL_POWER,
+
         LIMELIGHT_TV_1,
         LIMELIGHT_TX_1,
         LIMELIGHT_TY_1,
         LIMELIGHT_FIDUCIAL_ID_1,
+
         BATTERY_VOLTAGE,
         BROWNOUT_VOLTAGE,
         INPUT_VOLTAGE,
         INPUT_CURRENT,
         CPU_TEMP,
+
         LEFT_FRONT_SWERVE_STEER_POWER,
         LEFT_FRONT_SWERVE_STEER_CURRENT,
         LEFT_FRONT_SWERVE_STEER_TOTALPOWER,
@@ -94,14 +102,21 @@ public:
         RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
         SWERVE_CHASSIS_TOTAL_CURRENT,
-        SWERVE_CHASSIS_WATT_HOURS
+        SWERVE_CHASSIS_WATT_HOURS,
+
+        TALE_ARM_ANGLE,
+        TALE_ARM_TRAGET_ANGLE,
+        TALE_ELEVATOR_LEADER_HEIGHT,
+        TALE_ELEVATOR_LEADER_TARGET
     };
 
     enum StringSignals
     {
         CHASSIS_HEADING_STATE,
         CHASSIS_DRIVE_STATE,
-        AUTON_PATH_NAME
+        AUTON_PATH_NAME,
+
+        TALE_STATE
     };
 
     enum PoseSingals
