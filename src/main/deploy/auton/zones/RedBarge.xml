@@ -3,9 +3,9 @@
 
 <auton>
     <zone 
-        x1rect = "7.598"
-        y1rect = "3.706"
-        x2rect = "9.993"
-        y2rect = "0.161"
+        x1_rect = "7.598"
+        y1_rect = "3.706"
+        x2_rect = "9.993"
+        y2_rect = "0.161"
         taleOption="STATE_NET"/>
 </auton>

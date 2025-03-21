@@ -52,11 +52,6 @@ bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygr
 bool AutonGrid::IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose)
 // defining IsPoseInZone bool method and pulling in the arguements
 {
-    // cast the enums xgrid1, etc to doubles
-    units::length::meter_t x1 = xgrid1;
-    units::length::meter_t y1 = ygrid1;
-    units::length::meter_t x2 = xgrid2;
-    units::length::meter_t y2 = ygrid2;
 
     // then it is determined wether or not the robotPose is in the zone defined by the 2 grids.
     return ((robotPose.X() >= xgrid1) && (robotPose.X() <= xgrid2) &&
