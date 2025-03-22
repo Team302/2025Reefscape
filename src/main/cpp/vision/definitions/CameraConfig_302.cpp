@@ -53,7 +53,8 @@ void CameraConfig_302::BuildCameraConfig()
     //                                             DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG,      /// <I> enum for starting pipeline
     //                                             DRAGON_LIMELIGHT_LED_MODE::LED_OFF,        // DRAGON_LIMELIGHT_LED_MODE ledMode,
     //                                             DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION      // CAM_MODE camMode,
-    //); // additional parameter
+
+    // ); // additional parameter
     // DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 
     // new DragonQuest(units::length::meter_t(-.319),  // <I> x offset of Quest from robot center (forward relative to robot)
