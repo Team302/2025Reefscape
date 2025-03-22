@@ -1358,29 +1358,28 @@ void DragonTale::SetAlgaeMotor()
 
 void DragonTale::DataLog(uint64_t timestamp)
 {
-	// auto currTime = m_powerTimer.Get();
+	auto currTime = m_powerTimer.Get();
 
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ARM_ANGLE, GetArmAngle().value(), "Degrees");
-	// LogArm("/DragonTale/Arm/Angle", timestamp, "Degrees", GetArmAngle().value());
-	// auto ArmPower = DragonPower::CalcPowerEnergy(currTime, m_Arm->GetSupplyVoltage().GetValueAsDouble(), m_Arm->GetSupplyCurrent().GetValueAsDouble());
-	// m_power = get<0>(ArmPower);
-	// m_energy = get<1>(ArmPower);
-	// m_totalEnergy += m_energy;
+	auto ArmPower = DragonPower::CalcPowerEnergy(currTime, m_Arm->GetSupplyVoltage().GetValueAsDouble(), m_Arm->GetSupplyCurrent().GetValueAsDouble());
+	m_power = get<0>(ArmPower);
+	m_energy = get<1>(ArmPower);
+	m_totalEnergy += m_energy;
 	// LogArmPower("/DragonTale/Arm/Power", timestamp, "double", m_power);
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ARM_POWER, m_power, "Watts");
+
 	// LogArmEnergy("/DragonTale/Arm/Energy", timestamp, "double", m_energy);
-	// LogArmTarget("/DragonTale/Arm/Target", timestamp, "double", m_armLoggingTarget);
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ARM_ENERGY, m_energy, "WattHours");
+
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ARM_TRAGET_ANGLE, m_armLoggingTarget, "Degrees");
 
-	// LogElevatorLeader("/DragonTale/Elevator/ElevatorLeaderHeight", timestamp, "inches", GetElevatorHeight().value());
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ELEVATOR_LEADER_HEIGHT, GetElevatorHeight().value(), "Inches");
-
 	// auto ElevatorLeaderPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorLeader->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorLeader->GetSupplyCurrent().GetValueAsDouble());
 	// m_power = get<0>(ElevatorLeaderPower);
 	// m_energy = get<1>(ElevatorLeaderPower);
 	// m_totalEnergy += m_energy;
 	// LogElevatorLeaderPower("/DragonTale/Elevator/ElevatorLeaderPower", timestamp, "double", m_power);
 	// LogElevatorLeaderEnergy("/DragonTale/Elevator/ElevatorLeaderEnergy", timestamp, "double", m_energy);
-	// LogElevatorLeaderTarget("/DragonTale/Elevator/ElevatorLeaderTarget", timestamp, "double", m_elevatorTarget.value());
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ELEVATOR_LEADER_TARGET, m_elevatorTarget.value(), "Inches");
 
 	// auto AlgaePower = DragonPower::CalcPowerEnergy(currTime, m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFX->GetSupplyVoltage().GetValueAsDouble() : m_AlgaeTalonFXS->GetSupplyVoltage().GetValueAsDouble(), m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999 ? m_AlgaeTalonFX->GetSupplyCurrent().GetValueAsDouble() : m_AlgaeTalonFXS->GetSupplyCurrent().GetValueAsDouble());
