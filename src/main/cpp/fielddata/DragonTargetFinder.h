@@ -29,6 +29,7 @@
 
 enum class DragonTargetFinderTarget
 {
+    BARGE,
     CLOSEST_LEFT_REEF_BRANCH,
     CLOSEST_RIGHT_REEF_BRANCH,
     CLOSEST_REEF_ALGAE,
@@ -78,4 +79,5 @@ private:
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
+    units::length::foot_t m_centerLine{28.73};
 };

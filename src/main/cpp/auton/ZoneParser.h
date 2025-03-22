@@ -18,7 +18,7 @@
 
 // C++ Includes
 #include <string>
-
+#include "auton/ZoneParams.h"
 // FRC includes
 
 // Team 302 includes

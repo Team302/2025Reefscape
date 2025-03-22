@@ -151,6 +151,14 @@ void RobotState::PublishStateChange(RobotStateChanges::StateChange change, frc::
         m_brokers[slot]->Notify(newValue);
     }
 }
+void RobotState::PublishStateChange(RobotStateChanges::StateChange change, bool newValue)
+{
+    auto slot = static_cast<unsigned int>(change);
+    if (slot < m_brokers.size())
+    {
+        m_brokers[slot]->Notify(newValue);
+    }
+}
 
 void RobotState::PublishGameStateChanges()
 {

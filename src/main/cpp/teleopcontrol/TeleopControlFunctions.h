@@ -38,6 +38,7 @@ public:
         AUTO_ALIGN_RIGHT,
         AUTO_ALIGN_CENTER,
         AUTO_ALIGN_HUMAN_PLAYER_STATION,
+        AUTO_ALIGN_BARGE,
         ALIGN_FLOOR_GAME_PIECE,
         RESET_POSITION,
         POLAR_DRIVE,
@@ -72,7 +73,8 @@ public:
         FAILED_INTAKE_SENSOR,
         ALGAE_HIGH,
         ALGAE_LOW,
-        CAPPING
+        CAPPING,
+        FORCE_ELEVATOR
 
     };
 };

@@ -30,6 +30,7 @@
 #include "units/angle.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
+#include "fielddata/BargeHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -148,6 +149,37 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         else
         {
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d());
+        }
+    }
+    else if (item == DragonTargetFinderTarget::BARGE)
+    {
+        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (allianceColor == frc::DriverStation::Alliance::kRed)
+        {
+            auto pose2d = m_chassis->GetPose().X() > m_centerLine ? fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
+            if (bargeHelper->ClampChassisY().has_value())
+            {
+                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
+            }
+            else
+            {
+                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            }
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
+        }
+        else
+        {
+            auto pose2d = m_chassis->GetPose().X() > m_centerLine ? fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+            if (bargeHelper->ClampChassisY().has_value())
+            {
+                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
+            }
+            else
+            {
+                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            }
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
         }
     }
 

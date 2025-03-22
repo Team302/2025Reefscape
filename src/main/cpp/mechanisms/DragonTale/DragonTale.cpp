@@ -232,6 +232,9 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInBargeZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInReefZone_Bool);
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -1190,6 +1193,18 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 
 	else if (RobotStateChanges::StateChange::GameState_Int == change)
 		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
+}
+
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
+{
+	if (RobotStateChanges::StateChange::IsInReefZone_Bool == change)
+		m_isInReefZone = value;
+
+	else if (RobotStateChanges::StateChange::IsInBargeZone_Bool == change)
+		m_isInBargeZone = value;
+
+	else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
+		m_isDriveToIsDone = value;
 }
 
 void DragonTale::SetSensorFailSafe()

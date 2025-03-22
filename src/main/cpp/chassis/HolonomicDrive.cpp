@@ -124,6 +124,7 @@ void HolonomicDrive::Run()
         auto driveToRightReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
         auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
         auto driveToCoralStation = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
+        auto driveToBarge = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
@@ -157,6 +158,9 @@ void HolonomicDrive::Run()
         else if (driveToCoralStation && m_climbMode == true)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
+        else if (driveToBarge)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
         }
         else
         {
@@ -407,7 +411,10 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
 
         if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
-        else
+        else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH ||
+                 m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+        else
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_BARGE;
     }
 }
