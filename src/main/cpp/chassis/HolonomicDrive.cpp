@@ -158,6 +158,7 @@ void HolonomicDrive::Run()
         else if (driveToCoralStation && m_climbMode == true)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
+        }
         else if (driveToBarge)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);

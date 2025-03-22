@@ -119,3 +119,36 @@ bool BargeHelper::isInZone()
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Barge Zone", "nullptr");
     return false;
 }
+std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetLeftCage()
+{
+    if (m_allianceColor == frc::DriverStation::kRed)
+    {
+        return FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE;
+    }
+    else
+    {
+        return FieldConstants::FIELD_ELEMENT::BLUE_LEFT_CAGE;
+    }
+}
+std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetRightCage()
+{
+    if (m_allianceColor == frc::DriverStation::kRed)
+    {
+        return FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE;
+    }
+    else
+    {
+        return FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE;
+    }
+}
+std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetCenterCage()
+{
+    if (m_allianceColor == frc::DriverStation::kRed)
+    {
+        return FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE;
+    }
+    else
+    {
+        return FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
+    }
+}
