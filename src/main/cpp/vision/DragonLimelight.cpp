@@ -602,7 +602,7 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
     return std::nullopt;
 }
 
-std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::AprilTagIDs id)
+std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPoseRelativeToChassisPose(FieldConstants::AprilTagIDs id)
 {
     if (m_chassis != nullptr)
     {
@@ -612,7 +612,7 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
             if (fiducial.id == id)
             {
                 auto distToTarget = units::length::meter_t(fiducial.distToRobot);
-                auto angleToTarget = units::angle::degree_t(fiducial.txnc);
+                auto angleToTarget = -1.0 * units::angle::degree_t(fiducial.txnc);
 
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("distToTarget"), distToTarget.value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("angleToTarget"), angleToTarget.value());
@@ -620,8 +620,11 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
                 auto yaw = m_chassis->GetYaw();
                 auto flip = (yaw > -90_deg && yaw < 90_deg);
 
-                auto xOffset = distToTarget * cos(-angleToTarget.value() * M_PI / 180.0);
-                auto yOffset = distToTarget * sin(-angleToTarget.value() * M_PI / 180.0);
+                angleToTarget -= yaw;
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("chassis yaw"), yaw.value());
+
+                auto xOffset = distToTarget * cos(angleToTarget.value() * M_PI / 180.0);
+                auto yOffset = distToTarget * sin(angleToTarget.value() * M_PI / 180.0);
 
                 if (flip)
                 {

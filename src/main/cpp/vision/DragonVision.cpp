@@ -629,7 +629,7 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - tagID"), static_cast<int>(tagId));
 
 		auto visdata = cam->GetDataToSpecifiedTag(static_cast<int>(tagId));
-		auto visPoseData = cam->GetAprilTagPose(tagId);
+		auto visPoseData = cam->GetAprilTagPoseRelativeToChassisPose(tagId);
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - visData.has_value()"), visdata.has_value() ? "true" : "false");
 
 		if (visPoseData.has_value())
