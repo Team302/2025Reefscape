@@ -157,8 +157,8 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
 
         double speed = value.speed.value();
         double angle = value.angle.Radians().value();
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + nameprefix + "/speed", speed, "m/s", m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + nameprefix + "/angle", angle, "degrees", m_latency);
+        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/speed", speed, "m/s", m_latency);
+        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/angle", angle, "degrees", m_latency);
     }
 }
 
@@ -183,8 +183,8 @@ void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger
         double vx = value.vx.value();
         double vy = value.vy.value();
         double omega = value.omega.value();
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + nameprefix + "/vx", vx, m_swerveChassisSpeedUnits, m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + nameprefix + "/vy", vy, m_swerveChassisSpeedUnits, m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + nameprefix + "/omega", omega, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/vx", vx, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/vy", vy, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/omega", omega, m_swerveChassisSpeedUnits, m_latency);
     }
 }
