@@ -200,6 +200,10 @@ void HolonomicDrive::Run()
             m_resetPathplannerTrajectory = true;
             m_bargeHelper->IsInZone();
             m_reefHelper->IsInZone();
+            if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
+            {
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+            }
         }
         if (isSlowMode)
         {
@@ -216,6 +220,7 @@ void HolonomicDrive::Run()
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
 
         m_swerve->Drive(m_moveInfo);
+        m_previousDriveState = m_moveInfo.driveOption;
     }
     else
     {
