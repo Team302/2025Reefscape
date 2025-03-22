@@ -571,7 +571,7 @@ void SwerveChassis::DataLog(uint64_t timestamp)
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_RIGHT_BACK_SWERVE_DRIVE_CURRENT, m_backRight->GetDriveCurrent().value(), "Amps");
 
     m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_SWERVE_TOTAL_CURRENT, m_totalEnergy, "Watts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_SWERVE_TOTAL_POWER, m_totalEnergy, "Watts");
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_SWERVE_WATT_HOURS, m_totalWattHours, "Watt Hours");
 
     m_powerTimer.Reset();
