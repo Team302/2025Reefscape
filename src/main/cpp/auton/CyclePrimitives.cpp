@@ -64,6 +64,7 @@ CyclePrimitives::CyclePrimitives() : State(string("CyclePrimitives"), 0),
 {
 	auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
 	m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+	m_loopTimer.Start();
 }
 
 void CyclePrimitives::Init()
@@ -92,7 +93,6 @@ void CyclePrimitives::Run()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("Arrived at "), string("run"));
 	if (m_currentPrim != nullptr)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("CurrentPrim "), string("run"));
 		m_currentPrim->Run();
 
 		if (m_chassis != nullptr)
@@ -145,10 +145,12 @@ void CyclePrimitives::Run()
 			}
 		}
 
+		m_loopTimer.Reset();
 		if (m_currentPrim->IsDone())
 		{
 			GetNextPrim();
 		}
+		SignalLogger::WriteDouble("Cycle Prim Timer/IsDone", m_loopTimer.Get().value(), "Sec", 0_s);
 	}
 	else
 	{
@@ -178,9 +180,12 @@ void CyclePrimitives::GetNextPrim()
 		m_currentPrim = (currentPrimParam != nullptr) ? m_primFactory->GetIPrimitive(currentPrimParam) : nullptr;
 		if (m_currentPrim != nullptr)
 		{
+			m_loopTimer.Reset();
 			m_currentPrim->Init(currentPrimParam);
+			SignalLogger::WriteDouble("Cycle Prim Timer/Init", m_loopTimer.Get().value(), "Sec", 0_s);
 
 			SetMechanismStatesFromParam(currentPrimParam);
+
 			m_zones = currentPrimParam->GetZones();
 
 			m_maxTime = currentPrimParam->GetTime();

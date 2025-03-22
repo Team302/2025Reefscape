@@ -93,14 +93,16 @@ public:
         RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
         SWERVE_CHASSIS_TOTAL_CURRENT,
-        SWERVE_CHASSIS_WATT_HOURS
+        SWERVE_CHASSIS_WATT_HOURS,
+        TIMER,
     };
 
     enum StringSignals
     {
         CHASSIS_HEADING_STATE,
         CHASSIS_DRIVE_STATE,
-        AUTON_PATH_NAME
+        AUTON_PATH_NAME,
+        TIMER_NAME
     };
 
     enum PoseSingals
@@ -255,6 +257,9 @@ public:
     string m_swerveChassisTotalCurrentUnits = "Watts";
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
+
+    string m_timerPath = "/Timer";
+    string m_timerUnits = "seconds";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";

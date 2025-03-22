@@ -19,6 +19,7 @@
 #include <frc/TimedRobot.h>
 
 #include "frc/geometry/Pose2d.h"
+#include "frc/Timer.h"
 
 class CyclePrimitives;
 class HolonomicDrive;
@@ -70,4 +71,6 @@ private:
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
     DragonSwervePoseEstimator *m_dragonswerveposeestimator;
+
+    frc::Timer m_timer;
 };

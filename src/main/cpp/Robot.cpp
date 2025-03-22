@@ -34,6 +34,7 @@
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
 
+using ctre::phoenix6::SignalLogger;
 using std::string;
 
 void Robot::RobotInit()
@@ -49,6 +50,7 @@ void Robot::RobotInit()
     InitializeDriveteamFeedback();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
+    m_timer.Start();
 }
 
 /**
@@ -69,14 +71,13 @@ void Robot::RobotPeriodic()
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
-        // m_datalogger->PeriodicDataLog();
+        m_datalogger->PeriodicDataLog();
     }
 
     if (m_robotState != nullptr)
     {
         m_robotState->Run();
     }
-
     UpdateDriveTeamFeedback();
 }
 
@@ -108,10 +109,14 @@ void Robot::AutonomousPeriodic()
         m_dragonswerveposeestimator->Update();
     }
 
+    m_timer.Reset();
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Run();
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Timer", "Cycle Prim", m_timer.Get().value());
+    SignalLogger::WriteDouble("Timer", m_timer.Get().value(), "Sec", 0_s);
+
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 

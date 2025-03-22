@@ -74,6 +74,7 @@ DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
                                        m_visionAlignment(PrimitiveParams::VISION_ALIGNMENT::UNKNOWN)
 
 {
+    m_loopTimer.Start();
 }
 DriveToFieldElement *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType)
 {
@@ -110,12 +111,15 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_updateTimeLatch = false;
     m_driveToObject = nullptr;
 
+    m_loopTimer.Reset();
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
     {
         m_zone = params->GetZones()[index];
     }
+    SignalLogger::WriteDouble("DrivePathPlanner/GetZoens", m_loopTimer.Get().value(), "Sec", 0_s);
 
+    m_loopTimer.Reset();
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
     m_pathGainsType = params->GetPathGainsType();
@@ -125,7 +129,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_isVisionDrive = false;
     m_visionAlignment = params->GetVisionAlignment();
+    SignalLogger::WriteDouble("DrivePathPlanner/Getting Params", m_loopTimer.Get().value(), "Sec", 0_s);
 
+    m_loopTimer.Reset();
     if (m_zone != nullptr)
     {
         m_driveToObject = GetDriveToObject(m_zone->GetPathUpdateOption());
@@ -136,6 +142,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
         m_driveToObject = nullptr;
         m_checkForDriveToUpdate = false;
     }
+    SignalLogger::WriteDouble("DrivePathPlanner/Getting DriveToObject", m_loopTimer.Get().value(), "Sec", 0_s);
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 

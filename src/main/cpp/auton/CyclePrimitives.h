@@ -69,4 +69,6 @@ private:
 	SwerveChassis *m_chassis;
 	ChassisOptionEnums::PathUpdateOption m_updatedHeadingOption;
 	ZoneParamsVector m_zones;
+
+	frc::Timer m_loopTimer;
 };

@@ -242,6 +242,9 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
         case DragonDataLogger::DoubleSignals::SWERVE_CHASSIS_WATT_HOURS:
             SignalLogger::WriteDouble(m_swerveChassisWattHoursPath, value, m_swerveChassisWattHoursUnits, m_latency);
             break;
+        case DragonDataLogger::DoubleSignals::TIMER:
+            SignalLogger::WriteDouble(m_timerPath, value, m_timerUnits, m_latency);
+            break;
 
         default:
             break;
@@ -262,6 +265,9 @@ void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::Strin
 
         case DragonDataLogger::StringSignals::CHASSIS_HEADING_STATE:
             SignalLogger::WriteString(m_headingStatePath, value, m_latency);
+            break;
+        case DragonDataLogger::StringSignals::TIMER_NAME:
+            SignalLogger::WriteString(m_timerPath, value, m_latency);
             break;
 
         default:

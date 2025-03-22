@@ -32,6 +32,7 @@
 #include "frc/Timer.h"
 #include "units/length.h"
 #include "units/time.h"
+#include "frc/Timer.h"
 
 // third party includes
 #include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
@@ -87,4 +88,6 @@ private:
     std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
 
     ZoneParams *m_zone;
+
+    frc::Timer m_loopTimer;
 };
