@@ -614,6 +614,9 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
                 auto distToTarget = units::length::meter_t(fiducial.distToRobot);
                 auto angleToTarget = units::angle::degree_t(fiducial.txnc);
 
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("distToTarget"), distToTarget.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("angleToTarget"), angleToTarget.value());
+
                 auto yaw = m_chassis->GetYaw();
                 auto flip = (yaw > -90_deg && yaw < 90_deg);
 
@@ -635,7 +638,7 @@ std::optional<frc::Pose2d> DragonLimelight::GetAprilTagPose(FieldConstants::Apri
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Fiducials"), std::string("robotPose omega"), robotPose.Rotation().Degrees().value());
 
                 auto odomPose = FieldConstants::GetInstance()->GetAprilTagPose(id).ToPose2d();
-                return frc::Pose2d(robotPose.X() - xOffset, robotPose.Y() - yOffset, odomPose.Rotation().Degrees());
+                return frc::Pose2d(robotPose.X() - xOffset, robotPose.Y() + yOffset, odomPose.Rotation().Degrees());
             }
         }
     }
