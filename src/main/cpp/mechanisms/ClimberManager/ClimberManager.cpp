@@ -491,22 +491,23 @@ ControlData *ClimberManager::GetControlData(string name)
 
 void ClimberManager::DataLog(uint64_t timestamp)
 {
-	// auto currTime = m_powerTimer.Get();
+	auto currTime = m_powerTimer.Get();
 
-	// LogClimber(std::string("Climber/PositionDegrees"), std::string("Degrees"), m_Climber->GetPosition().GetValueAsDouble());
-	// LogClimberTarget(std::string("Climber/TargetPositionDegrees"), std::string("Degrees"), m_ClimberPositionDegree.Position.value());
-	// auto ClimberPower = DragonPower::CalcPowerEnergy(currTime, m_Climber->GetSupplyVoltage().GetValueAsDouble(), m_Climber->GetSupplyCurrent().GetValueAsDouble());
-	// m_power = get<0>(ClimberPower);
-	// m_energy = get<1>(ClimberPower);
-	// m_totalEnergy += m_energy;
-	// LogClimberPower(std::string("Climber/Power"), std::string("Amps"), m_power);
-	// LogClimberEnergy(std::string("Climber/Energy"), std::string("Watts"), m_energy);
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_ANGLE, m_Climber->GetPosition().GetValueAsDouble(), "Degrees");
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_TARGET, m_ClimberPositionDegree.Position.value(), "Degrees");
+	auto ClimberPower = DragonPower::CalcPowerEnergy(currTime, m_Climber->GetSupplyVoltage().GetValueAsDouble(), m_Climber->GetSupplyCurrent().GetValueAsDouble());
+	m_power = get<0>(ClimberPower);
+	m_energy = get<1>(ClimberPower);
+	m_totalEnergy += m_energy;
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_ENERGY, m_power, "Watts");
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_CURRENT, GetClimber()->GetSupplyCurrent().GetValueAsDouble(), "Amps");
 
-	// LogClimberManagerState(std::string("Climber/ClimberManagerState"), std::string("int"), GetCurrentState());
+	DragonDataLogger::LogStringData(timestamp, DragonDataLogger::StringSignals::CLIMBER_STATE, GetCurrentStatePtr()->GetStateName());
 
-	// m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
-	// LogClimberManagerTotalEnergy(std::string("Climber/TotalEnergy"), std::string("Watts"), m_totalEnergy);
-	// LogClimberManagerTotalWattHours(std::string("Climber/TotalWattHours"), std::string("WattHours"), m_totalWattHours);
-	// m_powerTimer.Reset();
-	// m_powerTimer.Start();
+	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_TOTAL_POWER, m_totalWattHours, "WattHours");
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CLIMBER_TOTAL_ENERGY, m_totalEnergy, "Watts");
+
+	m_powerTimer.Reset();
+	m_powerTimer.Start();
 }

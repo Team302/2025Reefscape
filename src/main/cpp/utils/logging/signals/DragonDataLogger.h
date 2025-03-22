@@ -115,16 +115,19 @@ public:
         TALE_ELEVATOR_LEADER_CURRENT,
         TALE_ELEVATOR_FOLLOWER_POWER,
         TALE_ELEVATOR_FOLLOWER_CURRENT,
-
         TALE_ALGAE_POWER,
         TALE_ALGAE_CURRENT,
-
         TALE_CORAL_POWER,
         TALE_CORAL_CURRENT,
-
         TALE_TOTAL_POWER,
-        TALE_TOTAL_ENERGY
+        TALE_TOTAL_ENERGY,
 
+        CLIMBER_ANGLE,
+        CLIMBER_TARGET,
+        CLIMBER_ENERGY,
+        CLIMBER_CURRENT,
+        CLIMBER_TOTAL_ENERGY,
+        CLIMBER_TOTAL_POWER
     };
 
     enum StringSignals
@@ -133,7 +136,9 @@ public:
         CHASSIS_DRIVE_STATE,
         AUTON_PATH_NAME,
 
-        TALE_STATE
+        TALE_STATE,
+
+        CLIMBER_STATE
     };
 
     enum PoseSingals
