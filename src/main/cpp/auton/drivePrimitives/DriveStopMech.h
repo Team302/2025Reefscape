@@ -45,4 +45,6 @@ public:
 private:
     DragonTale::STATE_NAMES m_switchState;
     DragonTale *m_dragonTaleMgr;
+
+        frc::Timer m_loopTimer;
 };

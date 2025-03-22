@@ -42,13 +42,21 @@ DriveStopMech::DriveStopMech() : DriveStop()
     auto dragonTale = config != nullptr ? config->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
 
     m_dragonTaleMgr = dragonTale != nullptr ? dynamic_cast<DragonTale *>(dragonTale) : nullptr;
+    m_loopTimer.Start();
 }
 void DriveStopMech::Init(PrimitiveParams *params)
 {
+
+    m_loopTimer.Reset();
     DriveStop::Init(params);
+    SignalLogger::WriteDouble("DriveStopMech/DriveStopInit", m_loopTimer.Get().value(), "Sec", 0_s);
+    m_loopTimer.Reset();
+
     m_switchState = ((params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL) || (params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE))
                         ? DragonTale::STATE_NAMES::STATE_READY
                         : DragonTale::STATE_NAMES::STATE_HOLD;
+
+    SignalLogger::WriteDouble("DriveStopMech/Switch State", m_loopTimer.Get().value(), "Sec", 0_s);
 }
 
 /// @brief check if the end condition has been met

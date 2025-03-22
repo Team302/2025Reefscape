@@ -117,7 +117,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     {
         m_zone = params->GetZones()[index];
     }
-    SignalLogger::WriteDouble("DrivePathPlanner/GetZoens", m_loopTimer.Get().value(), "Sec", 0_s);
+    SignalLogger::WriteDouble("DrivePathPlanner/GetZones", m_loopTimer.Get().value(), "Sec", 0_s);
 
     m_loopTimer.Reset();
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
@@ -143,6 +143,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
         m_checkForDriveToUpdate = false;
     }
     SignalLogger::WriteDouble("DrivePathPlanner/Getting DriveToObject", m_loopTimer.Get().value(), "Sec", 0_s);
+    m_loopTimer.Reset();
 
     Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
 
@@ -151,10 +152,18 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     InitMoveInfo();
     m_moveInfo.headingOption = params->GetHeadingOption();
 
+    SignalLogger::WriteDouble("DrivePathPlanner/Init MoveInfo", m_loopTimer.Get().value(), "Sec", 0_s);
+    m_loopTimer.Reset();
+
     m_timer.get()->Reset();
     m_timer.get()->Start();
 
+    SignalLogger::WriteDouble("DrivePathPlanner/Timer Management", m_loopTimer.Get().value(), "Sec", 0_s);
+    m_loopTimer.Reset();
+
     LogMoveInfo();
+    SignalLogger::WriteDouble("DrivePathPlanner/Logging Moveinfo", m_loopTimer.Get().value(), "Sec", 0_s);
+    m_loopTimer.Reset();
 }
 
 void DrivePathPlanner::LogMoveInfo()
