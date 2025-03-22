@@ -439,9 +439,9 @@ void DragonTale::CreateCOMP_BOT302()
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
 
 	ctre::phoenix6::configs::CANrangeConfiguration BranchCANRangeConfigs{};
-	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 12.0_in;
-	BranchCANRangeConfigs.FovParams.FOVRangeX = 15_deg;
-	BranchCANRangeConfigs.FovParams.FOVRangeY = 15_deg;
+	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 20.0_in;
+	BranchCANRangeConfigs.FovParams.FOVRangeX = 6.75_deg;
+	BranchCANRangeConfigs.FovParams.FOVRangeY = 6.75_deg;
 	m_BranchCANRange->GetConfigurator().Apply(BranchCANRangeConfigs);
 
 	ctre::phoenix6::configs::CANrangeConfiguration ElevatorCANRangeConfigs{};
@@ -845,8 +845,8 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(350);
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(500);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(250);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.05);
 	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.08);
@@ -1074,7 +1074,7 @@ void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
