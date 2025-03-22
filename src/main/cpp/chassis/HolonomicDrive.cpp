@@ -57,12 +57,15 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
 void HolonomicDrive::Init()
 {
     InitChassisMovement();
+    m_bargeHelper = BargeHelper::GetInstance();
+    m_reefHelper = ReefHelper::GetInstance();
 }
 
 /// @brief calculate the output for the wheels on the chassis from the throttle and steer components
 /// @return void
 void HolonomicDrive::Run()
 {
+
     auto controller = TeleopControl::GetInstance();
     if (controller != nullptr && m_swerve != nullptr)
     {
@@ -137,6 +140,7 @@ void HolonomicDrive::Run()
         else if (driveToLeftReefBranch)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
+            m_reefHelper->IsInZone();
         }
         else if (driveToRightReefBranch)
         {
@@ -149,6 +153,7 @@ void HolonomicDrive::Run()
         else if (driveToBarge)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
+            m_bargeHelper->IsInZone();
         }
         else
         {
@@ -193,6 +198,8 @@ void HolonomicDrive::Run()
                 }
             }
             m_resetPathplannerTrajectory = true;
+            m_bargeHelper->IsInZone();
+            m_reefHelper->IsInZone();
         }
         if (isSlowMode)
         {

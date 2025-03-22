@@ -41,7 +41,7 @@ class BargeHelper
 {
 public:
     static BargeHelper *GetInstance();
-    bool isInZone();
+    void IsInZone();
     void InitZones();
     std::optional<units::length::meter_t> ClampChassisY();
 
@@ -71,4 +71,5 @@ private:
     std::vector<frc::Pose2d> m_zonesVector;
     ZoneParams *m_bargeZonesBlue;
     ZoneParams *m_bargeZonesRed;
+    bool m_previousIsInZone;
 };

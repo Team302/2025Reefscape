@@ -230,8 +230,8 @@ private:
 	RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
 	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
-	bool m_isInBargeZone = true;
-	bool m_isInReefZone = true;
+	bool m_isInBargeZone = false;
+	bool m_isInReefZone = false;
 	bool m_isDriveToIsDone = false;
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);

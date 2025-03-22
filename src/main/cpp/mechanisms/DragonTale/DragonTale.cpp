@@ -235,6 +235,8 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInBargeZone_Bool);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInReefZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool);
+
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }

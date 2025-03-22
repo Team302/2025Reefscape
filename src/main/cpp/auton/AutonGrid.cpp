@@ -61,6 +61,6 @@ bool AutonGrid::IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t r
 {
     auto translationToCenter = circleZonePose.Translation().Distance(robotPose.Translation());
     bool inZone = translationToCenter <= radius;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "circle zones", "in zone", inZone);
+
     return inZone;
 }
