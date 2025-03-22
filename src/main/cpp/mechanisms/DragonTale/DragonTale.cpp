@@ -1202,6 +1202,9 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, bool v
 
 	else if (RobotStateChanges::StateChange::IsInBargeZone_Bool == change)
 		m_isInBargeZone = value;
+
+	else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
+		m_isDriveToIsDone = value;
 }
 
 void DragonTale::SetSensorFailSafe()
