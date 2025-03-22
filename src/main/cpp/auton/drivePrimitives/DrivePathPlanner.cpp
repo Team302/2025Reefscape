@@ -182,23 +182,44 @@ void DrivePathPlanner::InitMoveInfo()
 {
     if (m_isVisionDrive)
     {
+        m_loopTimer.Reset();
+
         m_moveInfo.driveOption = m_zone->GetPathUpdateOption();
+
+        SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - driveOption", m_loopTimer.Get().value(), "Sec", 0_s);
+        m_loopTimer.Reset();
 
         if (m_driveToObject != nullptr)
         {
             m_driveToObject->Init(m_moveInfo);
         }
+
+        SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - init drivetoObject", m_loopTimer.Get().value(), "Sec", 0_s);
+        m_loopTimer.Reset();
+
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Drive Option", m_zone->GetPathUpdateOption());
     }
     else
     {
+        m_loopTimer.Reset();
+
         m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
         m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER;
 
         m_moveInfo.pathnamegains = m_pathGainsType;
 
+        SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - basic stuff", m_loopTimer.Get().value(), "Sec", 0_s);
+        m_loopTimer.Reset();
+
         auto pose = m_chassis->GetPose();
+
+        SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - chassisPose", m_loopTimer.Get().value(), "Sec", 0_s);
+        m_loopTimer.Reset();
+
         auto speed = m_chassis->GetChassisSpeeds();
+
+        SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - chassisSpeeds", m_loopTimer.Get().value(), "Sec", 0_s);
+        m_loopTimer.Reset();
 
         pathplanner::PathPlannerTrajectory trajectory;
 
@@ -206,13 +227,24 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (AutonUtils::IsValidPath(path))
         {
+
+            SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - validating path", m_loopTimer.Get().value(), "Sec", 0_s);
+            m_loopTimer.Reset();
+
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), string("Valid Path"), true);
 
             trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
+
+            SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - getting trajectory", m_loopTimer.Get().value(), "Sec", 0_s);
+            m_loopTimer.Reset();
+
             m_moveInfo.pathplannerTrajectory = trajectory;
             auto endstate = trajectory.getEndState();
             m_finalPose = endstate.pose;
             m_totalTrajectoryTime = trajectory.getTotalTime();
+
+            SignalLogger::WriteDouble("DrivePathPlanner/InitMoveInfo - Getting items from pathplanner", m_loopTimer.Get().value(), "Sec", 0_s);
+            m_loopTimer.Reset();
         }
         else
         {
