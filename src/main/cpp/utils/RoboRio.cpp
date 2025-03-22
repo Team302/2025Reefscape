@@ -30,12 +30,12 @@ RoboRio *RoboRio::GetInstance()
 
 void RoboRio::DataLog(uint64_t timestamp)
 {
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::BATTERY_VOLTAGE, frc::RobotController::GetBatteryVoltage().value(), "Volts");
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_VOLTAGE, frc::RobotController::GetInputVoltage(), "Volts");
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::INPUT_CURRENT, frc::RobotController::GetInputCurrent(), "Amps");
-    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CPU_TEMP, frc::RobotController::GetCPUTemp().value(), "Degrees C");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIO_BATTERY_VOLTAGE, frc::RobotController::GetBatteryVoltage().value(), "Volts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIO_INPUT_VOLTAGE, frc::RobotController::GetInputVoltage(), "Volts");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIO_INPUT_CURRENT, frc::RobotController::GetInputCurrent(), "Amps");
+    LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::RIO_CPU_TEMP, frc::RobotController::GetCPUTemp().value(), "Degrees C");
 
-    LogBoolData(timestamp, DragonDataLogger::BoolSignals::IS_BROWNOUT, frc::RobotController::IsBrownedOut());
+    LogBoolData(timestamp, DragonDataLogger::BoolSignals::RIO_IS_BROWNOUT, frc::RobotController::IsBrownedOut());
 
     /** other things we may want to add, but commenting out for now
     auto commsDisabledCount = frc::RobotController::GetCommsDisableCount();
