@@ -1415,7 +1415,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 	DragonDataLogger::LogBoolData(timestamp, DragonDataLogger::BoolSignals::TALE_ALGAE_SENSOR, GetAlgaeSensorState());
 
 	// LogDragonTaleState("/DragonTale/DragonTaleState", timestamp, GetCurrentState());
-	DragonDataLogger::LogStringData(timestamp, DragonDataLogger::StringSignals::TALE_STATE, GetCurrentState());
+	DragonDataLogger::LogStringData(timestamp, DragonDataLogger::StringSignals::TALE_STATE, GetCurrentStatePtr()->GetStateName());
 
 	// m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	// LogDragonTaleTotalEnergy("/DragonTale/DragonTaleTotalEnergy", timestamp, "int", m_totalEnergy);

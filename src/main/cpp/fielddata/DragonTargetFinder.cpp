@@ -330,30 +330,30 @@ void DragonTargetFinder::DataLog(uint64_t timestamp)
         {
             if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
             }
             else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
             }
             else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE, m_goalPose.value());
             }
         }
         else
         {
             if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_ODOMETRY_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
             }
             else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_ODOMETRY_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE, m_goalPose.value());
             }
             else if (m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE || m_targetVisionTarget == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)
             {
-                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE, m_goalPose.value());
+                Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_ODOMETRY_DRIVE_TO_CORAL_STATION_TARGET_POSE, m_goalPose.value());
             }
         }
     }
