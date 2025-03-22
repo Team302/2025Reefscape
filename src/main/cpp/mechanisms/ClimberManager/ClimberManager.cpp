@@ -27,12 +27,14 @@
 #include "utils/DragonPower.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
+#include "ctre/phoenix6/TalonFXS.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "mechanisms/ClimberManager/InitState.h"
 #include "mechanisms/ClimberManager/OffState.h"
 #include "mechanisms/ClimberManager/ManualClimbState.h"
 #include "mechanisms/ClimberManager/AutoClimbState.h"
+#include "mechanisms/ClimberManager/DeliverState.h"
 #include "state/RobotState.h"
 
 #include "frc/DataLogManager.h"
@@ -40,11 +42,13 @@
 using ctre::phoenix6::configs::Slot0Configs;
 using ctre::phoenix6::configs::Slot1Configs;
 using ctre::phoenix6::configs::TalonFXConfiguration;
+using ctre::phoenix6::configs::TalonFXSConfiguration;
 using ctre::phoenix6::signals::FeedbackSensorSourceValue;
 using ctre::phoenix6::signals::ForwardLimitSourceValue;
 using ctre::phoenix6::signals::ForwardLimitTypeValue;
 using ctre::phoenix6::signals::GravityTypeValue;
 using ctre::phoenix6::signals::InvertedValue;
+using ctre::phoenix6::signals::MotorArrangementValue;
 using ctre::phoenix6::signals::NeutralModeValue;
 using ctre::phoenix6::signals::ReverseLimitSourceValue;
 using ctre::phoenix6::signals::ReverseLimitTypeValue;
@@ -67,11 +71,17 @@ void ClimberManager::CreateAndRegisterStates()
 	AutoClimbState *AutoClimbStateInst = new AutoClimbState(string("AutoClimb"), 3, this, m_activeRobotId);
 	AddToStateVector(AutoClimbStateInst);
 
+	DeliverState *DeliverClimberStateInst = new DeliverState(string("DeliverClimber"), 4, this, m_activeRobotId);
+	AddToStateVector(DeliverClimberStateInst);
+
 	InitStateInst->RegisterTransitionState(OffStateInst);
-	OffStateInst->RegisterTransitionState(ManualClimbStateInst);
+	OffStateInst->RegisterTransitionState(DeliverClimberStateInst);
 	ManualClimbStateInst->RegisterTransitionState(OffStateInst);
 	ManualClimbStateInst->RegisterTransitionState(AutoClimbStateInst);
 	AutoClimbStateInst->RegisterTransitionState(OffStateInst);
+	DeliverClimberStateInst->RegisterTransitionState(OffStateInst);
+	DeliverClimberStateInst->RegisterTransitionState(AutoClimbStateInst);
+	DeliverClimberStateInst->RegisterTransitionState(ManualClimbStateInst);
 }
 
 ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string("ClimberManager")),
@@ -89,6 +99,7 @@ std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE
 	{"STATE_OFF", ClimberManager::STATE_NAMES::STATE_OFF},
 	{"STATE_MANUAL_CLIMB", ClimberManager::STATE_NAMES::STATE_MANUAL_CLIMB},
 	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},
+	{"STATE_DELIVER_CLIMBER", ClimberManager::STATE_NAMES::STATE_DELIVER_CLIMBER},
 };
 void ClimberManager::InitializeLogging()
 {
@@ -119,6 +130,7 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
 	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "canivore");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(51, "rio");
 
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -194,6 +206,7 @@ void ClimberManager::CreateCOMP_BOT302()
 {
 	m_ntName = "ClimberManager";
 	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "canivore");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
 
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -268,12 +281,14 @@ void ClimberManager::CreateCOMP_BOT302()
 void ClimberManager::InitializePRACTICE_BOT9999()
 {
 	InitializeTalonFXClimberPRACTICE_BOT9999();
+	InitializeTalonFXSExtenderPRACTICE_BOT9999();
 	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 
 void ClimberManager::InitializeCOMP_BOT302()
 {
 	InitializeTalonFXClimberCOMP_BOT302();
+	InitializeTalonFXSExtenderCOMP_BOT302();
 	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
@@ -410,16 +425,142 @@ void ClimberManager::InitializeTalonFXClimberCOMP_BOT302()
 	if (!status.IsOK())
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Climber", "m_Climber Status", status.GetName());
 }
+void ClimberManager::InitializeTalonFXSExtenderPRACTICE_BOT9999()
+{
+	TalonFXSConfiguration configs{};
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
+
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(0);
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 225;
+
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_Extender->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Extender", "m_Extender Status", status.GetName());
+}
+
+void ClimberManager::InitializeTalonFXSExtenderCOMP_BOT302()
+{
+	TalonFXSConfiguration configs{};
+	configs.CurrentLimits.StatorCurrentLimit = units::current::ampere_t(60);
+	configs.CurrentLimits.StatorCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+	configs.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(40);
+	configs.CurrentLimits.SupplyCurrentLowerTime = units::time::second_t(0.2);
+
+	configs.Voltage.PeakForwardVoltage = units::voltage::volt_t(11.0);
+	configs.Voltage.PeakReverseVoltage = units::voltage::volt_t(-11.0);
+	configs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = units::time::second_t(0.25);
+	configs.HardwareLimitSwitch.ForwardLimitEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+	configs.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = units::angle::degree_t(95);
+
+	configs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue::NormallyOpen;
+
+	configs.HardwareLimitSwitch.ReverseLimitEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitRemoteSensorID = 0;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+	configs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = units::angle::degree_t(0);
+	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
+	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
+
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
+	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
+	configs.MotorOutput.PeakForwardDutyCycle = 1;
+	configs.MotorOutput.PeakReverseDutyCycle = -1;
+	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
+
+	configs.Commutation.MotorArrangement = MotorArrangementValue::Minion_JST;
+
+	configs.ExternalFeedback.ExternalFeedbackSensorSource = FeedbackSensorSourceValue::RotorSensor;
+	configs.ExternalFeedback.SensorToMechanismRatio = 225;
+
+	m_ExtenderPositionDegree.EnableFOC = true;
+
+	configs.Slot0.kP = m_PositionDegree->GetP();
+	configs.Slot0.kI = m_PositionDegree->GetI();
+	configs.Slot0.kD = m_PositionDegree->GetD();
+	configs.Slot0.kG = m_PositionDegree->GetF();
+	configs.Slot0.kS = m_PositionDegree->GetS();
+	configs.Slot0.kV = m_PositionDegree->GetV();
+	configs.Slot0.kA = m_PositionDegree->GetA();
+	configs.Slot0.GravityType = m_PositionDegree->GetGravityType();
+	configs.Slot0.StaticFeedforwardSign = m_PositionDegree->GetStaticFeedforwardSign();
+
+	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+	for (int i = 0; i < 5; ++i)
+	{
+		status = m_Extender->GetConfigurator().Apply(configs, units::time::second_t(0.25));
+		if (status.IsOK())
+			break;
+	}
+	if (!status.IsOK())
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "m_Extender", "m_Extender Status", status.GetName());
+}
 
 void ClimberManager::SetCurrentState(int state, bool run)
 {
 	StateMgr::SetCurrentState(state, run);
 }
 
+bool ClimberManager::AtTarget()
+{
+	return (units::math::abs(m_ExtenderPositionDegree.Position - m_Extender->GetPosition().GetValue()) < m_extenderThresh);
+}
+
 void ClimberManager::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Intake", "Extender", m_Extender->GetPosition().GetValueAsDouble());
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -434,6 +575,7 @@ void ClimberManager::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USA
 void ClimberManager::Update()
 {
 	m_Climber->SetControl(*m_ClimberActiveTarget);
+	m_Extender->SetControl(*m_ExtenderActiveTarget);
 }
 
 bool ClimberManager::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
@@ -501,6 +643,9 @@ void ClimberManager::DataLog(uint64_t timestamp)
 	// m_totalEnergy += m_energy;
 	// LogClimberPower(std::string("Climber/Power"), std::string("Amps"), m_power);
 	// LogClimberEnergy(std::string("Climber/Energy"), std::string("Watts"), m_energy);
+
+	LogExtender(std::string("Intake/ExtednerDegrees"), std::string("Degrees"), (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
+	LogExtenderTarget(std::string("Intake/ExtenderTargetDegrees"), std::string("Degrees"), units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
 
 	// LogClimberManagerState(std::string("Climber/ClimberManagerState"), std::string("int"), GetCurrentState());
 
