@@ -143,9 +143,6 @@ void DriverFeedback::UpdateLEDStates()
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-    bool questStatus = false;
-    bool ll1Status = false;
-    bool ll2Status = false;
     bool pigeonfaults = false;
     bool coralInSensor = false;
     bool coralOutSensor = false;
@@ -169,14 +166,13 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             intakeSensor = intakeMgr->GetIntakeSensorState();
         }
     }
-    if (DragonVision::GetDragonVision() != nullptr)
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, m_questStatus, m_ll1Status, m_ll2Status, pigeonfaults);
+    if (m_timer == 5)
     {
-        auto vision = DragonVision::GetDragonVision();
-        ll1Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA);
-        ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
-        pigeonfaults = false;
+        QueryNT();
+        m_timer = 0;
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+    m_timer++;
 }
 
 void DriverFeedback::ResetRequests(void)
@@ -221,5 +217,41 @@ void DriverFeedback::CheckControllers()
     if (m_controllerCounter > 25)
     {
         m_controllerCounter = 0;
+    }
+}
+
+void DriverFeedback::QueryNT()
+{
+    m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
+    m_ll2Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-back"));
+    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("Questnav"));
+
+    int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
+    int ll2hb = m_ll2Nt.get()->GetEntry("hb").GetDouble(0);
+    int questhb = m_llQuestNt.get()->GetEntry("framecount").GetInteger(0);
+
+    if (ll1hb == m_ll1hb)
+    {
+        m_ll1Status = false;
+    }
+    else
+    {
+        m_ll1Status = true;
+    }
+    if (ll2hb == m_ll2hb)
+    {
+        m_ll2Status = false;
+    }
+    else
+    {
+        m_ll2Status = true;
+    }
+    if (questhb == m_questhb)
+    {
+        m_questStatus = false;
+    }
+    else
+    {
+        m_questStatus = true;
     }
 }

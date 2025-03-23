@@ -19,6 +19,10 @@
 #include "chassis/ChassisOptionEnums.h"
 #include <state/IRobotStateChangeSubscriber.h>
 
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
+#include <networktables/NetworkTableInstance.h>
+
 class DriverFeedback : public IRobotStateChangeSubscriber
 {
 public:
@@ -39,6 +43,7 @@ private:
     void DisplayPressure() const;
     void DisplayDesiredGamePiece();
     void ResetRequests(void);
+    void QueryNT();
     DriverFeedback();
     ~DriverFeedback() = default;
 
@@ -69,4 +74,18 @@ private:
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
     bool m_DriveToIsDone = false;
     ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
+
+    std::shared_ptr<nt::NetworkTable> m_ll1Nt;
+    std::shared_ptr<nt::NetworkTable> m_ll2Nt;
+    std::shared_ptr<nt::NetworkTable> m_llQuestNt;
+
+    bool m_questStatus = false;
+    bool m_ll1Status = false;
+    bool m_ll2Status = false;
+
+    int m_ll1hb = 0;
+    int m_ll2hb = 0;
+    int m_questhb = 0;
+
+    int m_timer = 0;
 };
