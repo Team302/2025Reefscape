@@ -407,7 +407,7 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
         else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH ||
                  m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
-        else
+        else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_BARGE;
     }
 }

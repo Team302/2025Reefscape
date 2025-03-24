@@ -44,6 +44,7 @@ public:
     void IsInZone();
     void InitZones();
     std::optional<units::length::meter_t> ClampChassisY();
+    frc::Pose2d CalcBargePose();
 
 private:
     BargeHelper();
@@ -54,7 +55,6 @@ private:
     void CalculateZones();
 
     SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
     FieldConstants *m_fieldConstants;
 
     // blue
@@ -72,4 +72,5 @@ private:
     ZoneParams *m_bargeZonesBlue;
     ZoneParams *m_bargeZonesRed;
     bool m_previousIsInZone;
+    units::length::foot_t m_centerLine{28.73};
 };
