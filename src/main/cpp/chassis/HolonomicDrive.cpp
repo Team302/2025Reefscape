@@ -145,6 +145,7 @@ void HolonomicDrive::Run()
         else if (driveToRightReefBranch)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
+            m_reefHelper->IsInZone();
         }
         else if (driveToCoralStation)
         {
