@@ -167,7 +167,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         }
     }
     m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, m_questStatus, m_ll1Status, m_ll2Status, pigeonfaults);
-    if (m_timer == 5)
+    if (m_timer == 100)
     {
         QueryNT();
         m_timer = 0;
@@ -224,34 +224,19 @@ void DriverFeedback::QueryNT()
 {
     m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
     m_ll2Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-back"));
-    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("Questnav"));
+    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
 
     int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
     int ll2hb = m_ll2Nt.get()->GetEntry("hb").GetDouble(0);
-    int questhb = m_llQuestNt.get()->GetEntry("framecount").GetInteger(0);
+    int questhb = m_llQuestNt.get()->GetEntry("timestamp").GetDouble(0);
 
-    if (ll1hb == m_ll1hb)
-    {
-        m_ll1Status = false;
-    }
-    else
-    {
-        m_ll1Status = true;
-    }
-    if (ll2hb == m_ll2hb)
-    {
-        m_ll2Status = false;
-    }
-    else
-    {
-        m_ll2Status = true;
-    }
-    if (questhb == m_questhb)
-    {
-        m_questStatus = false;
-    }
-    else
-    {
-        m_questStatus = true;
-    }
+    m_ll1Status = ll1hb != m_ll1hb;
+    m_ll2Status = ll2hb != m_ll2hb;
+    m_questStatus = questhb != m_questhb;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriverFeedback", "quest", m_questStatus);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriverFeedback", "test", false);
+
+    m_ll1hb = ll1hb;
+    m_ll2hb = ll2hb;
+    m_questhb = questhb;
 }
