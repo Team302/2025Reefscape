@@ -5,7 +5,7 @@
     <zone 
         circlex="13.036"
         circley="4.038"
-        radius="70.0" 
+        radius="100.0"
         taleOption="STATE_L4SCORING_POSITION"
         pathUpdateOption="RIGHT_REEF_BRANCH"/>
 </auton>
