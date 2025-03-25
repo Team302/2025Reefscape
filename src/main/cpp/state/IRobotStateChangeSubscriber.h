@@ -36,4 +36,5 @@ public:
     virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t value) {}
     virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t value) {}
     virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, frc::Pose2d value) {}
+    virtual void NotifyStateUpdate(RobotStateChanges::StateChange change, bool value) {}
 };

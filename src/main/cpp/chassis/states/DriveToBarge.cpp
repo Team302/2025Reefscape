@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -12,33 +11,39 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//=====================================================================================================================================================
 
-#pragma once
+// C++ Includes
+#include <string>
 
-#include <vector>
-#include <state/RobotStateChanges.h>
-#include <state/IRobotStateChangeSubscriber.h>
+// FRC Includes
 
-class RobotStateChangeBroker
+// Team302 Includes
+#include "chassis/states/DriveToBarge.h"
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+using std::string;
+
+DriveToBarge::DriveToBarge(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
-public:
-	RobotStateChangeBroker() = delete;
-	RobotStateChangeBroker(RobotStateChanges::StateChange change);
-	~RobotStateChangeBroker() = default;
+}
 
-	void AddSubscriber(IRobotStateChangeSubscriber *subscriber);
+string DriveToBarge::GetDriveStateName() const
+{
+    return std::string("DriveToBarge");
+}
 
-	void Notify(int value);
-	void Notify(double value);
-	void Notify(units::length::meter_t value);
-	void Notify(units::angle::degree_t value);
-	void Notify(units::velocity::meters_per_second_t value);
-	void Notify(units::angular_velocity::degrees_per_second_t value);
-	void Notify(frc::Pose2d value);
-	void Notify(bool value);
-
-private:
-	RobotStateChanges::StateChange m_change;
-	std::vector<IRobotStateChangeSubscriber *> m_subscribers;
-};
+DragonTargetFinderTarget DriveToBarge::GetDriveToTarget() const
+{
+    return DragonTargetFinderTarget::BARGE;
+}
+ChassisOptionEnums::DriveStateType DriveToBarge::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE;
+}
+ChassisOptionEnums::HeadingOption DriveToBarge::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
+}

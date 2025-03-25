@@ -42,7 +42,9 @@
 #include "chassis/states/FaceReefCenter.h"
 #include "chassis/states/FaceNearestReefFace.h"
 #include "chassis/states/FaceNearestCoralStation.h"
+#include "chassis/states/FaceBarge.h"
 #include "chassis/states/DriveToCoralStation.h"
+#include "chassis/states/DriveToBarge.h"
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/LogChassisMovement.h"
 #include "chassis/SwerveChassis.h"
@@ -147,6 +149,7 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE] = new DriveToBarge(m_robotDrive);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
@@ -154,6 +157,7 @@ void SwerveChassis::InitStates()
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_CENTER] = new FaceReefCenter();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_REEF_FACE] = new FaceNearestReefFace();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION] = new FaceNearestCoralStation();
+    m_headingStateMap[ChassisOptionEnums::HeadingOption::FACE_BARGE] = new FaceBarge();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::IGNORE] = new IgnoreHeading();
 }
 

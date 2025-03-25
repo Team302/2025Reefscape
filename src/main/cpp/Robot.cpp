@@ -33,7 +33,8 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
-
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
 using std::string;
 
 void Robot::RobotInit()
@@ -47,6 +48,9 @@ void Robot::RobotInit()
     InitializeRobot();
     InitializeAutonOptions();
     InitializeDriveteamFeedback();
+
+    BargeHelper::GetInstance();
+    ReefHelper::GetInstance();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 }

@@ -167,6 +167,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
     {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
+    {TeleopControlFunctions::AUTO_ALIGN_BARGE, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::EXPEL, driverLTriggerPressed},
     {TeleopControlFunctions::INTAKE, driverRTriggerPressed},
@@ -186,6 +187,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::MANUAL_OFF, copilotRStickPressed},
     {TeleopControlFunctions::ALGAE_HIGH, copilotDPad0},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
+    {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
 
 };

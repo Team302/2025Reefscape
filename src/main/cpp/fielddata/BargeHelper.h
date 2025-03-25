@@ -16,40 +16,61 @@
 
 #pragma once
 
+// C++ includes
 #include <optional>
-
+#include <vector>
+// 302 includes
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
 #include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
-#include "auton/ZoneParams.h"
-#include "auton/ZoneParser.h"
 #include "state/RobotState.h"
-class ReefHelper
+#include "auton/AutonGrid.h"
+#include "auton/ZoneParser.h"
+#include "auton/ZoneParams.h"
+
+enum class BargeZones
+{
+    FAR_LEFT_ZONE,
+    CLOSE_LEFT_ZONE,
+    CLOSE_RIGHT_ZONE,
+    FAR_RIGHT_ZONE,
+    NO_ZONE
+};
+class BargeHelper
 {
 public:
-    static ReefHelper *GetInstance();
+    static BargeHelper *GetInstance();
     void IsInZone();
     void InitZones();
-    std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
+    std::optional<units::length::meter_t> ClampChassisY();
+    frc::Pose2d CalcBargePose();
 
 private:
-    ReefHelper();
-    ~ReefHelper() = default;
-    static ReefHelper *m_instance;
+    BargeHelper();
+    ~BargeHelper() = default;
+    static BargeHelper *m_instance;
 
-    units::length::meter_t CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose);
+    std::optional<BargeZones> GetClosestZone();
+    void CalculateZones();
 
     SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
     FieldConstants *m_fieldConstants;
 
-    frc::Pose2d m_redReefCenter;
-    frc::Pose2d m_blueReefCenter;
-    ZoneParams *m_reefZonesRed;
-    ZoneParams *m_reefZonesBlue;
-    AutonGrid *autongridptr;
+    // blue
+    const frc::Pose2d m_blueCenterOfBarge{8.225_m, 6.161_m, 0_deg};
+    const frc::Pose2d m_blueLeftBargePose{8.225_m, 8.033_m, 0_deg};
+    const frc::Pose2d m_blueRightBargePose{8.225_m, 4.329_m, 0_deg};
+
+    // red
+    const frc::Pose2d m_redLeftBargePose{9.358_m, 0.5_m, 0_deg};
+    const frc::Pose2d m_redCenterOfBarge{9.358_m, 1.904_m, 0_deg};
+    const frc::Pose2d m_redRightBargePose{9.358_m, 3.723_m, 0_deg};
+
+    const unsigned int m_numOfZones = 4;
+    std::vector<frc::Pose2d> m_zonesVector;
+    ZoneParams *m_bargeZonesBlue;
+    ZoneParams *m_bargeZonesRed;
     bool m_previousIsInZone;
+    units::length::foot_t m_centerLine{28.73};
 };

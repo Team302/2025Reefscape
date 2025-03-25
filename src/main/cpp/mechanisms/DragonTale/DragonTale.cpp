@@ -164,7 +164,6 @@ void DragonTale::CreateAndRegisterStates()
 	HoldStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
-	HoldStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(HoldStateInst);
@@ -232,6 +231,11 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInBargeZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInReefZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool);
+
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -439,9 +443,11 @@ void DragonTale::CreateCOMP_BOT302()
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
 
 	ctre::phoenix6::configs::CANrangeConfiguration BranchCANRangeConfigs{};
-	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 20.0_in;
-	BranchCANRangeConfigs.FovParams.FOVRangeX = 6.75_deg;
-	BranchCANRangeConfigs.FovParams.FOVRangeY = 6.75_deg;
+	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 15.0_in;
+	BranchCANRangeConfigs.FovParams.FOVRangeX = 15.0_deg;
+	BranchCANRangeConfigs.FovParams.FOVRangeY = 10.0_deg;
+	BranchCANRangeConfigs.ProximityParams.MinSignalStrengthForValidMeasurement = units::dimensionless::scalar_t(700.0);
+
 	m_BranchCANRange->GetConfigurator().Apply(BranchCANRangeConfigs);
 
 	ctre::phoenix6::configs::CANrangeConfiguration ElevatorCANRangeConfigs{};
@@ -1192,6 +1198,18 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
 }
 
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
+{
+	if (RobotStateChanges::StateChange::IsInReefZone_Bool == change)
+		m_isInReefZone = value;
+
+	else if (RobotStateChanges::StateChange::IsInBargeZone_Bool == change)
+		m_isInBargeZone = value;
+
+	else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
+		m_isDriveToIsDone = value;
+}
+
 void DragonTale::SetSensorFailSafe()
 {
 	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::MANUAL_ON))
@@ -1321,7 +1339,7 @@ void DragonTale::IsElevatorInSync()
 
 void DragonTale::SetAlgaeMotor()
 {
-	if ((GetAlgaeSensorState() || GetManualMode()) && GetCurrentState() != STATE_SCORE_ALGAE)
+	if ((GetAlgaeSensorState() || GetManualMode()) && (GetCurrentState() != STATE_SCORE_ALGAE))
 	{
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
@@ -1400,4 +1418,5 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
 }
