@@ -269,6 +269,7 @@ bool DrivePathPlanner::IsInZone()
 {
     if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
     {
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "ZoneMode", m_zone->GetZoneMode());
 
         if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
         {
