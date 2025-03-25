@@ -16,7 +16,7 @@ time= "1.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterH_Barge"
 time = "3.0">
-<zone filename = "RedBarge.xml"/>
+<zone filename = "RedBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DO_NOTHING"
@@ -24,7 +24,7 @@ taleOption="STATE_NET"
 time = "1.0"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueBarge_J"
+choreoname= "BlueCenterBarge_J"
 taleOption= "STATE_GRAB_ALGAE_REEF"
 time = "3.0">
 <zone filename = "RedReefDriveToLeftNoMech.xml"/>
@@ -33,7 +33,7 @@ time = "3.0">
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterJ_Barge"
 time = "3.0">
-<zone filename = "RedBarge.xml"/>
+<zone filename = "RedBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DO_NOTHING"
@@ -41,7 +41,7 @@ taleOption="STATE_NET"
 time = "1.0"/> 
 
 <primitive id = "DRIVE_PATH_PLANNER"
-choreoname= "BlueBarge_F"
+choreoname= "BlueCenterBarge_F"
 taleOption= "STATE_GRAB_ALGAE_REEF"
 time = "3.0">
 <zone filename = "RedReefDriveToLeftNoMech.xml"/>
@@ -50,7 +50,7 @@ time = "3.0">
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterF_Barge"
 time = "3.0">
-<zone filename = "RedBarge.xml"/>
+<zone filename = "RedBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DO_NOTHING"
