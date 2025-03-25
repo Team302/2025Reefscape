@@ -86,5 +86,5 @@ bool NetState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L4_SCORING_POSITION) && m_mechanism->IsAlgaeMode());
+	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L4_SCORING_POSITION) && m_mechanism->IsAlgaeMode() && (m_mechanism->IsInBargeZone() || TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_ELEVATOR)));
 }

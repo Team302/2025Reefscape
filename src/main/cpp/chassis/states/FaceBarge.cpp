@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,31 +13,40 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-#include <vector>
-#include <state/RobotStateChanges.h>
-#include <state/IRobotStateChangeSubscriber.h>
-
-class RobotStateChangeBroker
+// Team302 Includes
+#include "chassis/states/FaceBarge.h"
+#include "vision/DragonVision.h"
+#include "utils/AngleUtils.h"
+#include "utils/FMSData.h"
+FaceBarge::FaceBarge() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
 {
-public:
-	RobotStateChangeBroker() = delete;
-	RobotStateChangeBroker(RobotStateChanges::StateChange change);
-	~RobotStateChangeBroker() = default;
+}
 
-	void AddSubscriber(IRobotStateChangeSubscriber *subscriber);
+std::string FaceBarge::GetHeadingStateName() const
+{
+    return std::string("FaceBarge");
+}
 
-	void Notify(int value);
-	void Notify(double value);
-	void Notify(units::length::meter_t value);
-	void Notify(units::angle::degree_t value);
-	void Notify(units::velocity::meters_per_second_t value);
-	void Notify(units::angular_velocity::degrees_per_second_t value);
-	void Notify(frc::Pose2d value);
-	void Notify(bool value);
+DragonTargetFinderTarget FaceBarge::GetTarget() const
+{
+    return DragonTargetFinderTarget::BARGE;
+}
 
-private:
-	RobotStateChanges::StateChange m_change;
-	std::vector<IRobotStateChangeSubscriber *> m_subscribers;
-};
+units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovement) const
+{
+    auto finder = DragonTargetFinder::GetInstance();
+    if (finder != nullptr)
+    {
+        auto info = finder->GetPose(GetTarget());
+        if (info.has_value())
+        {
+            auto targetpose = get<1>(info.value());
+
+            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
+
+            return chassisMovement.yawAngle;
+        }
+    }
+
+    return units::angle::degree_t(0);
+}

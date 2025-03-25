@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,29 +15,30 @@
 
 #pragma once
 
+// C++ Includes
+#include <string>
 #include <vector>
-#include <state/RobotStateChanges.h>
-#include <state/IRobotStateChangeSubscriber.h>
 
-class RobotStateChangeBroker
+// FRC Includes
+
+// Team302 Includes
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class RobotDrive;
+
+class DriveToBarge : public DriveToFieldElement // will utilize a helper class for barge
 {
 public:
-	RobotStateChangeBroker() = delete;
-	RobotStateChangeBroker(RobotStateChanges::StateChange change);
-	~RobotStateChangeBroker() = default;
+    DriveToBarge(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-	void AddSubscriber(IRobotStateChangeSubscriber *subscriber);
-
-	void Notify(int value);
-	void Notify(double value);
-	void Notify(units::length::meter_t value);
-	void Notify(units::angle::degree_t value);
-	void Notify(units::velocity::meters_per_second_t value);
-	void Notify(units::angular_velocity::degrees_per_second_t value);
-	void Notify(frc::Pose2d value);
-	void Notify(bool value);
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 
 private:
-	RobotStateChanges::StateChange m_change;
-	std::vector<IRobotStateChangeSubscriber *> m_subscribers;
+    std::vector<unsigned int> m_numberOfAlgaeVector;
 };
