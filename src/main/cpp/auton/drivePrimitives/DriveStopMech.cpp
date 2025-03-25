@@ -46,9 +46,9 @@ DriveStopMech::DriveStopMech() : DriveStop()
 void DriveStopMech::Init(PrimitiveParams *params)
 {
     DriveStop::Init(params);
-    m_switchState = ((params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL) || (params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE))
-                        ? DragonTale::STATE_NAMES::STATE_READY
-                        : DragonTale::STATE_NAMES::STATE_HOLD;
+    // //m_switchState = ((params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL) || (params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE))
+    //                     ? DragonTale::STATE_NAMES::STATE_READY
+    //                     : DragonTale::STATE_NAMES::STATE_HOLD;
 }
 
 /// @brief check if the end condition has been met
@@ -56,7 +56,9 @@ void DriveStopMech::Init(PrimitiveParams *params)
 bool DriveStopMech::IsDone()
 {
     if (m_dragonTaleMgr != nullptr)
-        return m_dragonTaleMgr->GetCurrentState() == m_switchState || DriveStop::IsDone();
+        return m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_READY ||
+               m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD ||
+               DriveStop::IsDone();
 
     return DriveStop::IsDone();
 }
