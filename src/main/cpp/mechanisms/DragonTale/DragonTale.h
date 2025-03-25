@@ -154,10 +154,12 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
 	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
+
 	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	bool GetBranchCANRangeState() const { return m_BranchCANRange->GetIsDetected().GetValue(); }
+	bool IsValidTarget() { return m_BranchCANRange->GetDistanceStdDev().GetValue() < 0.075_m; }
 	units::length::inch_t GetElevatorCANRangeHeight() { return units::length::inch_t(m_ElevatorCANRange->GetDistance().GetValue()) - 2.0_in + 0.71_in; }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
