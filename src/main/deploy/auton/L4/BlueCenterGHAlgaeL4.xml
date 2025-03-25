@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE auton SYSTEM "auton.dtd">
+<auton>
+
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueCenter_H"
+time = "3.0">
+<zone filename = "RedReefDriveToLeftNoMech.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+taleOption = "STATE_L4SCORING_POSITION"
+time= "1.0"/>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueCenterH_Barge"
+time = "3.0">
+<zone filename = "BlueBarge.xml"/>
+</primitive>
+
+<primitive id = "DO_NOTHING"
+taleOption="STATE_NET"
+time = "1.0"/> 
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueBarge_J"
+taleOption= "STATE_GRAB_ALGAE_REEF"
+time = "3.0">
+<zone filename = "RedReefDriveToLeftNoMech.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueCenterJ_Barge"
+time = "3.0">
+<zone filename = "BlueBarge.xml"/>
+</primitive>
+
+<primitive id = "DO_NOTHING"
+taleOption="STATE_NET"
+time = "1.0"/> 
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname= "BlueBarge_F"
+taleOption= "STATE_GRAB_ALGAE_REEF"
+time = "3.0">
+<zone filename = "RedReefDriveToLeftNoMech.xml"/>
+</primitive>
+
+<primitive id = "DRIVE_PATH_PLANNER"
+choreoname = "BlueCenterF_Barge"
+time = "3.0">
+<zone filename = "BlueBarge.xml"/>
+</primitive>
+
+<primitive id = "DO_NOTHING"
+taleOption="STATE_NET"
+time = "1.0"/> 
+
+</auton>
