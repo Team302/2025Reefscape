@@ -29,10 +29,12 @@ public:
         GameState_Int,
         CompressorChange_Int,
         ChassisPose_Pose2D,
-        DriveToFieldElementIsDone_Int,
+        DriveToFieldElementIsDone_Bool,
         DriveStateType_Int,
         ElevatorHeight_Inch,
-        LoopCounterEnd  // Must be last Enum for the loop counter
+        IsInBargeZone_Bool,
+        IsInReefZone_Bool,
+        LoopCounterEnd // Must be last Enum for the loop counter
     };
 
     enum ScoringMode

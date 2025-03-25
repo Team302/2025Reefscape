@@ -185,7 +185,7 @@ DriverFeedback::DriverFeedback() : IRobotStateChangeSubscriber()
     RobotState *RobotStates = RobotState::GetInstance();
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
-    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int);
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool);
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveStateType_Int);
 }
 void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
@@ -196,11 +196,14 @@ void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, in
     else if (RobotStateChanges::StateChange::DesiredScoringMode_Int == change)
         m_scoringMode = static_cast<RobotStateChanges::ScoringMode>(value);
 
-    else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Int == change)
-        m_DriveToIsDone = value;
-
     else if (RobotStateChanges::StateChange::DriveStateType_Int == change)
         m_driveStateType = static_cast<ChassisOptionEnums::DriveStateType>(value);
+}
+
+void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
+{
+    if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
+        m_DriveToIsDone = value;
 }
 
 void DriverFeedback::CheckControllers()

@@ -74,6 +74,8 @@ public:
         BLUE_REEF_J,
         BLUE_REEF_K,
         BLUE_REEF_L,
+        BLUE_BARGE_FRONT_CALCULATED,
+        BLUE_BARGE_BACK_CALCULATED,
         // 2025 - Red Calculated Positions
         RED_CORAL_STATION_LEFT_ALLIANCE,
         RED_CORAL_STATION_LEFT_SIDEWALL,
@@ -94,7 +96,9 @@ public:
         RED_REEF_I,
         RED_REEF_J,
         RED_REEF_K,
-        RED_REEF_L
+        RED_REEF_L,
+        RED_BARGE_FRONT_CALCULATED,
+        RED_BARGE_BACK_CALCULATED
     };
 
     enum FIELD_ELEMENT_OFFSETS

@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,29 +15,19 @@
 
 #pragma once
 
-#include <vector>
-#include <state/RobotStateChanges.h>
-#include <state/IRobotStateChangeSubscriber.h>
+// Team302 Includes
+#include "chassis/states/FaceTarget.h"
+#include "fielddata/DragonTargetFinder.h"
 
-class RobotStateChangeBroker
+class FaceBarge : public FaceTarget
 {
 public:
-	RobotStateChangeBroker() = delete;
-	RobotStateChangeBroker(RobotStateChanges::StateChange change);
-	~RobotStateChangeBroker() = default;
+    FaceBarge();
+    ~FaceBarge() = default;
 
-	void AddSubscriber(IRobotStateChangeSubscriber *subscriber);
+    std::string GetHeadingStateName() const override;
+    units::angle::degree_t GetTargetAngle(ChassisMovement &chassisMovement) const override;
 
-	void Notify(int value);
-	void Notify(double value);
-	void Notify(units::length::meter_t value);
-	void Notify(units::angle::degree_t value);
-	void Notify(units::velocity::meters_per_second_t value);
-	void Notify(units::angular_velocity::degrees_per_second_t value);
-	void Notify(frc::Pose2d value);
-	void Notify(bool value);
-
-private:
-	RobotStateChanges::StateChange m_change;
-	std::vector<IRobotStateChangeSubscriber *> m_subscribers;
+protected:
+    DragonTargetFinderTarget GetTarget() const override;
 };

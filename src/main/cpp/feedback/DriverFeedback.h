@@ -35,6 +35,7 @@ public:
     void UpdateCompressorState();
 
     void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, bool value) override;
 
 private:
     void UpdateRumble();

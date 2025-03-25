@@ -82,3 +82,10 @@ void RobotStateChangeBroker::Notify(frc::Pose2d value)
         subscriber->NotifyStateUpdate(m_change, value);
     }
 }
+void RobotStateChangeBroker::Notify(bool value)
+{
+    for (auto subscriber : m_subscribers)
+    {
+        subscriber->NotifyStateUpdate(m_change, value);
+    }
+}

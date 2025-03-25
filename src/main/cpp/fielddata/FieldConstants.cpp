@@ -16,7 +16,6 @@
 
 #include "FieldElementCalculator.h"
 
-
 FieldConstants *FieldConstants::m_instance = nullptr;
 FieldConstants *FieldConstants::GetInstance()
 {
@@ -64,6 +63,8 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_J] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_K] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED] = m_placeholder;
 
     // Red AprilTag locations
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT] = m_aprilTag1;
@@ -98,6 +99,8 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_J] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_K] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED] = m_placeholder;
 
     aprilTagPoseMap[1] = m_aprilTag1;
     aprilTagPoseMap[2] = m_aprilTag2;
@@ -124,7 +127,6 @@ FieldConstants::FieldConstants()
 
     FieldElementCalculator fc;
     fc.CalcPositionsForField(fieldConstantsPoseMap);
-
 }
 frc::Pose3d FieldConstants::GetFieldElementPose(FIELD_ELEMENT element)
 {

@@ -30,6 +30,7 @@
 #include "units/angle.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
+#include "fielddata/BargeHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -148,6 +149,23 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         else
         {
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d());
+        }
+    }
+    else if (item == DragonTargetFinderTarget::BARGE)
+    {
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (bargeHelper != nullptr)
+        {
+            auto pose2d = bargeHelper->CalcBargePose();
+            if (bargeHelper->ClampChassisY().has_value())
+            {
+                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
+            }
+            else
+            {
+                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            }
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
         }
     }
 
