@@ -153,24 +153,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     }
     else if (item == DragonTargetFinderTarget::BARGE)
     {
-        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
         auto bargeHelper = BargeHelper::GetInstance();
-        if (allianceColor == frc::DriverStation::Alliance::kRed)
+        if (bargeHelper != nullptr)
         {
-            auto pose2d = m_chassis->GetPose().X() > m_centerLine ? fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
-            if (bargeHelper->ClampChassisY().has_value())
-            {
-                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
-            }
-            else
-            {
-                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
-            }
-            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
-        }
-        else
-        {
-            auto pose2d = m_chassis->GetPose().X() > m_centerLine ? fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : fieldconst->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+            auto pose2d = bargeHelper->CalcBargePose();
             if (bargeHelper->ClampChassisY().has_value())
             {
                 pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());

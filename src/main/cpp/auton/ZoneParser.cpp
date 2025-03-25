@@ -179,6 +179,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 
             AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
 
+            // TODO: add zoneType parsing and check
+
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
             bool isTaleStateChanging = false;
             bool isIntakeStateChanging = false;

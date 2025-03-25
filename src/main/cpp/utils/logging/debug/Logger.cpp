@@ -357,8 +357,8 @@ void Logger::SetLoggingLevel(
     m_level = level;
 }
 
-Logger::Logger() : m_option(LOGGER_OPTION::DASHBOARD),
-                   m_level(LOGGER_LEVEL::PRINT),
+Logger::Logger() : m_option(LOGGER_OPTION::EAT_IT),
+                   m_level(LOGGER_LEVEL::ERROR_ONCE),
                    m_alreadyDisplayed(),
                    m_cyclingCounter(0),
                    m_optionChooser(),
