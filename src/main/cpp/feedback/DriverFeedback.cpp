@@ -104,6 +104,10 @@ void DriverFeedback::UpdateLEDStates()
                 {
                     currentState = frc::Color::kAqua;
                 }
+                else if (taleMgr->GetCurrentState() == taleMgr->STATE_READY)
+                {
+                    currentState = m_scoringMode == RobotStateChanges::ScoringMode::Coral ? frc::Color::kGhostWhite : frc::Color::kAqua;
+                }
                 else
                 {
                     currentState = frc::Color::kGhostWhite;
