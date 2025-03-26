@@ -46,9 +46,6 @@ DriveStopMech::DriveStopMech() : DriveStop()
 void DriveStopMech::Init(PrimitiveParams *params)
 {
     DriveStop::Init(params);
-    // //m_switchState = ((params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_CORAL) || (params->GetTaleState() == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE))
-    //                     ? DragonTale::STATE_NAMES::STATE_READY
-    //                     : DragonTale::STATE_NAMES::STATE_HOLD;
 }
 
 /// @brief check if the end condition has been met

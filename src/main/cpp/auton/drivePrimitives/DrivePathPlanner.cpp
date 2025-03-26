@@ -132,7 +132,6 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     if (m_zone != nullptr)
     {
         m_driveToObject = GetDriveToObject(m_zone->GetPathUpdateOption());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), "driveToObj", m_zone->GetPathUpdateOption());
         m_checkForDriveToUpdate = true;
     }
     else
