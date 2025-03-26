@@ -133,42 +133,17 @@ frc::Pose2d BargeHelper::CalcBargePose()
     return pose2d;
 }
 
-std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetLeftCage()
+frc::Pose2d BargeHelper::GetCagePose(DragonTargetFinderTarget target)
 {
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED : FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED; // defualt value in front of barge
 
-    if (allianceColor == frc::DriverStation::kRed)
-    {
-        return FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE;
-    }
-    else
-    {
-        return FieldConstants::FIELD_ELEMENT::BLUE_LEFT_CAGE;
-    }
-}
-std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetRightCage()
-{
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    if (target == DragonTargetFinderTarget::LEFT_CAGE)
+        fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE : FieldConstants::FIELD_ELEMENT::BLUE_LEFT_CAGE;
+    else if (target == DragonTargetFinderTarget::RIGHT_CAGE)
+        fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE : FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE;
+    else if (target == DragonTargetFinderTarget::CENTER_CAGE)
+        fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE : FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
 
-    if (allianceColor == frc::DriverStation::kRed)
-    {
-        return FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE;
-    }
-    else
-    {
-        return FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE;
-    }
-}
-std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetCenterCage()
-{
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
-
-    if (allianceColor == frc::DriverStation::kRed)
-    {
-        return FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE;
-    }
-    else
-    {
-        return FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
-    }
+    return m_fieldConstants->GetFieldElementPose(fieldElement).ToPose2d();
 }

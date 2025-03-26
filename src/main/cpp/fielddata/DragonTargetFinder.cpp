@@ -224,8 +224,13 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
              item == DragonTargetFinderTarget::CENTER_CAGE ||
              item == DragonTargetFinderTarget::RIGHT_CAGE)
     {
-        // call cage helper to find the appropriate the cage,
-        // its corresponding APRILTAG ID and the field constant identifier
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (bargeHelper != nullptr)
+        {
+            auto cagepose = bargeHelper->GetCagePose(item);
+            m_goalPose = cagepose;
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, cagepose);
+        }
     }
 
     auto pose2d = Pose2d();

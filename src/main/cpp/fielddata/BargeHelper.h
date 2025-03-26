@@ -28,6 +28,7 @@
 #include "auton/AutonGrid.h"
 #include "auton/ZoneParser.h"
 #include "auton/ZoneParams.h"
+#include "fielddata/DragonTargetFinder.h"
 
 enum class BargeZones
 {
@@ -44,9 +45,8 @@ public:
     void IsInZone();
     void InitZones();
     std::optional<units::length::meter_t> ClampChassisY();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetLeftCage();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetRightCage();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetCenterCage();
+    frc::Pose2d GetCagePose(DragonTargetFinderTarget target);
+
     frc::Pose2d CalcBargePose();
 
 private:
