@@ -135,7 +135,9 @@ frc::Pose2d BargeHelper::CalcBargePose()
 
 std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetLeftCage()
 {
-    if (m_allianceColor == frc::DriverStation::kRed)
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+
+    if (allianceColor == frc::DriverStation::kRed)
     {
         return FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE;
     }
@@ -146,7 +148,9 @@ std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetLeftCage()
 }
 std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetRightCage()
 {
-    if (m_allianceColor == frc::DriverStation::kRed)
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+
+    if (allianceColor == frc::DriverStation::kRed)
     {
         return FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE;
     }
@@ -157,7 +161,9 @@ std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetRightCage()
 }
 std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetCenterCage()
 {
-    if (m_allianceColor == frc::DriverStation::kRed)
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+
+    if (allianceColor == frc::DriverStation::kRed)
     {
         return FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE;
     }
