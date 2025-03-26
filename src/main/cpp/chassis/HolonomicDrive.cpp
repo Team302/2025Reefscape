@@ -138,29 +138,29 @@ void HolonomicDrive::Run()
         {
             PolarDrive();
         }
-        else if (driveToLeftReefBranch && m_climbMode == false)
+        else if (driveToLeftReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
             m_reefHelper->IsInZone();
         }
-        else if (driveToRightReefBranch && m_climbMode == false)
+        else if (driveToRightReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
             m_reefHelper->IsInZone();
         }
-        else if (driveToCoralStation && m_climbMode == false)
+        else if (driveToCoralStation && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION);
         }
-        else if (driveToLeftReefBranch && m_climbMode == true)
+        else if (driveToLeftReefBranch && m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE);
         }
-        else if (driveToRightReefBranch && m_climbMode == true)
+        else if (driveToRightReefBranch && m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE);
         }
-        else if (driveToCoralStation && m_climbMode == true)
+        else if (driveToCoralStation && m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
         }
