@@ -33,7 +33,6 @@ BargeHelper *BargeHelper::GetInstance()
 }
 
 BargeHelper::BargeHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
-                             m_allianceColor(FMSData::GetInstance()->GetAllianceColor()),
                              m_fieldConstants(FieldConstants::GetInstance())
 {
     CalculateZones();
@@ -42,7 +41,8 @@ BargeHelper::BargeHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurre
 
 void BargeHelper::CalculateZones()
 {
-    bool isRed = m_allianceColor == frc::DriverStation::Alliance::kRed;
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    bool isRed = allianceColor == frc::DriverStation::Alliance::kRed;
     auto sizeOfBarge = 0_m;
 
     sizeOfBarge = isRed ? m_redLeftBargePose.Translation().Distance(m_redRightBargePose.Translation()) : m_blueLeftBargePose.Translation().Distance(m_blueRightBargePose.Translation());
@@ -89,8 +89,8 @@ void BargeHelper::InitZones()
 }
 std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
 {
-    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
-    auto bargeZones = m_allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
     if (bargeZones != nullptr)
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Parsed Y1", bargeZones->GetY1Rect().value());
@@ -104,21 +104,34 @@ std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
     return std::nullopt;
 }
 
-bool BargeHelper::isInZone()
+void BargeHelper::IsInZone()
 {
-    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
-    auto bargeZones = m_allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
 
     if (bargeZones != nullptr)
     {
         bool intheZone = AutonGrid::GetInstance()->IsPoseInZone(bargeZones->GetX1Rect(), bargeZones->GetX2Rect(), bargeZones->GetY1Rect(), bargeZones->GetY2Rect(), m_chassis->GetPose());
-        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, intheZone);
-        return intheZone;
+        if (m_previousIsInZone != intheZone)
+            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, intheZone);
+        m_previousIsInZone = intheZone;
     }
-    else
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Barge Zone", "nullptr");
-    return false;
 }
+
+frc::Pose2d BargeHelper::CalcBargePose()
+{
+    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    frc::Pose2d pose2d{};
+    if (allianceColor == frc::DriverStation::Alliance::kRed)
+    {
+        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
+    }
+    {
+        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+    }
+    return pose2d;
+}
+
 std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetLeftCage()
 {
     if (m_allianceColor == frc::DriverStation::kRed)
@@ -152,3 +165,4 @@ std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetCenterCage()
         return FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
     }
 }
+

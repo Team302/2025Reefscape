@@ -29,7 +29,8 @@ class ReefHelper
 {
 public:
     static ReefHelper *GetInstance();
-    bool IsPoseInZone();
+    void IsInZone();
+    void InitZones();
     std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
@@ -47,6 +48,8 @@ private:
 
     frc::Pose2d m_redReefCenter;
     frc::Pose2d m_blueReefCenter;
-    ZoneParams *m_zoneParamsptr;
+    ZoneParams *m_reefZonesRed;
+    ZoneParams *m_reefZonesBlue;
     AutonGrid *autongridptr;
+    bool m_previousIsInZone;
 };

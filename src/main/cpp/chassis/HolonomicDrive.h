@@ -23,6 +23,8 @@
 #include "chassis/ChassisMovement.h"
 #include "state/State.h"
 #include "state/IRobotStateChangeSubscriber.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
 
 class SwerveChassis;
 
@@ -69,4 +71,6 @@ private:
     units::length::inch_t m_elevatorHeightThreshold = units::length::inch_t(20.0);
     double m_dynamicSpeed = 1.0;
     bool m_climbMode = false;
+    ReefHelper *m_reefHelper;
+    BargeHelper *m_bargeHelper;
 };

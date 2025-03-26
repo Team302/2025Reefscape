@@ -41,12 +41,13 @@ class BargeHelper
 {
 public:
     static BargeHelper *GetInstance();
-    bool isInZone();
+    void IsInZone();
     void InitZones();
     std::optional<units::length::meter_t> ClampChassisY();
     std::optional<FieldConstants::FIELD_ELEMENT> GetLeftCage();
     std::optional<FieldConstants::FIELD_ELEMENT> GetRightCage();
     std::optional<FieldConstants::FIELD_ELEMENT> GetCenterCage();
+    frc::Pose2d CalcBargePose();
 
 private:
     BargeHelper();
@@ -57,7 +58,6 @@ private:
     void CalculateZones();
 
     SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
     FieldConstants *m_fieldConstants;
 
     // blue
@@ -74,4 +74,6 @@ private:
     std::vector<frc::Pose2d> m_zonesVector;
     ZoneParams *m_bargeZonesBlue;
     ZoneParams *m_bargeZonesRed;
+    bool m_previousIsInZone;
+    units::length::foot_t m_centerLine{28.73};
 };
