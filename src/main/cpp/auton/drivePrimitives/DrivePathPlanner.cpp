@@ -269,8 +269,6 @@ bool DrivePathPlanner::IsInZone()
 {
     if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "ZoneMode", m_zone->GetZoneMode());
-
         if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
         {
             return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetCircleZonePose(),
@@ -279,10 +277,11 @@ bool DrivePathPlanner::IsInZone()
         }
         else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
         {
-            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
-                                                          m_zone->GetXGrid2(),
-                                                          m_zone->GetYGrid1(),
-                                                          m_zone->GetYGrid2(),
+
+            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetX1Rect(),
+                                                          m_zone->GetX2Rect(),
+                                                          m_zone->GetY1Rect(),
+                                                          m_zone->GetY2Rect(),
                                                           m_chassis->GetPose());
         }
     }
