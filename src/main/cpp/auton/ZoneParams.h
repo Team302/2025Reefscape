@@ -27,15 +27,17 @@
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "auton/PrimitiveEnums.h"
+#include "auton/ZoneEnums.h"
+
 // Third Party Includes
 
 class ZoneParams
 {
 public:
-    ZoneParams(AutonGrid::XGRID xgrid1,
-               AutonGrid::YGRID ygrid1,
-               AutonGrid::XGRID xgrid2,
-               AutonGrid::YGRID ygrid2,
+    ZoneParams(XGRID xgrid1,
+               YGRID ygrid1,
+               XGRID xgrid2,
+               YGRID ygrid2,
                frc::Pose2d circlePose,
                units::length::inch_t radius,
                units::length::meter_t m_xgrid1rect,
@@ -50,22 +52,22 @@ public:
                ChassisOptionEnums::HeadingOption headingOption,
                ChassisOptionEnums::DriveStateType pathUpdateOption,
                ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
-               AutonGrid::ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
+               ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
     ZoneParams() = delete;
     ~ZoneParams() = default; // Destructor
 
-    AutonGrid::XGRID GetXGrid1() const { return m_xgrid1; }
-    AutonGrid::XGRID GetXGrid2() const { return m_xgrid2; }
-    AutonGrid::YGRID GetYGrid1() const { return m_ygrid1; }
-    AutonGrid::YGRID GetYGrid2() const { return m_ygrid2; }
+    XGRID GetXGrid1() const { return m_xgrid1; }
+    XGRID GetXGrid2() const { return m_xgrid2; }
+    YGRID GetYGrid1() const { return m_ygrid1; }
+    YGRID GetYGrid2() const { return m_ygrid2; }
 
     units::length::meter_t GetX1Rect() const { return m_xgrid1rect; }
     units::length::meter_t GetX2Rect() const { return m_xgrid2rect; }
     units::length::meter_t GetY1Rect() const { return m_ygrid1rect; }
     units::length::meter_t GetY2Rect() const { return m_ygrid2rect; }
 
-    AutonGrid::ZoneMode GetZoneMode() const { return m_zoneMode; }
+    ZoneMode GetZoneMode() const { return m_zoneMode; }
 
     frc::Pose2d GetCircleZonePose() const { return m_circlePose; }
     units::length::inch_t GetRadius() const { return m_radius; }
@@ -82,11 +84,13 @@ public:
     ChassisOptionEnums::AutonChassisOptions GetChassisOption() const { return m_chassisoption; }
     ChassisOptionEnums::AutonAvoidOptions GetAvoidOption() const { return m_avoidoption; }
 
+    bool IsPoseInZone(frc::Pose2d robotPose);
+
 private:
-    AutonGrid::XGRID m_xgrid1;
-    AutonGrid::YGRID m_ygrid1;
-    AutonGrid::XGRID m_xgrid2;
-    AutonGrid::YGRID m_ygrid2;
+    XGRID m_xgrid1;
+    YGRID m_ygrid1;
+    XGRID m_xgrid2;
+    YGRID m_ygrid2;
     units::length::meter_t m_xgrid1rect;
     units::length::meter_t m_xgrid2rect;
     units::length::meter_t m_ygrid1rect;
@@ -103,7 +107,7 @@ private:
 
     ChassisOptionEnums::DriveStateType m_pathUpdateOption;
 
-    AutonGrid::ZoneMode m_zoneMode;
+    ZoneMode m_zoneMode;
 
     frc::Pose2d m_circlePose;
     units::length::inch_t m_radius;

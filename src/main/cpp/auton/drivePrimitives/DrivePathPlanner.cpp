@@ -263,23 +263,10 @@ void DrivePathPlanner::CheckForDriveTo()
 }
 bool DrivePathPlanner::IsInZone()
 {
-    if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
+    if (m_zone->GetZoneMode() != ZoneMode::NOTHING && m_chassis != nullptr)
     {
 
-        if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
-        {
-            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetCircleZonePose(),
-                                                          m_zone->GetRadius(),
-                                                          m_chassis->GetPose());
-        }
-        else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
-        {
-            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
-                                                          m_zone->GetXGrid2(),
-                                                          m_zone->GetYGrid1(),
-                                                          m_zone->GetYGrid2(),
-                                                          m_chassis->GetPose());
-        }
+        return m_zone->IsPoseInZone(m_chassis->GetPose());
     }
     return false;
 }
