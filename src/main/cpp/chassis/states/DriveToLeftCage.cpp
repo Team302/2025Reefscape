@@ -44,5 +44,5 @@ ChassisOptionEnums::DriveStateType DriveToLeftCage::GetDriveStateType() const
 }
 ChassisOptionEnums::HeadingOption DriveToLeftCage::GetHeadingOption() const
 {
-    return ChassisOptionEnums::HeadingOption::MAINTAIN;
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
 }

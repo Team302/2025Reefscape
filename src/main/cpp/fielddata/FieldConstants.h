@@ -287,30 +287,7 @@ private:
         units::length::inch_t(130.17),
         units::length::inch_t(12.13),
         frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(300.0)));
-    frc::Pose3d m_blueCageleft = frc::Pose3d(units::length::inch_t(345.44),
-                                             units::length::inch_t(277.64),
-                                             units::length::inch_t(3.50),
-                                             frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    frc::Pose3d m_blueCageRight = frc::Pose3d(units::length::inch_t(345.44),
-                                              units::length::inch_t(198.765),
-                                              units::length::inch_t(3.50),
-                                              frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    frc::Pose3d m_blueCageCenter = frc::Pose3d(units::length::inch_t(345.44),
-                                               units::length::inch_t(241.64),
-                                               units::length::inch_t(3.50),
-                                               frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    frc::Pose3d m_redCageleft = frc::Pose3d(units::length::inch_t(345.44),
-                                            units::length::inch_t(39.39),
-                                            units::length::inch_t(3.50),
-                                            frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    frc::Pose3d m_redCageRight = frc::Pose3d(units::length::inch_t(345.44),
-                                             units::length::inch_t(118.265),
-                                             units::length::inch_t(3.50),
-                                             frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
-    frc::Pose3d m_redCageCenter = frc::Pose3d(units::length::inch_t(345.44),
-                                              units::length::inch_t(75.39),
-                                              units::length::inch_t(3.50),
-                                              frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::angle::degree_t(0.0)));
+
     frc::Pose3d m_placeholder = frc::Pose3d();
 
     std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;

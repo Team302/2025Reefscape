@@ -44,5 +44,5 @@ ChassisOptionEnums::DriveStateType DriveToRightCage::GetDriveStateType() const
 }
 ChassisOptionEnums::HeadingOption DriveToRightCage::GetHeadingOption() const
 {
-    return ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
 }

@@ -36,13 +36,13 @@ string DriveToCenterCage::GetDriveStateName() const
 
 DragonTargetFinderTarget DriveToCenterCage::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::RIGHT_CAGE;
+    return DragonTargetFinderTarget::CENTER_CAGE;
 }
 ChassisOptionEnums::DriveStateType DriveToCenterCage::GetDriveStateType() const
 {
-    return ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE;
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE;
 }
 ChassisOptionEnums::HeadingOption DriveToCenterCage::GetHeadingOption() const
 {
-    return ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
 }
