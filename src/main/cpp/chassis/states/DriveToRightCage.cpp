@@ -11,47 +11,38 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//=====================================================================================================================================================
+
+// C++ Includes
+#include <string>
+
+// FRC Includes
 
 // Team302 Includes
-#include "chassis/states/FaceBarge.h"
-#include "vision/DragonVision.h"
-#include "utils/AngleUtils.h"
-#include "utils/FMSData.h"
-FaceBarge::FaceBarge() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
+#include "chassis/states/DriveToRightCage.h"
+#include "fielddata/DragonTargetFinder.h"
+
+using std::string;
+
+DriveToRightCage::DriveToRightCage(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
 }
 
-std::string FaceBarge::GetHeadingStateName() const
+string DriveToRightCage::GetDriveStateName() const
 {
-    return std::string("FaceBarge");
+    return std::string("DriveToCage");
 }
 
-DragonTargetFinderTarget FaceBarge::GetTarget() const
+DragonTargetFinderTarget DriveToRightCage::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::BARGE;
+    return DragonTargetFinderTarget::RIGHT_CAGE;
 }
-
-units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovement) const
+ChassisOptionEnums::DriveStateType DriveToRightCage::GetDriveStateType() const
 {
-    auto finder = DragonTargetFinder::GetInstance();
-    if (finder != nullptr)
-    {
-        auto info = finder->GetPose(GetTarget());
-        if (info.has_value())
-        {
-            auto targetpose = get<1>(info.value());
-
-            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
-
-            if (chassisMovement.IsClimbMode)
-            {
-                chassisMovement.yawAngle -= 90_deg;
-            }
-
-            return chassisMovement.yawAngle;
-        }
-    }
-
-    return units::angle::degree_t(0);
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE;
+}
+ChassisOptionEnums::HeadingOption DriveToRightCage::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::FACE_BARGE;
 }

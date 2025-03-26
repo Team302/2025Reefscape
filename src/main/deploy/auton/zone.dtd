@@ -31,7 +31,7 @@
     circley                 CDATA #IMPLIED
     radius                  CDATA #IMPLIED                
 
-    pathUpdateOption 	(RIGHT_REEF_BRANCH | LEFT_REEF_BRANCH | REEF_ALGAE | FLOOR_ALGAE | CORAL_STATION | PROCESSOR | NOTHING) "NOTHING"         
+    pathUpdateOption 	(RIGHT_REEF_BRANCH | LEFT_REEF_BRANCH | REEF_ALGAE | FLOOR_ALGAE | CORAL_STATION | PROCESSOR | BARGE | NOTHING) "NOTHING"         
     
     taleOption		( STATE_READY | STATE_INITIALIZE | 
 		  					STATE_HUMAN_PLAYER_LOAD | STATE_GRAB_ALGAE_REEF | STATE_HOLD |

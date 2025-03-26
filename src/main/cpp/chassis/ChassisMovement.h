@@ -47,4 +47,5 @@ struct ChassisMovement
     units::angle::degree_t tippingTolerance = units::angle::degree_t(5.0);
     double tippingCorrection = -0.1;
     frc::Pose2d targetPose = frc::Pose2d();
+    bool IsClimbMode = false;
 };
