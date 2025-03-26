@@ -13,45 +13,28 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#pragma once
+
+// C++ Includes
+#include <string>
+
+// FRC Includes
+
 // Team302 Includes
-#include "chassis/states/FaceBarge.h"
-#include "vision/DragonVision.h"
-#include "utils/AngleUtils.h"
-#include "utils/FMSData.h"
-FaceBarge::FaceBarge() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class RobotDrive;
+
+class DriveToCenterCage : public DriveToFieldElement
 {
-}
+public:
+    DriveToCenterCage(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-std::string FaceBarge::GetHeadingStateName() const
-{
-    return std::string("FaceBarge");
-}
-
-DragonTargetFinderTarget FaceBarge::GetTarget() const
-{
-    return DragonTargetFinderTarget::BARGE;
-}
-
-units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovement) const
-{
-    auto finder = DragonTargetFinder::GetInstance();
-    if (finder != nullptr)
-    {
-        auto info = finder->GetPose(GetTarget());
-        if (info.has_value())
-        {
-            auto targetpose = get<1>(info.value());
-
-            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
-
-            if (chassisMovement.IsClimbMode)
-            {
-                chassisMovement.yawAngle -= 90_deg;
-            }
-
-            return chassisMovement.yawAngle;
-        }
-    }
-
-    return units::angle::degree_t(0);
-}
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
+};

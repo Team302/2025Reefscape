@@ -52,6 +52,10 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/AngleUtils.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
+#include "chassis/states/DriveToLeftCage.h"
+#include "chassis/states/DriveToRightCage.h"
+#include "chassis/states/DriveToCenterCage.h"
+
 #include "state/RobotState.h"
 
 // Third Party Includes
@@ -149,6 +153,9 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION] = new DriveToCoralStation(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH] = new DriveToLeftReefBranch(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH] = new DriveToRightReefBranch(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE] = new DriveToRightCage(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE] = new DriveToLeftCage(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE] = new DriveToCenterCage(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE] = new DriveToBarge(m_robotDrive);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
