@@ -303,6 +303,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
         m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     }
 
+    m_moveInfo.IsClimbMode = m_climbMode;
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 
