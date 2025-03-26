@@ -25,21 +25,21 @@ using std::string;
 
 void MechanismConfigPRACTICE_BOT_9999::DefineMechanisms()
 {
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("ClimberManager"), "");
-	m_theClimberManager = new ClimberManager(RobotIdentifier::PRACTICE_BOT_9999);
-	m_theClimberManager->CreatePRACTICE_BOT9999();
-	m_theClimberManager->CreateAndRegisterStates();
-	m_theClimberManager->InitializePRACTICE_BOT9999();
-	m_theClimberManager->Init(/*m_theClimberManager*/);
-	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER] = m_theClimberManager;
+	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("ClimberManager"), "");
+	// m_theClimberManager = new ClimberManager(RobotIdentifier::PRACTICE_BOT_9999);
+	// m_theClimberManager->CreatePRACTICE_BOT9999();
+	// m_theClimberManager->CreateAndRegisterStates();
+	// m_theClimberManager->InitializePRACTICE_BOT9999();
+	// m_theClimberManager->Init(/*m_theClimberManager*/);
+	// m_mechanismMap[MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER] = m_theClimberManager;
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("DragonTale"), "");
-	m_theDragonTale = new DragonTale(RobotIdentifier::PRACTICE_BOT_9999);
-	m_theDragonTale->CreatePRACTICE_BOT9999();
-	m_theDragonTale->CreateAndRegisterStates();
-	m_theDragonTale->InitializePRACTICE_BOT9999();
-	m_theDragonTale->Init(/*m_theDragonTale*/);
-	m_mechanismMap[MechanismTypes::MECHANISM_TYPE::DRAGON_TALE] = m_theDragonTale;
+	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("DragonTale"), "");
+	// m_theDragonTale = new DragonTale(RobotIdentifier::PRACTICE_BOT_9999);
+	// m_theDragonTale->CreatePRACTICE_BOT9999();
+	// m_theDragonTale->CreateAndRegisterStates();
+	// m_theDragonTale->InitializePRACTICE_BOT9999();
+	// m_theDragonTale->Init(/*m_theDragonTale*/);
+	// m_mechanismMap[MechanismTypes::MECHANISM_TYPE::DRAGON_TALE] = m_theDragonTale;
 
 	/*Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("Initializing mechanism"), string("IntakeManager"), "");
 	m_theIntakeManager = new IntakeManager(RobotIdentifier::PRACTICE_BOT_9999);

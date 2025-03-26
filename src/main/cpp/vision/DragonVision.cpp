@@ -273,25 +273,29 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION);
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 	for (auto cam : cameras)
 	{
-		// create translation using 3 estimated distances
-		if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
-			cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
-			cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
+		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
 		{
-			frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
-																	   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
-																	   cam->EstimateTargetZDistance_RelToRobotCoords().value());
-			frc::Rotation3d rotationToAlgae = frc::Rotation3d();
-			// create rotation3d with pitch and yaw (don't have access to roll)
-			rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
-											  cam->GetTargetPitchRobotFrame().value(),
-											  cam->GetTargetYawRobotFrame().value());
 
-			// return VisionData with new translation and rotation
-			return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
+			// create translation using 3 estimated distances
+			if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
+				cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
+				cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
+			{
+				frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
+																		   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
+																		   cam->EstimateTargetZDistance_RelToRobotCoords().value());
+				frc::Rotation3d rotationToAlgae = frc::Rotation3d();
+				// create rotation3d with pitch and yaw (don't have access to roll)
+				rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
+												  cam->GetTargetPitchRobotFrame().value(),
+												  cam->GetTargetYawRobotFrame().value());
+
+				// return VisionData with new translation and rotation
+				return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
+			}
 		}
 	}
 	// if we don't have a selected cam
