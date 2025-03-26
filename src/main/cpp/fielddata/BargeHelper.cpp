@@ -126,6 +126,7 @@ frc::Pose2d BargeHelper::CalcBargePose()
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
     }
+    else
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
     }
@@ -165,4 +166,3 @@ std::optional<FieldConstants::FIELD_ELEMENT> BargeHelper::GetCenterCage()
         return FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
     }
 }
-
