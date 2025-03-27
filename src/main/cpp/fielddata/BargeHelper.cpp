@@ -121,15 +121,40 @@ void BargeHelper::IsInZone()
 frc::Pose2d BargeHelper::CalcBargePose()
 {
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    bool inBargeHalf = false;
+    bool pastReef = false;
     frc::Pose2d pose2d{};
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
+        inBargeHalf = m_chassis->GetPose().Y() < m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d().Y();
+        pastReef = m_chassis->GetPose().X() < m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d().X();
+        m_avoidReefY = 2.0_m;
     }
     else
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+        inBargeHalf = m_chassis->GetPose().Y() > m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d().Y();
+        pastReef = m_chassis->GetPose().X() > m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d().X();
+        m_avoidReefY = 6.0_m;
     }
+
+    if (!inBargeHalf && !pastReef)
+    {
+        pose2d = frc::Pose2d(pose2d.X(), m_avoidReefY, pose2d.Rotation());
+    }
+    else
+    {
+        if (ClampChassisY().has_value())
+        {
+            pose2d = frc::Pose2d(pose2d.X(), ClampChassisY().value(), pose2d.Rotation());
+        }
+        else
+        {
+            pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+        }
+    }
+
     return pose2d;
 }
 

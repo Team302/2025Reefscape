@@ -76,4 +76,5 @@ private:
     ZoneParams *m_bargeZonesRed;
     bool m_previousIsInZone;
     units::length::foot_t m_centerLine{28.73};
+    units::length::meter_t m_avoidReefY{0.0};
 };
