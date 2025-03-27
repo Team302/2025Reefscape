@@ -71,7 +71,8 @@ DragonLimelight::DragonLimelight(
                                          DragonDataLogger(),
                                          m_identifier(identifier),
                                          m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
-                                         m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis())
+                                         m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+                                         m_cameraPose(frc::Pose3d(mountingXOffset, mountingYOffset, mountingZOffset, frc::Rotation3d(roll, pitch, yaw)))
 {
     SetLEDMode(ledMode);
     SetCamMode(camMode);
@@ -90,24 +91,12 @@ void DragonLimelight::PeriodicCacheData()
     m_megatag1PosBool = false;
     m_megatag2PosBool = false;
 
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
-    {
-        m_tv = LimelightHelpers::getTV(m_cameraName);
-        m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
-        m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
-        m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
-        m_pipeline = static_cast<DRAGON_LIMELIGHT_PIPELINE>(nt->GetNumber("getpipe", -1));
-    }
-    else
-    {
-        m_tv = false;
-        m_tx = units::angle::degree_t(0.0);
-        m_ty = units::angle::degree_t(0.0);
-        m_tagid = -1;
-        m_megatag1Pos = {};
-        m_megatag2Pos = {};
-    }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "null", "nt not null");
+    m_tv = LimelightHelpers::getTV(m_cameraName);
+    m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
+    m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
+    m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
+    m_pipeline = static_cast<DRAGON_LIMELIGHT_PIPELINE>(LimelightHelpers::getCurrentPipelineIndex(m_cameraName));
 }
 
 bool DragonLimelight::HealthCheck()
@@ -403,6 +392,10 @@ void DragonLimelight::PrintValues()
 units::length::inch_t DragonLimelight::CalcXTargetToRobot(units::angle::degree_t camPitch, units::length::inch_t mountHeight, units::length::inch_t camXOffset, units::angle::degree_t tY)
 {
     units::length::inch_t XDistance = units::length::inch_t((units::math::tan(units::angle::degree_t(90) + camPitch + tY) * mountHeight) + units::math::abs(camXOffset));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "actualx", XDistance.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "ty", tY.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "mountheight", mountHeight.to<double>());
+
     if (GetCameraYaw() > units::degree_t(std::abs(90.0)))
     {
         return -1.0 * (XDistance + m_driveThroughOffset);
