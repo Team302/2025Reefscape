@@ -77,6 +77,8 @@ public:
         BLUE_REEF_J,
         BLUE_REEF_K,
         BLUE_REEF_L,
+        BLUE_BARGE_FRONT_CALCULATED,
+        BLUE_BARGE_BACK_CALCULATED,
         // 2025 - Red Calculated Positions
         RED_CORAL_STATION_LEFT_ALLIANCE,
         RED_CORAL_STATION_LEFT_SIDEWALL,
@@ -98,6 +100,8 @@ public:
         RED_REEF_J,
         RED_REEF_K,
         RED_REEF_L,
+        RED_BARGE_FRONT_CALCULATED,
+        RED_BARGE_BACK_CALCULATED,
         NUMBER_OF_FIELD_ELEMENTS
     };
 
@@ -293,7 +297,7 @@ private:
     frc::Pose3d m_placeholder = frc::Pose3d();
 
     robin_hood::unordered_map<FIELD_ELEMENT, frc::Pose3d> m_fieldConstantsPoseMap;
-    std::array<frc::Pose2d, 62> m_fieldConst2dPoses;
+    std::array<frc::Pose2d, 64> m_fieldConst2dPoses;
     robin_hood::unordered_map<int, frc::Pose3d> m_aprilTagPoseMap;
     std::array<frc::Pose2d, 22> m_aprilTag2dPoses;
 };

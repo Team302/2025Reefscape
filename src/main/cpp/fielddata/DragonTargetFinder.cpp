@@ -30,6 +30,7 @@
 #include "units/angle.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
+#include "fielddata/BargeHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -150,6 +151,23 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElement2DPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER));
         }
     }
+    else if (item == DragonTargetFinderTarget::BARGE)
+    {
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (bargeHelper != nullptr)
+        {
+            auto pose2d = bargeHelper->CalcBargePose();
+            if (bargeHelper->ClampChassisY().has_value())
+            {
+                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
+            }
+            else
+            {
+                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
+            }
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
+        }
+    }
 
     else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE ||
              item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE ||
@@ -207,8 +225,13 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
              item == DragonTargetFinderTarget::CENTER_CAGE ||
              item == DragonTargetFinderTarget::RIGHT_CAGE)
     {
-        // call cage helper to find the appropriate the cage,
-        // its corresponding APRILTAG ID and the field constant identifier
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (bargeHelper != nullptr)
+        {
+            auto cagepose = bargeHelper->GetCagePose(item);
+            m_goalPose = cagepose;
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, cagepose);
+        }
     }
 
     auto pose2d = Pose2d();

@@ -154,10 +154,12 @@ public:
 	ctre::phoenix6::hardware::TalonFX *GetElevatorFollower() const { return m_ElevatorFollower; }
 	ctre::phoenix6::hardware::TalonFXS *GetCoral() const { return m_Coral; }
 	ctre::phoenix6::hardware::TalonFXS *GetAlgaeTalonFXS() const { return m_AlgaeTalonFXS; }
+
 	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
 	bool GetBranchCANRangeState() const { return m_BranchCANRange->GetIsDetected().GetValue(); }
+	bool IsValidTarget() { return m_BranchCANRange->GetDistanceStdDev().GetValue() < 0.075_m; }
 	units::length::inch_t GetElevatorCANRangeHeight() { return units::length::inch_t(m_ElevatorCANRange->GetDistance().GetValue()) - 2.0_in + 0.71_in; }
 	ctre::phoenix6::hardware::CANcoder *GetArmAngleSensor() const { return m_ArmAngleSensor; }
 	ctre::phoenix6::hardware::CANcoder *GetElevatorHeightSensor() const { return m_ElevatorHeightSensor; }
@@ -172,8 +174,12 @@ public:
 
 	bool IsCoralMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Coral; }
 	bool IsAlgaeMode() const { return m_scoringMode == RobotStateChanges::ScoringMode::Algae; }
+	bool IsInBargeZone() const { return m_isInBargeZone; }
+	bool IsInReefZone() const { return m_isInReefZone; }
+	bool IsDriveToIsDone() const { return m_isDriveToIsDone; }
 
 	void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
+	void NotifyStateUpdate(RobotStateChanges::StateChange change, bool value) override;
 
 	void SetAlgaeReefPosition();
 
@@ -225,6 +231,10 @@ private:
 	ControlData *m_PercentOutput;
 	RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
 	RobotStateChanges::GamePeriod m_gameMode = RobotStateChanges::GamePeriod::Disabled;
+	RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+	bool m_isInBargeZone = false;
+	bool m_isInReefZone = false;
+	bool m_isDriveToIsDone = false;
 
 	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);

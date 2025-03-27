@@ -44,25 +44,27 @@ FieldConstants::FieldConstants()
     m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_KL] = m_aprilTag19;
 
     // Blue Calculated Positions
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_ALLIANCE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_RIGHT_CAGE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_LEFT_CAGE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_CENTER] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_A] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_B] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_C] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_D] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_E] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_F] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_G] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_H] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_I] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_J] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_K] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_ALLIANCE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_ALLIANCE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_CORAL_STATION_RIGHT_SIDEWALL] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_RIGHT_CAGE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_LEFT_CAGE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_CENTER] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_A] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_B] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_C] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_D] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_E] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_F] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_G] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_H] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_I] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_J] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_K] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED] = m_placeholder;
 
     // Red AprilTag locations
     m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT] = m_aprilTag1;
@@ -78,25 +80,27 @@ FieldConstants::FieldConstants()
     m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_KL] = m_aprilTag6;
 
     // Red Calculated Positions
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_RIGHT_CAGE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_LEFT_CAGE] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_CENTER] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_A] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_B] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_C] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_D] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_E] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_F] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_G] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_H] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_I] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_J] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_K] = m_placeholder;
-    m_fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT_ALLIANCE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_ALLIANCE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_RIGHT_CAGE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_LEFT_CAGE] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_CENTER] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_A] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_B] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_C] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_D] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_E] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_F] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_G] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_H] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_I] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_J] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_K] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_L] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED] = m_placeholder;
 
     m_aprilTagPoseMap[1] = m_aprilTag1;
     m_aprilTagPoseMap[2] = m_aprilTag2;
