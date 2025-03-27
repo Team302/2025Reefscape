@@ -50,6 +50,7 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
 {
     Init();
     RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Inch);
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
 /// @brief initialize the profiles for the various gamepad inputs
@@ -137,19 +138,31 @@ void HolonomicDrive::Run()
         {
             PolarDrive();
         }
-        else if (driveToLeftReefBranch)
+        else if (driveToLeftReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
             m_reefHelper->IsInZone();
         }
-        else if (driveToRightReefBranch)
+        else if (driveToRightReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
             m_reefHelper->IsInZone();
         }
-        else if (driveToCoralStation)
+        else if (driveToCoralStation && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION);
+        }
+        else if (driveToLeftReefBranch && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE);
+        }
+        else if (driveToRightReefBranch && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE);
+        }
+        else if (driveToCoralStation && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
         }
         else if (driveToBarge)
         {
@@ -252,6 +265,14 @@ void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, un
         m_elevatorHeight = units::length::inch_t(value);
     }
 }
+void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (change == RobotStateChanges::StateChange::ClimbModeStatus_Int)
+    {
+        m_climbMode = value;
+    }
+}
+
 void HolonomicDrive::InitSpeeds(double forwardScale,
                                 double strafeScale,
                                 double rotateScale)
@@ -282,6 +303,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
         m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     }
 
+    m_moveInfo.IsClimbMode = m_climbMode;
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 

@@ -140,6 +140,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                                                                                //    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
                                                                                                {"CORAL_STATION", ChassisOptionEnums::DRIVE_TO_CORAL_STATION},
                                                                                                //    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                                               {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
                                                                                                {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
 
     static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
