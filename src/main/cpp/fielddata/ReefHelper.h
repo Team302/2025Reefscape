@@ -22,12 +22,15 @@
 #include "fielddata/FieldConstants.h"
 #include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
-
+#include "auton/ZoneParams.h"
+#include "auton/ZoneParser.h"
+#include "state/RobotState.h"
 class ReefHelper
 {
 public:
     static ReefHelper *GetInstance();
-
+    void IsInZone();
+    void InitZones();
     std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
     std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
@@ -45,4 +48,8 @@ private:
 
     frc::Pose2d m_redReefCenter;
     frc::Pose2d m_blueReefCenter;
+    ZoneParams *m_reefZonesRed;
+    ZoneParams *m_reefZonesBlue;
+    AutonGrid *autongridptr;
+    bool m_previousIsInZone;
 };

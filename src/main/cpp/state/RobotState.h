@@ -44,6 +44,7 @@ public:
     void PublishStateChange(RobotStateChanges::StateChange change, units::velocity::meters_per_second_t newValue);
     void PublishStateChange(RobotStateChanges::StateChange change, units::angular_velocity::degrees_per_second_t newValue);
     void PublishStateChange(RobotStateChanges::StateChange change, frc::Pose2d newValue);
+    void PublishStateChange(RobotStateChanges::StateChange change, bool newValue);
 
 private:
     void PublishGameStateChanges();

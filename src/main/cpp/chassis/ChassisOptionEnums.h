@@ -26,6 +26,7 @@ public:
         FACE_REEF_CENTER,
         FACE_REEF_FACE,
         FACE_CORAL_STATION,
+        FACE_BARGE,
         IGNORE
     };
 
@@ -39,6 +40,10 @@ public:
         DRIVE_TO_CORAL_STATION,
         DRIVE_TO_LEFT_REEF_BRANCH,
         DRIVE_TO_RIGHT_REEF_BRANCH,
+        DRIVE_TO_LEFT_CAGE,
+        DRIVE_TO_RIGHT_CAGE,
+        DRIVE_TO_CENTER_CAGE,
+        DRIVE_TO_BARGE,
         STOP_DRIVE
     };
 

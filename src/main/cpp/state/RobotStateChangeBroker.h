@@ -36,6 +36,7 @@ public:
 	void Notify(units::velocity::meters_per_second_t value);
 	void Notify(units::angular_velocity::degrees_per_second_t value);
 	void Notify(frc::Pose2d value);
+	void Notify(bool value);
 
 private:
 	RobotStateChanges::StateChange m_change;

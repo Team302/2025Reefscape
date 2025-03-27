@@ -29,6 +29,7 @@
 
 enum class DragonTargetFinderTarget
 {
+    BARGE,
     CLOSEST_LEFT_REEF_BRANCH,
     CLOSEST_RIGHT_REEF_BRANCH,
     CLOSEST_REEF_ALGAE,

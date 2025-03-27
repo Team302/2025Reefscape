@@ -87,7 +87,7 @@ bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 	// To get the current state use m_mechanism->GetCurrentState()
 	bool transition = false;
 	int currentState = m_mechanism->GetCurrentState();
-	if ((m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && !m_mechanism->GetManualMode() && (currentState == DragonTale::STATE_NAMES::STATE_HOLD || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))))
+	if ((m_mechanism->AllSensorsFalse() && !TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION) && (currentState == DragonTale::STATE_NAMES::STATE_HOLD || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_ALGAE) || (currentState == DragonTale::STATE_NAMES::STATE_SCORE_CORAL))))
 	{
 		m_scoringTimer->Start(); // This works becuase IsTransitionCondition is called every loop and it is the the first state to check the transition condition
 		if (m_scoringTimer->Get() > units::time::second_t(0.25))
