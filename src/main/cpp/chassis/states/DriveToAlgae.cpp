@@ -11,33 +11,39 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
-
-#pragma once
+//=====================================================================================================================================================
 
 // C++ Includes
 #include <string>
-#include <vector>
 
 // FRC Includes
 
 // Team302 Includes
+#include "chassis/states/DriveToAlgae.h"
 #include "chassis/states/DriveToFieldElement.h"
 #include "fielddata/DragonTargetFinder.h"
 
-class RobotDrive;
+using std::string;
 
-class DriveToAlgae : public DriveToFieldElement // will utilize a helper class for barge
+DriveToAlgae::DriveToAlgae(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
-public:
-    DriveToAlgae(RobotDrive *robotDrive);
-    std::string GetDriveStateName() const override;
+}
 
-protected:
-    DragonTargetFinderTarget GetDriveToTarget() const override;
-    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
-    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
-    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
+string DriveToAlgae::GetDriveStateName() const
+{
+    return std::string("DriveToAlgae");
+}
 
-private:
-};
+DragonTargetFinderTarget DriveToAlgae::GetDriveToTarget() const
+{
+    return DragonTargetFinderTarget::ALGAE;
+}
+ChassisOptionEnums::DriveStateType DriveToAlgae::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE;
+}
+ChassisOptionEnums::HeadingOption DriveToAlgae::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::IGNORE;
+}

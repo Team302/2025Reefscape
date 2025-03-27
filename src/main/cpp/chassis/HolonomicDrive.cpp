@@ -128,6 +128,7 @@ void HolonomicDrive::Run()
         auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
         auto driveToCoralStation = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
         auto driveToBarge = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE);
+        auto driveToAlgae = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_ALGAE);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
@@ -168,6 +169,10 @@ void HolonomicDrive::Run()
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
             m_bargeHelper->IsInZone();
+        }
+        else if (driveToAlgae)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE);
         }
         else
         {
