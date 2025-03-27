@@ -55,8 +55,9 @@
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
 #include <ctre/phoenix6/StatusSignal.hpp>
+#include <RobinHood/robin_hood.h>
 
-using std::map;
+using robin_hood::unordered_map;
 using std::string;
 
 using frc::ChassisSpeeds;

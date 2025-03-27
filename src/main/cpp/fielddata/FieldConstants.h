@@ -13,11 +13,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #pragma once
+#include <array>
 #include <filesystem>
 #include <iostream>
+#include <map>
 
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation3d.h>
+#include <RobinHood/robin_hood.h>
 
 #include "frc/apriltag/AprilTagFieldLayout.h"
 #include "units/angle.h"
@@ -94,7 +97,8 @@ public:
         RED_REEF_I,
         RED_REEF_J,
         RED_REEF_K,
-        RED_REEF_L
+        RED_REEF_L,
+        NUMBER_OF_FIELD_ELEMENTS
     };
 
     enum FIELD_ELEMENT_OFFSETS
@@ -131,8 +135,10 @@ public:
         RED_REEF_KL_TAG = 6
     };
     frc::Pose3d GetFieldElementPose(FIELD_ELEMENT element);
+    frc::Pose2d GetFieldElement2DPose(FIELD_ELEMENT element);
 
     frc::Pose3d GetAprilTagPose(AprilTagIDs tag);
+    frc::Pose2d GetAprilTag2DPose(AprilTagIDs tag);
 
 private:
     // make a singleton
@@ -286,6 +292,8 @@ private:
 
     frc::Pose3d m_placeholder = frc::Pose3d();
 
-    std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
-    std::map<int, frc::Pose3d> aprilTagPoseMap;
+    robin_hood::unordered_map<FIELD_ELEMENT, frc::Pose3d> m_fieldConstantsPoseMap;
+    std::array<frc::Pose2d, 62> m_fieldConst2dPoses;
+    robin_hood::unordered_map<int, frc::Pose3d> m_aprilTagPoseMap;
+    std::array<frc::Pose2d, 22> m_aprilTag2dPoses;
 };

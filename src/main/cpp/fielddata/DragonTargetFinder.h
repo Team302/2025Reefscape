@@ -17,6 +17,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <tuple>
 
 #include "chassis/ChassisMovement.h"
@@ -24,8 +25,8 @@
 #include "fielddata/FieldConstants.h"
 #include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
-#include "vision/DragonVision.h"
 #include "utils/logging/signals/DragonDataLogger.h"
+#include "vision/DragonVision.h"
 
 enum class DragonTargetFinderTarget
 {

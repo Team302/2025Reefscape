@@ -18,6 +18,8 @@
 #include <map>
 #include <string>
 
+#include <RobinHood/robin_hood.h>
+
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/IChassis.h"
@@ -156,8 +158,8 @@ private:
     ctre::phoenix6::hardware::Pigeon2 *m_pigeon = nullptr;
 
     RobotDrive *m_robotDrive = nullptr;
-    std::map<ChassisOptionEnums::DriveStateType, ISwerveDriveState *> m_driveStateMap;
-    std::map<ChassisOptionEnums::HeadingOption, ISwerveDriveOrientation *> m_headingStateMap;
+    robin_hood::unordered_map<ChassisOptionEnums::DriveStateType, ISwerveDriveState *> m_driveStateMap;
+    robin_hood::unordered_map<ChassisOptionEnums::HeadingOption, ISwerveDriveOrientation *> m_headingStateMap;
 
     units::length::inch_t m_wheelBase = units::length::inch_t(22.75);
     units::length::inch_t m_track = units::length::inch_t(22.75);

@@ -94,7 +94,6 @@ void CyclePrimitives::Run()
 	{
 		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("CurrentPrim "), string("run"));
 		m_currentPrim->Run();
-
 		if (m_chassis != nullptr)
 		{
 
@@ -174,12 +173,10 @@ void CyclePrimitives::GetNextPrim()
 	if (!m_primParams.empty())
 	{
 		PrimitiveParams *currentPrimParam = (m_currentPrimSlot < (int)m_primParams.size()) ? m_primParams[m_currentPrimSlot] : nullptr;
-
 		m_currentPrim = (currentPrimParam != nullptr) ? m_primFactory->GetIPrimitive(currentPrimParam) : nullptr;
 		if (m_currentPrim != nullptr)
 		{
 			m_currentPrim->Init(currentPrimParam);
-
 			SetMechanismStatesFromParam(currentPrimParam);
 			m_zones = currentPrimParam->GetZones();
 

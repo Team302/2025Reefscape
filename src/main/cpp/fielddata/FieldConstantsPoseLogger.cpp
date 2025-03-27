@@ -13,7 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <fielddata/FieldConstantsPoseLogger.h>
+#include "fielddata/FieldConstantsPoseLogger.h"
 
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #include "wpi/DataLog.h"
@@ -21,13 +21,13 @@
 #include "frc/geometry/Pose3d.h"
 #include "magic_enum/magic_enum.hpp"
 
-void FieldConstantsPoseLogger::LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
+void FieldConstantsPoseMapLogger::LogFieldElementPoses(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap)
 {
-   
+
     frc::DataLogManager::Start("", "field_poses.wpilog");
     wpi::log::DataLog &log = frc::DataLogManager::GetLog();
 
-    for (auto &[key, pose] : fieldConstantsPoseMap)
+    for (auto &[key, pose] : m_fieldConstantsPoseMap)
     {
         auto poseLog = wpi::log::StructLogEntry<frc::Pose3d>(log, magic_enum::enum_name(key));
         poseLog.Append(pose);

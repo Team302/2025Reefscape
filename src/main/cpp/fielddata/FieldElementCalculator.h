@@ -17,8 +17,9 @@
 // c++ includes
 #include <map>
 
-#include <frc/geometry/Pose3d.h>
 #include <fielddata/FieldConstants.h>
+#include <frc/geometry/Pose3d.h>
+#include <RobinHood/robin_hood.h>
 
 struct TransformToPose
 {
@@ -45,14 +46,14 @@ class FieldElementCalculator
 {
 
 public:
-    void CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
+    void CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap);
     frc::Pose3d CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset);
 
 private:
     void InitializeTransforms();
     void UpdateReefStickRobotTransforms();
     void InitializeReefBranchTransformsMap();
-    void CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
+    void CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
     // Robot is 34" from front to back
@@ -63,7 +64,7 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-    std::map<OffsetEnums, frc::Transform3d> m_reefBranchOffsetMap;
+    robin_hood::unordered_map<OffsetEnums, frc::Transform3d> m_reefBranchOffsetMap;
 
     // other transforms
     frc::Transform3d m_noTransform = frc::Transform3d(
@@ -129,6 +130,6 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
-    std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
-    std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;
+    robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
+    robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;
 };

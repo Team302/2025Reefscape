@@ -42,14 +42,10 @@ ResetPositionPathPlanner::ResetPositionPathPlanner() : IPrimitive()
 
 void ResetPositionPathPlanner::Init(PrimitiveParams *param)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
-
+    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
     if (chassis != nullptr)
     {
-
         auto path = param->GetTrajectoryName().empty() ? AutonUtils::GetPathFromPathFile(param->GetPathName()) : AutonUtils::GetPathFromTrajectory(param->GetTrajectoryName());
-
         if (AutonUtils::IsValidPath(path))
         {
             auto initialPose = path.get()->getStartingHolonomicPose();

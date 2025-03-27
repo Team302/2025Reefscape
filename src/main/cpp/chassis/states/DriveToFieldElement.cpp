@@ -49,16 +49,18 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
     InitChassisMovement(chassisMovement);
+
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_currentType = get<0>(info.value());
     m_endPose = get<1>(info.value());
-    m_currentPose = m_chassis->GetPose();
 
     if (m_chassis != nullptr)
     {
+        m_currentPose = m_chassis->GetPose();
         m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
         m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
     }
+
     CalculateFeedForward(chassisMovement);
 }
 

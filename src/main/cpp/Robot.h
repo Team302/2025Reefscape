@@ -15,10 +15,12 @@
 //====================================================================================================================================================
 
 #pragma once
+#include <memory>
 
 #include <frc/TimedRobot.h>
 
 #include "frc/geometry/Pose2d.h"
+#include "frc/Timer.h"
 
 class CyclePrimitives;
 class HolonomicDrive;
@@ -70,4 +72,6 @@ private:
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
     DragonSwervePoseEstimator *m_dragonswerveposeestimator;
+
+    std::unique_ptr<frc::Timer> m_looptimer;
 };

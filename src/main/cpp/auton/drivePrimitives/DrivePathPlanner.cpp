@@ -108,12 +108,18 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
     m_updateTimeLatch = false;
-    m_driveToObject = nullptr;
 
+    m_driveToObject = nullptr;
+    m_checkForDriveToUpdate = false;
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
     {
         m_zone = params->GetZones()[index];
+        if (m_zone != nullptr)
+        {
+            m_driveToObject = GetDriveToObject(m_zone->GetPathUpdateOption());
+            m_checkForDriveToUpdate = true;
+        }
     }
 
     m_pathname = params->GetPathName(); // Grabs path name from auton xml
@@ -126,28 +132,12 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_isVisionDrive = false;
     m_visionAlignment = params->GetVisionAlignment();
 
-    if (m_zone != nullptr)
-    {
-        m_driveToObject = GetDriveToObject(m_zone->GetPathUpdateOption());
-        m_checkForDriveToUpdate = true;
-    }
-    else
-    {
-        m_driveToObject = nullptr;
-        m_checkForDriveToUpdate = false;
-    }
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), m_pathname, m_chassis->GetPose().Rotation().Degrees().to<double>());
-
-    // Start timeout timer for path
-
     InitMoveInfo();
+
     m_moveInfo.headingOption = params->GetHeadingOption();
 
     m_timer.get()->Reset();
     m_timer.get()->Start();
-
-    LogMoveInfo();
 }
 
 void DrivePathPlanner::LogMoveInfo()
@@ -167,12 +157,10 @@ void DrivePathPlanner::InitMoveInfo()
     if (m_isVisionDrive)
     {
         m_moveInfo.driveOption = m_zone->GetPathUpdateOption();
-
         if (m_driveToObject != nullptr)
         {
             m_driveToObject->Init(m_moveInfo);
         }
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Drive Option", m_zone->GetPathUpdateOption());
     }
     else
     {
@@ -187,11 +175,8 @@ void DrivePathPlanner::InitMoveInfo()
         pathplanner::PathPlannerTrajectory trajectory;
 
         auto path = m_pathname.empty() ? AutonUtils::GetPathFromTrajectory(m_choreoTrajectoryName) : AutonUtils::GetPathFromPathFile(m_pathname);
-
         if (AutonUtils::IsValidPath(path))
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), string("Valid Path"), true);
-
             trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
             m_moveInfo.pathplannerTrajectory = trajectory;
             auto endstate = trajectory.getEndState();

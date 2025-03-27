@@ -14,17 +14,17 @@
 //====================================================================================================================================================
 #pragma once
 
-//#define INCLUDE_FIELD_ELEMENT_POSE_LOGGER
+// #define INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
 
-#include <frc/geometry/Pose3d.h>
-#include <fielddata/FieldConstants.h>
+#include "fielddata/FieldConstants.h"
+#include "frc/geometry/Pose3d.h"
+#include "RobinHood/robin_hood.h"
 
-class FieldConstantsPoseLogger
+class FieldConstantsPoseMapLogger
 {
-    public :
-        void LogFieldElementPoses(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
-
+public:
+    void LogFieldElementPoses(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap);
 };
 
-#endif 
+#endif
