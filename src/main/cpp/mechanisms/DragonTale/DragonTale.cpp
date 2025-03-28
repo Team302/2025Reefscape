@@ -1383,7 +1383,12 @@ void DragonTale::DataLog(uint64_t timestamp)
 	m_energy = get<1>(AlgaePower);
 	m_totalEnergy += m_energy;
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ALGAE_POWER, m_power, "Watts");
-	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ALGAE_CURRENT, GetAlgaeTalonFX()->GetSupplyCurrent().GetValueAsDouble(), "Amps");
+	if (m_activeRobotId == RobotIdentifier::COMP_BOT_302)
+		DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ALGAE_CURRENT, GetAlgaeTalonFXS()->GetSupplyCurrent().GetValueAsDouble(), "Amps");
+	else
+		DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ALGAE_CURRENT, GetAlgaeTalonFX()->GetSupplyCurrent().GetValueAsDouble(), "Amps");
+
+	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_ALGAE_CURRENT, GetAlgaeTalonFXS()->GetSupplyCurrent().GetValueAsDouble(), "Amps");
 
 	auto ElevatorFollowerPower = DragonPower::CalcPowerEnergy(currTime, m_ElevatorFollower->GetSupplyVoltage().GetValueAsDouble(), m_ElevatorFollower->GetSupplyCurrent().GetValueAsDouble());
 	m_power = get<0>(ElevatorFollowerPower);
