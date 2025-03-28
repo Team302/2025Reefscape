@@ -77,15 +77,12 @@ private:
     ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
 
     std::shared_ptr<nt::NetworkTable> m_ll1Nt;
-    std::shared_ptr<nt::NetworkTable> m_ll2Nt;
     std::shared_ptr<nt::NetworkTable> m_llQuestNt;
 
     bool m_questStatus = false;
     bool m_ll1Status = false;
-    bool m_ll2Status = false;
 
     int m_ll1hb = 0;
-    int m_ll2hb = 0;
     int m_questhb = 0;
 
     int m_timer = 0;
