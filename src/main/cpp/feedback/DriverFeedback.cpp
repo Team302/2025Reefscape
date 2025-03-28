@@ -170,12 +170,8 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             coralOutSensor = taleMgr->GetCoralOutSensorState();
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
-        if (intakeMgr != nullptr)
-        {
-            intakeSensor = intakeMgr->GetIntakeSensorState();
-        }
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, m_questStatus, m_ll1Status, m_ll2Status, pigeonfaults);
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
     if (m_timer == 100)
     {
         QueryNT();
