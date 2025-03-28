@@ -22,6 +22,9 @@
 #include "configs/MechanismConfigMgr.h"
 #include "ctre/phoenix6/SignalLogger.hpp"
 #include "feedback/DriverFeedback.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
+#include "frc/threads.h"
 #include "RobotIdentifier.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -36,10 +39,6 @@
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
 
-using ctre::phoenix6::SignalLogger;
-
-#include "fielddata/BargeHelper.h"
-#include "fielddata/ReefHelper.h"
 using std::string;
 
 void Robot::RobotInit()
@@ -60,9 +59,6 @@ void Robot::RobotInit()
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
     auto path = AutonUtils::GetPathFromTrajectory("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
-
-    m_looptimer = make_unique<frc::Timer>();
-    m_looptimer.get()->Start();
 }
 
 /**
@@ -90,7 +86,6 @@ void Robot::RobotPeriodic()
     {
         m_robotState->Run();
     }
-
     UpdateDriveTeamFeedback();
 }
 
@@ -107,6 +102,8 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+    frc::SetCurrentThreadPriority(true, 15);
+
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Init();
@@ -116,33 +113,18 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-    m_looptimer.get()->Reset();
-
     SensorDataMgr::GetInstance()->CacheData();
-
-    SignalLogger::WriteDouble("AutonomousPeriodic/CacheSensorData", m_looptimer.get()->Get().value(), "Sec", 0_s);
-    m_looptimer.get()->Reset();
-
     if (m_dragonswerveposeestimator != nullptr)
     {
         m_dragonswerveposeestimator->Update();
     }
-
-    SignalLogger::WriteDouble("AutonomousPeriodic/UpdatePose", m_looptimer.get()->Get().value(), "Sec", 0_s);
-    m_looptimer.get()->Reset();
 
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Run();
     }
 
-    SignalLogger::WriteDouble("AutonomousPeriodic/CyclePrimitives", m_looptimer.get()->Get().value(), "Sec", 0_s);
-    m_looptimer.get()->Reset();
-
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
-
-    SignalLogger::WriteDouble("AutonomousPeriodic/PeriodicLooper", m_looptimer.get()->Get().value(), "Sec", 0_s);
-    m_looptimer.get()->Reset();
 }
 
 void Robot::TeleopInit()

@@ -102,7 +102,7 @@ public:
         RED_REEF_L,
         RED_BARGE_FRONT_CALCULATED,
         RED_BARGE_BACK_CALCULATED,
-        NUMBER_OF_FIELD_ELEMENTS
+        NUMBER_OF_FIELD_ELEMENTS // This must be the last element & if entries are added the std::array at the end needs to be resized
     };
 
     enum FIELD_ELEMENT_OFFSETS
@@ -297,7 +297,7 @@ private:
     frc::Pose3d m_placeholder = frc::Pose3d();
 
     robin_hood::unordered_map<FIELD_ELEMENT, frc::Pose3d> m_fieldConstantsPoseMap;
-    std::array<frc::Pose2d, 64> m_fieldConst2dPoses;
+    std::array<frc::Pose2d, 66> m_fieldConst2dPoses;
     robin_hood::unordered_map<int, frc::Pose3d> m_aprilTagPoseMap;
     std::array<frc::Pose2d, 22> m_aprilTag2dPoses;
 };
