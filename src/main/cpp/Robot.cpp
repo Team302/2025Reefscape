@@ -6,11 +6,6 @@
 
 #include <string>
 
-#include <Robot.h>
-
-#include <frc/RobotController.h>
-#include <frc/threads.h>
-
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
 #include "auton/drivePrimitives/AutonUtils.h"
@@ -25,6 +20,8 @@
 #include "feedback/DriverFeedback.h"
 #include "fielddata/BargeHelper.h"
 #include "fielddata/ReefHelper.h"
+#include "frc/RobotController.h"
+#include "frc/Threads.h"
 #include "RobotIdentifier.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
