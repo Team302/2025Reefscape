@@ -9,6 +9,7 @@
 #include <Robot.h>
 
 #include <frc/RobotController.h>
+#include <frc/threads.h>
 
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
@@ -24,7 +25,6 @@
 #include "feedback/DriverFeedback.h"
 #include "fielddata/BargeHelper.h"
 #include "fielddata/ReefHelper.h"
-#include "frc/threads.h"
 #include "RobotIdentifier.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -207,7 +207,6 @@ void Robot::InitializeRobot()
 
     // initialize cameras
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
-    // auto vision = DragonVision::GetDragonVision();
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
