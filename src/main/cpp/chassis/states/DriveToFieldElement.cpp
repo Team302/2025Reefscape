@@ -73,16 +73,16 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
         // Reset the PID if resetTime in second has passed since the last reset
-        if (m_resetTime <= (currentTime - m_lastResetTime))
-        {
-            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-            m_lastResetTime = currentTime;
-        }
-        else
-        {
-            m_lastResetTime = currentTime;
-        }
+        // if (m_resetTime <= (currentTime - m_lastResetTime))
+        // {
+        m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+        m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+        // m_lastResetTime = currentTime;
+        // }
+        // else
+        // {
+        //     m_lastResetTime = currentTime;
+        // }
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
         if (info.has_value())
@@ -92,7 +92,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
             regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
-            if ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+            if (regenerate) // If we are in odometry but get vision based pose regenerate
             {
                 m_endPose = newEndPose;
             }

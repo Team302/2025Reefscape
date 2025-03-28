@@ -156,9 +156,9 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         auto bargeHelper = BargeHelper::GetInstance();
         if (bargeHelper != nullptr)
         {
-            auto pose2d = bargeHelper->CalcBargePose();
-
-            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
+            auto bargePose = bargeHelper->CalcBargePose();
+            m_goalPose = bargePose;
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, bargePose);
         }
     }
 

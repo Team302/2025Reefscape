@@ -123,23 +123,35 @@ frc::Pose2d BargeHelper::CalcBargePose()
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
     bool inBargeHalf = false;
     bool pastReef = false;
+    bool behindFrontFace = false;
+    bool clearOfReef = false;
     frc::Pose2d pose2d{};
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
         inBargeHalf = m_chassis->GetPose().Y() < m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d().Y();
         pastReef = m_chassis->GetPose().X() < m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG).ToPose2d().X();
-        m_avoidReefY = 2.0_m;
+        behindFrontFace = m_chassis->GetPose().X() > m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_AB).ToPose2d().X();
+        clearOfReef = m_chassis->GetPose().Y() < 2.0_m;
+        m_avoidReefY = behindFrontFace ? 2.0_m : 6.0_m;
     }
     else
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
         inBargeHalf = m_chassis->GetPose().Y() > m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d().Y();
         pastReef = m_chassis->GetPose().X() > m_fieldConstants->GetAprilTagPose(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG).ToPose2d().X();
-        m_avoidReefY = 6.0_m;
+        behindFrontFace = m_chassis->GetPose().X() < m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB).ToPose2d().X();
+        clearOfReef = m_chassis->GetPose().Y() > 6.0_m;
+        m_avoidReefY = behindFrontFace ? 6.0_m : 2.0_m;
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "In Barge Half", inBargeHalf);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Past Reef", pastReef);
 
-    if (!inBargeHalf && !pastReef)
+    if (behindFrontFace && m_chassis->GetPose().Y())
+    {
+        pose2d = frc::Pose2d(m_chassis->GetPose().X(), m_avoidReefY, pose2d.Rotation());
+    }
+    else if (!inBargeHalf && !pastReef)
     {
         pose2d = frc::Pose2d(pose2d.X(), m_avoidReefY, pose2d.Rotation());
     }
@@ -154,6 +166,8 @@ frc::Pose2d BargeHelper::CalcBargePose()
             pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
         }
     }
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Pose Y", pose2d.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Avoid Reef Y", m_avoidReefY.value());
 
     return pose2d;
 }

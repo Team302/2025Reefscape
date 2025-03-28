@@ -71,7 +71,7 @@ private:
     const units::length::meter_t m_ffMinRadius{0.05};
     const units::length::meter_t m_ffMaxRadius{2.0};
 
-    const units::velocity::meters_per_second_t kMaxVelocity = 2.5_mps;
+    const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
     const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 1.5_mps_sq;
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
