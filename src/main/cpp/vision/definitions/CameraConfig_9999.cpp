@@ -30,7 +30,7 @@ void CameraConfig_9999::BuildCameraConfig()
                                                  units::length::meter_t(0.23),                   // units::length::inch_t mountingXOffset, /// <I> x offset of cam from robot center (forward relative to robot)
                                                  units::length::meter_t(-0.08),                  // units::length::inch_t mountingYOffset, /// <I> y offset of cam from robot center (left relative to robot)
                                                  units::length::meter_t(0.22),                   // units::length::inch_t mountingZOffset, /// <I> z offset of cam from robot center (up relative to robot)
-                                                 units::angle::degree_t(0),                      // units::angle::degree_t pitch,          /// <I> - Pitch of camera
+                                                 units::angle::degree_t(-6),                     // units::angle::degree_t pitch,          /// <I> - Pitch of camera
                                                  units::angle::degree_t(-5),                     // units::angle::degree_t yaw,            /// <I> - Yaw of camera
                                                  units::angle::degree_t(-2),                     // units::angle::degree_t roll,           /// <I> - Roll of camera
                                                  DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL, /// <I> enum for starting pipeline

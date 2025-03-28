@@ -80,4 +80,6 @@ private:
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
+
+    const units::length::inch_t m_armoffset = units::length::inch_t(12);
 };

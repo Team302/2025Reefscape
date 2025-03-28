@@ -91,7 +91,6 @@ void DragonLimelight::PeriodicCacheData()
     m_megatag1PosBool = false;
     m_megatag2PosBool = false;
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "null", "nt not null");
     m_tv = LimelightHelpers::getTV(m_cameraName);
     m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
     m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
@@ -392,9 +391,6 @@ void DragonLimelight::PrintValues()
 units::length::inch_t DragonLimelight::CalcXTargetToRobot(units::angle::degree_t camPitch, units::length::inch_t mountHeight, units::length::inch_t camXOffset, units::angle::degree_t tY)
 {
     units::length::inch_t XDistance = units::length::inch_t((units::math::tan(units::angle::degree_t(90) + camPitch + tY) * mountHeight) + units::math::abs(camXOffset));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "actualx", XDistance.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "ty", tY.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Algae", "mountheight", mountHeight.to<double>());
 
     if (GetCameraYaw() > units::degree_t(std::abs(90.0)))
     {

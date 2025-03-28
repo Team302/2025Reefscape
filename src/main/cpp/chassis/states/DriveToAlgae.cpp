@@ -41,7 +41,7 @@ DragonTargetFinderTarget DriveToAlgae::GetDriveToTarget() const
 }
 ChassisOptionEnums::DriveStateType DriveToAlgae::GetDriveStateType() const
 {
-    return ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE;
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE;
 }
 ChassisOptionEnums::HeadingOption DriveToAlgae::GetHeadingOption() const
 {
