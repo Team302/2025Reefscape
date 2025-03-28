@@ -169,8 +169,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_BARGE, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
-    {TeleopControlFunctions::AUTO_ALIGN_PROCESSOR, driverLTriggerPressed},
-    {TeleopControlFunctions::AUTO_ALIGN_ALGAE, driverRTriggerPressed},
+    {TeleopControlFunctions::AUTO_ALIGN_ALGAE, driverLTriggerPressed},
     {TeleopControlFunctions::SLOW_MODE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
