@@ -176,6 +176,7 @@ void HolonomicDrive::Run()
             if (!m_mlPipeline)
             {
                 DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
+                m_mlPipeline = true;
             }
         }
         else
@@ -252,6 +253,7 @@ void HolonomicDrive::Run()
     if (m_mlPipeline)
     {
         DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
+        m_mlPipeline = false;
     }
 }
 
