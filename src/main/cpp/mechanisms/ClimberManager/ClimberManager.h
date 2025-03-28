@@ -161,7 +161,7 @@ private:
 	wpi::log::DoubleLogEntry m_ExtenderPowerLogEntry;
 	wpi::log::DoubleLogEntry m_ExtenderEnergyLogEntry;
 
-	units::turn_t m_extenderThresh = units::turn_t(3.0);
+	units::turn_t m_extenderThreshold = units::turn_t(3.0);
 
 	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
 	ctre::phoenix6::controls::PositionVoltage m_ExtenderPositionDegree{units::angle::turn_t(0.0)};

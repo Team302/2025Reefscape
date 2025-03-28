@@ -130,7 +130,7 @@ void ClimberManager::CreatePRACTICE_BOT9999()
 {
 	m_ntName = "ClimberManager";
 	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "canivore");
-	m_Extender = new ctre::phoenix6::hardware::TalonFXS(51, "rio");
+	m_Extender = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
 
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
@@ -282,14 +282,12 @@ void ClimberManager::InitializePRACTICE_BOT9999()
 {
 	InitializeTalonFXClimberPRACTICE_BOT9999();
 	InitializeTalonFXSExtenderPRACTICE_BOT9999();
-	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 
 void ClimberManager::InitializeCOMP_BOT302()
 {
 	InitializeTalonFXClimberCOMP_BOT302();
 	InitializeTalonFXSExtenderCOMP_BOT302();
-	m_Climber->SetPosition(units::angle::turn_t(108.0));
 }
 void ClimberManager::InitializeTalonFXClimberPRACTICE_BOT9999()
 {
@@ -553,14 +551,14 @@ void ClimberManager::SetCurrentState(int state, bool run)
 
 bool ClimberManager::AtTarget()
 {
-	return (units::math::abs(m_ExtenderPositionDegree.Position - m_Extender->GetPosition().GetValue()) < m_extenderThresh);
+	return (units::math::abs(m_ExtenderPositionDegree.Position - m_Extender->GetPosition().GetValue()) < m_extenderThreshold);
 }
 
 void ClimberManager::RunCommonTasks()
 {
 	// This function is called once per loop before the current state Run()
 	Cyclic();
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Intake", "Extender", m_Extender->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Extender", m_Extender->GetPosition().GetValueAsDouble());
 }
 
 /// @brief  Set the control constants (e.g. PIDF values).
@@ -602,9 +600,10 @@ void ClimberManager::Cyclic()
 {
 	Update();
 
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Position", m_Climber->GetPosition().GetValueAsDouble());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Down", (m_ClimberPositionDegree.Position.value()));
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Target Up", (m_ClimberPositionDegreeUp.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Climber Position", m_Climber->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", " Extender Position", m_Extender->GetPosition().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Extender Position Target", (m_ExtenderPositionDegree.Position.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Extender Percent Target", (m_ExtenderPercentOutput.Output.value()));
 }
 
 void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int value)
@@ -643,9 +642,6 @@ void ClimberManager::DataLog(uint64_t timestamp)
 	// m_totalEnergy += m_energy;
 	// LogClimberPower(std::string("Climber/Power"), std::string("Amps"), m_power);
 	// LogClimberEnergy(std::string("Climber/Energy"), std::string("Watts"), m_energy);
-
-	LogExtender(std::string("Intake/ExtednerDegrees"), std::string("Degrees"), (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
-	LogExtenderTarget(std::string("Intake/ExtenderTargetDegrees"), std::string("Degrees"), units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
 
 	// LogClimberManagerState(std::string("Climber/ClimberManagerState"), std::string("int"), GetCurrentState());
 
