@@ -173,6 +173,10 @@ void HolonomicDrive::Run()
         else if (driveToAlgae)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE);
+            if (!m_mlPipeline)
+            {
+                DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
+            }
         }
         else
         {
@@ -244,6 +248,10 @@ void HolonomicDrive::Run()
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Run"), string("nullptr"));
+    }
+    if (m_mlPipeline)
+    {
+        DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
     }
 }
 

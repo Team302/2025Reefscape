@@ -651,3 +651,15 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 
 	return std::nullopt;
 }
+
+void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline)
+{
+	auto cameras = GetCameras(position);
+	for (auto cam : cameras)
+	{
+		if (cam->GetPipeline() != pipeline)
+		{
+			cam->SetPipeline(pipeline);
+		}
+	}
+}

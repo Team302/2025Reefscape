@@ -71,6 +71,7 @@ private:
     units::length::inch_t m_elevatorHeightThreshold = units::length::inch_t(20.0);
     double m_dynamicSpeed = 1.0;
     bool m_climbMode = false;
+    bool m_mlPipeline = false;
     ReefHelper *m_reefHelper;
     BargeHelper *m_bargeHelper;
 };
