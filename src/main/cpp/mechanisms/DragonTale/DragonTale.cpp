@@ -164,7 +164,6 @@ void DragonTale::CreateAndRegisterStates()
 	HoldStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	HoldStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
-	HoldStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	GrabAlgaeFloorStateInst->RegisterTransitionState(HoldStateInst);
@@ -176,6 +175,9 @@ void DragonTale::CreateAndRegisterStates()
 	NetStateInst->RegisterTransitionState(HoldStateInst);
 	NetStateInst->RegisterTransitionState(ProcessStateInst);
 	NetStateInst->RegisterTransitionState(ScoreAlgaeStateInst);
+	NetStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	NetStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	NetStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	ScoreAlgaeStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreAlgaeStateInst->RegisterTransitionState(HoldStateInst);
 	L1ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
@@ -190,18 +192,21 @@ void DragonTale::CreateAndRegisterStates()
 	L2ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
+	L2ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
+	L3ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
+	L4ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
@@ -233,6 +238,10 @@ DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes:
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredScoringMode_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::GameState_Int);
 	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInBargeZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::IsInReefZone_Bool);
+	m_robotState->RegisterForStateChanges(this, RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool);
+
 	PeriodicLooper::GetInstance()->RegisterAll(this);
 	InitializeLogging();
 }
@@ -425,6 +434,8 @@ void DragonTale::CreateCOMP_BOT302()
 	m_CoralInSensor = new frc::DigitalInput(0);
 	m_CoralOutSensor = new frc::DigitalInput(1);
 	m_AlgaeSensor = new frc::DigitalInput(2);
+	m_ElevatorCANRange = new ctre::phoenix6::hardware::CANrange(31, "canivore");
+	m_BranchCANRange = new ctre::phoenix6::hardware::CANrange(32, "canivore");
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);
@@ -436,6 +447,19 @@ void DragonTale::CreateCOMP_BOT302()
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
+
+	ctre::phoenix6::configs::CANrangeConfiguration BranchCANRangeConfigs{};
+	BranchCANRangeConfigs.ProximityParams.ProximityThreshold = 15.0_in;
+	BranchCANRangeConfigs.FovParams.FOVRangeX = 15.0_deg;
+	BranchCANRangeConfigs.FovParams.FOVRangeY = 10.0_deg;
+	BranchCANRangeConfigs.ProximityParams.MinSignalStrengthForValidMeasurement = units::dimensionless::scalar_t(700.0);
+
+	m_BranchCANRange->GetConfigurator().Apply(BranchCANRangeConfigs);
+
+	ctre::phoenix6::configs::CANrangeConfiguration ElevatorCANRangeConfigs{};
+	ElevatorCANRangeConfigs.FovParams.FOVRangeX = 3.75_deg;
+	ElevatorCANRangeConfigs.FovParams.FOVRangeY = 3.75_deg;
+	m_ElevatorCANRange->GetConfigurator().Apply(ElevatorCANRangeConfigs);
 
 	m_PositionInch = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_INCH,		  // ControlModes::CONTROL_TYPE mode
@@ -629,7 +653,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 
 	m_elevatorDiameterInch = 0.75;
 	m_elevatorGearRatio = 3.0;
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(200);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(100);
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(75);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
@@ -833,8 +857,8 @@ void DragonTale::InitializeTalonFXArmCOMP_BOT302()
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
 	configs.MotorOutput.DutyCycleNeutralDeadband = 0;
 
-	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(350);
-	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(150);
+	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(500);
+	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(250);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
 	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.05);
 	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.08);
@@ -911,7 +935,7 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Feedback.SensorToMechanismRatio = 0.134535;
 
 	m_elevatorDiameterInch = 0.75;
-	m_elevatorGearRatio = 9.0;
+	m_elevatorGearRatio = 4.0;
 
 	configs.Slot0.kP = m_PositionInch->GetP();
 	configs.Slot0.kI = m_PositionInch->GetI();
@@ -922,6 +946,11 @@ void DragonTale::InitializeTalonFXElevatorLeaderCOMP_BOT302()
 	configs.Slot0.kA = m_PositionInch->GetA();
 	configs.Slot0.GravityType = m_PositionInch->GetGravityType();
 	configs.Slot0.StaticFeedforwardSign = m_PositionInch->GetStaticFeedforwardSign();
+
+	m_elevatorFeedForwardVoltage = units::voltage::volt_t(m_PositionInch->GetF());
+	m_elevatorKP = m_PositionInch->GetP();
+	m_elevatorKI = m_PositionInch->GetI();
+	m_elevatorKD = m_PositionInch->GetD();
 
 	ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
 	for (int i = 0; i < 5; ++i)
@@ -1057,7 +1086,7 @@ void DragonTale::InitializeTalonFXSAlgaeCOMP_BOT302()
 	configs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue::LimitSwitchPin;
 	configs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue::NormallyOpen;
 
-	configs.MotorOutput.Inverted = InvertedValue::Clockwise_Positive;
+	configs.MotorOutput.Inverted = InvertedValue::CounterClockwise_Positive;
 	configs.MotorOutput.NeutralMode = NeutralModeValue::Brake;
 	configs.MotorOutput.PeakForwardDutyCycle = 1;
 	configs.MotorOutput.PeakReverseDutyCycle = -1;
@@ -1173,9 +1202,18 @@ void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, int va
 
 	else if (RobotStateChanges::StateChange::GameState_Int == change)
 		m_gameMode = static_cast<RobotStateChanges::GamePeriod>(value);
+}
 
-	else if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
-		m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
+void DragonTale::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
+{
+	if (RobotStateChanges::StateChange::IsInReefZone_Bool == change)
+		m_isInReefZone = value;
+
+	else if (RobotStateChanges::StateChange::IsInBargeZone_Bool == change)
+		m_isInBargeZone = value;
+
+	else if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
+		m_isDriveToIsDone = value;
 }
 
 void DragonTale::SetSensorFailSafe()
@@ -1254,19 +1292,6 @@ void DragonTale::UpdateTarget()
 		actualTargetAngle = m_armProtectionAngle;
 	}
 
-	if ((m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn) && (actualTargetHeight < m_climbModeHeight))
-	{
-		actualTargetHeight = m_climbModeHeight;
-	}
-
-	// units::angle::degree_t armError = units::math::abs(actualTargetAngle - GetArmAngle());
-
-	// if ((GetElevatorHeight() >= m_elevatorPreventionHeight) && (actualTargetHeight < m_elevatorPreventionHeight) && (armError > m_armErrorThreshold))
-	// {
-	// 	actualTargetAngle = m_armHoldAngle;
-	// 	actualTargetHeight = GetElevatorHeight();
-	// }
-
 	m_armLoggingTarget = actualTargetAngle.value();
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Target", m_armLoggingTarget);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Target", actualTargetHeight.value());
@@ -1281,6 +1306,7 @@ void DragonTale::UpdateTarget()
 	else
 		UpdateTargetArmPositionDegree(actualTargetAngle);
 
+	// units::voltage::volt_t elevatorPIDOutput{m_elevatorController.Calculate(GetElevatorCANRangeHeight(), actualTargetHeight)};
 	if (abs(elevatorInput) > m_manualControlThreshold || m_elevatorRemedialAction)
 	{
 		UpdateTargetElevatorLeaderPercentOutput(elevatorInput * m_changeRate);
@@ -1288,6 +1314,7 @@ void DragonTale::UpdateTarget()
 	}
 	else
 		UpdateTargetElevatorLeaderPositionInch(actualTargetHeight);
+	// UpdateTargetElevatorLeaderVoltage(elevatorPIDOutput);
 }
 
 bool DragonTale::AtTarget()
@@ -1297,36 +1324,7 @@ bool DragonTale::AtTarget()
 
 void DragonTale::IsElevatorInSync()
 {
-	// units::angular_velocity::turns_per_second_t cancoderVelocity = m_ElevatorHeightSensor->GetVelocity().GetValue();
-	// bool elevatorDirectionUp = cancoderVelocity > 0.0_tps;
-	// if (units::math::abs(cancoderVelocity) > 0.5_tps && !(units::math::abs(m_elevatorTarget - GetElevatorHeight()) < m_elevatorAtTargetThreshold))
-	// {
-	// 	if ((elevatorDirectionUp != m_elevatorDesiredDirectionUp) && !m_elevatorRemedialAction)
-	// 	{
-	// 		m_currElevatorFails++;
-	// 		if (m_currElevatorFails >= m_elevatorMaxFails)
-	// 		{
-	// 			m_elevatorRemedialAction = true;
-	// 		}
-	// 	}
-	// }
-	// else if (m_elevatorRemedialAction)
-	// {
-	// 	if (elevatorDirectionUp == m_elevatorDesiredDirectionUp)
-	// 	{
-	// 		if (m_currElevatorFails > 0)
-	// 			m_currElevatorFails--;
-
-	// 		if (m_currElevatorFails == 0)
-	// 		{
-	// 			m_elevatorRemedialAction = false;
-	// 			SetElevatorTarget(GetElevatorHeight() + (m_elevatorDesiredDirectionUp ? -1_in : 1_in));
-	// 		}
-	// 	}
-	// }
-
 	double motorCounts = m_ElevatorLeader->GetRotorPosition().GetValueAsDouble();
-
 	double elevatorCount = (motorCounts / (m_elevatorGearRatio)) * m_elevatorDiameterInch * std::numbers::pi;
 
 	m_motorCountInches = units::length::inch_t(elevatorCount);
@@ -1347,7 +1345,7 @@ void DragonTale::IsElevatorInSync()
 
 void DragonTale::SetAlgaeMotor()
 {
-	if ((GetAlgaeSensorState() || GetManualMode()) && GetCurrentState() != STATE_SCORE_ALGAE)
+	if ((GetAlgaeSensorState() || GetManualMode()) && (GetCurrentState() != STATE_SCORE_ALGAE))
 	{
 		if (m_activeRobotId == RobotIdentifier::PRACTICE_BOT_9999)
 			UpdateTargetAlgaeTalonFXPercentOutput(0.05);
@@ -1422,11 +1420,10 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Algae Sensor", GetAlgaeSensorState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Arm Angle Method (Abs)", GetArmAngle().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height Method", GetElevatorHeight().value());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Height CANCoder", m_ElevatorHeightSensor->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Reverse", m_ElevatorLeader->GetReverseLimit().GetValue().value);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Limit Switch Forward", m_ElevatorLeader->GetForwardLimit().GetValue().value);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Fail Counts", m_currElevatorFails);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
 }

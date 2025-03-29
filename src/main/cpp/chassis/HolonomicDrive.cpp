@@ -51,6 +51,7 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
 {
     Init();
     RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Inch);
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
 /// @brief initialize the profiles for the various gamepad inputs
@@ -58,12 +59,15 @@ HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
 void HolonomicDrive::Init()
 {
     InitChassisMovement();
+    m_bargeHelper = BargeHelper::GetInstance();
+    m_reefHelper = ReefHelper::GetInstance();
 }
 
 /// @brief calculate the output for the wheels on the chassis from the throttle and steer components
 /// @return void
 void HolonomicDrive::Run()
 {
+
     auto controller = TeleopControl::GetInstance();
     if (controller != nullptr && m_swerve != nullptr)
     {
@@ -124,6 +128,7 @@ void HolonomicDrive::Run()
         auto driveToRightReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
         auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
         auto driveToCoralStation = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
+        auto driveToBarge = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
@@ -134,17 +139,36 @@ void HolonomicDrive::Run()
         {
             PolarDrive();
         }
-        else if (driveToLeftReefBranch)
+        else if (driveToLeftReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH);
+            m_reefHelper->IsInZone();
         }
-        else if (driveToRightReefBranch)
+        else if (driveToRightReefBranch && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH);
+            m_reefHelper->IsInZone();
         }
-        else if (driveToCoralStation)
+        else if (driveToCoralStation && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION);
+        }
+        else if (driveToLeftReefBranch && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE);
+        }
+        else if (driveToRightReefBranch && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_CAGE);
+        }
+        else if (driveToCoralStation && m_climbMode)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
+        }
+        else if (driveToBarge)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
+            m_bargeHelper->IsInZone();
         }
         else
         {
@@ -189,6 +213,12 @@ void HolonomicDrive::Run()
                 }
             }
             m_resetPathplannerTrajectory = true;
+            m_bargeHelper->IsInZone();
+            m_reefHelper->IsInZone();
+            if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
+            {
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+            }
         }
         if (isSlowMode)
         {
@@ -205,6 +235,7 @@ void HolonomicDrive::Run()
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
 
         m_swerve->Drive(m_moveInfo);
+        m_previousDriveState = m_moveInfo.driveOption;
     }
     else
     {
@@ -236,6 +267,14 @@ void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, un
         m_elevatorHeight = units::length::inch_t(value);
     }
 }
+void HolonomicDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (change == RobotStateChanges::StateChange::ClimbModeStatus_Int)
+    {
+        m_climbMode = value;
+    }
+}
+
 void HolonomicDrive::InitSpeeds(double forwardScale,
                                 double strafeScale,
                                 double rotateScale)
@@ -266,6 +305,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
         m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     }
 
+    m_moveInfo.IsClimbMode = m_climbMode;
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
 }
 
@@ -405,7 +445,10 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
 
         if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
-        else
+        else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH ||
+                 m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
+        else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE)
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_BARGE;
     }
 }

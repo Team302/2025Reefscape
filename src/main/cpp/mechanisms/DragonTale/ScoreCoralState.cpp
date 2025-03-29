@@ -75,5 +75,6 @@ bool ScoreCoralState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SCORE));
+	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SCORE)) ||
+			(m_mechanism->GetBranchCANRangeState() && m_mechanism->AtTarget() && m_mechanism->IsValidTarget()));
 }

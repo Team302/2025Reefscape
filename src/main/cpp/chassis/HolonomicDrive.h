@@ -23,6 +23,8 @@
 #include "chassis/ChassisMovement.h"
 #include "state/State.h"
 #include "state/IRobotStateChangeSubscriber.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
 
 class SwerveChassis;
 
@@ -52,6 +54,7 @@ private:
     void DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState);
     void DriveToGamePiece(double forward, double strafe, double rot);
     void NotifyStateUpdate(RobotStateChanges::StateChange change, units::length::meter_t value) override;
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
     SwerveChassis *m_swerve;
     ChassisOptionEnums::DriveStateType m_previousDriveState;
@@ -67,4 +70,7 @@ private:
     units::length::inch_t m_elevatorHeight;
     units::length::inch_t m_elevatorHeightThreshold = units::length::inch_t(20.0);
     double m_dynamicSpeed = 1.0;
+    bool m_climbMode = false;
+    ReefHelper *m_reefHelper;
+    BargeHelper *m_bargeHelper;
 };

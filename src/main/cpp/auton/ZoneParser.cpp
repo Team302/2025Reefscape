@@ -139,6 +139,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                                                                                //    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
                                                                                                {"CORAL_STATION", ChassisOptionEnums::DRIVE_TO_CORAL_STATION},
                                                                                                //    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                                               {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
                                                                                                {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
 
     static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
@@ -172,7 +173,14 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             AutonGrid::XGRID xgrid2 = AutonGrid::XGRID::NO_VALUE;
             AutonGrid::YGRID ygrid2 = AutonGrid::YGRID::NONE;
 
+            units::length::meter_t xgrid1rect = units::length::meter_t(0.0);
+            units::length::meter_t ygrid1rect = units::length::meter_t(0.0);
+            units::length::meter_t xgrid2rect = units::length::meter_t(0.0);
+            units::length::meter_t ygrid2rect = units::length::meter_t(0.0);
+
             AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
+
+            // TODO: add zoneType parsing and check
 
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
             bool isTaleStateChanging = false;
@@ -256,7 +264,26 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 {
                     radius = attr.as_double();
                 }
-
+                if (strcmp(attr.name(), "x1_rect") == 0)
+                {
+                    zoneMode = AutonGrid::RECTANGLE;
+                    xgrid1rect = units::length::meter_t(attr.as_double());
+                }
+                else if (strcmp(attr.name(), "y1_rect") == 0)
+                {
+                    zoneMode = AutonGrid::RECTANGLE;
+                    ygrid1rect = units::length::meter_t(attr.as_double());
+                }
+                else if (strcmp(attr.name(), "x2_rect") == 0)
+                {
+                    zoneMode = AutonGrid::RECTANGLE;
+                    xgrid2rect = units::length::meter_t(attr.as_double());
+                }
+                else if (strcmp(attr.name(), "y2_rect") == 0)
+                {
+                    zoneMode = AutonGrid::RECTANGLE;
+                    ygrid2rect = units::length::meter_t(attr.as_double());
+                }
                 else if (strcmp(attr.name(), "intakeOption") == 0)
                 {
                     auto itr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
@@ -353,6 +380,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        ygrid2,
                                        circlePose2d,
                                        units::inch_t(radius),
+                                       xgrid1rect,
+                                       xgrid2rect,
+                                       ygrid1rect,
+                                       ygrid2rect,
                                        isTaleStateChanging,
                                        isIntakeStateChanging,
                                        intakeChosenOption,

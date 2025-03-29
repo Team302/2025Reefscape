@@ -19,6 +19,7 @@
 #include "fielddata/ReefHelper.h"
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
+#include "utils/logging/debug/Logger.h"
 
 ReefHelper *ReefHelper::m_instance = nullptr;
 ReefHelper *ReefHelper::GetInstance()
@@ -36,6 +37,7 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrent
 {
     m_blueReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d();
     m_redReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d();
+    InitZones();
 }
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
@@ -189,6 +191,7 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
 {
     if (m_allianceColor == frc::DriverStation::Alliance::kRed)
     {
+
         switch (tag) // nearest april
         {
         case FieldConstants::AprilTagIDs::RED_REEF_AB_TAG:
@@ -263,4 +266,24 @@ units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilT
 {
     auto aprilTagPose = m_fieldConstants->GetAprilTagPose(tag).ToPose2d();
     return currentPose.Translation().Distance(aprilTagPose.Translation());
+}
+void ReefHelper::InitZones()
+{
+    m_reefZonesRed = ZoneParser::ParseXML("RedReefPlacerZones.xml");
+    m_reefZonesBlue = ZoneParser::ParseXML("BlueReefPlacerZones.xml");
+}
+
+void ReefHelper::IsInZone()
+{
+    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto reefZones = m_allianceColor == frc::DriverStation::Alliance::kRed ? m_reefZonesRed : m_reefZonesBlue;
+
+    if (reefZones != nullptr)
+    {
+        bool intheZone = autongridptr->IsPoseInZone(reefZones->GetCircleZonePose(), reefZones->GetRadius(), m_chassis->GetPose());
+
+        if (intheZone != m_previousIsInZone)
+            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
+        m_previousIsInZone = intheZone;
+    }
 }
