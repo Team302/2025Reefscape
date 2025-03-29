@@ -34,6 +34,7 @@ enum class ZoneMode
 {
     NOTHING = -1,
     RECTANGLE,
+    HEXAGON,
     CIRCLE,
 };
 
@@ -53,7 +54,6 @@ public:
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::HeadingOption headingOption,
                ChassisOptionEnums::DriveStateType pathUpdateOption,
-               ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
                ZoneMode zoneMode); // declare ZoneParams public constructor with parameters xgrid1, etc.
 
     ZoneParams() = delete;

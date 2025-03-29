@@ -24,18 +24,6 @@
 
 // Thirdparty includes
 
-AutonGrid *AutonGrid::m_instance = nullptr; // initialize m_instance as a nullptr
-
-AutonGrid *AutonGrid::GetInstance()
-{
-    // if m_instance is nullptr then a new instance of AutonGrid is created and returned therefore only leaving one instance of the class
-    if (AutonGrid::m_instance == nullptr)
-    {
-        AutonGrid::m_instance = new AutonGrid();
-    }
-    return AutonGrid::m_instance;
-} // to make the class a singlton
-
 bool AutonGrid::IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose)
 // defining IsPoseInZone bool method and pulling in the arguements
 {

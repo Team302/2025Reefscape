@@ -40,7 +40,6 @@ ZoneParams::ZoneParams(
 	ChassisOptionEnums::AutonChassisOptions autonchassisoption,
 	ChassisOptionEnums::HeadingOption headingOption,
 	ChassisOptionEnums::DriveStateType pathUpdateOption,
-	ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
 	ZoneMode zoneMode) : m_xgrid1rect(xgrid1rect),
 						 m_xgrid2rect(xgrid2rect),
 						 m_ygrid1rect(ygrid1rect),
@@ -51,7 +50,6 @@ ZoneParams::ZoneParams(
 						 m_taleOption(taleOption),
 						 m_chassisoption(autonchassisoption),
 						 m_headingOption(headingOption),
-						 m_avoidoption(autonavoidoption),
 						 m_pathUpdateOption(pathUpdateOption),
 						 m_zoneMode(zoneMode),
 						 m_circlePose(circlePose),
@@ -60,13 +58,14 @@ ZoneParams::ZoneParams(
 }
 bool ZoneParams::IsPoseInZone(frc::Pose2d robotPose)
 {
-	auto autonGrid = AutonGrid::GetInstance();
-	switch (GetZoneMode())
+	switch (m_zoneMode)
 	{
 	case ZoneMode::RECTANGLE:
-		return autonGrid->IsPoseInZone(GetX1Rect(), GetX2Rect(), GetY1Rect(), GetY2Rect(), robotPose);
+		return AutonGrid::IsPoseInZone(m_xgrid1rect, m_xgrid2rect, m_ygrid1rect, m_ygrid2rect, robotPose);
 	case ZoneMode::CIRCLE:
-		return autonGrid->IsPoseInZone(GetCircleZonePose(), GetRadius(), robotPose);
+		return AutonGrid::IsPoseInZone(m_circlePose, m_radius, robotPose);
+	case ZoneMode::HEXAGON:
+		return AutonGrid::IsPoseInZone(m_circlePose, (m_radius * (2 / 3)), robotPose);
 	default:
 		return true;
 	}

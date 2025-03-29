@@ -23,14 +23,11 @@
 class AutonGrid
 {
 public:
-    static AutonGrid *GetInstance();
-
-    bool IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose);
-    bool IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose);
+    static bool IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose);
+    static bool IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose);
 
 private:
     AutonGrid() = default;
     ~AutonGrid() = default;
-    static AutonGrid *m_instance;
     units::length::foot_t m_gridRes = units::length::foot_t(1.0);
 };

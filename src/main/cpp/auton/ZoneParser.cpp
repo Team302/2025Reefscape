@@ -58,10 +58,10 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                                                                                {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
                                                                                                {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
 
-    static std::map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
-        {"PODIUM", ChassisOptionEnums::AutonAvoidOptions::PODIUM},
-        {"ROBOT_COLLISION", ChassisOptionEnums::AutonAvoidOptions::ROBOT_COLLISION},
-        {"NO_AVOID_OPTION", ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION},
+    static std::map<std::string, ZoneMode> xmlStringToZoneModeEnumMap{
+        {"HEXAGON", ZoneMode::HEXAGON},
+        {"CIRCLE", ZoneMode::CIRCLE},
+        {"RECTANGLE", ZoneMode::RECTANGLE},
 
     };
 
@@ -101,7 +101,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             ChassisOptionEnums::HeadingOption chosenHeadingOption = ChassisOptionEnums::HeadingOption::IGNORE;
 
             ChassisOptionEnums::DriveStateType chosenUpdateOption = ChassisOptionEnums::STOP_DRIVE;
-            ChassisOptionEnums::AutonAvoidOptions avoidChosenOption = ChassisOptionEnums::AutonAvoidOptions::NO_AVOID_OPTION;
 
             auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 
@@ -219,12 +218,13 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                         hasError = true;
                     }
                 }
-                else if (strcmp(attr.name(), "avoidOption") == 0)
+                else if (strcmp(attr.name(), "ZoneMode") == 0)
                 {
-                    auto itr = xmlStringToAvoidOptionEnumMap.find(attr.value());
-                    if (itr != xmlStringToAvoidOptionEnumMap.end())
+                    auto itr = xmlStringToZoneModeEnumMap.find(attr.value());
+                    if (itr != xmlStringToZoneModeEnumMap.end())
                     {
-                        avoidChosenOption = itr->second;
+                        zoneMode = itr->second;
+                        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "Zone Mode Parsed", chosenUpdateOption);
                     }
                     else
                     {
@@ -250,7 +250,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        chassisChosenOption,
                                        chosenHeadingOption,
                                        chosenUpdateOption,
-                                       avoidChosenOption,
                                        zoneMode));
             }
 
