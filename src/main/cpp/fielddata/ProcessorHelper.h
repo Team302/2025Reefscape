@@ -18,7 +18,6 @@
 
 // C++ includes
 #include <optional>
-#include <vector>
 // 302 includes
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
