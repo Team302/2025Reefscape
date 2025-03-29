@@ -115,10 +115,10 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         {
             chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
         }
-        if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
-        {
-            chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
-        }
+        // if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
+        // {
+        //     chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
+        // }
         units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
         rotationError = AngleUtils::GetEquivAngle(rotationError);
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
