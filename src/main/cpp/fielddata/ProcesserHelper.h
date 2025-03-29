@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,74 +16,31 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// C++ includes
+#include <optional>
+#include <vector>
+// 302 includes
+#include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/DriverStation.h"
+#include "frc/geometry/Pose2d.h"
+#include "state/RobotState.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class ProcesserHelper
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        FACE_BARGE,
-        IGNORE
-    };
+    static ProcesserHelper *GetInstance();
+    frc::Pose2d CalcProcesserPose();
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag();
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        DRIVE_TO_LEFT_CAGE,
-        DRIVE_TO_RIGHT_CAGE,
-        DRIVE_TO_CENTER_CAGE,
-        DRIVE_TO_BARGE,
-        DRIVE_TO_PROCESSER,
-        STOP_DRIVE
-    };
+private:
+    ProcesserHelper();
+    ~ProcesserHelper() = default;
+    static ProcesserHelper *m_instance;
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
+    SwerveChassis *m_chassis;
+    FieldConstants *m_fieldConstants;
 
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
-
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+    units::length::foot_t m_centerLine{28.73};
 };

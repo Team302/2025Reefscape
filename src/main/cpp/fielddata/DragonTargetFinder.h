@@ -39,7 +39,8 @@ enum class DragonTargetFinderTarget
     CLOSEST_CORAL_STATION_ALLIANCE_SIDE,
     LEFT_CAGE,
     CENTER_CAGE,
-    RIGHT_CAGE
+    RIGHT_CAGE,
+    PROCESSER
 };
 
 enum class DragonTargetFinderData
