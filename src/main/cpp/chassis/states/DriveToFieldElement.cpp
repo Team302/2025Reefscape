@@ -92,7 +92,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
             regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
 
-            if ((m_currentType == DragonTargetFinderData::ODOMETRY_BASED) && (get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+            if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
             {
                 m_endPose = newEndPose;
             }
@@ -101,8 +101,10 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
         DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
         DragonVisionStructLogger::logPose2d("target pose", m_endPose);
+
         if (m_currentType != DragonTargetFinderData::NOT_FOUND)
         {
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
 
             m_translationPIDX.SetGoal(m_endPose.X());
             m_translationPIDY.SetGoal(m_endPose.Y());
@@ -136,6 +138,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         }
         else
         {
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not found");
             auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
             chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(0.0_mps,
                                                                                         0.0_mps,
