@@ -22,28 +22,28 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
 
-void FieldElementCalculator::CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap)
+void FieldElementCalculator::CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
     InitializeReefBranchTransformsMap();
     UpdateReefStickRobotTransforms();
     InitializeTransforms();
-    CalculateCenters(m_fieldConstantsPoseMap);
+    CalculateCenters(fieldConstantsPoseMap);
 
     // update all of the calculated values only
     for (auto &[key, translatedPose] : m_transformCalculatedMap)
     {
-        m_fieldConstantsPoseMap[key] = m_fieldConstantsPoseMap[m_transformCalculatedMap[key].referencePose] + m_transformCalculatedMap[key].transform + m_halfRobotTransform;
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[m_transformCalculatedMap[key].referencePose] + m_transformCalculatedMap[key].transform + m_halfRobotTransform;
     }
 
     // after transform the tags, if the tags are transformed first it doubly transforms the calculated values
     for (auto &[key, unusedValue] : m_transformTagsMap)
     {
-        m_fieldConstantsPoseMap[key] = m_fieldConstantsPoseMap[key] + m_halfRobotTransform;
+        fieldConstantsPoseMap[key] = fieldConstantsPoseMap[key] + m_halfRobotTransform;
     }
 
 #ifdef INCLUDE_FIELD_ELEMENT_POSE_LOGGER
-    m_fieldConstantsPoseMapLogger fpl;
-    fpl.LogFieldElementPoses(m_fieldConstantsPoseMap);
+    fieldConstantsPoseMapLogger fpl;
+    fpl.LogFieldElementPoses(fieldConstantsPoseMap);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("PoseLogger"), std::string("Logging"), std::string(""));
 #endif
 }
@@ -246,23 +246,23 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_KL, m_calcRightStick);
 }
 
-void FieldElementCalculator::CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap)
+void FieldElementCalculator::CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
-    m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER] = AverageHexagonPose(
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_AB],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CD],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_EF],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_GH],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_IJ],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_KL]);
+    fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_KL]);
 
-    m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER] = AverageHexagonPose(
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ],
-        m_fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL]);
+    fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER] = AverageHexagonPose(
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_AB],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_CD],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_EF],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_GH],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_IJ],
+        fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL]);
 }
 
 frc::Pose3d FieldElementCalculator::AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6)
