@@ -41,6 +41,4 @@ private:
 
     SwerveChassis *m_chassis;
     FieldConstants *m_fieldConstants;
-
-    units::length::foot_t m_centerLine{28.73};
 };

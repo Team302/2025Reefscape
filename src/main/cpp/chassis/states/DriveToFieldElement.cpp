@@ -118,7 +118,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         }
         if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR)
         {
-            chassisMovement.yawAngle = ProcessorHelper::GetInstance()->CalcProcessorPose().Rotation().Degrees();
+            chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
         }
 
         units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();

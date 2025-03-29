@@ -229,8 +229,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     }
     else if (item == DragonTargetFinderTarget::PROCESSOR)
     {
-        frc::Pose2d Processorpose = ProcessorHelper::GetInstance()->CalcProcessorPose();
-        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, Processorpose);
+        frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
+        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
     }
 
     auto pose2d = Pose2d();
