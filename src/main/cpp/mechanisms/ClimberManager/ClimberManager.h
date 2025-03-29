@@ -25,6 +25,7 @@
 #include "wpi/DataLog.h"
 
 #include "ctre/phoenix6/TalonFX.hpp"
+#include "ctre/phoenix6/TalonFXS.hpp"
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "ctre/phoenix6/SignalLogger.hpp"
@@ -51,7 +52,8 @@ public:
 		STATE_INIT,
 		STATE_OFF,
 		STATE_MANUAL_CLIMB,
-		STATE_AUTO_CLIMB
+		STATE_AUTO_CLIMB,
+		STATE_DELIVER_CLIMBER
 	};
 
 	ClimberManager(RobotIdentifier activeRobotId);
@@ -87,6 +89,16 @@ public:
 		m_ClimberPositionDegreeUp.Position = position;
 		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
+	void UpdateTargetExtenderPositionDegree(units::angle::turn_t position)
+	{
+		m_ExtenderPositionDegree.Position = position;
+		m_ExtenderActiveTarget = &m_ExtenderPositionDegree;
+	}
+	void UpdateTargetExtenderPercentOutput(double percentOut)
+	{
+		m_ExtenderPercentOutput.Output = percentOut;
+		m_ExtenderActiveTarget = &m_ExtenderPercentOutput;
+	}
 
 	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
 	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
@@ -96,6 +108,8 @@ public:
 	void RunCommonTasks() override;
 	void DataLog(uint64_t timestamp) override;
 
+	bool AtTarget();
+
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int value) override;
@@ -103,6 +117,7 @@ public:
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
 
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
+	ctre::phoenix6::hardware::TalonFXS *GetExtender() const { return m_Extender; }
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOut() const { return m_PercentOut; }
 	ControlData *GetPositionDegreeUp() const { return m_PositionDegreeUp; }
@@ -121,6 +136,7 @@ private:
 	std::unordered_map<std::string, STATE_NAMES> m_stateMap;
 
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
+	ctre::phoenix6::hardware::TalonFXS *m_Extender;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOut;
 	ControlData *m_PositionDegreeUp;
@@ -130,12 +146,25 @@ private:
 
 	void InitializeTalonFXClimberPRACTICE_BOT9999();
 	void InitializeTalonFXClimberCOMP_BOT302();
+	void InitializeTalonFXSExtenderCOMP_BOT302();
+	void InitializeTalonFXSExtenderPRACTICE_BOT9999();
 
 	ctre::phoenix6::controls::DutyCycleOut m_ClimberPercentOut{0.0};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegree{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::PositionTorqueCurrentFOC m_ClimberPositionDegreeUp{units::angle::turn_t(0.0)};
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
+	ctre::phoenix6::controls::ControlRequest *m_ExtenderActiveTarget;
+
 	void InitializeLogging();
+	wpi::log::DoubleLogEntry m_ExtenderLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderTargetLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderPowerLogEntry;
+	wpi::log::DoubleLogEntry m_ExtenderEnergyLogEntry;
+
+	units::turn_t m_extenderThreshold = units::turn_t(3.0);
+
+	ctre::phoenix6::controls::DutyCycleOut m_ExtenderPercentOutput{0.0};
+	ctre::phoenix6::controls::PositionVoltage m_ExtenderPositionDegree{units::angle::turn_t(0.0)};
 
 	frc::Timer m_powerTimer;
 	double m_power = 0.0;
@@ -150,4 +179,8 @@ private:
 	auto LogClimberManagerTotalEnergy(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
 	auto LogClimberManagerTotalWattHours(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
 	auto LogClimberManagerState(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogExtender(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogExtenderTarget(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogExtenderPower(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
+	ctre::phoenix::StatusCode LogExtenderEnergy(string name, string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
 };
