@@ -22,7 +22,6 @@
 // 302 includes
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
-#include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
 #include "state/RobotState.h"
 #include "fielddata/DragonTargetFinder.h"

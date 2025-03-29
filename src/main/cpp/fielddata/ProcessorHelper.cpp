@@ -14,13 +14,9 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "fielddata/ProcessorHelper.h"
-#include "frc/DriverStation.h"
 #include "utils/FMSData.h"
-#include "utils/logging/debug/Logger.h"
-#include "frc/Filesystem.h"
 
 ProcessorHelper *ProcessorHelper::m_instance = nullptr;
 ProcessorHelper *ProcessorHelper::GetInstance()
@@ -53,7 +49,6 @@ frc::Pose2d ProcessorHelper::CalcProcessorPose()
 }
 std::optional<FieldConstants::AprilTagIDs> ProcessorHelper::GetAprilTag()
 {
-    int apriltagid;
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
