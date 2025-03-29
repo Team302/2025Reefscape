@@ -30,6 +30,7 @@
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/AngleUtils.h"
 #include "state/RobotState.h"
+#include "fielddata/ProcessorHelper.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -114,6 +115,10 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
         {
             chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
+        }
+        if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR)
+        {
+            chassisMovement.yawAngle = ProcessorHelper::GetInstance()->CalcProcessorPose().Rotation().Degrees();
         }
 
         units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();

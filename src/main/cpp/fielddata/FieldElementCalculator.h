@@ -143,6 +143,19 @@ private:
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
+    frc::Transform3d m_calcProcessorRed = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(16.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    frc::Transform3d m_calcProcessorBlue = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(16.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
     std::map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;
 };

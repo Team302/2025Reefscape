@@ -158,7 +158,7 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE] = new DriveToLeftCage(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE] = new DriveToCenterCage(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE] = new DriveToBarge(m_robotDrive);
-    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR] = new DriveToProcessor_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR] = new DriveToProcessor(m_robotDrive);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();

@@ -43,13 +43,13 @@ frc::Pose2d ProcessorHelper::CalcProcessorPose()
     frc::Pose2d pose2d{};
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
-        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR).ToPose2d();
+        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR_CALCULATED).ToPose2d();
     }
     else
     {
-        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR).ToPose2d();
+        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR_CALCULATED).ToPose2d();
     }
-    return pose2d;
+    return frc::Pose2d(pose2d.X(), pose2d.Y(), pose2d.Rotation().Degrees() + units::degree_t(180));
 }
 std::optional<FieldConstants::AprilTagIDs> ProcessorHelper::GetAprilTag()
 {
