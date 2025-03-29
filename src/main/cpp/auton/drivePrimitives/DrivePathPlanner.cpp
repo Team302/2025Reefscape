@@ -34,6 +34,7 @@
 #include "fielddata/DragonTargetFinder.h"
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
+#include "chassis/states/DriveToBarge.h"
 #include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/states/DriveToCoralStation.h"
 #include "configs/MechanismConfig.h"
@@ -79,12 +80,14 @@ DriveToFieldElement *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::Driv
 {
     switch (driveToType)
     {
-    case ChassisOptionEnums::DRIVE_TO_CORAL_STATION:
+    case ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION:
         return dynamic_cast<DriveToCoralStation *>(m_chassis->GetSpecifiedDriveState(driveToType));
-    case ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH:
+    case ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH:
         return dynamic_cast<DriveToRightReefBranch *>(m_chassis->GetSpecifiedDriveState(driveToType));
-    case ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH:
+    case ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH:
         return dynamic_cast<DriveToLeftReefBranch *>(m_chassis->GetSpecifiedDriveState(driveToType));
+    case ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE:
+        return dynamic_cast<DriveToBarge *>(m_chassis->GetSpecifiedDriveState(driveToType));
     default:
         return nullptr;
     }
@@ -263,23 +266,10 @@ void DrivePathPlanner::CheckForDriveTo()
 }
 bool DrivePathPlanner::IsInZone()
 {
-    if (m_zone->GetZoneMode() != AutonGrid::ZoneMode::NOTHING && m_chassis != nullptr)
+    if (m_zone->GetZoneMode() != ZoneMode::NOTHING && m_chassis != nullptr)
     {
 
-        if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::CIRCLE)
-        {
-            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetCircleZonePose(),
-                                                          m_zone->GetRadius(),
-                                                          m_chassis->GetPose());
-        }
-        else if (m_zone->GetZoneMode() == AutonGrid::ZoneMode::RECTANGLE)
-        {
-            return AutonGrid::GetInstance()->IsPoseInZone(m_zone->GetXGrid1(),
-                                                          m_zone->GetXGrid2(),
-                                                          m_zone->GetYGrid1(),
-                                                          m_zone->GetYGrid2(),
-                                                          m_chassis->GetPose());
-        }
+        return m_zone->IsPoseInZone(m_chassis->GetPose());
     }
     return false;
 }

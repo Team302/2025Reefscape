@@ -43,8 +43,9 @@ InitState::InitState(std::string stateName,
 void InitState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitState"), string("Init"));
-	m_mechanism->GetClimber()->SetPosition(units::angle::turn_t(108.0));
+	m_mechanism->GetClimber()->SetPosition(units::angle::turn_t(0.0));
 	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void InitState::Run()

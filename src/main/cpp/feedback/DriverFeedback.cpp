@@ -79,14 +79,14 @@ void DriverFeedback::UpdateLEDStates()
         {
             if (taleMgr->GetRemedialActionStatus())
             {
-                m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, units::time::millisecond_t(50));
+                m_LEDStates->SetBlinkingPattern(frc::Color::kCrimson, m_blinkingPeriod);
             }
             else if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
             {
                 currentState = frc::Color::kRed;
                 m_LEDStates->SetSolidColor(currentState);
             }
-            else if (((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION)) && frc::DriverStation::IsAutonomous())
+            else if (((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE)) && frc::DriverStation::IsAutonomous())
             {
                 currentState = frc::Color::kGreen;
                 if (m_DriveToIsDone)
@@ -100,21 +100,30 @@ void DriverFeedback::UpdateLEDStates()
             }
             else
             {
-                if (m_scoringMode == RobotStateChanges::ScoringMode::Coral)
-                {
-                    currentState = frc::Color::kGhostWhite;
-                }
-                else
+                if (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR || taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF || taleMgr->GetCurrentState() == taleMgr->STATE_NET || taleMgr->GetCurrentState() == taleMgr->STATE_PROCESS || (taleMgr->GetCurrentState() == taleMgr->STATE_SCORE_ALGAE))
                 {
                     currentState = frc::Color::kAqua;
                 }
+                else if (taleMgr->GetCurrentState() == taleMgr->STATE_READY)
+                {
+                    currentState = m_scoringMode == RobotStateChanges::ScoringMode::Coral ? frc::Color::kGhostWhite : frc::Color::kAqua;
+                }
+                else
+                {
+                    currentState = frc::Color::kGhostWhite;
+                }
+
                 if ((taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_REEF) || (taleMgr->GetCurrentState() == taleMgr->STATE_GRAB_ALGAE_FLOOR) || (taleMgr->GetCurrentState() == taleMgr->STATE_HUMAN_PLAYER_LOAD))
                 {
                     m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
                 }
                 else if (taleMgr->GetCurrentState() == taleMgr->STATE_HOLD)
                 {
-                    if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
+                    if (taleMgr->GetCoralOutSensorState() && taleMgr->GetAlgaeSensorState())
+                    {
+                        m_LEDStates->SetAlternatingColorBlinkingPattern(frc::Color::kGhostWhite, frc::Color::kAqua);
+                    }
+                    else if (taleMgr->GetCoralOutSensorState() || taleMgr->GetAlgaeSensorState())
                     {
                         m_LEDStates->SetBreathingPattern(currentState, m_breathingPeriod);
                     }
@@ -143,40 +152,27 @@ void DriverFeedback::UpdateLEDStates()
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-    bool questStatus = false;
-    bool ll1Status = false;
-    bool ll2Status = false;
-    bool pigeonfaults = false;
     bool coralInSensor = false;
     bool coralOutSensor = false;
     bool algaeSensor = false;
-    bool intakeSensor = false;
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
-        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
-        auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
-
         if (taleMgr != nullptr)
         {
             coralInSensor = taleMgr->GetCoralInSensorState();
             coralOutSensor = taleMgr->GetCoralOutSensorState();
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
-        if (intakeMgr != nullptr)
-        {
-            intakeSensor = intakeMgr->GetIntakeSensorState();
-        }
     }
-    if (DragonVision::GetDragonVision() != nullptr)
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
+    if (m_timer == 20)
     {
-        auto vision = DragonVision::GetDragonVision();
-        ll1Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA);
-        ll2Status = vision->HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA);
-        pigeonfaults = false;
+        QueryNT();
+        m_timer = 0;
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, questStatus, ll1Status, ll2Status, pigeonfaults);
+    m_timer++;
 }
 
 void DriverFeedback::ResetRequests(void)
@@ -225,4 +221,19 @@ void DriverFeedback::CheckControllers()
     {
         m_controllerCounter = 0;
     }
+}
+
+void DriverFeedback::QueryNT()
+{
+    m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
+    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
+
+    int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
+    int questhb = m_llQuestNt.get()->GetEntry("timestamp").GetDouble(0);
+
+    m_ll1Status = ll1hb != m_ll1hb;
+    m_questStatus = questhb != m_questhb;
+
+    m_ll1hb = ll1hb;
+    m_questhb = questhb;
 }

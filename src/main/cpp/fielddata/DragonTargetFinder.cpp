@@ -157,14 +157,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (bargeHelper != nullptr)
         {
             auto pose2d = bargeHelper->CalcBargePose();
-            if (bargeHelper->ClampChassisY().has_value())
-            {
-                pose2d = frc::Pose2d(pose2d.X(), bargeHelper->ClampChassisY().value(), pose2d.Rotation());
-            }
-            else
-            {
-                pose2d = frc::Pose2d(pose2d.X(), m_chassis->GetPose().Y(), pose2d.Rotation());
-            }
+            m_goalPose = pose2d;
+
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, pose2d);
         }
     }
@@ -224,8 +218,13 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
              item == DragonTargetFinderTarget::CENTER_CAGE ||
              item == DragonTargetFinderTarget::RIGHT_CAGE)
     {
-        // call cage helper to find the appropriate the cage,
-        // its corresponding APRILTAG ID and the field constant identifier
+        auto bargeHelper = BargeHelper::GetInstance();
+        if (bargeHelper != nullptr)
+        {
+            auto cagepose = bargeHelper->GetCagePose(item);
+            m_goalPose = cagepose;
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, cagepose);
+        }
     }
 
     auto pose2d = Pose2d();

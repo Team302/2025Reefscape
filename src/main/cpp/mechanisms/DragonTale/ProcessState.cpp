@@ -86,5 +86,5 @@ bool ProcessState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L1_SCORING_POSITION)) && m_mechanism->IsAlgaeMode());
+	return (m_mechanism->GetAlgaeSensorState() && considerGamepadTransitions && (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L1_SCORING_POSITION)));
 }

@@ -110,20 +110,7 @@ void CyclePrimitives::Run()
 					bool isInZone = false;
 					if (zone != nullptr)
 					{
-						if (zone->GetZoneMode() == AutonGrid::RECTANGLE)
-						{
-							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetXGrid1(),
-																			  zone->GetXGrid2(),
-																			  zone->GetYGrid1(),
-																			  zone->GetYGrid2(),
-																			  m_chassis->GetPose());
-						}
-						else if (zone->GetZoneMode() == AutonGrid::CIRCLE)
-						{
-							isInZone = AutonGrid::GetInstance()->IsPoseInZone(zone->GetCircleZonePose(),
-																			  zone->GetRadius(),
-																			  m_chassis->GetPose());
-						}
+						isInZone = zone->IsPoseInZone(m_chassis->GetPose());
 
 						if (isInZone)
 						{
