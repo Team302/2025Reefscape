@@ -5,7 +5,8 @@
     <zone 
         circlex="13.036"
         circley="4.038"
-        radius="90.0"  
+        radius="75.0"  
         taleOption="STATE_L4SCORING_POSITION"
         ZoneMode="HEXAGON" />      
+        
 </auton>
