@@ -31,7 +31,7 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/BargeHelper.h"
-#include "fielddata/ProcesserHelper.h"
+#include "fielddata/ProcessorHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -233,10 +233,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, cagepose);
         }
     }
-    else if (item == DragonTargetFinderTarget::PROCESSER)
+    else if (item == DragonTargetFinderTarget::Processor)
     {
-        frc::Pose2d processerpose = ProcesserHelper::GetInstance()->CalcProcesserPose();
-        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processerpose);
+        frc::Pose2d Processorpose = ProcessorHelper::GetInstance()->CalcProcessorPose();
+        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, Processorpose);
     }
 
     auto pose2d = Pose2d();
@@ -269,7 +269,7 @@ std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(Drago
     }
     else if (item == DragonVision::VISION_ELEMENT::PROCESSOR)
     {
-        return ProcesserHelper::GetInstance()->GetAprilTag(); // TODO JW come back to this one
+        return ProcessorHelper::GetInstance()->GetAprilTag(); // TODO JW come back to this one
     }
     else
     {

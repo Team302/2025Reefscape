@@ -40,7 +40,7 @@ enum class DragonTargetFinderTarget
     LEFT_CAGE,
     CENTER_CAGE,
     RIGHT_CAGE,
-    PROCESSER
+    PROCESSOR
 };
 
 enum class DragonTargetFinderData

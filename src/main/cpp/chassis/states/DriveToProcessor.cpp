@@ -19,30 +19,30 @@
 // FRC Includes
 
 // Team302 Includes
-#include "chassis/states/DriveToProcesser.h"
+#include "chassis/states/DriveToProcessor.h"
 #include "fielddata/DragonTargetFinder.h"
 
 using std::string;
 
-DriveToProcesser::DriveToProcesser(RobotDrive *robotDrive)
+DriveToProcessor::DriveToProcessor(RobotDrive *robotDrive)
     : DriveToFieldElement(robotDrive)
 {
 }
 
-string DriveToProcesser::GetDriveStateName() const
+string DriveToProcessor::GetDriveStateName() const
 {
-    return std::string("DriveToProcesser");
+    return std::string("DriveToProcessor");
 }
 
-DragonTargetFinderTarget DriveToProcesser::GetDriveToTarget() const
+DragonTargetFinderTarget DriveToProcessor::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::PROCESSER;
+    return DragonTargetFinderTarget::PROCESSOR;
 }
-ChassisOptionEnums::DriveStateType DriveToProcesser::GetDriveStateType() const
+ChassisOptionEnums::DriveStateType DriveToProcessor::GetDriveStateType() const
 {
-    return ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSER;
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR;
 }
-ChassisOptionEnums::HeadingOption DriveToProcesser::GetHeadingOption() const
+ChassisOptionEnums::HeadingOption DriveToProcessor::GetHeadingOption() const
 {
     return ChassisOptionEnums::HeadingOption::IGNORE;
 }

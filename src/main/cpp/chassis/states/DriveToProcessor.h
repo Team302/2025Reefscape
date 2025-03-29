@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,31 +15,26 @@
 
 #pragma once
 
-// C++ includes
-#include <optional>
-#include <vector>
-// 302 includes
-#include "chassis/SwerveChassis.h"
-#include "fielddata/FieldConstants.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose2d.h"
-#include "state/RobotState.h"
+// C++ Includes
+#include <string>
+
+// FRC Includes
+
+// Team302 Includes
+#include "chassis/states/DriveToFieldElement.h"
 #include "fielddata/DragonTargetFinder.h"
 
-class ProcesserHelper
+class RobotDrive;
+
+class DriveToProcessor : public DriveToFieldElement
 {
 public:
-    static ProcesserHelper *GetInstance();
-    frc::Pose2d CalcProcesserPose();
-    std::optional<FieldConstants::AprilTagIDs> GetAprilTag();
+    DriveToProcessor(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-private:
-    ProcesserHelper();
-    ~ProcesserHelper() = default;
-    static ProcesserHelper *m_instance;
-
-    SwerveChassis *m_chassis;
-    FieldConstants *m_fieldConstants;
-
-    units::length::foot_t m_centerLine{28.73};
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 };

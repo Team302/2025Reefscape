@@ -16,28 +16,28 @@
 
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
-#include "fielddata/ProcesserHelper.h"
+#include "fielddata/ProcessorHelper.h"
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
 #include "frc/Filesystem.h"
 
-ProcesserHelper *ProcesserHelper::m_instance = nullptr;
-ProcesserHelper *ProcesserHelper::GetInstance()
+ProcessorHelper *ProcessorHelper::m_instance = nullptr;
+ProcessorHelper *ProcessorHelper::GetInstance()
 {
-    if (ProcesserHelper::m_instance == nullptr)
+    if (ProcessorHelper::m_instance == nullptr)
     {
-        ProcesserHelper::m_instance = new ProcesserHelper();
+        ProcessorHelper::m_instance = new ProcessorHelper();
     }
-    return ProcesserHelper::m_instance;
+    return ProcessorHelper::m_instance;
 }
 
-ProcesserHelper::ProcesserHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+ProcessorHelper::ProcessorHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
                                      m_fieldConstants(FieldConstants::GetInstance())
 {
 }
 
-frc::Pose2d ProcesserHelper::CalcProcesserPose()
+frc::Pose2d ProcessorHelper::CalcProcessorPose()
 {
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
     frc::Pose2d pose2d{};
@@ -51,7 +51,7 @@ frc::Pose2d ProcesserHelper::CalcProcesserPose()
     }
     return pose2d;
 }
-std::optional<FieldConstants::AprilTagIDs> ProcesserHelper::GetAprilTag()
+std::optional<FieldConstants::AprilTagIDs> ProcessorHelper::GetAprilTag()
 {
     int apriltagid;
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
