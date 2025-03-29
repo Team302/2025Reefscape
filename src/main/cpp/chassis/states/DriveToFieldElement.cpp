@@ -101,33 +101,47 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
         DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
         DragonVisionStructLogger::logPose2d("target pose", m_endPose);
-
-        m_translationPIDX.SetGoal(m_endPose.X());
-        m_translationPIDY.SetGoal(m_endPose.Y());
-
-        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
-
-        chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
-        chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
-
-        if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
+        if (m_currentType != DragonTargetFinderData::NOT_FOUND)
         {
-            chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
-        }
-        // if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
-        // {
-        //     chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
-        // }
-        units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
-        rotationError = AngleUtils::GetEquivAngle(rotationError);
-        chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
-        auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
-        chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
-                                                                                    chassisSpeeds.vy,
-                                                                                    chassisSpeeds.omega,
-                                                                                    rot2d);
+            m_translationPIDX.SetGoal(m_endPose.X());
+            m_translationPIDY.SetGoal(m_endPose.Y());
+
+            chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+            chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+
+            chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+            chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+
+            if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
+            {
+                chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
+            }
+            if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
+            {
+                chassisSpeeds.omega = 0_deg_per_s;
+            }
+            else
+            {
+                units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
+                rotationError = AngleUtils::GetEquivAngle(rotationError);
+                chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+            }
+
+            auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+            chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                                        chassisSpeeds.vy,
+                                                                                        chassisSpeeds.omega,
+                                                                                        rot2d);
+        }
+        else
+        {
+            auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+            chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(0.0_mps,
+                                                                                        0.0_mps,
+                                                                                        0.0_rad_per_s,
+                                                                                        rot2d);
+        }
     }
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);

@@ -278,7 +278,6 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 	{
 		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
 		{
-
 			// create translation using 3 estimated distances
 			if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
 				cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
@@ -288,6 +287,8 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 																		   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
 																		   cam->EstimateTargetZDistance_RelToRobotCoords().value());
 				frc::Rotation3d rotationToAlgae = frc::Rotation3d();
+				Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("rotation"), cam->GetTargetYawRobotFrame().value().to<double>());
+
 				// create rotation3d with pitch and yaw (don't have access to roll)
 				rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
 												  cam->GetTargetPitchRobotFrame().value(),
