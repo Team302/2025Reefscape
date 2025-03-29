@@ -93,14 +93,11 @@ std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
     auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
     if (bargeZones != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Parsed Y1", bargeZones->GetY1Rect().value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Parsed Y2", bargeZones->GetY2Rect().value());
         auto min = std::min(bargeZones->GetY2Rect(), bargeZones->GetY1Rect());
         auto max = std::max(bargeZones->GetY2Rect(), bargeZones->GetY1Rect());
         return std::clamp(m_chassis->GetPose().Y(), min, max);
     }
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Barge Helper", "Barge Zone", "nullptr");
     return std::nullopt;
 }
 
@@ -111,9 +108,11 @@ void BargeHelper::IsInZone()
 
     if (bargeZones != nullptr)
     {
-        bool intheZone = AutonGrid::GetInstance()->IsPoseInZone(bargeZones->GetX1Rect(), bargeZones->GetX2Rect(), bargeZones->GetY1Rect(), bargeZones->GetY2Rect(), m_chassis->GetPose());
+        bool intheZone = bargeZones->IsPoseInZone(m_chassis->GetPose());
+
         if (m_previousIsInZone != intheZone)
             RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, intheZone);
+
         m_previousIsInZone = intheZone;
     }
 }
@@ -129,6 +128,12 @@ frc::Pose2d BargeHelper::CalcBargePose()
     else
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+    }
+
+    auto clampY = ClampChassisY();
+    if (clampY.has_value())
+    {
+        return frc::Pose2d(pose2d.X(), ClampChassisY().value(), pose2d.Rotation());
     }
     return pose2d;
 }

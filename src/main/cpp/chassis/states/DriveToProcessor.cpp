@@ -11,26 +11,38 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
+//=====================================================================================================================================================
 
-#pragma once
+// C++ Includes
+#include <string>
+
 // FRC Includes
-#include <frc/geometry/Pose2d.h>
-#include "auton/ZoneParams.h"
+
 // Team302 Includes
+#include "chassis/states/DriveToProcessor.h"
+#include "fielddata/DragonTargetFinder.h"
 
-// Thirdparty includes
-class AutonGrid
+using std::string;
+
+DriveToProcessor::DriveToProcessor(RobotDrive *robotDrive)
+    : DriveToFieldElement(robotDrive)
 {
-public:
-    static AutonGrid *GetInstance();
+}
 
-    bool IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose);
-    bool IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose);
+string DriveToProcessor::GetDriveStateName() const
+{
+    return std::string("DriveToProcessor");
+}
 
-private:
-    AutonGrid() = default;
-    ~AutonGrid() = default;
-    static AutonGrid *m_instance;
-    units::length::foot_t m_gridRes = units::length::foot_t(1.0);
-};
+DragonTargetFinderTarget DriveToProcessor::GetDriveToTarget() const
+{
+    return DragonTargetFinderTarget::PROCESSOR;
+}
+ChassisOptionEnums::DriveStateType DriveToProcessor::GetDriveStateType() const
+{
+    return ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR;
+}
+ChassisOptionEnums::HeadingOption DriveToProcessor::GetHeadingOption() const
+{
+    return ChassisOptionEnums::HeadingOption::IGNORE;
+}

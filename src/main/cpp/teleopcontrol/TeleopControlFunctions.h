@@ -43,6 +43,7 @@ public:
         RESET_POSITION,
         POLAR_DRIVE,
         SLOW_MODE,
+        DRIVE_TO_PROCESSOR,
         HOLD_POSITION,
         MANUAL_CLIMB,
         SWEEP,

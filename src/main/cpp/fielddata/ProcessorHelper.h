@@ -16,41 +16,25 @@
 
 #pragma once
 
+// C++ includes
 #include <optional>
-
+// 302 includes
 #include "chassis/SwerveChassis.h"
 #include "fielddata/FieldConstants.h"
-#include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
-#include "auton/ZoneParams.h"
-#include "auton/ZoneParser.h"
-#include "state/RobotState.h"
-class ReefHelper
+
+class ProcessorHelper
 {
 public:
-    static ReefHelper *GetInstance();
-    void IsInZone();
-    void InitZones();
-    std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
+    static ProcessorHelper *GetInstance();
+    frc::Pose2d CalcProcessorPose();
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag();
 
 private:
-    ReefHelper();
-    ~ReefHelper() = default;
-    static ReefHelper *m_instance;
-
-    units::length::meter_t CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose);
+    ProcessorHelper();
+    ~ProcessorHelper() = default;
+    static ProcessorHelper *m_instance;
 
     SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
     FieldConstants *m_fieldConstants;
-
-    frc::Pose2d m_redReefCenter;
-    frc::Pose2d m_blueReefCenter;
-
-    ZoneParams *m_reefZonesRed;
-    ZoneParams *m_reefZonesBlue;
-
-    bool m_previousIsInZone;
 };

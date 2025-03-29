@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,41 +15,26 @@
 
 #pragma once
 
-#include <optional>
+// C++ Includes
+#include <string>
 
-#include "chassis/SwerveChassis.h"
-#include "fielddata/FieldConstants.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose2d.h"
-#include "auton/ZoneParams.h"
-#include "auton/ZoneParser.h"
-#include "state/RobotState.h"
-class ReefHelper
+// FRC Includes
+
+// Team302 Includes
+#include "chassis/states/DriveToFieldElement.h"
+#include "fielddata/DragonTargetFinder.h"
+
+class RobotDrive;
+
+class DriveToProcessor : public DriveToFieldElement
 {
 public:
-    static ReefHelper *GetInstance();
-    void IsInZone();
-    void InitZones();
-    std::optional<FieldConstants::AprilTagIDs> GetNearestReefTag();
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestLeftReefBranch(FieldConstants::AprilTagIDs tag);
-    std::optional<FieldConstants::FIELD_ELEMENT> GetNearestRightReefBranch(FieldConstants::AprilTagIDs tag);
+    DriveToProcessor(RobotDrive *robotDrive);
+    std::string GetDriveStateName() const override;
 
-private:
-    ReefHelper();
-    ~ReefHelper() = default;
-    static ReefHelper *m_instance;
-
-    units::length::meter_t CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose);
-
-    SwerveChassis *m_chassis;
-    frc::DriverStation::Alliance m_allianceColor;
-    FieldConstants *m_fieldConstants;
-
-    frc::Pose2d m_redReefCenter;
-    frc::Pose2d m_blueReefCenter;
-
-    ZoneParams *m_reefZonesRed;
-    ZoneParams *m_reefZonesBlue;
-
-    bool m_previousIsInZone;
+protected:
+    DragonTargetFinderTarget GetDriveToTarget() const override;
+    ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
+    ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
+    units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
 };
