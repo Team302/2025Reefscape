@@ -238,7 +238,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (visiondata.has_value())
         {
             auto algaePose = GetVisonPose(visiondata.value());
-            m_goalPose = frc::Pose2d(algaePose.value().X(), algaePose.value().Y() - m_armoffset, algaePose.value().Rotation());
+            m_goalPose = frc::Pose2d(algaePose.value().X(), algaePose.value().Y() + m_armoffset, algaePose.value().Rotation());
             DragonVisionStructLogger::logPose2d("Algae", algaePose.value());
             return make_tuple(DragonTargetFinderData::VISION_BASED, algaePose.value()); // TODO JW come back to this one when we have machine learning
         }
