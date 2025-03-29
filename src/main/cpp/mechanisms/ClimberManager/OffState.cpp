@@ -44,6 +44,7 @@ void OffState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
 	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void OffState::Run()
@@ -67,8 +68,8 @@ bool OffState::AtTarget()
 bool OffState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
-	return (!m_mechanism->IsClimbMode() && !(m_mechanism->GetCurrentState() == ClimberManager::STATE_INIT)) ||
-		   ((m_mechanism->GetCurrentState() == ClimberManager::STATE_INIT) && (m_mechanism->IsTeleop()));
+	return (!m_mechanism->IsClimbMode() ||
+			(m_mechanism->GetCurrentState() == ClimberManager::STATE_INIT));
 
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }
