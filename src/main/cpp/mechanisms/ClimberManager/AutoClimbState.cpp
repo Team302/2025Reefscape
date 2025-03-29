@@ -50,7 +50,7 @@ void AutoClimbState::Run()
 {
 	if (m_mechanism->GetClimber()->GetStatorCurrent().GetValue() > m_climbCurrent)
 	{
-		m_mechanism->UpdateTargetClimberPositionDegree(m_currentPosition);
+		m_mechanism->UpdateTargetClimberPositionDegree(m_currentPosition /*+ someturnvalue :)*/);
 	}
 	else
 	{
