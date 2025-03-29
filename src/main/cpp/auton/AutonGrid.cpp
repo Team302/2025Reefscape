@@ -36,20 +36,6 @@ AutonGrid *AutonGrid::GetInstance()
     return AutonGrid::m_instance;
 } // to make the class a singlton
 
-bool AutonGrid::IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygrid2, frc::Pose2d robotPose)
-// defining IsPoseInZone bool method and pulling in the arguements
-{
-    // cast the enums xgrid1, etc to doubles
-    double x1 = static_cast<double>((xgrid1));
-    double y1 = static_cast<double>((ygrid1));
-    double x2 = static_cast<double>((xgrid2));
-    double y2 = static_cast<double>((ygrid2));
-
-    // then it is determined whether or not the robotPose is in the zone defined by the 2 grids.
-    // TODO: remove dependency of order of x's and y's
-    return ((robotPose.X().value() >= units::length::meter_t(x1 * m_gridRes).value()) && (robotPose.X().value() <= units::length::meter_t(x2 * m_gridRes).value()) &&
-            (robotPose.Y().value() >= units::length::meter_t(y1 * m_gridRes).value()) && (robotPose.Y().value() <= units::length::meter_t(y2 * m_gridRes).value()));
-}
 bool AutonGrid::IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose)
 // defining IsPoseInZone bool method and pulling in the arguements
 {

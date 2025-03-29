@@ -26,43 +26,36 @@
 // ZoneParams.cpp
 #include "auton/ZoneParams.h"
 
-ZoneParams::ZoneParams(XGRID xgrid1,
-					   YGRID ygrid1,
-					   XGRID xgrid2,
-					   YGRID ygrid2,
-					   frc::Pose2d circlePose,
-					   units::length::inch_t radius,
-					   units::length::meter_t xgrid1rect,
-					   units::length::meter_t xgrid2rect,
-					   units::length::meter_t ygrid1rect,
-					   units::length::meter_t ygrid2rect,
-					   bool isTaleStateChanging,
-					   bool isIntakeStateChanging,
-					   IntakeManager::STATE_NAMES intakeOption,
-					   DragonTale::STATE_NAMES taleOption,
-					   ChassisOptionEnums::AutonChassisOptions autonchassisoption,
-					   ChassisOptionEnums::HeadingOption headingOption,
-					   ChassisOptionEnums::DriveStateType pathUpdateOption,
-					   ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
-					   ZoneMode zoneMode) : m_xgrid1(xgrid1),
-											m_ygrid1(ygrid1),
-											m_xgrid2(xgrid2),
-											m_ygrid2(ygrid2),
-											m_xgrid1rect(xgrid1rect),
-											m_xgrid2rect(xgrid2rect),
-											m_ygrid1rect(ygrid1rect),
-											m_ygrid2rect(ygrid2rect),
-											m_isIntakeStateChanging(isIntakeStateChanging),
-											m_isTaleStateChanging(isTaleStateChanging),
-											m_intakeOption(intakeOption),
-											m_taleOption(taleOption),
-											m_chassisoption(autonchassisoption),
-											m_headingOption(headingOption),
-											m_avoidoption(autonavoidoption),
-											m_pathUpdateOption(pathUpdateOption),
-											m_zoneMode(zoneMode),
-											m_circlePose(circlePose),
-											m_radius(radius)
+ZoneParams::ZoneParams(
+	frc::Pose2d circlePose,
+	units::length::inch_t radius,
+	units::length::meter_t xgrid1rect,
+	units::length::meter_t xgrid2rect,
+	units::length::meter_t ygrid1rect,
+	units::length::meter_t ygrid2rect,
+	bool isTaleStateChanging,
+	bool isIntakeStateChanging,
+	IntakeManager::STATE_NAMES intakeOption,
+	DragonTale::STATE_NAMES taleOption,
+	ChassisOptionEnums::AutonChassisOptions autonchassisoption,
+	ChassisOptionEnums::HeadingOption headingOption,
+	ChassisOptionEnums::DriveStateType pathUpdateOption,
+	ChassisOptionEnums::AutonAvoidOptions autonavoidoption,
+	ZoneMode zoneMode) : m_xgrid1rect(xgrid1rect),
+						 m_xgrid2rect(xgrid2rect),
+						 m_ygrid1rect(ygrid1rect),
+						 m_ygrid2rect(ygrid2rect),
+						 m_isIntakeStateChanging(isIntakeStateChanging),
+						 m_isTaleStateChanging(isTaleStateChanging),
+						 m_intakeOption(intakeOption),
+						 m_taleOption(taleOption),
+						 m_chassisoption(autonchassisoption),
+						 m_headingOption(headingOption),
+						 m_avoidoption(autonavoidoption),
+						 m_pathUpdateOption(pathUpdateOption),
+						 m_zoneMode(zoneMode),
+						 m_circlePose(circlePose),
+						 m_radius(radius)
 {
 }
 bool ZoneParams::IsPoseInZone(frc::Pose2d robotPose)
@@ -75,6 +68,6 @@ bool ZoneParams::IsPoseInZone(frc::Pose2d robotPose)
 	case ZoneMode::CIRCLE:
 		return autonGrid->IsPoseInZone(GetCircleZonePose(), GetRadius(), robotPose);
 	default:
-		return false;
+		return true;
 	}
 }

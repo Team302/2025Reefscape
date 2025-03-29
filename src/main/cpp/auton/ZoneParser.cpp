@@ -24,7 +24,6 @@
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "auton/PrimitiveEnums.h"
 #include "pugixml/pugixml.hpp"
-#include "auton/ZoneEnums.h"
 
 #include "utils/logging/debug/Logger.h"
 
@@ -34,90 +33,6 @@ using namespace pugi;
 ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 {
     auto hasError = false;
-
-    static std::map<std::string, XGRID> X_xmlStringToGridEnumMap{
-        {"1", XGRID::X_1},
-        {"2", XGRID::X_2},
-        {"3", XGRID::X_3},
-        {"4", XGRID::X_4},
-        {"5", XGRID::X_5},
-        {"6", XGRID::X_6},
-        {"7", XGRID::X_7},
-        {"8", XGRID::X_8},
-        {"9", XGRID::X_9},
-        {"10", XGRID::X_10},
-        {"11", XGRID::X_11},
-        {"12", XGRID::X_12},
-        {"13", XGRID::X_13},
-        {"14", XGRID::X_14},
-        {"15", XGRID::X_15},
-        {"16", XGRID::X_16},
-        {"17", XGRID::X_17},
-        {"18", XGRID::X_18},
-        {"19", XGRID::X_19},
-        {"20", XGRID::X_20},
-        {"21", XGRID::X_21},
-        {"22", XGRID::X_22},
-        {"23", XGRID::X_23},
-        {"24", XGRID::X_24},
-        {"25", XGRID::X_25},
-        {"26", XGRID::X_26},
-        {"27", XGRID::X_27},
-        {"28", XGRID::X_28},
-        {"29", XGRID::X_29},
-        {"30", XGRID::X_30},
-        {"31", XGRID::X_31},
-        {"32", XGRID::X_32},
-        {"33", XGRID::X_33},
-        {"34", XGRID::X_34},
-        {"35", XGRID::X_35},
-        {"36", XGRID::X_36},
-        {"37", XGRID::X_37},
-        {"38", XGRID::X_38},
-        {"39", XGRID::X_39},
-        {"40", XGRID::X_40},
-        {"41", XGRID::X_41},
-        {"42", XGRID::X_42},
-        {"43", XGRID::X_43},
-        {"44", XGRID::X_44},
-        {"45", XGRID::X_45},
-        {"46", XGRID::X_46},
-        {"47", XGRID::X_47},
-        {"48", XGRID::X_48},
-        {"49", XGRID::X_49},
-        {"50", XGRID::X_50},
-        {"51", XGRID::X_51},
-        {"52", XGRID::X_52},
-        {"53", XGRID::X_53},
-        {"54", XGRID::X_54}}; // 1-54
-    static std::map<std::string, YGRID> Y_xmlStringToGridEnumMap{
-        {"1", YGRID::Y_1},
-        {"2", YGRID::Y_2},
-        {"3", YGRID::Y_3},
-        {"4", YGRID::Y_4},
-        {"5", YGRID::Y_5},
-        {"6", YGRID::Y_6},
-        {"7", YGRID::Y_7},
-        {"8", YGRID::Y_8},
-        {"9", YGRID::Y_9},
-        {"10", YGRID::Y_10},
-        {"11", YGRID::Y_11},
-        {"12", YGRID::Y_12},
-        {"13", YGRID::Y_13},
-        {"14", YGRID::Y_14},
-        {"15", YGRID::Y_15},
-        {"16", YGRID::Y_16},
-        {"17", YGRID::Y_17},
-        {"18", YGRID::Y_18},
-        {"19", YGRID::Y_19},
-        {"20", YGRID::Y_20},
-        {"21", YGRID::Y_21},
-        {"22", YGRID::Y_22},
-        {"23", YGRID::Y_23},
-        {"24", YGRID::Y_24},
-        {"25", YGRID::Y_25},
-        {"26", YGRID::Y_26},
-        {"27", YGRID::Y_27}};
 
     static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
@@ -169,11 +84,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             double circleX = -1;
             double circleY = -1;
 
-            XGRID xgrid1 = XGRID::NO_VALUE;
-            YGRID ygrid1 = YGRID::NONE;
-            XGRID xgrid2 = XGRID::NO_VALUE;
-            YGRID ygrid2 = YGRID::NONE;
-
             units::length::meter_t xgrid1rect = units::length::meter_t(0.0);
             units::length::meter_t ygrid1rect = units::length::meter_t(0.0);
             units::length::meter_t xgrid2rect = units::length::meter_t(0.0);
@@ -199,55 +109,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             for (xml_attribute attr = zonenode.first_attribute(); attr; attr = attr.next_attribute())
             {
 
-                if (strcmp(attr.name(), "xgrid1") == 0)
-                {
-                    auto itr = X_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != X_xmlStringToGridEnumMap.end())
-                    {
-                        xgrid1 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "ygrid1") == 0)
-                {
-                    auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != Y_xmlStringToGridEnumMap.end())
-                    {
-                        ygrid1 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "xgrid2") == 0)
-                {
-                    auto itr = X_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != X_xmlStringToGridEnumMap.end())
-                    {
-                        xgrid2 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "ygrid2") == 0)
-                {
-                    auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != Y_xmlStringToGridEnumMap.end())
-                    {
-                        ygrid2 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "circlex") == 0)
+                if (strcmp(attr.name(), "circlex") == 0)
                 {
                     zoneMode = ZoneMode::CIRCLE;
                     circleX = attr.as_double();
@@ -262,6 +124,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 }
                 else if (strcmp(attr.name(), "radius") == 0)
                 {
+                    zoneMode = ZoneMode::CIRCLE;
                     radius = attr.as_double();
                 }
                 if (strcmp(attr.name(), "x1_rect") == 0)
@@ -374,11 +237,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             {
 
                 auto circlePose2d = frc::Pose2d(units::length::meter_t(circleX), units::length::meter_t(circleY), units::degree_t(0));
-                return (new ZoneParams(xgrid1,
-                                       ygrid1,
-                                       xgrid2,
-                                       ygrid2,
-                                       circlePose2d,
+                return (new ZoneParams(circlePose2d,
                                        units::inch_t(radius),
                                        xgrid1rect,
                                        xgrid2rect,
