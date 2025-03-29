@@ -65,6 +65,7 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_REEF_L] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::BLUE_PROCESSOR_CALCULATED] = m_placeholder;
 
     // Red AprilTag locations
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_CORAL_STATION_LEFT] = m_aprilTag1;
@@ -101,6 +102,7 @@ FieldConstants::FieldConstants()
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_REEF_L] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED] = m_placeholder;
     fieldConstantsPoseMap[FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED] = m_placeholder;
+    fieldConstantsPoseMap[FIELD_ELEMENT::RED_PROCESSOR_CALCULATED] = m_placeholder;
 
     aprilTagPoseMap[1] = m_aprilTag1;
     aprilTagPoseMap[2] = m_aprilTag2;

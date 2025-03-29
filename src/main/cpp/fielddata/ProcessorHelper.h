@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -15,74 +16,25 @@
 
 #pragma once
 
-class ChassisOptionEnums
+// C++ includes
+#include <optional>
+// 302 includes
+#include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/geometry/Pose2d.h"
+
+class ProcessorHelper
 {
 public:
-    enum HeadingOption
-    {
-        MAINTAIN,
-        SPECIFIED_ANGLE,
-        FACE_GAME_PIECE,
-        FACE_REEF_CENTER,
-        FACE_REEF_FACE,
-        FACE_CORAL_STATION,
-        FACE_BARGE,
-        IGNORE
-    };
+    static ProcessorHelper *GetInstance();
+    frc::Pose2d CalcProcessorPose();
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag();
 
-    enum DriveStateType
-    {
-        ROBOT_DRIVE,
-        FIELD_DRIVE,
-        TRAJECTORY_DRIVE_PLANNER,
-        HOLD_DRIVE,
-        POLAR_DRIVE,
-        DRIVE_TO_CORAL_STATION,
-        DRIVE_TO_LEFT_REEF_BRANCH,
-        DRIVE_TO_RIGHT_REEF_BRANCH,
-        DRIVE_TO_LEFT_CAGE,
-        DRIVE_TO_RIGHT_CAGE,
-        DRIVE_TO_CENTER_CAGE,
-        DRIVE_TO_BARGE,
-        DRIVE_TO_PROCESSOR,
-        STOP_DRIVE
-    };
+private:
+    ProcessorHelper();
+    ~ProcessorHelper() = default;
+    static ProcessorHelper *m_instance;
 
-    enum NoMovementOption
-    {
-        STOP,
-        HOLD_POSITION
-    };
-
-    enum AutonControllerType
-    {
-        RAMSETE,
-        HOLONOMIC
-    };
-
-    enum AutonChassisOptions
-    {
-        VISION_DRIVE_SPEAKER,
-        NO_VISION
-    };
-    enum AutonAvoidOptions
-    {
-        PODIUM,
-        ROBOT_COLLISION,
-        NO_AVOID_OPTION
-    };
-
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
-    enum PathUpdateOption
-    {
-        NONE
-    };
-
-    ChassisOptionEnums() = delete;
-    ~ChassisOptionEnums() = delete;
+    SwerveChassis *m_chassis;
+    FieldConstants *m_fieldConstants;
 };
