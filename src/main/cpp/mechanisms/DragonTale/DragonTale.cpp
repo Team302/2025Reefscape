@@ -340,6 +340,8 @@ void DragonTale::CreatePRACTICE_BOT9999()
 	m_CoralInSensor = new frc::DigitalInput(1);	 // yellow wire reverse
 	m_CoralOutSensor = new frc::DigitalInput(0); // black
 	m_AlgaeSensor = new frc::DigitalInput(2);	 // red reverse this one
+	m_BranchCANRange = nullptr;
+	m_ElevatorCANRange = nullptr;
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
 	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.421387);
@@ -656,8 +658,8 @@ void DragonTale::InitializeTalonFXElevatorLeaderPRACTICE_BOT9999()
 	configs.MotionMagic.MotionMagicCruiseVelocity = units::angular_velocity::turns_per_second_t(100);
 	configs.MotionMagic.MotionMagicAcceleration = units::angular_acceleration::turns_per_second_squared_t(75);
 	configs.MotionMagic.MotionMagicJerk = units::angular_jerk::radians_per_second_cubed_t(0);
-	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.12);
-	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.1);
+	configs.MotionMagic.MotionMagicExpo_kV = ctre::unit::volts_per_turn_per_second_t(0.2);
+	configs.MotionMagic.MotionMagicExpo_kA = ctre::unit::volts_per_turn_per_second_squared_t(0.15);
 
 	configs.Slot0.kP = m_PositionInch->GetP();
 	configs.Slot0.kI = m_PositionInch->GetI();
@@ -1423,7 +1425,7 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
+	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
 }
