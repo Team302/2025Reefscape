@@ -47,23 +47,22 @@ void ManualClimbState::Init()
 
 void ManualClimbState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void ManualClimbState::InitCOMP_BOT302()
 {
-	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void ManualClimbState::Run()
 {
-	// double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
-	// if (abs(manualClimberPercent) > 0.1)
-	// 	m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent);
-	// else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_CLIMB_DOWN))
-	// 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	// else
-	// 	m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
+
+	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
+	if (abs(manualClimberPercent) > 0.1)
+		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_ClimberTarget);
+	else
+		m_mechanism->UpdateTargetClimberPercentOut(0.0);
 }
 
 void ManualClimbState::Exit()
@@ -83,7 +82,7 @@ bool ManualClimbState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return m_mechanism->IsClimbMode();
+	return ((m_mechanism->GetCurrentState() == ClimberManager::STATE_DELIVER_CLIMBER) && m_mechanism->AtTarget());
 
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }

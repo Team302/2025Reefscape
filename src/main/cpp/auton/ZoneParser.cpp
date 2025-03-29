@@ -33,91 +33,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 {
     auto hasError = false;
 
-    static robin_hood::unordered_map<std::string, AutonGrid::XGRID> X_xmlStringToGridEnumMap{
-        {"1", AutonGrid::XGRID::X_1},
-        {"2", AutonGrid::XGRID::X_2},
-        {"3", AutonGrid::XGRID::X_3},
-        {"4", AutonGrid::XGRID::X_4},
-        {"5", AutonGrid::XGRID::X_5},
-        {"6", AutonGrid::XGRID::X_6},
-        {"7", AutonGrid::XGRID::X_7},
-        {"8", AutonGrid::XGRID::X_8},
-        {"9", AutonGrid::XGRID::X_9},
-        {"10", AutonGrid::XGRID::X_10},
-        {"11", AutonGrid::XGRID::X_11},
-        {"12", AutonGrid::XGRID::X_12},
-        {"13", AutonGrid::XGRID::X_13},
-        {"14", AutonGrid::XGRID::X_14},
-        {"15", AutonGrid::XGRID::X_15},
-        {"16", AutonGrid::XGRID::X_16},
-        {"17", AutonGrid::XGRID::X_17},
-        {"18", AutonGrid::XGRID::X_18},
-        {"19", AutonGrid::XGRID::X_19},
-        {"20", AutonGrid::XGRID::X_20},
-        {"21", AutonGrid::XGRID::X_21},
-        {"22", AutonGrid::XGRID::X_22},
-        {"23", AutonGrid::XGRID::X_23},
-        {"24", AutonGrid::XGRID::X_24},
-        {"25", AutonGrid::XGRID::X_25},
-        {"26", AutonGrid::XGRID::X_26},
-        {"27", AutonGrid::XGRID::X_27},
-        {"28", AutonGrid::XGRID::X_28},
-        {"29", AutonGrid::XGRID::X_29},
-        {"30", AutonGrid::XGRID::X_30},
-        {"31", AutonGrid::XGRID::X_31},
-        {"32", AutonGrid::XGRID::X_32},
-        {"33", AutonGrid::XGRID::X_33},
-        {"34", AutonGrid::XGRID::X_34},
-        {"35", AutonGrid::XGRID::X_35},
-        {"36", AutonGrid::XGRID::X_36},
-        {"37", AutonGrid::XGRID::X_37},
-        {"38", AutonGrid::XGRID::X_38},
-        {"39", AutonGrid::XGRID::X_39},
-        {"40", AutonGrid::XGRID::X_40},
-        {"41", AutonGrid::XGRID::X_41},
-        {"42", AutonGrid::XGRID::X_42},
-        {"43", AutonGrid::XGRID::X_43},
-        {"44", AutonGrid::XGRID::X_44},
-        {"45", AutonGrid::XGRID::X_45},
-        {"46", AutonGrid::XGRID::X_46},
-        {"47", AutonGrid::XGRID::X_47},
-        {"48", AutonGrid::XGRID::X_48},
-        {"49", AutonGrid::XGRID::X_49},
-        {"50", AutonGrid::XGRID::X_50},
-        {"51", AutonGrid::XGRID::X_51},
-        {"52", AutonGrid::XGRID::X_52},
-        {"53", AutonGrid::XGRID::X_53},
-        {"54", AutonGrid::XGRID::X_54}}; // 1-54
-    static robin_hood::unordered_map<std::string, AutonGrid::YGRID> Y_xmlStringToGridEnumMap{
-        {"1", AutonGrid::YGRID::Y_1},
-        {"2", AutonGrid::YGRID::Y_2},
-        {"3", AutonGrid::YGRID::Y_3},
-        {"4", AutonGrid::YGRID::Y_4},
-        {"5", AutonGrid::YGRID::Y_5},
-        {"6", AutonGrid::YGRID::Y_6},
-        {"7", AutonGrid::YGRID::Y_7},
-        {"8", AutonGrid::YGRID::Y_8},
-        {"9", AutonGrid::YGRID::Y_9},
-        {"10", AutonGrid::YGRID::Y_10},
-        {"11", AutonGrid::YGRID::Y_11},
-        {"12", AutonGrid::YGRID::Y_12},
-        {"13", AutonGrid::YGRID::Y_13},
-        {"14", AutonGrid::YGRID::Y_14},
-        {"15", AutonGrid::YGRID::Y_15},
-        {"16", AutonGrid::YGRID::Y_16},
-        {"17", AutonGrid::YGRID::Y_17},
-        {"18", AutonGrid::YGRID::Y_18},
-        {"19", AutonGrid::YGRID::Y_19},
-        {"20", AutonGrid::YGRID::Y_20},
-        {"21", AutonGrid::YGRID::Y_21},
-        {"22", AutonGrid::YGRID::Y_22},
-        {"23", AutonGrid::YGRID::Y_23},
-        {"24", AutonGrid::YGRID::Y_24},
-        {"25", AutonGrid::YGRID::Y_25},
-        {"26", AutonGrid::YGRID::Y_26},
-        {"27", AutonGrid::YGRID::Y_27}};
-
-    static robin_hood::unordered_map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
+    static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
         {"NO_VISION", ChassisOptionEnums::AutonChassisOptions::NO_VISION},
     };
@@ -167,17 +83,12 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             double circleX = -1;
             double circleY = -1;
 
-            AutonGrid::XGRID xgrid1 = AutonGrid::XGRID::NO_VALUE;
-            AutonGrid::YGRID ygrid1 = AutonGrid::YGRID::NONE;
-            AutonGrid::XGRID xgrid2 = AutonGrid::XGRID::NO_VALUE;
-            AutonGrid::YGRID ygrid2 = AutonGrid::YGRID::NONE;
-
             units::length::meter_t xgrid1rect = units::length::meter_t(0.0);
             units::length::meter_t ygrid1rect = units::length::meter_t(0.0);
             units::length::meter_t xgrid2rect = units::length::meter_t(0.0);
             units::length::meter_t ygrid2rect = units::length::meter_t(0.0);
 
-            AutonGrid::ZoneMode zoneMode = AutonGrid::ZoneMode::NOTHING;
+            ZoneMode zoneMode = ZoneMode::NOTHING;
 
             // TODO: add zoneType parsing and check
 
@@ -197,90 +108,42 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             for (xml_attribute attr = zonenode.first_attribute(); attr; attr = attr.next_attribute())
             {
 
-                if (strcmp(attr.name(), "xgrid1") == 0)
+                if (strcmp(attr.name(), "circlex") == 0)
                 {
-                    auto itr = X_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != X_xmlStringToGridEnumMap.end())
-                    {
-                        zoneMode = AutonGrid::RECTANGLE;
-                        xgrid1 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "ygrid1") == 0)
-                {
-                    auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != Y_xmlStringToGridEnumMap.end())
-                    {
-                        ygrid1 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "xgrid2") == 0)
-                {
-                    auto itr = X_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != X_xmlStringToGridEnumMap.end())
-                    {
-                        xgrid2 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "ygrid2") == 0)
-                {
-                    auto itr = Y_xmlStringToGridEnumMap.find(attr.value());
-                    if (itr != Y_xmlStringToGridEnumMap.end())
-                    {
-                        ygrid2 = itr->second;
-                    }
-                    else
-                    {
-                        hasError = true;
-                    }
-                }
-                else if (strcmp(attr.name(), "circlex") == 0)
-                {
-                    zoneMode = AutonGrid::CIRCLE;
+                    zoneMode = ZoneMode::CIRCLE;
                     circleX = attr.as_double();
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "parsed circlex", circleX);
                 }
                 else if (strcmp(attr.name(), "circley") == 0)
                 {
 
-                    zoneMode = AutonGrid::CIRCLE;
+                    zoneMode = ZoneMode::CIRCLE;
                     circleY = attr.as_double();
                     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "ZoneParser", "parsed circley", circleX);
                 }
                 else if (strcmp(attr.name(), "radius") == 0)
                 {
+                    zoneMode = ZoneMode::CIRCLE;
                     radius = attr.as_double();
                 }
                 if (strcmp(attr.name(), "x1_rect") == 0)
                 {
-                    zoneMode = AutonGrid::RECTANGLE;
+                    zoneMode = ZoneMode::RECTANGLE;
                     xgrid1rect = units::length::meter_t(attr.as_double());
                 }
                 else if (strcmp(attr.name(), "y1_rect") == 0)
                 {
-                    zoneMode = AutonGrid::RECTANGLE;
+                    zoneMode = ZoneMode::RECTANGLE;
                     ygrid1rect = units::length::meter_t(attr.as_double());
                 }
                 else if (strcmp(attr.name(), "x2_rect") == 0)
                 {
-                    zoneMode = AutonGrid::RECTANGLE;
+                    zoneMode = ZoneMode::RECTANGLE;
                     xgrid2rect = units::length::meter_t(attr.as_double());
                 }
                 else if (strcmp(attr.name(), "y2_rect") == 0)
                 {
-                    zoneMode = AutonGrid::RECTANGLE;
+                    zoneMode = ZoneMode::RECTANGLE;
                     ygrid2rect = units::length::meter_t(attr.as_double());
                 }
                 else if (strcmp(attr.name(), "intakeOption") == 0)
@@ -373,11 +236,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
             {
 
                 auto circlePose2d = frc::Pose2d(units::length::meter_t(circleX), units::length::meter_t(circleY), units::degree_t(0));
-                return (new ZoneParams(xgrid1,
-                                       ygrid1,
-                                       xgrid2,
-                                       ygrid2,
-                                       circlePose2d,
+                return (new ZoneParams(circlePose2d,
                                        units::inch_t(radius),
                                        xgrid1rect,
                                        xgrid2rect,

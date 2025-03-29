@@ -152,31 +152,22 @@ void DriverFeedback::UpdateLEDStates()
 
 void DriverFeedback::UpdateDiagnosticLEDs()
 {
-    bool pigeonfaults = false;
     bool coralInSensor = false;
     bool coralOutSensor = false;
     bool algaeSensor = false;
-    bool intakeSensor = false;
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
-        StateMgr *intakeStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::INTAKE_MANAGER);
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
-        auto intakeMgr = intakeStateManager != nullptr ? dynamic_cast<IntakeManager *>(intakeStateManager) : nullptr;
-
         if (taleMgr != nullptr)
         {
             coralInSensor = taleMgr->GetCoralInSensorState();
             coralOutSensor = taleMgr->GetCoralOutSensorState();
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
-        if (intakeMgr != nullptr)
-        {
-            intakeSensor = intakeMgr->GetIntakeSensorState();
-        }
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, intakeSensor, m_questStatus, m_ll1Status, m_ll2Status, pigeonfaults);
-    if (m_timer == 100)
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
+    if (m_timer == 20)
     {
         QueryNT();
         m_timer = 0;
@@ -235,20 +226,14 @@ void DriverFeedback::CheckControllers()
 void DriverFeedback::QueryNT()
 {
     m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
-    m_ll2Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-back"));
     m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
 
     int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
-    int ll2hb = m_ll2Nt.get()->GetEntry("hb").GetDouble(0);
     int questhb = m_llQuestNt.get()->GetEntry("timestamp").GetDouble(0);
 
     m_ll1Status = ll1hb != m_ll1hb;
-    m_ll2Status = ll2hb != m_ll2hb;
     m_questStatus = questhb != m_questhb;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriverFeedback", "quest", m_questStatus);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriverFeedback", "test", false);
 
     m_ll1hb = ll1hb;
-    m_ll2hb = ll2hb;
     m_questhb = questhb;
 }

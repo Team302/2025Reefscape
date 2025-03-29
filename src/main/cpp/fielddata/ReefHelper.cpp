@@ -262,7 +262,7 @@ void ReefHelper::IsInZone()
 
     if (reefZones != nullptr)
     {
-        bool intheZone = autongridptr->IsPoseInZone(reefZones->GetCircleZonePose(), reefZones->GetRadius(), m_chassis->GetPose());
+        bool intheZone = reefZones->IsPoseInZone(m_chassis->GetPose());
 
         if (intheZone != m_previousIsInZone)
         {
