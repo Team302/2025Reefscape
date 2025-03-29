@@ -148,7 +148,7 @@ private:
     // make a singleton
     static FieldConstants *m_instance;
     std::vector<frc::AprilTag> m_aprilTagVector;
-    const std::string m_feildFilePath = "/home/lvuser/FieldData/output.json";
+    const std::string m_fieldFilePath = "/home/lvuser/FieldData/output.json";
     // make constructor private
     FieldConstants();
     // make singleton copy constructor private

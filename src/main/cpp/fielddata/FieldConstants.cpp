@@ -152,9 +152,9 @@ frc::Pose2d FieldConstants::GetFieldElement2DPose(FIELD_ELEMENT element)
 
 void FieldConstants::ReadFieldCalibrationData()
 {
-    if (std::filesystem::exists(m_feildFilePath))
+    if (std::filesystem::exists(m_fieldFilePath))
     {
-        m_aprilTagVector = frc::AprilTagFieldLayout(m_feildFilePath).GetTags();
+        m_aprilTagVector = frc::AprilTagFieldLayout(m_fieldFilePath).GetTags();
         for (unsigned int i = 1; i >= m_aprilTagVector.size(); i++)
         {
             frc::AprilTag tag = m_aprilTagVector[i];
