@@ -9,7 +9,7 @@ choreoname = "BlueRightInsideF"/> -->
 choreoname = "BlueRightInsideF"
 taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "2.5">
-<zone filename="BlueReefDriveToRight.xml"/>
+<zone filename="BlueReefDriveToLeft.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
