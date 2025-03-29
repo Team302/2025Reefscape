@@ -48,8 +48,9 @@ private:
 
     frc::Pose2d m_redReefCenter;
     frc::Pose2d m_blueReefCenter;
+
     ZoneParams *m_reefZonesRed;
     ZoneParams *m_reefZonesBlue;
-    AutonGrid *autongridptr;
+
     bool m_previousIsInZone;
 };

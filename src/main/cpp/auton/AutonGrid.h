@@ -17,18 +17,15 @@
 // FRC Includes
 #include <frc/geometry/Pose2d.h>
 #include "auton/ZoneParams.h"
-#include "auton/ZoneEnums.h"
 // Team302 Includes
 
 // Thirdparty includes
-
 class AutonGrid
 {
 public:
     static AutonGrid *GetInstance();
 
     bool IsPoseInZone(units::length::meter_t xgrid1, units::length::meter_t xgrid2, units::length::meter_t ygrid1, units::length::meter_t ygrid2, frc::Pose2d robotPose);
-    bool IsPoseInZone(XGRID xgrid1, XGRID xgrid2, YGRID ygrid1, YGRID ygrid2, frc::Pose2d robotPose);
     bool IsPoseInZone(frc::Pose2d circleZonePose, units::length::inch_t radius, frc::Pose2d robotPose);
 
 private:

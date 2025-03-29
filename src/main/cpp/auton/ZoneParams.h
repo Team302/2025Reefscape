@@ -27,18 +27,20 @@
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "auton/PrimitiveEnums.h"
-#include "auton/ZoneEnums.h"
 
 // Third Party Includes
+
+enum class ZoneMode
+{
+    NOTHING = -1,
+    RECTANGLE,
+    CIRCLE,
+};
 
 class ZoneParams
 {
 public:
-    ZoneParams(XGRID xgrid1,
-               YGRID ygrid1,
-               XGRID xgrid2,
-               YGRID ygrid2,
-               frc::Pose2d circlePose,
+    ZoneParams(frc::Pose2d circlePose,
                units::length::inch_t radius,
                units::length::meter_t m_xgrid1rect,
                units::length::meter_t m_xgrid2rect,
@@ -56,11 +58,6 @@ public:
 
     ZoneParams() = delete;
     ~ZoneParams() = default; // Destructor
-
-    XGRID GetXGrid1() const { return m_xgrid1; }
-    XGRID GetXGrid2() const { return m_xgrid2; }
-    YGRID GetYGrid1() const { return m_ygrid1; }
-    YGRID GetYGrid2() const { return m_ygrid2; }
 
     units::length::meter_t GetX1Rect() const { return m_xgrid1rect; }
     units::length::meter_t GetX2Rect() const { return m_xgrid2rect; }
@@ -87,10 +84,6 @@ public:
     bool IsPoseInZone(frc::Pose2d robotPose);
 
 private:
-    XGRID m_xgrid1;
-    YGRID m_ygrid1;
-    XGRID m_xgrid2;
-    YGRID m_ygrid2;
     units::length::meter_t m_xgrid1rect;
     units::length::meter_t m_xgrid2rect;
     units::length::meter_t m_ygrid1rect;
