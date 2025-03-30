@@ -122,8 +122,8 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
             sleep(1);
 #endif
             m_questMosi.Set(2);
+            m_hasreset = true;
         }
-        m_hasreset = true;
     }
 }
 
@@ -136,7 +136,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
