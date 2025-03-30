@@ -3,10 +3,12 @@
 <auton>
 
 <primitive id = "DRIVE_PATH_PLANNER"
+taleOption="STATE_HUMAN_PLAYER_LOAD"
 choreoname= "BlueCenter_H"
 time = "3.0">
 <zone filename = "BlueReefDriveToLeft.xml"/>
 </primitive>
+
 <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_CORAL"
 time = "1.5"/>

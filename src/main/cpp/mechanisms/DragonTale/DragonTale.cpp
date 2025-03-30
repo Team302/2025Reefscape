@@ -1430,4 +1430,5 @@ void DragonTale::LogInformation()
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "At Target", AtTarget());
 }
