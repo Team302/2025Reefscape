@@ -16,68 +16,25 @@
 
 #pragma once
 
-// C++ Includes
+// C++ includes
+#include <optional>
+// 302 includes
+#include "chassis/SwerveChassis.h"
+#include "fielddata/FieldConstants.h"
+#include "frc/geometry/Pose2d.h"
 
-// FRC includes
-
-// Team 302 includes
-
-class TeleopControlFunctions
+class ProcessorHelper
 {
 public:
-    enum FUNCTION
-    {
-        READY,
-        ROBOT_ORIENTED_DRIVE,
-        HOLONOMIC_DRIVE_FORWARD,
-        HOLONOMIC_DRIVE_ROTATE,
-        HOLONOMIC_DRIVE_STRAFE,
-        AUTO_TURN_FORWARD,
-        AUTO_TURN_BACKWARD,
-        AUTO_ALIGN_LEFT,
-        AUTO_ALIGN_RIGHT,
-        AUTO_ALIGN_CENTER,
-        AUTO_ALIGN_HUMAN_PLAYER_STATION,
-        AUTO_ALIGN_BARGE,
-        AUTO_ALIGN_PROCESSOR,
-        AUTO_ALIGN_ALGAE,
-        ALIGN_FLOOR_GAME_PIECE,
-        RESET_POSITION,
-        POLAR_DRIVE,
-        SLOW_MODE,
-        DRIVE_TO_PROCESSOR,
-        HOLD_POSITION,
-        MANUAL_CLIMB,
-        SWEEP,
+    static ProcessorHelper *GetInstance();
+    frc::Pose2d CalcProcessorPose();
+    std::optional<FieldConstants::AprilTagIDs> GetAprilTag();
 
-        // tip correction controls
-        TIPCORRECTION_TOGGLE,
+private:
+    ProcessorHelper();
+    ~ProcessorHelper() = default;
+    static ProcessorHelper *m_instance;
 
-        MANUAL_LAUNCH_INC,
-        MANUAL_LAUNCH_DEC,
-        CLIMB_MODE,
-        AUTO_CLIMB,
-        INTAKE,
-        ELAVATOR,
-        ARM,
-        L1_SCORING_POSITION,
-        L2_SCORING_POSITION,
-        L3_SCORING_POSITION,
-        L4_SCORING_POSITION,
-        SCORE,
-        SCORING_MODE,
-        HUMAN_PLAYER_STATION,
-        ALGAE_INTAKE,
-        EXPEL,
-        MANUAL_ON,
-        MANUAL_OFF,
-        MANUAL_IN,
-        MANUAL_OUT,
-        FAILED_INTAKE_SENSOR,
-        ALGAE_HIGH,
-        ALGAE_LOW,
-        CAPPING,
-        FORCE_ELEVATOR
-
-    };
+    SwerveChassis *m_chassis;
+    FieldConstants *m_fieldConstants;
 };

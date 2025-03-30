@@ -129,6 +129,7 @@ void HolonomicDrive::Run()
         auto driveToCoralStation = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
         auto driveToBarge = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE);
         auto driveToAlgae = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_ALGAE);
+        auto driveToProcessor = controller->IsButtonPressed(TeleopControlFunctions::DRIVE_TO_PROCESSOR);
 
         // Switch Heading Option and Drive Mode
         if (isAlignGamePieceSelected)
@@ -178,6 +179,9 @@ void HolonomicDrive::Run()
                 DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
                 m_mlPipeline = true;
             }
+        else if (driveToProcessor)
+        {
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR);
         }
         else
         {
@@ -255,6 +259,7 @@ void HolonomicDrive::Run()
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Run"), string("nullptr"));
     }
+}
 }
 
 void HolonomicDrive::InitChassisMovement()

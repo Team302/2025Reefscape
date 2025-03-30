@@ -31,6 +31,7 @@
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/BargeHelper.h"
+#include "fielddata/ProcessorHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -239,6 +240,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
 
             return make_tuple(DragonTargetFinderData::VISION_BASED, algaePose.value()); // TODO JW come back to this one when we have machine learning
         }
+    else if (item == DragonTargetFinderTarget::PROCESSOR)
+    {
+        frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
+        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
     }
 
     auto pose2d = Pose2d();
@@ -271,7 +276,7 @@ std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(Drago
     }
     else if (item == DragonVision::VISION_ELEMENT::PROCESSOR)
     {
-        return std::nullopt; // TODO JW come back to this one
+        return ProcessorHelper::GetInstance()->GetAprilTag(); // TODO JW come back to this one
     }
     else
     {

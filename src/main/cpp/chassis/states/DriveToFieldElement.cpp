@@ -30,6 +30,7 @@
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/AngleUtils.h"
 #include "state/RobotState.h"
+#include "fielddata/ProcessorHelper.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -145,6 +146,20 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                         0.0_rad_per_s,
                                                                                         rot2d);
         }
+        if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR)
+        {
+            chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
+        }
+
+        units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
+        rotationError = AngleUtils::GetEquivAngle(rotationError);
+        chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+
+        auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+        chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                                    chassisSpeeds.vy,
+                                                                                    chassisSpeeds.omega,
+                                                                                    rot2d);
     }
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
