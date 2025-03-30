@@ -5,7 +5,7 @@
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenter_H"
 time = "3.0">
-<zone filename = "RedReefDriveToLeft.xml"/>
+<zone filename = "BlueReefDriveToLeft.xml"/>
 </primitive>
 <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_CORAL"
@@ -18,7 +18,7 @@ time= "1.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterH_Barge"
 time = "3.0">
-<zone filename = "RedBargeDriveTo.xml"/>
+<zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -28,13 +28,13 @@ time = "1.5"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenterBarge_J"
 time = "3.0">
-<zone filename = "RedReefDriveToLeftAlgae.xml"/>
+<zone filename = "BlueReefDriveToLeftAlgae.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenterJ_Barge"
 time = "3.0">
-<zone filename = "RedBargeDriveTo.xml"/>
+<zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
@@ -43,14 +43,15 @@ time = "1.5"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenterBarge_F"
-time = "4.0">
-<zone filename = "RedReefDriveToLeftAlgae.xml"/>
+time = "4.0"
+taleOption="STATE_GRAB_ALGAE_REEF">
+<zone filename = "BlueReefDriveToLeftAlgae.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterF_Barge"
 time = "3.0">
-<zone filename = "RedBargeDriveTo.xml"/>
+<zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
