@@ -140,6 +140,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             }
         }
     }
+
     else if (item == DragonTargetFinderTarget::REEF_CENTER)
     {
         auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
@@ -240,17 +241,16 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
 
             return make_tuple(DragonTargetFinderData::VISION_BASED, algaePose.value()); // TODO JW come back to this one when we have machine learning
         }
-    else if (item == DragonTargetFinderTarget::PROCESSOR)
-    {
-        frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
-        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
+        else if (item == DragonTargetFinderTarget::PROCESSOR)
+        {
+            frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
+            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
+        }
     }
-
     auto pose2d = Pose2d();
     targetInfo = make_tuple(DragonTargetFinderData::NOT_FOUND, pose2d);
     return targetInfo;
 }
-
 std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
 {
     SetChassis();
