@@ -1408,9 +1408,7 @@ void DragonTale::DataLog(uint64_t timestamp)
 
 	DragonDataLogger::LogStringData(timestamp, DragonDataLogger::StringSignals::TALE_STATE, GetCurrentStatePtr()->GetStateName());
 
-	m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_TOTAL_ENERGY, m_totalEnergy, "Watts");
-	DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::TALE_TOTAL_POWER, m_totalWattHours, "WattHours");
 
 	m_powerTimer.Reset();
 	m_powerTimer.Start();

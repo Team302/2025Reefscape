@@ -571,8 +571,8 @@ void IntakeManager::DataLog(uint64_t timestamp)
 	// LogIntakePower(std::string("Intake/Intake/Power"), std::string("Amps"), m_power);
 	// LogIntakeEnergy(std::string("Intake/Intake/Energy"), std::string("Watts"), m_energy);
 
-	LogExtender(std::string("Intake/ExtednerDegrees"), std::string("Degrees"), (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
-	LogExtenderTarget(std::string("Intake/ExtenderTargetDegrees"), std::string("Degrees"), units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
+	// LogExtender(std::string("Intake/ExtednerDegrees"), std::string("Degrees"), (units::angle::degree_t(m_Extender->GetPosition().GetValue())).value());
+	// LogExtenderTarget(std::string("Intake/ExtenderTargetDegrees"), std::string("Degrees"), units::angle::degree_t(m_ExtenderPositionDegree.Position).value());
 	// auto ExtenderPower = DragonPower::CalcPowerEnergy(currTime, m_Extender->GetSupplyVoltage().GetValueAsDouble(), m_Extender->GetSupplyCurrent().GetValueAsDouble());
 	// m_power = get<0>(ExtenderPower);
 	// m_energy = get<1>(ExtenderPower);
@@ -580,9 +580,9 @@ void IntakeManager::DataLog(uint64_t timestamp)
 	// LogExtenderPower(std::string("Intake/Extender/Power"), std::string("Amps"), m_power);
 	// LogExtenderEnergy(std::string("Intake/Extender/Energy"), std::string("Watts"), m_energy);
 
-	LogIntakeSensor(std::string("Intake/BannerSensorState"), std::string("bool"), GetIntakeSensorState());
+	// LogIntakeSensor(std::string("Intake/BannerSensorState"), std::string("bool"), GetIntakeSensorState());
 
-	LogIntakeManagerState(std::string("Intake/State"), std::string("State"), GetCurrentState());
+	// LogIntakeManagerState(std::string("Intake/State"), std::string("State"), GetCurrentState());
 
 	// m_totalWattHours += DragonPower::ConvertEnergyToWattHours(m_totalEnergy);
 	// LogIntakeManagerTotalEnergy(std::string("Intake/Power"), std::string("Amps"), m_totalEnergy);
