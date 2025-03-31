@@ -20,6 +20,8 @@
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/states/ISwerveDriveOrientation.h"
+#include "ctre/phoenix6/SignalLogger.hpp"
+#include "fielddata/BargeHelper.h"
 #include "fielddata/CoralStationHelper.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "fielddata/FieldConstants.h"
@@ -30,10 +32,12 @@
 #include "units/angle.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "fielddata/BargeHelper.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/LoggerEnums.h"
+
+using ctre::phoenix6::SignalLogger;
 
 using frc::Pose2d;
 using frc::Pose3d;
@@ -61,6 +65,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     SetChassis();
     tuple<DragonTargetFinderData, Pose2d> targetInfo;
 
+    SignalLogger::WriteDouble("/DragonTargetFinder/item", static_cast<double>(item), "", units::time::second_t(0.0));
+
     auto fieldconst = FieldConstants::GetInstance();
     if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH ||
         item == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH ||
@@ -72,7 +78,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (taginfo.has_value())
         {
             auto tag = taginfo.value();
-            auto tagpose{fieldconst->GetAprilTagPose(tag)};
+            auto tagpose{fieldconst->GetAprilTag2DPose(tag)};
 
             // auto visTagPose{m_vision->GetAprilTagPose(tag)};
             // m_switchToVision = SwitchToVision(visTagPose);
@@ -86,7 +92,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
                 //  return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 //}
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
@@ -173,7 +179,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
         if (taginfo.has_value())
         {
             auto tag = taginfo.value();
-            auto tagpose{fieldconst->GetAprilTagPose(tag)};
+            auto tagpose{fieldconst->GetAprilTag2DPose(tag)};
             if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE)
             {
                 /**
@@ -183,7 +189,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     auto visiontagpose = GetVisonPose(visiondata.value());
                     if (visiontagpose)
                     {
-                        if (visiontagpose.value().Translation().Distance(tagpose.ToPose2d().Translation()) < 1_m)
+                        if (visiontagpose.value().Translation().Distance(tagpose.Translation()) < 1_m)
                         {
                             m_goalPose = visiontagpose.value();
                             return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
@@ -191,7 +197,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                     }
                 }
                 **/
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose.ToPose2d());
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)
             {

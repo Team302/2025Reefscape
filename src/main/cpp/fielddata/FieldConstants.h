@@ -101,8 +101,7 @@ public:
         RED_REEF_K,
         RED_REEF_L,
         RED_BARGE_FRONT_CALCULATED,
-        RED_BARGE_BACK_CALCULATED,
-        NUMBER_OF_FIELD_ELEMENTS // This must be the last element & if entries are added the std::array at the end needs to be resized
+        RED_BARGE_BACK_CALCULATED
     };
 
     enum FIELD_ELEMENT_OFFSETS

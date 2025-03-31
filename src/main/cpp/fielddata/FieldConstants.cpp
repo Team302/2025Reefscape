@@ -14,7 +14,10 @@
 //====================================================================================================================================================
 #include "FieldConstants.h"
 
+#include "ctre/phoenix6/SignalLogger.hpp"
 #include "FieldElementCalculator.h"
+
+using ctre::phoenix6::SignalLogger;
 
 FieldConstants *FieldConstants::m_instance = nullptr;
 FieldConstants *FieldConstants::GetInstance()
@@ -170,5 +173,8 @@ frc::Pose3d FieldConstants::GetAprilTagPose(AprilTagIDs tag)
 
 frc::Pose2d FieldConstants::GetAprilTag2DPose(AprilTagIDs tag)
 {
-    return m_aprilTag2dPoses[static_cast<int>(tag)];
+
+    SignalLogger::WriteDouble("/FieldConstants/AprilTag", static_cast<double>(tag), "", units::time::second_t(0.0));
+
+    return m_aprilTag2dPoses[static_cast<unsigned int>(tag - 1)];
 }

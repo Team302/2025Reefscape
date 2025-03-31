@@ -16,10 +16,13 @@
 
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "ctre/phoenix6/SignalLogger.hpp"
 #include "fielddata/ReefHelper.h"
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
+
+using ctre::phoenix6::SignalLogger;
 
 ReefHelper *ReefHelper::m_instance = nullptr;
 ReefHelper *ReefHelper::GetInstance()
@@ -74,12 +77,15 @@ std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
                 distance = CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_AB_TAG, pose);
                 if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_CD_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_CD_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::RED_REEF_CD_TAG;
                 }
                 else if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_KL_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_KL_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::RED_REEF_KL_TAG;
                 }
+                SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_AB_TAG", units::time::second_t(0.0));
                 return FieldConstants::AprilTagIDs::RED_REEF_AB_TAG;
             }
             else
@@ -87,12 +93,15 @@ std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
                 distance = CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_GH_TAG, pose);
                 if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_EF_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_EF_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::RED_REEF_EF_TAG;
                 }
                 else if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_IJ_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::RED_REEF_IJ_TAG;
                 }
+                SignalLogger::WriteString("/ReefHelper/reeftag", "RED_REEF_GH_TAG", units::time::second_t(0.0));
                 return FieldConstants::AprilTagIDs::RED_REEF_GH_TAG;
             }
         }
@@ -103,12 +112,15 @@ std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
                 distance = CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG, pose);
                 if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_CD_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::BLUE_REEF_CD_TAG;
                 }
                 else if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_KL_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::BLUE_REEF_KL_TAG;
                 }
+                SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_AB_TAG", units::time::second_t(0.0));
                 return FieldConstants::AprilTagIDs::BLUE_REEF_AB_TAG;
             }
             else
@@ -116,12 +128,15 @@ std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
                 distance = CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG, pose);
                 if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_EF_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::BLUE_REEF_EF_TAG;
                 }
                 else if (CalcDistanceToAprilTag(FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG, pose) < distance)
                 {
+                    SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_IJ_TAG", units::time::second_t(0.0));
                     return FieldConstants::AprilTagIDs::BLUE_REEF_IJ_TAG;
                 }
+                SignalLogger::WriteString("/ReefHelper/reeftag", "BLUE_REEF_GH_TAG", units::time::second_t(0.0));
                 return FieldConstants::AprilTagIDs::BLUE_REEF_GH_TAG;
             }
         }
@@ -247,6 +262,26 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
 
 units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose)
 {
+    SignalLogger::WriteDouble("/ReefHelper/apriltag", static_cast<double>(tag), "", units::time::second_t(0.0));
+
+    auto dist = currentPose.Translation().Distance(m_fieldConstants->GetAprilTag2DPose(tag).Translation());
+
+    auto value = m_fieldConstants->GetAprilTag2DPose(tag);
+    double x = value.X().value();
+    double y = value.Y().value();
+    double rot = value.Rotation().Radians().value();
+    std::vector<double> pose = {x, y, rot};
+
+    SignalLogger::WriteDoubleArray("/ReefHelper/apriltagpose", pose, "X, Y, Rotation", units::time::second_t(0.0));
+
+    x = currentPose.X().value();
+    y = currentPose.Y().value();
+    rot = currentPose.Rotation().Radians().value();
+    pose = {x, y, rot};
+    SignalLogger::WriteDoubleArray("/ReefHelper/currentrobotpose", pose, "X, Y, Rotation", units::time::second_t(0.0));
+
+    SignalLogger::WriteDouble("/ReefHelper/CalcDistanceToAprilTag", dist.value(), "Meters", units::time::second_t(0.0));
+
     return currentPose.Translation().Distance(m_fieldConstants->GetAprilTag2DPose(tag).Translation());
 }
 void ReefHelper::InitZones()

@@ -290,6 +290,7 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 
         state->Init(moveInfo);
         m_initialized = true;
+        m_currentDriveState = state;
     }
 
     return state;
