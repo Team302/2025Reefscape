@@ -192,6 +192,7 @@ void DragonTale::CreateAndRegisterStates()
 	L2ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
+	L2ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
@@ -200,6 +201,7 @@ void DragonTale::CreateAndRegisterStates()
 	L3ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
+	L3ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
@@ -207,6 +209,7 @@ void DragonTale::CreateAndRegisterStates()
 	L4ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
+	L4ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
