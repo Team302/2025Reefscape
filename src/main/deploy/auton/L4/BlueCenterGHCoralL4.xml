@@ -19,10 +19,13 @@ time= "1.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterH_Barge"
-taleOption="STATE_NET"
 time = "3.0">
 <zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+taleOption = "STATE_NET"
+time = "0.75"/>
 
 <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_ALGAE"
@@ -41,6 +44,10 @@ time = "3.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
+taleOption = "STATE_NET"
+time = "0.75"/>
+
+<primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_ALGAE"
 time = "1.5"/>
 
@@ -56,6 +63,10 @@ choreoname = "BlueCenterJ_Barge"
 time = "3.0">
 <zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
+
+<primitive id = "DRIVE_STOP_MECH"
+taleOption = "STATE_NET"
+time = "0.75"/>
 
 <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_ALGAE"
