@@ -41,4 +41,5 @@ private:
     const units::time::second_t m_period{0.00075};
 
     static DragonDataLoggerMgr *m_instance;
+    DragonDataLogger *m_dragondatalogger;
 };

@@ -626,11 +626,11 @@ void DragonLimelight::DataLog(uint64_t timestamp)
     {
         if (m_identifier == DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA)
         {
-            Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLogger::PoseSignals::POSE2D_CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
         }
         else
         {
-            Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
+            Log3DPoseData(timestamp, DragonDataLogger::PoseSignals::POSE2D_CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
         }
     }
 }

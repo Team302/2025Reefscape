@@ -472,7 +472,7 @@ bool SwerveChassis::IsSamePose()
 
 void SwerveChassis::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::POSE2D_CURRENT_CHASSIS_POSE2D, GetPose());
+    Log2DPoseData(timestamp, DragonDataLogger::PoseSignals::POSE2D_CURRENT_CHASSIS_POSE2D, GetPose());
 
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value(), "Degrees");
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value(), "Degrees");

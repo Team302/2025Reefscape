@@ -28,31 +28,34 @@ DragonDataLogger::DragonDataLogger()
 {
     DragonDataLoggerMgr::GetInstance()->RegisterItem(this);
 }
-
 void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSignals signalID, bool value)
 {
     auto dataMgr = DragonDataLoggerMgr::GetInstance();
     if (dataMgr != nullptr)
     {
-        std::string nameprefix = std::string(magic_enum::enum_name(signalID));
-        char delimiter = '_';
-        size_t pos = nameprefix.find_first_of(delimiter);
-        if (pos != std::string::npos)
+        if (m_boolSignalMap.find(signalID) == m_boolSignalMap.end())
         {
-            nameprefix = nameprefix.substr(0, pos) + "/";
+            std::string nameprefix = std::string(magic_enum::enum_name(signalID));
+            char delimiter = '_';
+            size_t pos = nameprefix.find_first_of(delimiter);
+            if (pos != std::string::npos)
+            {
+                nameprefix = nameprefix.substr(0, pos) + "/";
+            }
+            else
+            {
+                nameprefix = "";
+            }
+            m_boolSignalMap.insert(std::pair<DragonDataLogger::BoolSignals, string>(signalID, nameprefix + std::string(magic_enum::enum_name(signalID))));
         }
-        else
-        {
-            nameprefix = "";
-        }
-        SignalLogger::WriteBoolean(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)), value, m_latency);
+
+        SignalLogger::WriteBoolean(m_boolSignalMap[signalID], value, m_latency);
     }
 }
 
 void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value, string units)
 {
-    auto dataMgr = DragonDataLoggerMgr::GetInstance();
-    if (dataMgr != nullptr)
+    if (m_doubleSignalMap.find(signalID) == m_doubleSignalMap.end())
     {
         std::string nameprefix = std::string(magic_enum::enum_name(signalID));
         char delimiter = '_';
@@ -65,14 +68,15 @@ void DragonDataLogger::LogDoubleData(uint64_t timestamp, DragonDataLogger::Doubl
         {
             nameprefix = "";
         }
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)), value, units, m_latency);
+        m_doubleSignalMap.insert(std::pair<DragonDataLogger::DoubleSignals, string>(signalID, nameprefix + std::string(magic_enum::enum_name(signalID))));
     }
+
+    SignalLogger::WriteDouble(m_doubleSignalMap[signalID], value, units);
 }
 
 void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, std::string value)
 {
-    auto dataMgr = DragonDataLoggerMgr::GetInstance();
-    if (dataMgr != nullptr)
+    if (m_stringSignalMap.find(signalID) == m_stringSignalMap.end())
     {
         std::string nameprefix = std::string(magic_enum::enum_name(signalID));
         char delimiter = '_';
@@ -85,56 +89,61 @@ void DragonDataLogger::LogStringData(uint64_t timestamp, DragonDataLogger::Strin
         {
             nameprefix = "";
         }
-        SignalLogger::WriteString(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)), value, m_latency);
+        m_stringSignalMap.insert(std::pair<DragonDataLogger::StringSignals, string>(signalID, nameprefix + std::string(magic_enum::enum_name(signalID))));
     }
+    SignalLogger::WriteString(m_stringSignalMap[signalID], value, m_latency);
 }
-void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose2d value)
+void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSignals signalID, frc::Pose2d value)
+{
+    if (m_poseSignalMap.find(signalID) == m_poseSignalMap.end())
+    {
+        if (m_poseSignalMap.find(signalID) == m_poseSignalMap.end())
+        {
+            std::string nameprefix = std::string(magic_enum::enum_name(signalID));
+            char delimiter = '_';
+            size_t pos = nameprefix.find_first_of(delimiter);
+            if (pos != std::string::npos)
+            {
+                nameprefix = nameprefix.substr(0, pos) + "/";
+            }
+            else
+            {
+                nameprefix = "";
+            }
+            m_poseSignalMap.insert(std::pair<DragonDataLogger::PoseSignals, string>(signalID, nameprefix + std::string(magic_enum::enum_name(signalID))));
+        }
+    }
+    double x = value.X().value();
+    double y = value.Y().value();
+    double rot = value.Rotation().Radians().value();
+    std::vector<double> pose = {x, y, rot};
+    SignalLogger::WriteDoubleArray(m_poseSignalMap[signalID], pose, m_pose2dUnits, m_latency);
+}
+
+void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSignals signalID, frc::Pose3d value)
 {
     auto dataMgr = DragonDataLoggerMgr::GetInstance();
     if (dataMgr != nullptr)
     {
-        std::string nameprefix = std::string(magic_enum::enum_name(signalID));
-        char delimiter = '_';
-        size_t pos = nameprefix.find_first_of(delimiter);
-        if (pos != std::string::npos)
+        if (m_poseSignalMap.find(signalID) == m_poseSignalMap.end())
         {
-            nameprefix = nameprefix.substr(0, pos) + "/";
+            std::string nameprefix = std::string(magic_enum::enum_name(signalID));
+            char delimiter = '_';
+            size_t pos = nameprefix.find_first_of(delimiter);
+            if (pos != std::string::npos)
+            {
+                nameprefix = nameprefix.substr(0, pos) + "/";
+            }
+            else
+            {
+                nameprefix = "";
+            }
         }
-        else
-        {
-            nameprefix = "";
-        }
-
-        double x = value.X().value();
-        double y = value.Y().value();
-        double rot = value.Rotation().Radians().value();
-        std::vector<double> pose = {x, y, rot};
-        SignalLogger::WriteDoubleArray(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)), pose, m_pose2dUnits, m_latency);
-    }
-}
-
-void DragonDataLogger::Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose3d value)
-{
-    auto dataMgr = DragonDataLoggerMgr::GetInstance();
-    if (dataMgr != nullptr)
-    {
-        std::string nameprefix = std::string(magic_enum::enum_name(signalID));
-        char delimiter = '_';
-        size_t pos = nameprefix.find_first_of(delimiter);
-        if (pos != std::string::npos)
-        {
-            nameprefix = nameprefix.substr(0, pos) + "/";
-        }
-        else
-        {
-            nameprefix = "";
-        }
-
         double x = value.ToPose2d().X().value();
         double y = value.ToPose2d().Y().value();
         double rot = value.ToPose2d().Rotation().Radians().value();
         std::vector<double> pose = {x, y, rot};
-        SignalLogger::WriteDoubleArray(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)), pose, m_pose2dUnits, m_latency);
+        SignalLogger::WriteDoubleArray(m_poseSignalMap[signalID], pose, m_pose2dUnits, m_latency);
     }
 }
 
@@ -143,22 +152,24 @@ void DragonDataLogger::LogSwerveModuleStateData(uint64_t timestamp, DragonDataLo
     auto dataMgr = DragonDataLoggerMgr::GetInstance();
     if (dataMgr != nullptr)
     {
-        std::string nameprefix = std::string(magic_enum::enum_name(signalID));
-        char delimiter = '_';
-        size_t pos = nameprefix.find_first_of(delimiter);
-        if (pos != std::string::npos)
+        if (m_swerveStateSignalMap.find(signalID) == m_swerveStateSignalMap.end())
         {
-            nameprefix = nameprefix.substr(0, pos) + "/";
+            std::string nameprefix = std::string(magic_enum::enum_name(signalID));
+            char delimiter = '_';
+            size_t pos = nameprefix.find_first_of(delimiter);
+            if (pos != std::string::npos)
+            {
+                nameprefix = nameprefix.substr(0, pos) + "/";
+            }
+            else
+            {
+                nameprefix = "";
+            }
         }
-        else
-        {
-            nameprefix = "";
-        }
-
         double speed = value.speed.value();
         double angle = value.angle.Radians().value();
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/speed", speed, "m/s", m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/angle", angle, "degrees", m_latency);
+        SignalLogger::WriteDouble(m_swerveStateSignalMap[signalID] + std::string(magic_enum::enum_name(signalID)) + "/speed", speed, "m/s", m_latency);
+        SignalLogger::WriteDouble(m_swerveStateSignalMap[signalID] + std::string(magic_enum::enum_name(signalID)) + "/angle", angle, "degrees", m_latency);
     }
 }
 
@@ -168,23 +179,25 @@ void DragonDataLogger::LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger
     if (dataMgr != nullptr)
     {
 
-        std::string nameprefix = std::string(magic_enum::enum_name(signalID));
-        char delimiter = '_';
-        size_t pos = nameprefix.find_first_of(delimiter);
-        if (pos != std::string::npos)
+        if (m_chassisSpeedSignalMap.find(signalID) == m_chassisSpeedSignalMap.end())
         {
-            nameprefix = nameprefix.substr(0, pos) + "/";
+            std::string nameprefix = std::string(magic_enum::enum_name(signalID));
+            char delimiter = '_';
+            size_t pos = nameprefix.find_first_of(delimiter);
+            if (pos != std::string::npos)
+            {
+                nameprefix = nameprefix.substr(0, pos) + "/";
+            }
+            else
+            {
+                nameprefix = "";
+            }
         }
-        else
-        {
-            nameprefix = "";
-        }
-
         double vx = value.vx.value();
         double vy = value.vy.value();
         double omega = value.omega.value();
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/vx", vx, m_swerveChassisSpeedUnits, m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/vy", vy, m_swerveChassisSpeedUnits, m_latency);
-        SignalLogger::WriteDouble(std::string(nameprefix) + std::string(magic_enum::enum_name(signalID)) + "/omega", omega, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(m_chassisSpeedSignalMap[signalID] + "/vx", vx, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(m_chassisSpeedSignalMap[signalID] + std::string(magic_enum::enum_name(signalID)) + "/vy", vy, m_swerveChassisSpeedUnits, m_latency);
+        SignalLogger::WriteDouble(m_chassisSpeedSignalMap[signalID] + std::string(magic_enum::enum_name(signalID)) + "/omega", omega, m_swerveChassisSpeedUnits, m_latency);
     }
 }

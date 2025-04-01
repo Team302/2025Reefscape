@@ -141,7 +141,7 @@ public:
         CLIMBER_STATE
     };
 
-    enum PoseSingals
+    enum PoseSignals
     {
         POSE2D_CURRENT_CHASSIS_POSE2D,
         POSE2D_CURRENT_CHASSIS_LIMELIGHT_POSE3D,
@@ -186,11 +186,19 @@ protected:
     void LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSignals signalID, bool value);
     void LogDoubleData(uint64_t timestamp, DragonDataLogger::DoubleSignals signalID, double value, string units);
     void LogStringData(uint64_t timestamp, DragonDataLogger::StringSignals signalID, string value);
-    void Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose2d value);
-    void Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSingals signalID, frc::Pose3d value);
+    void Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseSignals signalID, frc::Pose2d value);
+    void Log3DPoseData(uint64_t timestamp, DragonDataLogger::PoseSignals signalID, frc::Pose3d value);
 
     void LogSwerveModuleStateData(uint64_t timestamp, DragonDataLogger::SwerveStateSingals signalID, frc::SwerveModuleState value);
     void LogChassisSpeedsData(uint64_t timestamp, DragonDataLogger::ChassisSpeedSignals signalID, frc::ChassisSpeeds value);
 
     const double m_doubleTolerance = 0.001;
+
+private:
+    std::unordered_map<BoolSignals, string> m_boolSignalMap;
+    std::unordered_map<DoubleSignals, string> m_doubleSignalMap;
+    std::unordered_map<StringSignals, string> m_stringSignalMap;
+    std::unordered_map<PoseSignals, string> m_poseSignalMap;
+    std::unordered_map<ChassisSpeedSignals, string> m_chassisSpeedSignalMap;
+    std::unordered_map<SwerveStateSingals, string> m_swerveStateSignalMap;
 };
