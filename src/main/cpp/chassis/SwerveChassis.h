@@ -33,6 +33,7 @@
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveModuleState.h"
 #include "pathplanner/lib/config/RobotConfig.h"
+#include "RobinHood/robin_hood.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"
@@ -156,8 +157,8 @@ private:
     ctre::phoenix6::hardware::Pigeon2 *m_pigeon = nullptr;
 
     RobotDrive *m_robotDrive = nullptr;
-    std::map<ChassisOptionEnums::DriveStateType, ISwerveDriveState *> m_driveStateMap;
-    std::map<ChassisOptionEnums::HeadingOption, ISwerveDriveOrientation *> m_headingStateMap;
+    robin_hood::unordered_map<ChassisOptionEnums::DriveStateType, ISwerveDriveState *> m_driveStateMap;
+    robin_hood::unordered_map<ChassisOptionEnums::HeadingOption, ISwerveDriveOrientation *> m_headingStateMap;
 
     units::length::inch_t m_wheelBase = units::length::inch_t(22.75);
     units::length::inch_t m_track = units::length::inch_t(22.75);

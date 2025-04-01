@@ -20,6 +20,8 @@
 #include <frc/geometry/Rotation3d.h>
 
 #include "frc/apriltag/AprilTagFieldLayout.h"
+#include "RobinHood/robin_hood.h"
+#include "RobinHood/robin_hood.h"
 #include "units/angle.h"
 #include "units/base.h"
 
@@ -292,6 +294,6 @@ private:
 
     frc::Pose3d m_placeholder = frc::Pose3d();
 
-    std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
-    std::map<int, frc::Pose3d> aprilTagPoseMap;
+    robin_hood::unordered_map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
+    robin_hood::unordered_map<int, frc::Pose3d> aprilTagPoseMap;
 };
