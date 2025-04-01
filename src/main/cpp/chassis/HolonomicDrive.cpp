@@ -173,12 +173,13 @@ void HolonomicDrive::Run()
         }
         else if (driveToAlgae)
         {
-            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE);
             if (!m_mlPipeline)
             {
                 DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
                 m_mlPipeline = true;
             }
+            DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE);
+        }
         else if (driveToProcessor)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR);
@@ -229,37 +230,37 @@ void HolonomicDrive::Run()
                     DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
                     m_mlPipeline = false;
                 }
+
+                m_resetPathplannerTrajectory = true;
+                m_bargeHelper->IsInZone();
+                m_reefHelper->IsInZone();
+                if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
+                {
+                    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+                }
             }
-            m_resetPathplannerTrajectory = true;
-            m_bargeHelper->IsInZone();
-            m_reefHelper->IsInZone();
-            if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
+            if (isSlowMode)
             {
-                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+                SlowMode();
             }
-        }
-        if (isSlowMode)
-        {
-            SlowMode();
-        }
 
-        if (abs(rotate) > 0.05)
-        {
-            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+            if (abs(rotate) > 0.05)
+            {
+                m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+            }
+
+            CheckTipping(checkTipping);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Drive State"), m_moveInfo.driveOption);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
+
+            m_swerve->Drive(m_moveInfo);
+            m_previousDriveState = m_moveInfo.driveOption;
         }
-
-        CheckTipping(checkTipping);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Drive State"), m_moveInfo.driveOption);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
-
-        m_swerve->Drive(m_moveInfo);
-        m_previousDriveState = m_moveInfo.driveOption;
     }
     else
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Run"), string("nullptr"));
     }
-}
 }
 
 void HolonomicDrive::InitChassisMovement()

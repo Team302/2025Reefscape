@@ -232,21 +232,21 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     {
         auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::ALGAE);
         auto algaePose = GetVisonPose(visiondata);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
         if (algaePose.has_value())
         {
             m_goalPose = frc::Pose2d(algaePose.value().X(), algaePose.value().Y() + m_armoffset, m_chassis->GetYaw());
             DragonVisionStructLogger::logPose2d("Algae", algaePose.value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), m_goalPose.value().Rotation().Degrees().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
-
             return make_tuple(DragonTargetFinderData::VISION_BASED, algaePose.value()); // TODO JW come back to this one when we have machine learning
         }
-        else if (item == DragonTargetFinderTarget::PROCESSOR)
-        {
-            frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
-            return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
-        }
     }
+    else if (item == DragonTargetFinderTarget::PROCESSOR)
+    {
+        frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
+        return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, processorPose);
+    }
+
     auto pose2d = Pose2d();
     targetInfo = make_tuple(DragonTargetFinderData::NOT_FOUND, pose2d);
     return targetInfo;
