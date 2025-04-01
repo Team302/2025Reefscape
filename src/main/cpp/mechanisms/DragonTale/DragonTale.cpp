@@ -188,25 +188,28 @@ void DragonTale::CreateAndRegisterStates()
 	L1ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
-	L2ScoringPositionStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	L2ScoringPositionStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
+	L2ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	L2ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
-	L3ScoringPositionStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	L3ScoringPositionStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	L3ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
+	L3ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ReadyStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(HoldStateInst);
-	L4ScoringPositionStateInst->RegisterTransitionState(L1ScoringPositionStateInst);
+	L4ScoringPositionStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(ScoreCoralStateInst);
 	L4ScoringPositionStateInst->RegisterTransitionState(NetStateInst);
+	L4ScoringPositionStateInst->RegisterTransitionState(ProcessStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(ReadyStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	ScoreCoralStateInst->RegisterTransitionState(HoldStateInst);
@@ -445,7 +448,7 @@ void DragonTale::CreateCOMP_BOT302()
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
 	ctre::phoenix6::configs::CANcoderConfiguration ElevatorHeightSensorConfigs{};
-	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(-0.12036133);
+	ElevatorHeightSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(-0.11962890625);
 	ElevatorHeightSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ElevatorHeightSensor = new ctre::phoenix6::hardware::CANcoder(4, "canivore");
 	m_ElevatorHeightSensor->GetConfigurator().Apply(ElevatorHeightSensorConfigs);
@@ -1114,9 +1117,6 @@ void DragonTale::SetCurrentState(int state, bool run)
 
 void DragonTale::RunCommonTasks()
 {
-	// This function is called once per loop before the current state Run()
-	SetSensorFailSafe();
-
 	if ((m_ElevatorLeader->GetReverseLimit().GetValue() == ReverseLimitValue::ClosedToGround) && (units::math::abs(GetElevatorHeight()) > 1_in))
 	{
 		m_ElevatorHeightSensor->SetPosition(0_tr, 5_ms);
