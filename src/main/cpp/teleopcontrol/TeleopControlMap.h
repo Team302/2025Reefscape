@@ -186,6 +186,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::MANUAL_ON, copilotLStickPressed},
     {TeleopControlFunctions::MANUAL_OFF, copilotRStickPressed},
     {TeleopControlFunctions::ALGAE_HIGH, copilotDPad0},
+    {TeleopControlFunctions::GRAB_ALGAE_REEF, copilotDPad90},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
     {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
@@ -242,7 +243,4 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlA
     {TeleopControlFunctions::ELAVATOR, copilotLJoystickY},
     {TeleopControlFunctions::ARM, copilotRJoystickY},
     {TeleopControlFunctions::MANUAL_IN, copilotLTrigger},
-    {TeleopControlFunctions::MANUAL_OUT, copilotRTrigger},
-    {TeleopControlFunctions::CAPPING, copilotRTrigger}
-
-};
+    {TeleopControlFunctions::MANUAL_OUT, copilotRTrigger}};

@@ -19,7 +19,6 @@ time= "1.0"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterH_Barge"
-taleOption="STATE_NET"
 time = "3.0">
 <zone filename = "BlueBargeDriveTo.xml"/>
 </primitive>
