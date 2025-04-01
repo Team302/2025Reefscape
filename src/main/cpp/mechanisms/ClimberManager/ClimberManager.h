@@ -29,6 +29,7 @@
 #include "ctre/phoenix6/controls/Follower.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "ctre/phoenix6/SignalLogger.hpp"
+#include <frc/DigitalInput.h>
 
 #include "mechanisms/base/BaseMech.h"
 #include "state/StateMgr.h"
@@ -118,6 +119,8 @@ public:
 
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
 	ctre::phoenix6::hardware::TalonFXS *GetExtender() const { return m_Extender; }
+	bool GetClimberSensorState() const { return m_ClimberSensor->Get(); }
+
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOut() const { return m_PercentOut; }
 	ControlData *GetPositionDegreeUp() const { return m_PositionDegreeUp; }
@@ -137,6 +140,7 @@ private:
 
 	ctre::phoenix6::hardware::TalonFX *m_Climber;
 	ctre::phoenix6::hardware::TalonFXS *m_Extender;
+	frc::DigitalInput *m_ClimberSensor;
 	ControlData *m_PositionDegree;
 	ControlData *m_PercentOut;
 	ControlData *m_PositionDegreeUp;

@@ -282,6 +282,7 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
     if (state != m_currentDriveState)
     {
         m_initialized = false;
+        m_currentDriveState = state;
     }
 
     if (!m_initialized && state != nullptr)
