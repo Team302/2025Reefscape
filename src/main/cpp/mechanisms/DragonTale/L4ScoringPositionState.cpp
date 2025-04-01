@@ -68,11 +68,6 @@ void L4ScoringPositionState::InitCOMP_BOT302()
 void L4ScoringPositionState::Run()
 {
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("L4ScoringPositionState"), string("Run"));
-	double cappush = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::CAPPING);
-	units::angle::degree_t captargetdifference = cappush * m_cappingAngleFactor;
-	units::angle::degree_t capTarget = m_ArmTarget - captargetdifference;
-
-	m_mechanism->SetArmTarget(capTarget);
 }
 
 void L4ScoringPositionState::Exit()
