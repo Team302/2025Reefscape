@@ -13,7 +13,6 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "frc/DriverStation.h"
 #include "feedback/DriverFeedback.h"
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"

@@ -74,6 +74,9 @@ private:
     const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
     const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 2.5_mps_sq;
 
+    const units::velocity::meters_per_second_t kTeleopMaxVelocity = 3.5_mps;
+    const units::acceleration::meters_per_second_squared_t kTeleopMaxAcceleration = 2.5_mps_sq;
+
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
 
     units::time::second_t m_lastResetTime = 0_s;
@@ -87,6 +90,9 @@ private:
 
     units::angle::degree_t m_sweepDelta{90.0};
 
+    bool m_teleopLatch = false;
+
+    frc::TrapezoidProfile<units::length::meters>::Constraints m_teleopTranslationConstraints{kTeleopMaxVelocity, kTeleopMaxAcceleration};
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
     frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};

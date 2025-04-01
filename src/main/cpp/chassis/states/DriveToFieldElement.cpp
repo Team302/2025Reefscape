@@ -19,6 +19,7 @@
 #include <frc/geometry/Pose2d.h>
 #include <pathplanner/lib/path/PathConstraints.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
+#include <frc/DriverStation.h>
 
 // Team302 Includes
 #include "chassis/definitions/ChassisConfig.h"
@@ -49,6 +50,15 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
+    if (frc::DriverStation::IsTeleop())
+    {
+        if (!m_teleopLatch)
+        {
+            m_teleopLatch = true;
+            m_translationPIDX.SetConstraints(m_teleopTranslationConstraints);
+            m_translationPIDY.SetConstraints(m_teleopTranslationConstraints);
+        }
+    }
     InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
     m_currentType = get<0>(info.value());
