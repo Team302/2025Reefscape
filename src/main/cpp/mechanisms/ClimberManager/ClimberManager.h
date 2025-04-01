@@ -119,7 +119,7 @@ public:
 
 	ctre::phoenix6::hardware::TalonFX *GetClimber() const { return m_Climber; }
 	ctre::phoenix6::hardware::TalonFXS *GetExtender() const { return m_Extender; }
-	bool GetClimberSensorState() const { return m_ClimberSensor->Get(); }
+	bool GetClimberSensorState() const { return !m_ClimberSensor->Get(); }
 
 	ControlData *GetPositionDegree() const { return m_PositionDegree; }
 	ControlData *GetPercentOut() const { return m_PercentOut; }

@@ -46,6 +46,6 @@ namespace ClimberManagerStates
 		void InitCOMP_BOT302();
 		RobotIdentifier m_RobotId;
 		const double m_ClimberTarget = double(0);
-		const units::angle::degree_t m_ExtenderTarget{85.0};
+		const units::angle::degree_t m_ExtenderTarget{75.0};
 	};
 }
