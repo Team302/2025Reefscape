@@ -208,6 +208,8 @@ void ClimberManager::CreateCOMP_BOT302()
 	m_Climber = new ctre::phoenix6::hardware::TalonFX(7, "canivore");
 	m_Extender = new ctre::phoenix6::hardware::TalonFXS(15, "rio");
 
+	m_ClimberSensor = new frc::DigitalInput(3);
+
 	m_PositionDegree = new ControlData(
 		ControlModes::CONTROL_TYPE::POSITION_DEGREES,	  // ControlModes::CONTROL_TYPE mode
 		ControlModes::CONTROL_RUN_LOCS::MOTOR_CONTROLLER, // ControlModes::CONTROL_RUN_LOCS server
