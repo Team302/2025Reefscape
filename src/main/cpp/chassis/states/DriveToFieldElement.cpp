@@ -74,16 +74,16 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
         // Reset the PID if resetTime in second has passed since the last reset
-        // if (m_resetTime <= (currentTime - m_lastResetTime))
-        // {
-        m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-        m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-        // m_lastResetTime = currentTime;
-        // }
-        // else
-        // {
-        //     m_lastResetTime = currentTime;
-        // }
+        if (m_resetTime <= (currentTime - m_lastResetTime))
+        {
+            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+            m_lastResetTime = currentTime;
+        }
+        else
+        {
+            m_lastResetTime = currentTime;
+        }
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
         if (info.has_value())
