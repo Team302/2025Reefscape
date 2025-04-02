@@ -43,28 +43,23 @@ AutoClimbState::AutoClimbState(std::string stateName,
 void AutoClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutoClimbState"), string("Init"));
-	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_ClimberTarget)
-	{
-		m_mechanism->UpdateTargetClimberPositionDegreeUp(m_ClimberTarget);
-	}
-	else
-	{
-		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	}
+	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void AutoClimbState::Run()
 {
-	units::angle::turn_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
-	m_manualTarget += TargetChange;
-
-	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_manualTarget)
+	if (m_mechanism->GetClimberSensorState())
 	{
-		m_mechanism->UpdateTargetClimberPositionDegreeUp(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+		m_mechanism->UpdateTargetClimberPercentOut(0.0);
+	}
+	else if (m_mechanism->GetClimber()->GetStatorCurrent().GetValue() > m_climbCurrentThreshold)
+	{
+		m_mechanism->UpdateTargetClimberPositionDegree(m_currentPosition);
 	}
 	else
 	{
-		m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
+		m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
+		m_currentPosition = m_mechanism->GetClimber()->GetPosition().GetValue();
 	}
 }
 

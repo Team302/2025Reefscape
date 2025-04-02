@@ -597,6 +597,7 @@ void ClimberManager::Cyclic()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", " Extender Position", m_Extender->GetPosition().GetValueAsDouble());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Extender Position Target", (m_ExtenderPositionDegree.Position.value()));
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Extender Percent Target", (m_ExtenderPercentOutput.Output.value()));
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Climber", "Climber Sensor", m_ClimberSensor->Get());
 }
 
 void ClimberManager::NotifyStateUpdate(RobotStateChanges::StateChange statechange, int value)
