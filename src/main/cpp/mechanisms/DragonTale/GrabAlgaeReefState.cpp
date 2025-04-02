@@ -86,5 +86,6 @@ bool GrabAlgaeReefState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (!m_mechanism->GetAlgaeSensorState() && ((m_mechanism->IsAlgaeMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_ELEVATOR)) || (m_mechanism->IsInReefZone())) && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION));
+	// return (!m_mechanism->GetAlgaeSensorState() && ((m_mechanism->IsAlgaeMode() && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_ELEVATOR)) || (m_mechanism->IsInReefZone())) && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::HUMAN_PLAYER_STATION));
+	return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::GRAB_ALGAE_REEF));
 }

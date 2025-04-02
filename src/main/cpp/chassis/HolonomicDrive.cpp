@@ -239,9 +239,13 @@ void HolonomicDrive::Run()
                     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
                 }
             }
-            if (isSlowMode)
+            m_resetPathplannerTrajectory = true;
+            if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             {
-                SlowMode();
+                m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, false);
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
             }
 
             if (abs(rotate) > 0.05)
@@ -435,7 +439,7 @@ bool HolonomicDrive::AtTarget()
 }
 void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState)
 {
-    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || m_resetPathplannerTrajectory == false)
+    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || !m_resetPathplannerTrajectory)
     {
         m_moveInfo.driveOption = driveState;
         m_resetPathplannerTrajectory = false;

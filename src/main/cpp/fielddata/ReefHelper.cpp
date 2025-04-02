@@ -35,8 +35,8 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrent
                            m_allianceColor(FMSData::GetInstance()->GetAllianceColor()),
                            m_fieldConstants(FieldConstants::GetInstance())
 {
-    m_blueReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER).ToPose2d();
-    m_redReefCenter = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER).ToPose2d();
+    m_blueReefCenter = m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER);
+    m_redReefCenter = m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER);
     InitZones();
 }
 
@@ -247,8 +247,7 @@ std::optional<FieldConstants::FIELD_ELEMENT> ReefHelper::GetNearestRightReefBran
 
 units::length::meter_t ReefHelper::CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose)
 {
-    auto aprilTagPose = m_fieldConstants->GetAprilTagPose(tag).ToPose2d();
-    return currentPose.Translation().Distance(aprilTagPose.Translation());
+    return currentPose.Translation().Distance(m_fieldConstants->GetAprilTagPose2d(tag).Translation());
 }
 void ReefHelper::InitZones()
 {
