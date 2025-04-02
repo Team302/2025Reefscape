@@ -26,6 +26,7 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
 #include "mechanisms/DragonTale/DragonTale.h"
+#include "mechanisms/ClimberManager/ClimberManager.h"
 #include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
@@ -68,6 +69,7 @@ void DriverFeedback::UpdateLEDStates()
     auto mechanismConfigMgr = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
     StateMgr *taleStateManager = mechanismConfigMgr != nullptr ? mechanismConfigMgr->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
     auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
+
     oldState = currentState;
     if (frc::DriverStation::IsDisabled())
     {
@@ -155,18 +157,30 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     bool coralInSensor = false;
     bool coralOutSensor = false;
     bool algaeSensor = false;
+    bool climberLimitSensor = false;
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
-        StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
+        auto mechanismConfigMgr = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+
+        StateMgr *taleStateManager = mechanismConfigMgr != nullptr ? mechanismConfigMgr->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
         auto taleMgr = taleStateManager != nullptr ? dynamic_cast<DragonTale *>(taleStateManager) : nullptr;
+
+        StateMgr *climberStateManager = mechanismConfigMgr != nullptr ? mechanismConfigMgr->GetMechanism(MechanismTypes::CLIMBER_MANAGER) : nullptr;
+        auto climberMgr = taleStateManager != nullptr ? dynamic_cast<ClimberManager *>(climberStateManager) : nullptr;
+
         if (taleMgr != nullptr)
         {
             coralInSensor = taleMgr->GetCoralInSensorState();
             coralOutSensor = taleMgr->GetCoralOutSensorState();
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
+
+        if (climberMgr != nullptr)
+        {
+            climberLimitSensor = climberMgr->GetClimberSensorState();
+        }
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, climberLimitSensor, m_questStatus, m_ll1Status);
     if (m_timer == 20)
     {
         QueryNT();

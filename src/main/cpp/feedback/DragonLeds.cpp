@@ -234,7 +234,7 @@ void DragonLeds::SetClosingInChaserPattern(frc::Color c)
     }
 }
 
-void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool questStatus, bool ll1Status)
+void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool coralInSensor, bool coralOutSensor, bool algaeSensor, bool climberSensor, bool questStatus, bool ll1Status)
 {
     if (IsInitialized())
     {
@@ -249,6 +249,9 @@ void DragonLeds::DiagnosticPattern(frc::DriverStation::Alliance alliance, bool c
 
         auto algaeSensorcolor = algaeSensor ? frc::Color::kYellow : frc::Color::kBlack;
         SetSpecificLED(m_algaeSensorDiagnosticLED, algaeSensorcolor);
+
+        auto climberSensorColor = climberSensor ? frc::Color::kYellow : frc::Color::kBlack;
+        SetSpecificLED(m_climberSensorDiagnosticLED, climberSensorColor);
 
         auto questStatuscolor = questStatus ? frc::Color::kGreen : frc::Color::kDarkRed;
         SetSpecificLED(m_questDiagnosticLED, questStatuscolor);
