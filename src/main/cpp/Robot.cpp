@@ -8,10 +8,9 @@
 
 #include <Robot.h>
 
-#include <frc/RobotController.h>
-
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
+#include "auton/drivePrimitives/AutonUtils.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
@@ -19,7 +18,14 @@
 #include "chassis/SwerveChassis.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
+#include "ctre/phoenix6/SignalLogger.hpp"
 #include "feedback/DriverFeedback.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
+#include "fielddata/ReefHelper.h"
+#include "frc/RobotController.h"
+#include "frc/Threads.h"
 #include "RobotIdentifier.h"
 #include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
@@ -33,8 +39,7 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
-#include "fielddata/BargeHelper.h"
-#include "fielddata/ReefHelper.h"
+
 using std::string;
 
 void Robot::RobotInit()
@@ -53,6 +58,8 @@ void Robot::RobotInit()
     ReefHelper::GetInstance();
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
+
+    auto path = AutonUtils::GetPathFromTrajectory("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
 }
 
 /**
@@ -73,7 +80,7 @@ void Robot::RobotPeriodic()
 
     if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
     {
-        // m_datalogger->PeriodicDataLog();
+        m_datalogger->PeriodicDataLog();
     }
 
     if (m_robotState != nullptr)
@@ -97,6 +104,8 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+    frc::SetCurrentThreadPriority(true, 15);
+
     if (m_cyclePrims != nullptr)
     {
         m_cyclePrims->Init();

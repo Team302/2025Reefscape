@@ -14,14 +14,15 @@
 //====================================================================================================================================================
 #include "FieldElementCalculator.h"
 
+#include <frc/RobotController.h>
+
 #include "FieldConstantsPoseLogger.h"
+#include "RobotIdentifier.h"
+#include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVisionStructLogger.h"
-#include <frc/RobotController.h>
-#include "utils/FMSData.h"
-#include "RobotIdentifier.h"
 
-void FieldElementCalculator::CalcPositionsForField(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
+void FieldElementCalculator::CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
     InitializeReefBranchTransformsMap();
     UpdateReefStickRobotTransforms();
@@ -249,7 +250,7 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR, m_calcProcessorRed);
 }
 
-void FieldElementCalculator::CalculateCenters(std::map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
+void FieldElementCalculator::CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
     fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER] = AverageHexagonPose(
         fieldConstantsPoseMap[FieldConstants::FIELD_ELEMENT::RED_REEF_AB],
