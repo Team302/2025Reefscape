@@ -131,6 +131,5 @@ std::optional<FieldConstants::FIELD_ELEMENT> CoralStationHelper::GetNearestSideW
 
 units::length::meter_t CoralStationHelper::CalcDistanceToAprilTag(FieldConstants::AprilTagIDs tag, frc::Pose2d currentPose)
 {
-    auto aprilTagPose = m_fieldConstants->GetAprilTagPose(tag).ToPose2d();
-    return currentPose.Translation().Distance(aprilTagPose.Translation());
+    return currentPose.Translation().Distance(m_fieldConstants->GetAprilTagPose2d(tag).Translation());
 }

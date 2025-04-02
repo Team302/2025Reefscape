@@ -16,10 +16,13 @@
 #include <filesystem>
 #include <iostream>
 
+#include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation3d.h>
 
 #include "frc/apriltag/AprilTagFieldLayout.h"
+#include "RobinHood/robin_hood.h"
+#include "RobinHood/robin_hood.h"
 #include "units/angle.h"
 #include "units/base.h"
 
@@ -137,14 +140,16 @@ public:
         RED_REEF_KL_TAG = 6
     };
     frc::Pose3d GetFieldElementPose(FIELD_ELEMENT element);
+    frc::Pose2d GetFieldElementPose2d(FIELD_ELEMENT element);
 
     frc::Pose3d GetAprilTagPose(AprilTagIDs tag);
+    frc::Pose2d GetAprilTagPose2d(AprilTagIDs tag);
 
 private:
     // make a singleton
     static FieldConstants *m_instance;
     std::vector<frc::AprilTag> m_aprilTagVector;
-    const std::string m_feildFilePath = "/home/lvuser/FieldData/output.json";
+    const std::string m_fieldFilePath = "/home/lvuser/FieldData/output.json";
     // make constructor private
     FieldConstants();
     // make singleton copy constructor private
@@ -292,6 +297,9 @@ private:
 
     frc::Pose3d m_placeholder = frc::Pose3d();
 
-    std::map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
-    std::map<int, frc::Pose3d> aprilTagPoseMap;
+    robin_hood::unordered_map<FIELD_ELEMENT, frc::Pose3d> fieldConstantsPoseMap;
+    std::array<frc::Pose2d, 68> m_fieldConst2dPoses;
+
+    robin_hood::unordered_map<int, frc::Pose3d> m_aprilTagPoseMap;
+    std::array<frc::Pose2d, 23> m_aprilTag2dPoses;
 };

@@ -62,8 +62,9 @@
 // Third Party Includes
 #include "pugixml/pugixml.hpp"
 #include <ctre/phoenix6/StatusSignal.hpp>
+#include "ctre/phoenix6/SignalLogger.hpp"
 
-using std::map;
+using robin_hood::unordered_map;
 using std::string;
 
 using frc::ChassisSpeeds;
@@ -71,6 +72,7 @@ using frc::Pose2d;
 using frc::Rotation2d;
 using frc::SwerveModulePosition;
 
+using ctre::phoenix6::SignalLogger;
 using ctre::phoenix6::configs::MountPoseConfigs;
 using ctre::phoenix6::hardware::Pigeon2;
 
@@ -267,6 +269,8 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 {
     auto state = GetSpecifiedDriveState(moveInfo.driveOption);
 
+    SignalLogger::WriteDouble(std::string("/swervechassis/state"), static_cast<int>(moveInfo.driveOption), "", units::time::second_t((0)));
+
     auto itr = m_driveStateMap.find(moveInfo.driveOption);
     if (itr == m_driveStateMap.end())
     {
@@ -291,6 +295,7 @@ ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 
         state->Init(moveInfo);
         m_initialized = true;
+        m_currentDriveState = state;
     }
 
     return state;
