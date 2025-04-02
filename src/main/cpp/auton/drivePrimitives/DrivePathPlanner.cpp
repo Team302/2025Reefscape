@@ -111,9 +111,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
     m_updateTimeLatch = false;
-
     m_driveToObject = nullptr;
     m_checkForDriveToUpdate = false;
+
     auto index = FindDriveToZoneIndex(params->GetZones());
     if (index != -1)
     {
@@ -134,6 +134,8 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_isVisionDrive = false;
     m_visionAlignment = params->GetVisionAlignment();
+
+    // Start timeout timer for path
 
     InitMoveInfo();
 

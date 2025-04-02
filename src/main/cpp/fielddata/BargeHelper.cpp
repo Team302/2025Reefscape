@@ -18,9 +18,9 @@
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "fielddata/BargeHelper.h"
 #include "frc/DriverStation.h"
+#include "frc/Filesystem.h"
 #include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
-#include "frc/Filesystem.h"
 
 BargeHelper *BargeHelper::m_instance = nullptr;
 BargeHelper *BargeHelper::GetInstance()
@@ -123,11 +123,11 @@ frc::Pose2d BargeHelper::CalcBargePose()
     frc::Pose2d pose2d{};
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
-        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED).ToPose2d();
+        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED) : m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED);
     }
     else
     {
-        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED).ToPose2d() : m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED).ToPose2d();
+        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED) : m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED);
     }
 
     auto clampY = ClampChassisY();
@@ -150,5 +150,5 @@ frc::Pose2d BargeHelper::GetCagePose(DragonTargetFinderTarget target)
     else if (target == DragonTargetFinderTarget::CENTER_CAGE)
         fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE : FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE;
 
-    return m_fieldConstants->GetFieldElementPose(fieldElement).ToPose2d();
+    return m_fieldConstants->GetFieldElementPose2d(fieldElement);
 }

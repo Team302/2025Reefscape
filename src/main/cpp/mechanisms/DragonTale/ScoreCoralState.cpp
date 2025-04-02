@@ -47,13 +47,10 @@ void ScoreCoralState::Init()
 
 void ScoreCoralState::Run()
 {
-	if (m_mechanism->AtTarget() || m_mechanism->IsTeleop())
-	{
-		if (m_mechanism->GetElevatorHeight() < units::length::inch_t(28))
-			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
-		else
-			m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	}
+	if (m_mechanism->GetElevatorHeight() < units::length::inch_t(28))
+		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
+	else
+		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
 
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }

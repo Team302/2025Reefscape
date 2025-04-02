@@ -33,7 +33,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 {
     auto hasError = false;
 
-    static std::map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
+    static robin_hood::unordered_map<std::string, ChassisOptionEnums::AutonChassisOptions> xmlStringToChassisOptionEnumMap{
         {"VISION_DRIVE_SPEAKER", ChassisOptionEnums::AutonChassisOptions::VISION_DRIVE_SPEAKER},
         {"NO_VISION", ChassisOptionEnums::AutonChassisOptions::NO_VISION},
     };
@@ -49,13 +49,13 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
         {"IGNORE", ChassisOptionEnums::HeadingOption::IGNORE}};
 
     static robin_hood::unordered_map<string, ChassisOptionEnums::DriveStateType> xmlStringToPathUpdateOptionMap{{"RIGHT_REEF_BRANCH", ChassisOptionEnums::DRIVE_TO_RIGHT_REEF_BRANCH},
-                                                                                               {"LEFT_REEF_BRANCH", ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH},
-                                                                                               //    {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
-                                                                                               //    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
-                                                                                               {"CORAL_STATION", ChassisOptionEnums::DRIVE_TO_CORAL_STATION},
-                                                                                               //    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
-                                                                                               {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
-                                                                                               {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
+                                                                                                                {"LEFT_REEF_BRANCH", ChassisOptionEnums::DRIVE_TO_LEFT_REEF_BRANCH},
+                                                                                                                //    {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE},
+                                                                                                                //    {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
+                                                                                                                {"CORAL_STATION", ChassisOptionEnums::DRIVE_TO_CORAL_STATION},
+                                                                                                                //    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
+                                                                                                                {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
+                                                                                                                {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
 
     static robin_hood::unordered_map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{
         {"PODIUM", ChassisOptionEnums::AutonAvoidOptions::PODIUM},

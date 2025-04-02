@@ -35,6 +35,7 @@
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveModuleState.h"
 #include "pathplanner/lib/config/RobotConfig.h"
+#include "RobinHood/robin_hood.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"

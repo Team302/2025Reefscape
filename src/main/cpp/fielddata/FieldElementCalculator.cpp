@@ -188,6 +188,8 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL, m_calcLeftStick);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_REEF_L] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_KL, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR_CALCULATED] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR, m_calcProcessorBlue);
 
     // no transforms for april tags on red side
     m_transformTagsMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT];
@@ -244,6 +246,8 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_KL, m_calcLeftStick);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_REEF_L] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_REEF_KL, m_calcRightStick);
+    m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_PROCESSOR_CALCULATED] =
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR, m_calcProcessorRed);
 }
 
 void FieldElementCalculator::CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)

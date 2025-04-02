@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include <Robot.h>
+
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
 #include "auton/drivePrimitives/AutonUtils.h"
@@ -19,6 +21,8 @@
 #include "ctre/phoenix6/SignalLogger.hpp"
 #include "feedback/DriverFeedback.h"
 #include "fielddata/BargeHelper.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
 #include "fielddata/ReefHelper.h"
 #include "frc/RobotController.h"
 #include "frc/Threads.h"

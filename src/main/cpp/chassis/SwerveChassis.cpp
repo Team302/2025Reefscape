@@ -55,6 +55,7 @@
 #include "chassis/states/DriveToLeftCage.h"
 #include "chassis/states/DriveToRightCage.h"
 #include "chassis/states/DriveToCenterCage.h"
+#include "chassis/states/DriveToProcessor.h"
 
 #include "state/RobotState.h"
 
@@ -62,6 +63,7 @@
 #include "pugixml/pugixml.hpp"
 #include <ctre/phoenix6/StatusSignal.hpp>
 #include <RobinHood/robin_hood.h>
+#include "ctre/phoenix6/SignalLogger.hpp"
 
 using robin_hood::unordered_map;
 using std::string;
@@ -71,6 +73,7 @@ using frc::Pose2d;
 using frc::Rotation2d;
 using frc::SwerveModulePosition;
 
+using ctre::phoenix6::SignalLogger;
 using ctre::phoenix6::configs::MountPoseConfigs;
 using ctre::phoenix6::hardware::Pigeon2;
 
@@ -158,6 +161,7 @@ void SwerveChassis::InitStates()
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_CAGE] = new DriveToLeftCage(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE] = new DriveToCenterCage(m_robotDrive);
     m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE] = new DriveToBarge(m_robotDrive);
+    m_driveStateMap[ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR] = new DriveToProcessor(m_robotDrive);
 
     m_headingStateMap[ChassisOptionEnums::HeadingOption::MAINTAIN] = new MaintainHeading();
     m_headingStateMap[ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE] = new SpecifiedHeading();
@@ -265,6 +269,8 @@ ISwerveDriveOrientation *SwerveChassis::GetHeadingState(const ChassisMovement &m
 ISwerveDriveState *SwerveChassis::GetDriveState(ChassisMovement &moveInfo)
 {
     auto state = GetSpecifiedDriveState(moveInfo.driveOption);
+
+    SignalLogger::WriteDouble(std::string("/swervechassis/state"), static_cast<int>(moveInfo.driveOption), "", units::time::second_t((0)));
 
     auto itr = m_driveStateMap.find(moveInfo.driveOption);
     if (itr == m_driveStateMap.end())

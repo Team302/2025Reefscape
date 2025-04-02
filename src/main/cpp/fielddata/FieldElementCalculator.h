@@ -19,7 +19,6 @@
 
 #include <fielddata/FieldConstants.h>
 #include <frc/geometry/Pose3d.h>
-#include <RobinHood/robin_hood.h>
 
 struct TransformToPose
 {
@@ -46,14 +45,14 @@ class FieldElementCalculator
 {
 
 public:
-    void CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap);
+    void CalcPositionsForField(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d CalcOffsetPositionForElement(frc::Pose3d &poseOfFaceTag, FieldConstants::FIELD_ELEMENT_OFFSETS offset);
 
 private:
     void InitializeTransforms();
     void UpdateReefStickRobotTransforms();
     void InitializeReefBranchTransformsMap();
-    void CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap);
+    void CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
     // Robot is 34" from front to back
@@ -105,14 +104,14 @@ private:
     frc::Transform3d m_calcCageLeft = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-42.5),
+            units::length::inch_t(-41.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCageRight = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(42.5),
+            units::length::inch_t(41.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
@@ -140,6 +139,19 @@ private:
     frc::Transform3d m_calcBargeBack = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(18.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcProcessorRed = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(16.0),
+            units::length::inch_t(0.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+    frc::Transform3d m_calcProcessorBlue = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(16.0),
             units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());

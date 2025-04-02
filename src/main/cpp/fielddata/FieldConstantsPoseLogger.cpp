@@ -21,7 +21,7 @@
 #include "frc/geometry/Pose3d.h"
 #include "magic_enum/magic_enum.hpp"
 
-void FieldConstantsPoseMapLogger::LogFieldElementPoses(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &m_fieldConstantsPoseMap)
+void FieldConstantsPoseLogger::LogFieldElementPoses(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap)
 {
 
     frc::DataLogManager::Start("", "field_poses.wpilog");

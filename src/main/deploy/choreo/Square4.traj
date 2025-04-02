@@ -22,7 +22,8 @@
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"4 m / s", "val":4.0}}}, "enabled":true},
-    {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"3 m / s ^ 2", "val":3.0}}}, "enabled":true}],
+    {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"3 m / s ^ 2", "val":3.0}}}, "enabled":true},
+    {"from":0, "to":1, "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"6.5 m", "val":6.5}, "y":{"exp":"4.9 m", "val":4.9}, "w":{"exp":"4.5 m", "val":4.5}, "h":{"exp":"4.5 m", "val":4.5}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05
