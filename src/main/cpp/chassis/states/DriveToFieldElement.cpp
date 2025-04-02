@@ -122,6 +122,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             }
             if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
             {
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("DriveState"), "IsFound");
                 chassisSpeeds.omega = 0_deg_per_s;
             }
             else

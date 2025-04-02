@@ -252,10 +252,9 @@ void HolonomicDrive::Run()
             CheckTipping(checkTipping);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Drive State"), m_moveInfo.driveOption);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
-
-            m_swerve->Drive(m_moveInfo);
-            m_previousDriveState = m_moveInfo.driveOption;
         }
+        m_swerve->Drive(m_moveInfo);
+        m_previousDriveState = m_moveInfo.driveOption;
     }
     else
     {
@@ -452,5 +451,7 @@ void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double r
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_REEF_FACE;
         else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE)
             m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::FACE_BARGE;
+        else if (m_moveInfo.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
+            m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
     }
 }

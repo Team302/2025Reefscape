@@ -69,7 +69,7 @@ private:
     DragonVision *m_vision;
     DragonTargetFinderTarget m_targetVisionTarget;
 
-    std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
+        std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
     std::optional<frc::Pose2d> GetVisonPose(std::optional<VisionData> data);
@@ -78,6 +78,8 @@ private:
     void SetChassis();
 
     std::optional<frc::Pose2d> m_goalPose;
+    std::optional<frc::Pose2d> m_algaePose;
+
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};

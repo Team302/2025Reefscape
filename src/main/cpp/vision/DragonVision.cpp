@@ -111,6 +111,8 @@ std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 {
 	if (element == VISION_ELEMENT::ALGAE)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("GetVisionData"), std::string("reached"));
+
 		return GetVisionDataFromAlgae(element);
 	}
 	else if (element == VISION_ELEMENT::NEAREST_APRILTAG) // nearest april tag
@@ -273,11 +275,15 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
 {
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("getVisionDataFrom Algae"), std::string("Machine Learning"));
+
 	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 	for (auto cam : cameras)
 	{
 		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
 		{
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("pipeline"), std::string("Machine learning"));
+
 			// create translation using 3 estimated distances
 			if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
 				cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
