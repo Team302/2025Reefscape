@@ -49,23 +49,31 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
-    InitChassisMovement(chassisMovement);
     auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-    m_currentType = get<0>(info.value());
-    m_endPose = get<1>(info.value());
-
-    if (m_chassis != nullptr)
+    m_hasTarget = false;
+    if (info.has_value())
     {
-        m_currentPose = m_chassis->GetPose();
-        m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-        m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+        InitChassisMovement(chassisMovement);
+
+        m_currentType = get<0>(info.value());
+        m_hasTarget = m_currentType != DragonTargetFinderData::NOT_FOUND;
+        if (m_hasTarget)
+        {
+            m_endPose = get<1>(info.value());
+
+            if (m_chassis != nullptr)
+            {
+                m_currentPose = m_chassis->GetPose();
+                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+            }
+        }
     }
-    CalculateFeedForward(chassisMovement);
 }
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    if (m_chassis != nullptr)
+    if (m_hasTarget && m_chassis != nullptr)
     {
         m_currentPose = m_chassis->GetPose();
         CalculateFeedForward(chassisMovement);
@@ -185,35 +193,23 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
 }
-void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
-{
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "heading option", moveInfo.headingOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "drive option", moveInfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", moveInfo.chassisSpeeds.vx.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", moveInfo.chassisSpeeds.vy.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "omega", moveInfo.chassisSpeeds.omega.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose x", moveInfo.targetPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose y", moveInfo.targetPose.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "yaw angle", moveInfo.yawAngle.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "raw omega", moveInfo.rawOmega);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "controller type", moveInfo.controllerType);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "no movement option", moveInfo.noMovementOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.Y().value());
-}
 
 bool DriveToFieldElement::IsDone()
 {
     bool isDone = false;
     bool isSamePose = false;
-    if (m_chassis != nullptr)
+
+    if (m_hasTarget && m_chassis != nullptr)
     {
         auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
 
         isDone = distance < m_distanceThreshold;
         isSamePose = m_chassis->IsSamePose();
         m_prevPose = m_currentPose;
+    }
+    else
+    {
+        isDone = true;
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
@@ -242,4 +238,22 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
         chassisMovement.chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
         chassisMovement.chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
     }
+}
+
+void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
+{
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "heading option", moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "drive option", moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", moveInfo.chassisSpeeds.vx.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", moveInfo.chassisSpeeds.vy.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "omega", moveInfo.chassisSpeeds.omega.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose x", moveInfo.targetPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose y", moveInfo.targetPose.Y().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "yaw angle", moveInfo.yawAngle.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "raw omega", moveInfo.rawOmega);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "controller type", moveInfo.controllerType);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "no movement option", moveInfo.noMovementOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.X().value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.Y().value());
 }

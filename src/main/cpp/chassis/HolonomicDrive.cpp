@@ -248,6 +248,11 @@ void HolonomicDrive::Run()
                 RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
             }
 
+            if (isSlowMode)
+            {
+                SlowMode();
+            }
+
             if (abs(rotate) > 0.05)
             {
                 m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;

@@ -60,6 +60,7 @@ private:
 
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
 
+    bool m_hasTarget = false;
     frc::Pose2d m_endPose;
     frc::Pose2d m_prevPose;
     frc::Pose2d m_currentPose;
