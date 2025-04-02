@@ -39,11 +39,11 @@ frc::Pose2d ProcessorHelper::CalcProcessorPose()
     frc::Pose2d pose2d{};
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
-        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR_CALCULATED).ToPose2d();
+        pose2d = m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR_CALCULATED);
     }
     else
     {
-        pose2d = m_fieldConstants->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR_CALCULATED).ToPose2d();
+        pose2d = m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR_CALCULATED);
     }
     return frc::Pose2d(pose2d.X(), pose2d.Y(), pose2d.Rotation().Degrees() + units::degree_t(180));
 }
