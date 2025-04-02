@@ -47,6 +47,7 @@ public:
         HOLD_POSITION,
         MANUAL_CLIMB,
         SWEEP,
+        FORCE_MANUAL_CLIMB,
 
         // tip correction controls
         TIPCORRECTION_TOGGLE,

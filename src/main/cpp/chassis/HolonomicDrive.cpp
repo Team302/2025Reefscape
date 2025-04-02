@@ -135,7 +135,7 @@ void HolonomicDrive::Run()
         {
             DriveToGamePiece(forward, strafe, rotate);
         }
-        else if (isPolarDriveSelected)
+        else if (isPolarDriveSelected && !m_climbMode)
         {
             PolarDrive();
         }

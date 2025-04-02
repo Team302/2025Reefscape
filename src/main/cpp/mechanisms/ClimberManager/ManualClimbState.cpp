@@ -59,8 +59,10 @@ void ManualClimbState::Run()
 {
 
 	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
-	if (abs(manualClimberPercent) > 0.1)
-		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_ClimberTarget);
+	if (abs(manualClimberPercent) > 0.05 && !m_mechanism->GetClimberSensorState())
+	{
+		m_mechanism->UpdateTargetClimberPercentOut(std::clamp(abs(manualClimberPercent), 0.25, 0.75));
+	}
 	else
 		m_mechanism->UpdateTargetClimberPercentOut(0.0);
 }
@@ -82,7 +84,8 @@ bool ManualClimbState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return ((m_mechanism->GetCurrentState() == ClimberManager::STATE_DELIVER_CLIMBER) && m_mechanism->AtTarget());
+	return (((m_mechanism->GetCurrentState() == ClimberManager::STATE_DELIVER_CLIMBER) && m_mechanism->AtTarget()) ||
+			(considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_MANUAL_CLIMB)));
 
 	// return (considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::EXAMPLE_MECH_FORWARD));
 }
