@@ -473,6 +473,24 @@ bool SwerveChassis::IsSamePose()
 
     return isSamePose;
 }
+bool SwerveChassis::IsSamePose(units::length::inch_t distanceThreshold)
+{
+    bool isSamePose = false;
+
+    if (GetPose().Translation().Distance(m_prevPose.Translation()) < distanceThreshold)
+    {
+        m_samePoseCount++;
+        isSamePose = m_samePoseCount > m_samePoseCountThreshold;
+    }
+    else
+    {
+        m_samePoseCount = 0;
+    }
+
+    m_prevPose = GetPose();
+
+    return isSamePose;
+}
 //==================================================================================
 
 void SwerveChassis::DataLog(uint64_t timestamp)

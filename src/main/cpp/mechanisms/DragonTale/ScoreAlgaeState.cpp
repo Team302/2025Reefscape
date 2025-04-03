@@ -84,5 +84,5 @@ bool ScoreAlgaeState::IsTransitionCondition(bool considerGamepadTransitions)
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SCORE)) ||
-			(m_mechanism->IsDriveToIsDone() && m_mechanism->AtTarget()));
+			(m_mechanism->IsDriveToIsDone() && m_mechanism->AtTarget() && (m_mechanism->GetCurrentState() != m_mechanism->STATE_PROCESS)));
 }
