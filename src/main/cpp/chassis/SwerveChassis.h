@@ -126,6 +126,7 @@ public:
 
     bool IsRotating() const { return m_rotatingLatch; }
     bool IsSamePose();
+    bool IsSamePose(units::length::inch_t distanceThreshold);
     double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
     void LogInformation();
     void DataLog(uint64_t timestamp) override;

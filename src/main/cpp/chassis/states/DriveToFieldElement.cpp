@@ -187,7 +187,7 @@ bool DriveToFieldElement::IsDone()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
 
-    return (isDone || isSamePose);
+    return (isDone || isSamePose || (GetDriveStateType() == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE && m_chassis->IsSamePose(4_in)));
 }
 
 void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
