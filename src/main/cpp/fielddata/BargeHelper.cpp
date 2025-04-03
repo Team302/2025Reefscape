@@ -93,8 +93,9 @@ std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
     auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
     if (bargeZones != nullptr)
     {
-        auto min = std::min(bargeZones->GetY2Rect(), bargeZones->GetY1Rect());
-        auto max = std::max(bargeZones->GetY2Rect(), bargeZones->GetY1Rect());
+        auto min = allianceColor == frc::DriverStation::Alliance::kRed ? m_redYClampMin : m_blueYClampMin;
+        auto max = allianceColor == frc::DriverStation::Alliance::kRed ? m_redYClampMax : m_blueYClampMax;
+
         return std::clamp(m_chassis->GetPose().Y(), min, max);
     }
 
@@ -110,10 +111,7 @@ void BargeHelper::IsInZone()
     {
         bool intheZone = bargeZones->IsPoseInZone(m_chassis->GetPose());
 
-        if (m_previousIsInZone != intheZone)
-            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, intheZone);
-
-        m_previousIsInZone = intheZone;
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, intheZone);
     }
 }
 

@@ -264,8 +264,6 @@ void ReefHelper::IsInZone()
     {
         bool intheZone = reefZones->IsPoseInZone(m_chassis->GetPose());
 
-        if (intheZone != m_previousIsInZone)
-            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
-        m_previousIsInZone = intheZone;
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
     }
 }
