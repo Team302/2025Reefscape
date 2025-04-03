@@ -72,7 +72,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    // isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    isFMSAttached = true;
     if (!isFMSAttached)
     {
         Logger::GetLogger()->PeriodicLog();

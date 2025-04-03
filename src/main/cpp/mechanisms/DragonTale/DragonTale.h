@@ -158,7 +158,8 @@ public:
 	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
-	bool GetBranchCANRangeState() const { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetIsDetected().GetValue() : false; }
+	bool GetBranchCANRangeState() const { return false; }
+	// bool GetBranchCANRangeState() const { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetIsDetected().GetValue() : false; }
 	// bool GetBranchCANRangeState() const { return false; }
 
 	bool IsValidTarget() { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetDistanceStdDev().GetValue() < 0.075_m : false; }

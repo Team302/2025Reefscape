@@ -46,6 +46,9 @@ DriveStopMech::DriveStopMech() : DriveStop()
 void DriveStopMech::Init(PrimitiveParams *params)
 {
     DriveStop::Init(params);
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+    auto dragonTale = config != nullptr ? config->GetMechanism(MechanismTypes::DRAGON_TALE) : nullptr;
+    m_dragonTaleMgr = dragonTale != nullptr ? dynamic_cast<DragonTale *>(dragonTale) : nullptr;
 }
 
 /// @brief check if the end condition has been met
@@ -53,9 +56,10 @@ void DriveStopMech::Init(PrimitiveParams *params)
 bool DriveStopMech::IsDone()
 {
     if (m_dragonTaleMgr != nullptr)
+    {
         return m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_READY ||
                m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD ||
                DriveStop::IsDone();
-
+    }
     return DriveStop::IsDone();
 }
