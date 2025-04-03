@@ -233,28 +233,28 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     }
     else if (item == DragonTargetFinderTarget::ALGAE)
     {
-        if (!m_algaePose.has_value())
+
+        auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::ALGAE);
+        if (visiondata.has_value())
         {
-            auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::ALGAE);
-            if (visiondata.has_value())
+
+            // visiondata.value().transformToTarget.X() - units::length::inch_t(16.0);
+            // visiondata.value().transformToTarget.Y() - units::length::inch_t(12.0);
+            m_algaePose = GetVisonPose(visiondata);
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
+            if (m_algaePose.has_value())
             {
-
-                // visiondata.value().transformToTarget.X() - units::length::inch_t(16.0);
-                // visiondata.value().transformToTarget.Y() - units::length::inch_t(12.0);
-                m_algaePose = GetVisonPose(visiondata);
-
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
-                if (m_algaePose.has_value())
-                {
-                    m_goalPose = frc::Pose2d(m_algaePose.value().X(), m_algaePose.value().Y(), m_chassis->GetYaw());
-                    DragonVisionStructLogger::logPose2d("Algae", m_algaePose.value());
-                    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), m_goalPose.value().Rotation().Degrees().value());
-                    auto field = DragonField::GetInstance();
-                    field->UpdateObject("algae", m_goalPose.value());
-                    return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
-                }
+                m_goalPose = frc::Pose2d(m_algaePose.value().X(), m_algaePose.value().Y(), m_chassis->GetYaw());
+                DragonVisionStructLogger::logPose2d("Algae", m_algaePose.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), m_goalPose.value().Rotation().Degrees().value());
+                SignalLogger::WriteString(m_driveStatePath, "Algae", m_latency);
+                auto field = DragonField::GetInstance();
+                field->UpdateObject("algae", m_goalPose.value());
+                return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
             }
         }
+
         else
         {
             return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
