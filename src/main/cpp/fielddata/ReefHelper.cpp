@@ -42,6 +42,7 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrent
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
 {
+    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
     if (m_chassis != nullptr)
     {
         auto pose = m_chassis->GetPose();
