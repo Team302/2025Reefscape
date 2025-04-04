@@ -240,7 +240,7 @@ private:
 	bool m_isInReefZone = false;
 	bool m_isDriveToIsDone = false;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.25);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
 	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(67.0);
 	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(67.0);

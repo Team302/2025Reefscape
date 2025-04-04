@@ -24,7 +24,7 @@ time = "3.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-time = "5.0"/>
+time = "2.5"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_D1"
@@ -44,7 +44,7 @@ time = "3.0">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-time = "5.0"/>
+time = "2.5"/>
 
 <primitive id= "DRIVE_PATH_PLANNER"
 choreoname = "BlueRightCSA_C1"
@@ -64,5 +64,5 @@ time = "2.5">
 </primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
-time = "5.0"/>
+time = "2.5"/>
 </auton>
