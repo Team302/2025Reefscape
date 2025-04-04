@@ -28,7 +28,7 @@ time = "1.5"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname= "BlueCenterBarge_F"
-time = "3.0">
+time = "4.0">
 <zone filename = "BlueReefDriveToLeftAlgae.xml"/>
 </primitive>
 
