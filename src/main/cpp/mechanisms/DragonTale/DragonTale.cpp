@@ -150,6 +150,7 @@ void DragonTale::CreateAndRegisterStates()
 	HumanPlayerLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(HoldStateInst);
+	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeFloorStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(HoldStateInst);
