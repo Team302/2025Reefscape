@@ -43,15 +43,19 @@ ScoreCoralState::ScoreCoralState(std::string stateName,
 void ScoreCoralState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Init"));
-}
-
-void ScoreCoralState::Run()
-{
 	if (m_mechanism->GetElevatorHeight() < units::length::inch_t(28))
 		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralL1Target);
 	else
 		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+}
 
+void ScoreCoralState::Run()
+{
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
+	if (m_mechanism->GetCoral()->GetTorqueCurrent().GetValue() > m_L1CurrentThreshold)
+	{
+		m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	}
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("ScoreCoralState"), string("Run"));
 }
 

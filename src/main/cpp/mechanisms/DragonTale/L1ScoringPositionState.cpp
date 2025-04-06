@@ -86,5 +86,5 @@ bool L1ScoringPositionState::IsTransitionCondition(bool considerGamepadTransitio
 {
 	// To get the current state use m_mechanism->GetCurrentState()
 
-	return (false);
+	return (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::FORCE_ELEVATOR) && considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::L1_SCORING_POSITION));
 }
