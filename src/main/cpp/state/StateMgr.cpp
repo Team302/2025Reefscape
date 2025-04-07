@@ -114,6 +114,7 @@ void StateMgr::SetCurrentState(int stateID, bool run)
             }
 
             // Transition to the new state
+            m_previousStateID = m_currentStateID;
             m_currentState = state;
             m_currentStateID = stateID;
             m_currentState->Init();

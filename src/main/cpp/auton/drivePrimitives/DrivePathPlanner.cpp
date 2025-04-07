@@ -228,7 +228,12 @@ bool DrivePathPlanner::IsDone()
     else if (!m_isVisionDrive)
     {
         auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
-        if (trajDrivePathPlanner != nullptr)
+
+        if (((m_timer.get()->Get() / m_maxTime) < 0.90))
+        {
+            return false;
+        }
+        else if (trajDrivePathPlanner != nullptr)
         {
             return trajDrivePathPlanner->IsDone();
         }

@@ -49,9 +49,12 @@ void HoldState::Init()
 	else if (m_RobotId == RobotIdentifier::COMP_BOT_302)
 		InitCOMP_BOT302();
 
-	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	m_mechanism->SetArmTarget(m_ArmTarget);
-	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	if (m_mechanism->GetPreviousState() != m_mechanism->STATE_GRAB_ALGAE_FLOOR)
+	{
+		m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+		m_mechanism->SetArmTarget(m_ArmTarget);
+		m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	}
 }
 
 void HoldState::InitPRACTICE_BOT9999()
@@ -66,6 +69,13 @@ void HoldState::InitCOMP_BOT302()
 
 void HoldState::Run()
 {
+	// if ((m_mechanism->GetPreviousState() == m_mechanism->STATE_GRAB_ALGAE_FLOOR) &&
+	// 	TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_INTAKE))
+	// {
+	// 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
+	// 	m_mechanism->SetArmTarget(m_ArmTarget);
+	// 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	// }
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("HoldState"), string("Run"));
 }
 
