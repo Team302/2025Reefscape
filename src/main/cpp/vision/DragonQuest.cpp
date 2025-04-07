@@ -39,6 +39,12 @@ DragonQuest::DragonQuest(
 
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
+
+    // This transform is from the robot center to the Quest sensor
+    m_robotToQuestTransform = frc::Transform2d{
+        frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
+        frc::Rotation2d(m_mountingYaw)};
+    m_questTransform = m_robotToQuestTransform.Inverse(); // Invert to get Quest to robot transform
 }
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
@@ -57,6 +63,7 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
 
     frc::Pose2d questPose{x, y, yaw};
     frc::Pose2d robotPose = questPose + m_questTransform;
+
     return robotPose;
 }
 
@@ -93,6 +100,7 @@ void DragonQuest::DataLog(uint64_t timestamp)
     Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
+    field->AddPose("Quest Initial Pose", m_initialQuestPose);
 }
 
 void DragonQuest::RefreshNT()
@@ -108,13 +116,10 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        auto x = (pose.X() + m_mountingXOffset);
-        auto y = (pose.Y() + m_mountingYOffset);
-        auto rot = (pose.Rotation().Degrees() + m_mountingYaw);
+        frc::Pose2d questPose = pose + m_robotToQuestTransform;
+        m_initialQuestPose = questPose; // Save the initial pose for logging purposes
 
-        m_initialPosePublisher.Set(std::array<double, 3>{x.value(), y.value(), rot.value()});
-
-        m_questTransform = pose - frc::Pose2d{x, y, frc::Rotation2d(rot)};
+        m_initialPosePublisher.Set(std::array<double, 3>{questPose.X().value(), questPose.Y().value(), questPose.Rotation().Degrees().value()});
 
         if (m_questMiso.Get() != 99)
         {
