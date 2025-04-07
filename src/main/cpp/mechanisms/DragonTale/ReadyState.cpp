@@ -98,6 +98,7 @@ bool ReadyState::IsTransitionCondition(bool considerGamepadTransitions)
 		m_scoringTimer->Stop();
 		m_scoringTimer->Reset();
 	}
+
 	return ((considerGamepadTransitions && TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::READY)) ||
 			transition ||
 			(currentState == DragonTale::STATE_NAMES::STATE_INITIALIZE));

@@ -51,6 +51,4 @@ private:
 
     ZoneParams *m_reefZonesRed;
     ZoneParams *m_reefZonesBlue;
-
-    bool m_previousIsInZone;
 };

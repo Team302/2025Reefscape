@@ -185,13 +185,13 @@ private:
         units::length::inch_t(365.20),
         units::length::inch_t(241.64),
         units::length::inch_t(73.54),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(0.0)));
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(-10.0)));
 
     frc::Pose3d m_aprilTag5 = frc::Pose3d(
         units::length::inch_t(365.20),
         units::length::inch_t(75.39),
         units::length::inch_t(73.54),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(0.0)));
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(10.0)));
 
     frc::Pose3d m_aprilTag6 = frc::Pose3d(
         units::length::inch_t(530.49),
@@ -245,13 +245,13 @@ private:
         units::length::inch_t(325.68),
         units::length::inch_t(241.64),
         units::length::inch_t(73.54),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(180.0)));
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(-170.0)));
 
     frc::Pose3d m_aprilTag15 = frc::Pose3d(
         units::length::inch_t(325.68),
         units::length::inch_t(75.39),
         units::length::inch_t(73.54),
-        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(180.0)));
+        frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(30.0), units::angle::degree_t(170.0)));
 
     frc::Pose3d m_aprilTag16 = frc::Pose3d(
         units::length::inch_t(235.73),

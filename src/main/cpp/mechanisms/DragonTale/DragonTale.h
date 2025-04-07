@@ -158,7 +158,8 @@ public:
 	bool GetCoralInSensorState() const { return m_activeRobotId == RobotIdentifier::COMP_BOT_302 ? !m_CoralInSensor->Get() : m_CoralInSensor->Get(); }
 	bool GetCoralOutSensorState() const { return !m_CoralOutSensor->Get(); }
 	bool GetAlgaeSensorState() const { return !m_AlgaeSensor->Get(); }
-	bool GetBranchCANRangeState() const { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetIsDetected().GetValue() : false; }
+	bool GetBranchCANRangeState() const { return false; }
+	// bool GetBranchCANRangeState() const { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetIsDetected().GetValue() : false; }
 	// bool GetBranchCANRangeState() const { return false; }
 
 	bool IsValidTarget() { return m_BranchCANRange != nullptr ? m_BranchCANRange->GetDistanceStdDev().GetValue() < 0.075_m : false; }
@@ -239,7 +240,7 @@ private:
 	bool m_isInReefZone = false;
 	bool m_isDriveToIsDone = false;
 
-	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(8.75);
+	const units::length::inch_t m_grabAlgaeHigh = units::length::inch_t(9.25);
 	const units::length::inch_t m_grabAlgaeLow = units::length::inch_t(2.0);
 	const units::angle::degree_t m_grabAlgaeHighAngle = units::angle::degree_t(67.0);
 	const units::angle::degree_t m_grabAlgaeLowAngle = units::angle::degree_t(67.0);
