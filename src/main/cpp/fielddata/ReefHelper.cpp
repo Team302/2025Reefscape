@@ -42,6 +42,7 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrent
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
 {
+    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
     if (m_chassis != nullptr)
     {
         auto pose = m_chassis->GetPose();
@@ -264,8 +265,6 @@ void ReefHelper::IsInZone()
     {
         bool intheZone = reefZones->IsPoseInZone(m_chassis->GetPose());
 
-        if (intheZone != m_previousIsInZone)
-            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
-        m_previousIsInZone = intheZone;
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, intheZone);
     }
 }
