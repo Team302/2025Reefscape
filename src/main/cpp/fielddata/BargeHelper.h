@@ -77,6 +77,6 @@ private:
     units::length::foot_t m_centerLine{28.73};
     units::length::meter_t m_redYClampMin{0.5_m};
     units::length::meter_t m_redYClampMax{3.25_m};
-    units::length::meter_t m_blueYClampMin{4.5_m};
+    units::length::meter_t m_blueYClampMin{5.0_m};
     units::length::meter_t m_blueYClampMax{7.5_m};
 };

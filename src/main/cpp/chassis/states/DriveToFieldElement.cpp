@@ -42,8 +42,8 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
-    m_translationPIDX.SetIZone(0.05);
-    m_translationPIDY.SetIZone(0.05);
+    m_translationPIDX.SetIZone(0.10);
+    m_translationPIDY.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
 }
 
@@ -126,6 +126,10 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
 
         auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", chassisSpeeds.vx.value());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", chassisSpeeds.vy.value());
+
         chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
                                                                                     chassisSpeeds.vy,
                                                                                     chassisSpeeds.omega,
