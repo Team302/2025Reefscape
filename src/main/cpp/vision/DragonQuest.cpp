@@ -62,6 +62,8 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     units::angle::degree_t yaw{-rotationarray[1]};
 
     frc::Pose2d questPose{x, y, yaw};
+    m_initialQuestPose = questPose; // Save the initial pose for logging purposes
+
     frc::Pose2d robotPose = questPose + m_questTransform;
 
     return robotPose;
@@ -101,10 +103,6 @@ void DragonQuest::DataLog(uint64_t timestamp)
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
     field->AddPose("Quest Initial Pose", m_initialQuestPose);
-
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Quest", "Initial X Pose", m_initialQuestPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Quest", "Initial Y Pose", m_initialQuestPose.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Quest", "Initial Yaw Pose", m_initialQuestPose.Rotation().Degrees().value());
 }
 
 void DragonQuest::RefreshNT()
@@ -121,8 +119,6 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
     if (!m_hasreset)
     {
         frc::Pose2d questPose = pose + m_robotToQuestTransform;
-        m_initialQuestPose = questPose; // Save the initial pose for logging purposes
-
         m_initialPosePublisher.Set(std::array<double, 3>{questPose.X().value(), questPose.Y().value(), questPose.Rotation().Degrees().value()});
 
         if (m_questMiso.Get() != 99)
