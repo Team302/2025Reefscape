@@ -57,6 +57,7 @@ public:
     /// @param [in]     run - true means run, false just initialize it
     /// @return void
     virtual void SetCurrentState(int state, bool run);
+    inline int GetPreviousState() const { return m_previousStateID; };
 
 protected:
     virtual void CheckForStateTransition();
@@ -71,4 +72,5 @@ private:
     State *m_currentState;
     std::vector<State *> m_stateVector;
     int m_currentStateID;
+    int m_previousStateID;
 };

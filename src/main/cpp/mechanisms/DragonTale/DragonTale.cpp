@@ -150,6 +150,7 @@ void DragonTale::CreateAndRegisterStates()
 	HumanPlayerLoadStateInst->RegisterTransitionState(ReadyStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeReefStateInst);
 	HumanPlayerLoadStateInst->RegisterTransitionState(HoldStateInst);
+	HumanPlayerLoadStateInst->RegisterTransitionState(GrabAlgaeFloorStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(ReadyStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
 	GrabAlgaeReefStateInst->RegisterTransitionState(HoldStateInst);
@@ -1429,4 +1430,6 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "At Target", AtTarget());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "IsInBargeZone", m_isInBargeZone);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "IsInReefZone", m_isInReefZone);
 }
