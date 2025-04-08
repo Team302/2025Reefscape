@@ -30,6 +30,9 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
+#include "chassis/SwerveChassis.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
 
 using frc::DriverStation;
 
@@ -166,13 +169,13 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
-    if (m_timer == 20)
+    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
+    if (chassis != nullptr)
     {
-        QueryNT();
-        m_timer = 0;
     }
-    m_timer++;
+
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
 }
 
 void DriverFeedback::ResetRequests(void)
@@ -221,19 +224,4 @@ void DriverFeedback::CheckControllers()
     {
         m_controllerCounter = 0;
     }
-}
-
-void DriverFeedback::QueryNT()
-{
-    m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
-    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
-
-    int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
-    int questhb = m_llQuestNt.get()->GetEntry("timestamp").GetDouble(0);
-
-    m_ll1Status = ll1hb != m_ll1hb;
-    m_questStatus = questhb != m_questhb;
-
-    m_ll1hb = ll1hb;
-    m_questhb = questhb;
 }

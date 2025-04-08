@@ -48,7 +48,7 @@ public:
     );
     frc::Pose2d GetEstimatedPose();
     void DataLog(uint64_t timestamp) override;
-    bool IsConnected() { return m_isConnected; };
+    bool HealthCheck() override { return m_isConnected; };
     void SetIsConnected();
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
@@ -58,6 +58,7 @@ private:
     DragonQuest() = delete;
     void ZeroPosition();
     void RefreshNT();
+    void HandleHeartBeat();
 
     units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
     units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
@@ -74,6 +75,8 @@ private:
     nt::DoubleArrayTopic m_rotationTopic;
     nt::IntegerTopic m_frameCountTopic;
     nt::DoubleArrayPublisher m_initialPosePublisher;
+    nt::DoubleSubscriber m_heartbeatRequestSub;
+    nt::DoublePublisher m_heartbeatResponsePub;
 
     bool m_hasreset = false;
     bool m_isConnected = false;
@@ -88,4 +91,6 @@ private:
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;
+
+    int m_lastProcessedHeartbeatId = 0;
 };

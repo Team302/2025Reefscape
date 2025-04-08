@@ -84,6 +84,4 @@ private:
 
     int m_ll1hb = 0;
     int m_questhb = 0;
-
-    int m_timer = 0;
 };

@@ -25,6 +25,7 @@ public:
 
     virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
     virtual void SetRobotPose(const frc::Pose2d &pose) {};
+    virtual bool HealthCheck() = 0;
 
 private:
     DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;

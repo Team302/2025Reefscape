@@ -130,7 +130,7 @@ public:
     ///-----------------------------------------------------------------------------------
     ~DragonLimelight() = default;
 
-    bool HealthCheck();
+    bool HealthCheck() override;
     bool HasTarget();
 
     virtual std::optional<units::angle::degree_t> GetTargetYaw();

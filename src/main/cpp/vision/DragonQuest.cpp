@@ -40,6 +40,9 @@ DragonQuest::DragonQuest(
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
 
+    m_heartbeatRequestSub = m_networktable.get()->GetDoubleTopic("heartbeat/quest_to_robot").Subscribe(0);
+    m_heartbeatResponsePub = m_networktable.get()->GetDoubleTopic("heartbeat/robot_to_quest").Publish();
+
     // This transform is from the robot center to the Quest sensor
     m_robotToQuestTransform = frc::Transform2d{
         frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
@@ -49,7 +52,6 @@ DragonQuest::DragonQuest(
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
-    RefreshNT();
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
@@ -110,7 +112,17 @@ void DragonQuest::RefreshNT()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+}
 
+void DragonQuest::HandleHeartBeat()
+{
+    double requestId = m_heartbeatRequestSub.Get();
+    // Only respond to new requests to avoid flooding
+    if (requestId > 0 && requestId != m_lastProcessedHeartbeatId)
+    {
+        m_heartbeatResponsePub.Set(requestId);
+        m_lastProcessedHeartbeatId = requestId;
+    }
     SetIsConnected();
 }
 
@@ -141,9 +153,11 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
+    HandleHeartBeat();
+    RefreshNT();
     return str;
 }
