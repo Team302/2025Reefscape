@@ -48,6 +48,8 @@ DragonQuest::DragonQuest(
         frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
         frc::Rotation2d(m_mountingYaw)};
     m_questTransform = m_robotToQuestTransform.Inverse(); // Invert to get Quest to robot transform
+
+    m_questMosi.Set(0); // initial idle state
 }
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
@@ -113,6 +115,10 @@ void DragonQuest::RefreshNT()
 
 void DragonQuest::HandleHeartBeat()
 {
+    if (m_questMiso.Get() == 98)
+    {
+        m_questMosi.Set(0);
+    }
     double requestId = m_heartbeatRequestSub.Get();
     // Only respond to new requests to avoid flooding
     if (requestId > 0 && requestId != m_lastProcessedHeartbeatId)

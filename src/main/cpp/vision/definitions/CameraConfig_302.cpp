@@ -60,8 +60,8 @@ void CameraConfig_302::BuildCameraConfig()
     new DragonQuest(units::length::meter_t(-0.319), // <I> x offset of Quest from robot center (forward relative to robot)
                     units::length::meter_t(0.0384), // <I> y offset of Quest from robot center (left relative to robot)
                     units::length::meter_t(0.238),  // <I> z offset of Quest from robot center (up relative to robot)
-                    units::angle::degree_t(0),      // <I> - Pitch of Quest
-                    units::angle::degree_t(180),    // <I> - Yaw of Quest
-                    units::angle::degree_t(0)       // <I> - Roll of Quest
+                    units::angle::degree_t(0.0),    // <I> - Pitch of Quest
+                    units::angle::degree_t(178.5),  // <I> - Yaw of Quest
+                    units::angle::degree_t(0.0)     // <I> - Roll of Quest
     );
 }
