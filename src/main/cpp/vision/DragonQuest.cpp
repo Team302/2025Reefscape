@@ -154,7 +154,5 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
     }
-    HandleHeartBeat();
-    RefreshNT();
     return str;
 }

@@ -60,6 +60,15 @@ void Robot::RobotInit()
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
     auto path = AutonUtils::GetPathFromTrajectory("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
+
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        auto visionPoseEstitmators = m_dragonswerveposeestimator->GetVisionPoseEstimators();
+        if (visionPoseEstitmators.size() > 0)
+        {
+            m_quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[1]);
+        }
+    }
 }
 
 /**
@@ -88,9 +97,14 @@ void Robot::RobotPeriodic()
         m_robotState->Run();
     }
 
+    if (m_quest != nullptr)
+    {
+        m_quest->HandleHeartBeat();
+        m_quest->RefreshNT();
+    }
+
     UpdateDriveTeamFeedback();
 }
-
 /**
  * This autonomous (along with the chooser code above) shows how to select
  * between different autonomous modes using the dashboard. The sendable chooser

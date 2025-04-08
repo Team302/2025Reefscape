@@ -54,11 +54,12 @@ public:
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
 
+    void RefreshNT();
+    void HandleHeartBeat();
+
 private:
     DragonQuest() = delete;
     void ZeroPosition();
-    void RefreshNT();
-    void HandleHeartBeat();
 
     units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
     units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
