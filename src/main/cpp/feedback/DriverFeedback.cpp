@@ -158,6 +158,8 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     bool coralInSensor = false;
     bool coralOutSensor = false;
     bool algaeSensor = false;
+    bool questStatus = false;
+    bool ll1Status = false;
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
@@ -173,9 +175,23 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     auto chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
     if (chassis != nullptr)
     {
+        auto visionPoseEstitmators = chassis->GetSwervePoseEstimator()->GetVisionPoseEstimators();
+        if (visionPoseEstitmators.size() > 0)
+        {
+            auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[0]);
+            if (limeLight != nullptr)
+            {
+                ll1Status = limeLight->HealthCheck();
+            }
+            auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[1]);
+            if (quest != nullptr)
+            {
+                questStatus = quest->HealthCheck();
+            }
+        }
     }
 
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, questStatus, ll1Status);
 }
 
 void DriverFeedback::ResetRequests(void)

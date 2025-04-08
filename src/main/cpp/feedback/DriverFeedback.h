@@ -75,13 +75,4 @@ private:
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
     bool m_DriveToIsDone = false;
     ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
-
-    std::shared_ptr<nt::NetworkTable> m_ll1Nt;
-    std::shared_ptr<nt::NetworkTable> m_llQuestNt;
-
-    bool m_questStatus = false;
-    bool m_ll1Status = false;
-
-    int m_ll1hb = 0;
-    int m_questhb = 0;
 };
