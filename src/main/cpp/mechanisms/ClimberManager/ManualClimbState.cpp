@@ -47,12 +47,10 @@ void ManualClimbState::Init()
 
 void ManualClimbState::InitPRACTICE_BOT9999()
 {
-	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void ManualClimbState::InitCOMP_BOT302()
 {
-	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
 }
 
 void ManualClimbState::Run()

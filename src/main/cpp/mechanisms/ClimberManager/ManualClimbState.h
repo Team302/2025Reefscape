@@ -46,7 +46,6 @@ namespace ClimberManagerStates
 		void InitCOMP_BOT302();
 
 		RobotIdentifier m_RobotId;
-		const double m_ClimberTarget = 0.35;
-		const double m_ExtenderTarget = 0.25;
+		const double m_ClimberTarget = -0.35;
 	};
 }

@@ -43,8 +43,7 @@ OffState::OffState(std::string stateName,
 void OffState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
-	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
-	m_mechanism->UpdateTargetExtenderPercentOutput(m_ExtenderTarget);
+	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void OffState::Run()
