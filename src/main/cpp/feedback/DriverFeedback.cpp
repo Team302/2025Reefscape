@@ -26,7 +26,6 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"

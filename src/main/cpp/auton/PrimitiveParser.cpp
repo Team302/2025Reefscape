@@ -141,8 +141,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     auto heading = 0.0;
                     auto visionAlignment = PrimitiveParams::VISION_ALIGNMENT::UNKNOWN;
 
-                    auto intakeStates = IntakeManager::STATE_OFF;
-                    bool changeIntakeState = false;
                     auto taleState = DragonTale::STATE_READY;
                     bool changeTaleState = false;
                     auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
@@ -257,18 +255,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                 }
                             }
                         }
-                        else if (strcmp(attr.name(), "intakeOption") == 0)
-                        {
-                            if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
-                            {
-                                auto intakeStateItr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
-                                if (intakeStateItr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
-                                {
-                                    intakeStates = intakeStateItr->second;
-                                    changeIntakeState = true;
-                                }
-                            }
-                        }
 
                         else if (strcmp(attr.name(), "visionAlignment") == 0)
                         {
@@ -319,8 +305,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      zones, // vector of all zones included as part of the path
                                                                             // can have multiple zones as part of a complex path
                                                                      visionAlignment,
-                                                                     changeIntakeState,
-                                                                     intakeStates,
                                                                      changeTaleState,
                                                                      taleState,
                                                                      pathUpdateOption,

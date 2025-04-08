@@ -170,7 +170,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_BARGE, driverYButton},
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::DRIVE_TO_PROCESSOR, driverLTriggerPressed},
-    {TeleopControlFunctions::INTAKE, driverRTriggerPressed},
     {TeleopControlFunctions::SLOW_MODE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
 
@@ -189,8 +188,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::GRAB_ALGAE_REEF, copilotDPad90},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
-    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
-
 };
 
 const TeleopControlAxis driverLJoystickX = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::LEFT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::AXIS_PROFILE::LINEAR, TeleopControlMappingEnums::REVERSED, 1.0};

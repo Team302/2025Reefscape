@@ -23,7 +23,6 @@
 #include "state/StateMgr.h"
 #include "mechanisms/ClimberManager/ClimberManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 
 class MechanismConfigCOMP_BOT_302 : public MechanismConfig
 {
@@ -40,7 +39,6 @@ protected:
 private:
 	ClimberManager *m_theClimberManager = nullptr;
 	DragonTale *m_theDragonTale = nullptr;
-	IntakeManager *m_theIntakeManager = nullptr;
 
 	std::unordered_map<MechanismTypes::MECHANISM_TYPE, StateMgr *> m_mechanismMap;
 };
