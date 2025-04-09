@@ -33,6 +33,7 @@
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 using frc::DriverStation;
 
@@ -178,12 +179,12 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         auto visionPoseEstitmators = chassis->GetSwervePoseEstimator()->GetVisionPoseEstimators();
         if (visionPoseEstitmators.size() > 0)
         {
-            auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[0]);
+            auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs()[0]]);
             if (limeLight != nullptr)
             {
                 ll1Status = limeLight->HealthCheck();
             }
-            auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[1]);
+            auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
             if (quest != nullptr)
             {
                 questStatus = quest->HealthCheck();

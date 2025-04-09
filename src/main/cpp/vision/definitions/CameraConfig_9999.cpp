@@ -19,6 +19,7 @@
 #include "vision/definitions/CameraConfig_9999.h"
 #include "vision/DragonLimelight.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 void CameraConfig_9999::BuildCameraConfig()
 {
@@ -39,6 +40,7 @@ void CameraConfig_9999::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(placer, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    m_limelightIndexs.push_back(0);
 
     new DragonQuest(units::length::inch_t(-5.5),   // <I> x offset of Quest from robot center (forward relative to robot)
                     units::length::inch_t(-17.25), // <I> y offset of Quest from robot center (left relative to robot)
@@ -47,4 +49,5 @@ void CameraConfig_9999::BuildCameraConfig()
                     units::angle::degree_t(-90),   // <I> - Yaw of Quest
                     units::angle::degree_t(0)      // <I> - Roll of Quest
     );
+    m_questIndex = 1;
 }

@@ -39,6 +39,7 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 using std::string;
 
@@ -64,9 +65,9 @@ void Robot::RobotInit()
     if (m_dragonswerveposeestimator != nullptr)
     {
         auto visionPoseEstitmators = m_dragonswerveposeestimator->GetVisionPoseEstimators();
-        if (visionPoseEstitmators.size() > 0)
+        if (!visionPoseEstitmators.empty())
         {
-            m_quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[1]);
+            m_quest = static_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
         }
     }
 }

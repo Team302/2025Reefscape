@@ -25,7 +25,10 @@ public:
     ~CameraConfig_9999() = default;
 
     void BuildCameraConfig() override;
+    std::vector<int> GetLimelightIndexs() override { return m_limelightIndexs; }
+    int GetQuestIndex() override { return m_questIndex; }
 
 private:
-
+    std::vector<int> m_limelightIndexs;
+    int m_questIndex;
 };

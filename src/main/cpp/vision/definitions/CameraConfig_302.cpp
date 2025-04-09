@@ -19,6 +19,7 @@
 #include "vision/definitions/CameraConfig_302.h"
 #include "vision/DragonLimelight.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 void CameraConfig_302::BuildCameraConfig()
 {
@@ -39,6 +40,7 @@ void CameraConfig_302::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    m_limelightIndexs.push_back(0);
 
     // DragonLimelight *back = new DragonLimelight(std::string("limelight-back"), // networkTableName
     //                                             DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA,
@@ -64,4 +66,5 @@ void CameraConfig_302::BuildCameraConfig()
                     units::angle::degree_t(178.5),  // <I> - Yaw of Quest
                     units::angle::degree_t(0.0)     // <I> - Roll of Quest
     );
+    m_questIndex = 1;
 }
