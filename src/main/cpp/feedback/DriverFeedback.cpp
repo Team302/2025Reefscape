@@ -172,11 +172,10 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
     }
-    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
-    if (chassis != nullptr)
+    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
+    if (chassisConfig != nullptr)
     {
-        auto visionPoseEstitmators = chassis->GetSwervePoseEstimator()->GetVisionPoseEstimators();
+        auto visionPoseEstitmators = chassisConfig->GetSwervePoseEstimator()->GetVisionPoseEstimators();
         if (visionPoseEstitmators.size() > 0)
         {
             if (!CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs().empty())
