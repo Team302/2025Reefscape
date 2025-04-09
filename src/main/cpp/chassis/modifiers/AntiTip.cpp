@@ -51,14 +51,7 @@ void AntiTip::CorrectForTipping(ChassisMovement &chassisMovement, units::velocit
 }
 void AntiTip::DecideTipCorrection(ChassisMovement &chassisMovement, units::velocity::feet_per_second_t m_maxspeed)
 {
-    if (frc::DriverStation::IsFMSAttached())
-    {
-        if (frc::DriverStation::GetMatchTime() > units::time::second_t(20.0))
-        {
-            AntiTip::CorrectForTipping(chassisMovement, m_maxspeed);
-        }
-    }
-    else
+    if (!frc::DriverStation::IsAutonomous())
     {
         CorrectForTipping(chassisMovement, m_maxspeed);
     }

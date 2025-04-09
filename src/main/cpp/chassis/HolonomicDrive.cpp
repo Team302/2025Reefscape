@@ -258,7 +258,7 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = m_swerve->GetYaw();
-    m_moveInfo.checkTipping = false;
+    m_moveInfo.checkTipping = true;
     m_moveInfo.tippingTolerance = units::angle::degree_t(5.0);
     m_moveInfo.tippingCorrection = -0.1;
     m_moveInfo.targetPose = frc::Pose2d();
