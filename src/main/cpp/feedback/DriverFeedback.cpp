@@ -179,15 +179,21 @@ void DriverFeedback::UpdateDiagnosticLEDs()
         auto visionPoseEstitmators = chassis->GetSwervePoseEstimator()->GetVisionPoseEstimators();
         if (visionPoseEstitmators.size() > 0)
         {
-            auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs()[0]]);
-            if (limeLight != nullptr)
+            if (!CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs().empty())
             {
-                ll1Status = limeLight->HealthCheck();
+                auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs()[0]]);
+                if (limeLight != nullptr)
+                {
+                    ll1Status = limeLight->HealthCheck();
+                }
             }
-            auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
-            if (quest != nullptr)
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
             {
-                questStatus = quest->HealthCheck();
+                auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+                if (quest != nullptr)
+                {
+                    questStatus = quest->HealthCheck();
+                }
             }
         }
     }

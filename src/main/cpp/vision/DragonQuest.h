@@ -87,8 +87,8 @@ private:
 
     frc::Pose2d m_rawQuestPose;
 
-    const double m_stdxy = 0.5;
-    const double m_stddeg = 6.0;
+    const double m_stdxy = 0.001;
+    const double m_stddeg = .01;
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;

@@ -23,7 +23,6 @@
 
 void CameraConfig_302::BuildCameraConfig()
 {
-
     DragonLimelight *front = new DragonLimelight(std::string("limelight-front"), // networkTableName
                                                  DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,  // PIPELINE initialPipeline,

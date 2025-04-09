@@ -30,5 +30,5 @@ public:
 
 private:
     std::vector<int> m_limelightIndexs;
-    int m_questIndex;
+    int m_questIndex = -1;
 };
