@@ -71,19 +71,19 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         CalculateFeedForward(chassisMovement);
         auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
-        units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
+        // units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
         // Reset the PID if resetTime in second has passed since the last reset
-        if (m_resetTime <= (currentTime - m_lastResetTime))
-        {
-            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-            m_lastResetTime = currentTime;
-        }
-        else
-        {
-            m_lastResetTime = currentTime;
-        }
+        // if (m_resetTime <= (currentTime - m_lastResetTime))
+        // {
+        //     m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+        //     m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+        //     m_lastResetTime = currentTime;
+        // }
+        // else
+        // {
+        //     m_lastResetTime = currentTime;
+        // }
 
         auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
         if (info.has_value())
@@ -106,8 +106,16 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
         m_translationPIDX.SetGoal(m_endPose.X());
         m_translationPIDY.SetGoal(m_endPose.Y());
 
-        chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-        chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+        if (m_endPose.Translation().Distance(m_currentPose.Translation()) < m_pidDistanceThreshold)
+        {
+            chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+            chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+        }
+        else
+        {
+            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+        }
 
         chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
         chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);

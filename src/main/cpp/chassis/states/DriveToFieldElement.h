@@ -67,12 +67,13 @@ private:
     int m_samePoseCount = 0;
     const int m_samePoseCountThreshold = 25;
 
+    const units::length::meter_t m_pidDistanceThreshold{0.75};
     const units::length::inch_t m_distanceThreshold{0.25};
     const units::length::meter_t m_ffMinRadius{0.05};
     const units::length::meter_t m_ffMaxRadius{2.0};
 
-    const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
-    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 3.5_mps_sq;
+    const units::velocity::meters_per_second_t kMaxVelocity = 4.5_mps;
+    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 4.0_mps_sq;
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
 
