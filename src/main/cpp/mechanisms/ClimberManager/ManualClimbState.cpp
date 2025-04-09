@@ -57,10 +57,10 @@ void ManualClimbState::Run()
 {
 
 	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
-	if (abs(manualClimberPercent) > 0.1)
-		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_ClimberTarget);
-	else
+	if (!(abs(manualClimberPercent) > 0.1) || m_mechanism->GetClimbDoneSensor())
 		m_mechanism->UpdateTargetClimberPercentOut(0.0);
+	else
+		m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_ClimberTarget);
 }
 
 void ManualClimbState::Exit()

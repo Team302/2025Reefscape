@@ -102,6 +102,7 @@ public:
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
+	bool GetClimbDoneSensor() { return false; } // update once we know what this will be
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int value) override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
