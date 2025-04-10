@@ -38,6 +38,8 @@ void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSig
         case DragonDataLogger::BoolSignals::IS_BROWNOUT:
             SignalLogger::WriteBoolean(m_brownOutPath, value, m_latency);
             break;
+        case DragonDataLogger::DRIVE_TO_IS_DONE:
+            SignalLogger::WriteBoolean(m_IsDonePath, value, m_latency);
         default:
             break;
         }

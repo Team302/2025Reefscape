@@ -245,9 +245,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
             if (m_algaePose.has_value())
             {
-                m_goalPose = frc::Pose2d(m_algaePose.value().X(), m_algaePose.value().Y(), m_chassis->GetYaw());
+                m_goalPose = frc::Pose2d(m_algaePose.value().X(), m_algaePose.value().Y(), m_algaePose.value().Rotation());
                 DragonVisionStructLogger::logPose2d("Algae", m_algaePose.value());
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), m_goalPose.value().Rotation().Degrees().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("X"), m_goalPose.value().X().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("Y"), m_goalPose.value().Y().value());
                 SignalLogger::WriteString(m_driveStatePath, "Algae", m_latency);
                 auto field = DragonField::GetInstance();
                 field->UpdateObject("algae", m_goalPose.value());
@@ -257,7 +258,10 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
 
         else
         {
-            return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
+            if (!m_goalPose.has_value())
+                return make_tuple(DragonTargetFinderData::NOT_FOUND, frc::Pose2d()); // TODO JW come back to this one when we have machine learning
+            else
+                return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
         }
     }
     else if (item == DragonTargetFinderTarget::PROCESSOR)
@@ -332,6 +336,10 @@ units::angle::degree_t DragonTargetFinder::AdjustRobotRelativeAngleForIntake(uni
     }
     return robotRelativeAngle;
 }
+void DragonTargetFinder::ResetGoalPose()
+{
+    m_goalPose = std::nullopt;
+}
 
 std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(std::optional<VisionData> data)
 {
@@ -343,11 +351,12 @@ std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(std::optional<Vision
             auto currentPose{Pose3d(m_chassis->GetPose())};
 
             auto trans3d = data.value().transformToTarget;
-            auto targetPose = currentPose + trans3d;
-            units::angle::degree_t robotRelativeAngle = data.value().rotationToTarget.Z(); // value is robot to target
+            auto targetPose = currentPose + trans3d + m_calcAlgaeOffset;
+            auto distanceY = targetPose.ToPose2d().Translation().Y() - currentPose.ToPose2d().Translation().Y(); // value is robot to target
+            auto distanceX = targetPose.ToPose2d().Translation().X() - currentPose.ToPose2d().Translation().X();
+            auto angle = atan2(distanceY.value(), distanceX.value());
 
-            units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
-            return frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
+            return frc::Pose2d(targetPose.X(), targetPose.Y(), (units::angle::radian_t(angle)));
         }
     }
     return std::nullopt;

@@ -35,6 +35,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
 #include "utils/logging/debug/LoggerEnums.h"
+#include "chassis/LogChassisMovement.h"
 
 using namespace pathplanner;
 using namespace std;
@@ -49,7 +50,10 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
-    auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
+    auto dragonTargetFinderInst = DragonTargetFinder::GetInstance();
+    dragonTargetFinderInst->ResetGoalPose();
+    auto info = dragonTargetFinderInst->GetPose(GetDriveToTarget());
+
     m_hasTarget = false;
     if (info.has_value())
     {
@@ -73,106 +77,95 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
 std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
-    if (m_hasTarget && m_chassis != nullptr)
+    if (m_chassis != nullptr)
     {
-        m_currentPose = m_chassis->GetPose();
-        CalculateFeedForward(chassisMovement);
-        auto chassisSpeeds = chassisMovement.chassisSpeeds;
-
-        units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
-
-        // Reset the PID if resetTime in second has passed since the last reset
-        if (m_resetTime <= (currentTime - m_lastResetTime))
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target found", m_hasTarget);
+        if (m_hasTarget)
         {
-            m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-            m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-            m_lastResetTime = currentTime;
-        }
-        else
-        {
-            m_lastResetTime = currentTime;
-        }
+            m_currentPose = m_chassis->GetPose();
+            CalculateFeedForward(chassisMovement);
+            auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
-        auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
-        if (info.has_value())
-        {
-            frc::Pose2d newEndPose = get<1>(info.value());
-            auto regenerate = false;
+            units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
-            regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) > m_distanceThreshold;
-
-            if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+            // Reset the PID if resetTime in second has passed since the last reset
+            if (m_resetTime <= (currentTime - m_lastResetTime))
             {
-                m_endPose = newEndPose;
-            }
-            m_currentType = get<0>(info.value());
-        }
-
-        DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
-        DragonVisionStructLogger::logPose2d("target pose", m_endPose);
-
-        if (m_currentType != DragonTargetFinderData::NOT_FOUND)
-        {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
-
-            m_translationPIDX.SetGoal(m_endPose.X());
-            m_translationPIDY.SetGoal(m_endPose.Y());
-
-            chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-            chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
-
-            chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
-            chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
-
-            if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
-            {
-                chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
-            }
-            if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
-            {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("DriveState"), "IsFound");
-                chassisSpeeds.omega = 0_deg_per_s;
+                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+                m_lastResetTime = currentTime;
             }
             else
             {
-                units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
-                rotationError = AngleUtils::GetEquivAngle(rotationError);
-                chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+                m_lastResetTime = currentTime;
             }
 
-            auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
-            chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
-                                                                                        chassisSpeeds.vy,
-                                                                                        chassisSpeeds.omega,
-                                                                                        rot2d);
+            auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
+            if (info.has_value())
+            {
+                frc::Pose2d newEndPose = get<1>(info.value());
+                auto regenerate = false;
+
+                regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) < m_regenerationDistanceThreshold;
+
+                if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+                {
+                    m_endPose = newEndPose;
+                }
+                m_currentType = get<0>(info.value());
+            }
+
+            DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
+            DragonVisionStructLogger::logPose2d("target pose", m_endPose);
+
+            if (m_currentType != DragonTargetFinderData::NOT_FOUND)
+            {
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
+
+                m_translationPIDX.SetGoal(m_endPose.X());
+                m_translationPIDY.SetGoal(m_endPose.Y());
+
+                chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+                chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+
+                chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+                chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+
+                if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
+                {
+                    chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
+                }
+                // if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
+                // {
+                //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("DriveState"), "IsFound");
+                //     // chassisSpeeds.omega = 0.0_deg_per_s;
+                // }
+                else
+                {
+                    auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees() : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();
+                    rotationError = AngleUtils::GetEquivAngle(rotationError);
+                    chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+                }
+
+                auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+                chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
+                                                                                            chassisSpeeds.vy,
+                                                                                            chassisSpeeds.omega,
+                                                                                            rot2d);
+            }
+            if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR)
+            {
+                chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
+            }
         }
         else
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not found");
-            auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+            // for if we initially do not have a target.
             chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(0.0_mps,
                                                                                         0.0_mps,
                                                                                         0.0_rad_per_s,
-                                                                                        rot2d);
+                                                                                        m_chassis->GetYaw());
         }
-        if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR)
-        {
-            chassisMovement.yawAngle = m_endPose.Rotation().Degrees();
-        }
-
-        units::angle::degree_t rotationError = chassisMovement.yawAngle - m_currentPose.Rotation().Degrees();
-        rotationError = AngleUtils::GetEquivAngle(rotationError);
-        chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
-
-        auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", chassisSpeeds.vx.value());
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", chassisSpeeds.vy.value());
-
-        chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisSpeeds.vx,
-                                                                                    chassisSpeeds.vy,
-                                                                                    chassisSpeeds.omega,
-                                                                                    rot2d);
     }
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
@@ -217,8 +210,13 @@ bool DriveToFieldElement::IsDone()
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
-
+    m_isSamePose = isSamePose;
     return (isDone || isSamePose);
+}
+
+void DriveToFieldElement::DataLog(uint64_t timestamp)
+{
+    LogBoolData(timestamp, DragonDataLogger::BoolSignals::DRIVE_TO_IS_DONE, m_isSamePose);
 }
 
 void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
@@ -246,18 +244,5 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
 
 void DriveToFieldElement::LogMoveInfo(ChassisMovement &moveInfo)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "heading option", moveInfo.headingOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "drive option", moveInfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vx", moveInfo.chassisSpeeds.vx.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "vy", moveInfo.chassisSpeeds.vy.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "omega", moveInfo.chassisSpeeds.omega.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose x", moveInfo.targetPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target pose y", moveInfo.targetPose.Y().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Rotation", moveInfo.targetPose.Rotation().Degrees().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "yaw angle", moveInfo.yawAngle.value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "raw omega", moveInfo.rawOmega);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "controller type", moveInfo.controllerType);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "no movement option", moveInfo.noMovementOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose X", m_endPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Target Pose Y", m_endPose.Y().value());
+    LogChassisMovement::Print(moveInfo);
 }

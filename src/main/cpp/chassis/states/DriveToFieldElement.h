@@ -34,7 +34,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 
-class DriveToFieldElement : public RobotDrive
+class DriveToFieldElement : public RobotDrive, DragonDataLogger
 {
 public:
     DriveToFieldElement(RobotDrive *robotDrive);
@@ -51,6 +51,8 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
+    virtual void DataLog(uint64_t timestamp) override;
+
     void LogMoveInfo(ChassisMovement &moveInfo);
 
     RobotDrive *m_robotDrive;
@@ -61,6 +63,7 @@ private:
     DragonTargetFinderData m_currentType = DragonTargetFinderData::NOT_FOUND;
 
     bool m_hasTarget = false;
+    bool m_isSamePose = false;
     frc::Pose2d m_endPose;
     frc::Pose2d m_prevPose;
     frc::Pose2d m_currentPose;
@@ -69,6 +72,7 @@ private:
     const int m_samePoseCountThreshold = 25;
 
     const units::length::inch_t m_distanceThreshold{0.25};
+    const units::length::inch_t m_regenerationDistanceThreshold{2.0};
     const units::length::meter_t m_ffMinRadius{0.05};
     const units::length::meter_t m_ffMaxRadius{2.0};
 
