@@ -51,8 +51,6 @@ protected:
     virtual units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return (calculatedHeading - 180_deg); }
 
 private:
-    virtual void DataLog(uint64_t timestamp) override;
-
     void LogMoveInfo(ChassisMovement &moveInfo);
 
     RobotDrive *m_robotDrive;
