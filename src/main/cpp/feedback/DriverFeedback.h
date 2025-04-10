@@ -61,9 +61,6 @@ private:
 
     DragonLeds *m_LEDStates = DragonLeds::GetInstance();
     int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
     int m_rumbleLoopCounter = 0;
     int m_firstloop = true;
 

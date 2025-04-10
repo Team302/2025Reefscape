@@ -37,7 +37,6 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveModule.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 // #include "mechanisms/MechanismTypes.h"
 
 // Third Party Includes
@@ -201,8 +200,6 @@ void CyclePrimitives::RunDriveStop()
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
 										  false,
-										  IntakeManager::STATE_NAMES::STATE_OFF,
-										  false,
 										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::DriveStateType::STOP_DRIVE,
 										  DriveStopDelay::DelayOption::START);
@@ -218,14 +215,6 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
-		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
-
-		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
-		{
-			intakeMgr->SetCurrentState(params->GetIntakeState(), true);
-		}
-
 		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
 		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
 
@@ -240,14 +229,6 @@ void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
-		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
-
-		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
-		{
-			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);
-		}
-
 		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
 		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
 

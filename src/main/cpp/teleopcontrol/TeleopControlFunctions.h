@@ -45,7 +45,8 @@ public:
         SLOW_MODE,
         DRIVE_TO_PROCESSOR,
         HOLD_POSITION,
-        MANUAL_CLIMB,
+        MANUAL_CLIMB_UP,
+        MANUAL_CLIMB_DOWN,
         SWEEP,
 
         // tip correction controls
@@ -55,7 +56,6 @@ public:
         MANUAL_LAUNCH_DEC,
         CLIMB_MODE,
         AUTO_CLIMB,
-        INTAKE,
         ELAVATOR,
         ARM,
         L1_SCORING_POSITION,
@@ -71,7 +71,6 @@ public:
         MANUAL_OFF,
         MANUAL_IN,
         MANUAL_OUT,
-        FAILED_INTAKE_SENSOR,
         ALGAE_HIGH,
         ALGAE_LOW,
         GRAB_ALGAE_REEF,
