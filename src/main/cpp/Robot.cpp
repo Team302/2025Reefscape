@@ -67,7 +67,10 @@ void Robot::RobotInit()
         auto visionPoseEstitmators = m_dragonswerveposeestimator->GetVisionPoseEstimators();
         if (!visionPoseEstitmators.empty())
         {
-            m_quest = static_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            {
+                m_quest = static_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+            }
         }
     }
 }

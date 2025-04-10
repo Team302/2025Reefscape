@@ -63,7 +63,6 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     units::angle::degree_t yaw{-rotationarray[1]};
 
     frc::Pose2d questPose{x, y, yaw};
-    m_rawQuestPose = questPose; // Save the initial pose for logging purposes
 
     frc::Pose2d robotPose = questPose + m_questTransform;
 
@@ -103,7 +102,6 @@ void DragonQuest::DataLog(uint64_t timestamp)
     Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
-    field->AddPose("Quest Raw Pose", m_rawQuestPose);
 }
 
 void DragonQuest::RefreshNT()

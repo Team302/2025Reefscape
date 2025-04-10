@@ -85,8 +85,6 @@ private:
     frc::Transform2d m_robotToQuestTransform; // <I> Transform from robot center to Quest (used to calculate the quest pose from the robot pose)
     frc::Transform2d m_questTransform;
 
-    frc::Pose2d m_rawQuestPose;
-
     const double m_stdxy = 0.001;
     const double m_stddeg = .01;
 
