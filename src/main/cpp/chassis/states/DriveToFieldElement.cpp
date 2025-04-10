@@ -210,13 +210,7 @@ bool DriveToFieldElement::IsDone()
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
-    m_isSamePose = isSamePose;
     return (isDone || isSamePose);
-}
-
-void DriveToFieldElement::DataLog(uint64_t timestamp)
-{
-    LogBoolData(timestamp, DragonDataLogger::BoolSignals::DRIVE_TO_IS_DONE, m_isSamePose);
 }
 
 void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)

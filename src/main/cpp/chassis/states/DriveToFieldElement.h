@@ -34,7 +34,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 
-class DriveToFieldElement : public RobotDrive, DragonDataLogger
+class DriveToFieldElement : public RobotDrive
 {
 public:
     DriveToFieldElement(RobotDrive *robotDrive);
