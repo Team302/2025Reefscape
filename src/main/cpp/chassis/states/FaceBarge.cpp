@@ -46,7 +46,7 @@ units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovemen
 
             if (chassisMovement.IsClimbMode)
             {
-                chassisMovement.yawAngle -= 90_deg;
+                chassisMovement.yawAngle = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? -90_deg : 90_deg;
             }
 
             return chassisMovement.yawAngle;
