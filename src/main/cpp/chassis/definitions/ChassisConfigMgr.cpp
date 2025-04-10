@@ -61,7 +61,7 @@ void ChassisConfigMgr::InitChassis(RobotIdentifier id)
 		break;
 
 	case RobotIdentifier::SIM_BOT_0:
-		m_config = new ChassisConfigChassis_9999();
+		m_config = new ChassisConfigCompBot_302();
 		break;
 
 	default:

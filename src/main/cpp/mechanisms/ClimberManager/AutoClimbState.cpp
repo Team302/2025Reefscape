@@ -43,29 +43,10 @@ AutoClimbState::AutoClimbState(std::string stateName,
 void AutoClimbState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("AutoClimbState"), string("Init"));
-	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_ClimberTarget)
-	{
-		m_mechanism->UpdateTargetClimberPositionDegreeUp(m_ClimberTarget);
-	}
-	else
-	{
-		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	}
 }
 
 void AutoClimbState::Run()
 {
-	units::angle::turn_t TargetChange = units::angle::degree_t(TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB) * m_manualClimbRate);
-	m_manualTarget += TargetChange;
-
-	if (m_mechanism->GetClimber()->GetPosition().GetValue() < m_manualTarget)
-	{
-		m_mechanism->UpdateTargetClimberPositionDegreeUp(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
-	}
-	else
-	{
-		m_mechanism->UpdateTargetClimberPositionDegree(std::clamp(m_manualTarget, m_minClimberAngle, m_maxClimberAngle));
-	}
 }
 
 void AutoClimbState::Exit()

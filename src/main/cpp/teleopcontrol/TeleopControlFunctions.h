@@ -45,7 +45,8 @@ public:
         SLOW_MODE,
         DRIVE_TO_PROCESSOR,
         HOLD_POSITION,
-        MANUAL_CLIMB,
+        MANUAL_CLIMB_UP,
+        MANUAL_CLIMB_DOWN,
         SWEEP,
 
         // tip correction controls

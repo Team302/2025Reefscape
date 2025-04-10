@@ -56,7 +56,7 @@ void ManualClimbState::InitCOMP_BOT302()
 void ManualClimbState::Run()
 {
 
-	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB);
+	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB_UP) - TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB_DOWN);
 	if (!(abs(manualClimberPercent) > 0.1) || m_mechanism->GetClimbDoneSensor())
 		m_mechanism->UpdateTargetClimberPercentOut(0.0);
 	else
