@@ -41,11 +41,14 @@
 // #include "mechanisms/MechanismTypes.h"
 
 // Third Party Includes
+#include "ctre/phoenix6/SignalLogger.hpp"
 
+using ctre::phoenix6::SignalLogger;
 using frc::DriverStation;
 using frc::Timer;
 using std::make_unique;
 using std::string;
+
 #include <pugixml/pugixml.hpp>
 using namespace pugi;
 
@@ -72,6 +75,8 @@ void CyclePrimitives::Init()
 	m_currentPrimSlot = 0; // Reset current prim
 	m_currentPrim = nullptr;
 	m_zones.clear();
+
+	SignalLogger::WriteString("/Auton/SelectedFile", m_autonSelector->GetSelectedAutoFile(), units::time::second_t(0.0));
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("About to parse XML file "), m_autonSelector->GetSelectedAutoFile().c_str());
 
