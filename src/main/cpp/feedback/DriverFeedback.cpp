@@ -63,14 +63,7 @@ void DriverFeedback::UpdateRumble()
     }
     else
     {
-        if (m_driveToIsDone)
-        {
-            controller->SetRumble(1, true, true);
-        }
-        else
-        {
-            controller->SetRumble(1, false, false);
-        }
+        controller->SetRumble(1, m_driveToIsDone, m_driveToIsDone);
     }
 }
 
