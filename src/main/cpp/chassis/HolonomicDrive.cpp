@@ -46,7 +46,7 @@ using namespace frc;
 HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
                                    m_swerve(ChassisConfigMgr::GetInstance()->GetCurrentConfig() != nullptr ? ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis() : nullptr),
                                    m_previousDriveState(ChassisOptionEnums::DriveStateType::FIELD_DRIVE),
-                                   m_checkTippingLatch(false)
+                                   m_checkTippingLatch(true)
 {
     Init();
     RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ElevatorHeight_Inch);
@@ -122,7 +122,7 @@ void HolonomicDrive::Run()
         auto isFaceForward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_FORWARD);
         auto isFaceBackward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_BACKWARD);
         auto isSlowMode = controller->IsButtonPressed(TeleopControlFunctions::SLOW_MODE);
-        auto checkTipping = controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
+        auto checkTipping = !controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
         auto isPolarDriveSelected = controller->IsButtonPressed(TeleopControlFunctions::POLAR_DRIVE);
         auto driveToRightReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
         auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
@@ -391,6 +391,8 @@ void HolonomicDrive::CheckTipping(bool isSelected)
         m_checkTippingLatch = false;
     }
     m_moveInfo.checkTipping = m_CheckTipping;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("isselected"), isSelected);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("checktipping"), m_CheckTipping);
 }
 
 void HolonomicDrive::CheckRobotOriented(bool isSelected)

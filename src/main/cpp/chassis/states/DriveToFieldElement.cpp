@@ -154,7 +154,7 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
     chassisMovement.checkTipping = false;
-    chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
+    chassisMovement.tippingTolerance = units::angle::degree_t(10.0);
     chassisMovement.tippingCorrection = -0.1;
     chassisMovement.targetPose = frc::Pose2d();
 }

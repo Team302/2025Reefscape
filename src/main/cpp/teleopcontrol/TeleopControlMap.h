@@ -189,7 +189,8 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::GRAB_ALGAE_REEF, copilotDPad90},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
-    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
+    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed},
+    {TeleopControlFunctions::TIPCORRECTION_TOGGLE, driverLStickPressed}
 
 };
 

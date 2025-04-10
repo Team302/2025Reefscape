@@ -60,7 +60,7 @@ private:
     ChassisOptionEnums::DriveStateType m_previousDriveState;
     const double m_slowModeMultiplier = 0.25;
     const double m_inputScale = 1.0;
-    bool m_CheckTipping = false;
+    bool m_CheckTipping = true;
     bool m_checkTippingLatch = false;
     ChassisMovement m_moveInfo;
 
