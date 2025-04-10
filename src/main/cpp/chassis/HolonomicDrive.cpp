@@ -391,8 +391,6 @@ void HolonomicDrive::CheckTipping(bool isSelected)
         m_checkTippingLatch = false;
     }
     m_moveInfo.checkTipping = m_CheckTipping;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("isselected"), isSelected);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("A"), string("checktipping"), m_CheckTipping);
 }
 
 void HolonomicDrive::CheckRobotOriented(bool isSelected)
