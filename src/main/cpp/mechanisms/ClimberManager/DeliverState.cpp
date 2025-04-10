@@ -43,8 +43,7 @@ DeliverState::DeliverState(std::string stateName,
 void DeliverState::Init()
 {
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("OffState"), string("Init"));
-	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);
-	m_mechanism->UpdateTargetExtenderPositionDegree(m_ExtenderTarget);
+	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
 }
 
 void DeliverState::Run()

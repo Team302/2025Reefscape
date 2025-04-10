@@ -190,8 +190,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::GRAB_ALGAE_REEF, copilotDPad90},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
-    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed}
-
 };
 
 const TeleopControlAxis driverLJoystickX = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::LEFT_JOYSTICK_X, TeleopControlMappingEnums::APPLY_STANDARD_DEADBAND, TeleopControlMappingEnums::AXIS_PROFILE::LINEAR, TeleopControlMappingEnums::REVERSED, 1.0};
@@ -240,7 +238,8 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlA
     {TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD, driverLJoystickY},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE, driverLJoystickX},
     {TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE, driverRJoystickX},
-    {TeleopControlFunctions::MANUAL_CLIMB, driverRTrigger},
+    {TeleopControlFunctions::MANUAL_CLIMB_UP, driverRTrigger},
+    {TeleopControlFunctions::MANUAL_CLIMB_DOWN, driverLTrigger},
     {TeleopControlFunctions::ELAVATOR, copilotLJoystickY},
     {TeleopControlFunctions::ARM, copilotRJoystickY},
     {TeleopControlFunctions::MANUAL_IN, copilotLTrigger},

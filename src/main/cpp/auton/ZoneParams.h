@@ -24,7 +24,6 @@
 // Team 302 includes
 #include "auton/AutonGrid.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
 #include "auton/PrimitiveEnums.h"
 
@@ -47,8 +46,6 @@ public:
                units::length::meter_t m_ygrid1rect,
                units::length::meter_t m_ygrid2rect,
                bool isTaleStateChanging,
-               bool isIntakeStateChanging,
-               IntakeManager::STATE_NAMES intakeOption,
                DragonTale::STATE_NAMES taleOption,
                ChassisOptionEnums::AutonChassisOptions autonchassisoption,
                ChassisOptionEnums::HeadingOption headingOption,
@@ -71,10 +68,8 @@ public:
 
     ChassisOptionEnums::DriveStateType GetPathUpdateOption() const { return m_pathUpdateOption; }
 
-    bool IsIntakeStateChanging() const { return m_isIntakeStateChanging; }
     bool IsTaleStateChanging() const { return m_isTaleStateChanging; }
 
-    IntakeManager::STATE_NAMES GetIntakeOption() const { return m_intakeOption; }
     DragonTale::STATE_NAMES GetTaleOption() const { return m_taleOption; }
 
     ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; }
@@ -88,10 +83,8 @@ private:
     units::length::meter_t m_xgrid2rect;
     units::length::meter_t m_ygrid1rect;
     units::length::meter_t m_ygrid2rect;
-    bool m_isIntakeStateChanging;
     bool m_isTaleStateChanging;
 
-    IntakeManager::STATE_NAMES m_intakeOption;
     DragonTale::STATE_NAMES m_taleOption;
 
     ChassisOptionEnums::AutonChassisOptions m_chassisoption;
