@@ -73,7 +73,7 @@ private:
     static DriverFeedback *m_instance;
     RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
-    bool m_DriveToIsDone = false;
+    bool m_driveToIsDone = false;
     ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
 
     std::shared_ptr<nt::NetworkTable> m_ll1Nt;
