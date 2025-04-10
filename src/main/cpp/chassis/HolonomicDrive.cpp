@@ -165,12 +165,12 @@ void HolonomicDrive::Run()
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
         }
-        else if (driveToBarge)
+        else if (driveToBarge && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
             m_bargeHelper->IsInZone();
         }
-        else if (driveToProcessor)
+        else if (driveToProcessor && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_PROCESSOR);
         }

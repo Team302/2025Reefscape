@@ -22,7 +22,6 @@
 #include "auton/ZoneParser.h"
 #include "frc/Filesystem.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 #include "pugixml/pugixml.hpp"
 #include "utils/logging/debug/Logger.h"
 
@@ -94,9 +93,7 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
 
             ChassisOptionEnums::AutonChassisOptions chassisChosenOption = ChassisOptionEnums::AutonChassisOptions::NO_VISION;
             bool isTaleStateChanging = false;
-            bool isIntakeStateChanging = false;
             DragonTale::STATE_NAMES taleChosenOption = DragonTale::STATE_NAMES::STATE_READY;
-            IntakeManager::STATE_NAMES intakeChosenOption = IntakeManager::STATE_NAMES::STATE_OFF;
             ChassisOptionEnums::HeadingOption chosenHeadingOption = ChassisOptionEnums::HeadingOption::IGNORE;
 
             ChassisOptionEnums::DriveStateType chosenUpdateOption = ChassisOptionEnums::STOP_DRIVE;
@@ -145,23 +142,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                 {
                     zoneMode = ZoneMode::RECTANGLE;
                     ygrid2rect = units::length::meter_t(attr.as_double());
-                }
-                else if (strcmp(attr.name(), "intakeOption") == 0)
-                {
-                    auto itr = IntakeManager::stringToSTATE_NAMESEnumMap.find(attr.value());
-                    if (config != nullptr && config->GetMechanism(MechanismTypes::INTAKE_MANAGER) != nullptr)
-                    {
-
-                        if (itr != IntakeManager::stringToSTATE_NAMESEnumMap.end())
-                        {
-                            intakeChosenOption = itr->second;
-                            isIntakeStateChanging = true;
-                        }
-                        else
-                        {
-                            hasError = true;
-                        }
-                    }
                 }
                 else if (strcmp(attr.name(), "taleOption") == 0)
                 {
@@ -243,8 +223,6 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                        ygrid1rect,
                                        ygrid2rect,
                                        isTaleStateChanging,
-                                       isIntakeStateChanging,
-                                       intakeChosenOption,
                                        taleChosenOption,
                                        chassisChosenOption,
                                        chosenHeadingOption,

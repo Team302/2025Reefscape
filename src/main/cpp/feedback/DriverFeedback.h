@@ -61,9 +61,6 @@ private:
 
     DragonLeds *m_LEDStates = DragonLeds::GetInstance();
     int m_controllerCounter = 0;
-    bool m_rumbleLauncher = false;
-    bool m_rumblePlacer = false;
-    bool m_rumbleIntake = false;
     int m_rumbleLoopCounter = 0;
     int m_firstloop = true;
 
@@ -73,6 +70,6 @@ private:
     static DriverFeedback *m_instance;
     RobotStateChanges::ScoringMode m_scoringMode = RobotStateChanges::ScoringMode::Coral;
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
-    bool m_DriveToIsDone = false;
+    bool m_driveToIsDone = false;
     ChassisOptionEnums::DriveStateType m_driveStateType = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
 };
