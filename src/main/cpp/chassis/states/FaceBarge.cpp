@@ -42,7 +42,7 @@ units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovemen
         {
             auto targetpose = get<1>(info.value());
 
-            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
+            chassisMovement.yawAngle = targetpose.Rotation().Degrees();
 
             if (chassisMovement.IsClimbMode)
             {

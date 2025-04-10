@@ -77,6 +77,11 @@ private:
     units::length::foot_t m_centerLine{28.73};
     units::length::meter_t m_redYClampMin{0.5_m};
     units::length::meter_t m_redYClampMax{3.25_m};
-    units::length::meter_t m_blueYClampMin{5.0_m};
+    units::length::meter_t m_blueYClampMin{4.75_m};
     units::length::meter_t m_blueYClampMax{7.5_m};
+
+    frc::Rotation2d m_redBackBargeRotation{-170_deg};
+    frc::Rotation2d m_blueBackBargeRotation{170_deg};
+    frc::Rotation2d m_redFrontBargeRotation{-10_deg};
+    frc::Rotation2d m_blueFrontBargeRotation{10_deg};
 };
