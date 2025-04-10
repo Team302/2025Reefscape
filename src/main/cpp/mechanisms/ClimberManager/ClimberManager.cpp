@@ -32,8 +32,7 @@
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "mechanisms/ClimberManager/InitState.h"
 #include "mechanisms/ClimberManager/OffState.h"
-#include "mechanisms/ClimberManager/ManualClimbState.h"
-#include "mechanisms/ClimberManager/AutoClimbState.h"
+#include "mechanisms/ClimberManager/ClimbState.h"
 #include "mechanisms/ClimberManager/DeliverState.h"
 #include "state/RobotState.h"
 
@@ -65,23 +64,17 @@ void ClimberManager::CreateAndRegisterStates()
 	OffState *OffStateInst = new OffState(string("Off"), 1, this, m_activeRobotId);
 	AddToStateVector(OffStateInst);
 
-	ManualClimbState *ManualClimbStateInst = new ManualClimbState(string("ManualClimb"), 2, this, m_activeRobotId);
-	AddToStateVector(ManualClimbStateInst);
+	ClimbState *ClimbStateInst = new ClimbState(string("Climb"), 2, this, m_activeRobotId);
+	AddToStateVector(ClimbStateInst);
 
-	AutoClimbState *AutoClimbStateInst = new AutoClimbState(string("AutoClimb"), 3, this, m_activeRobotId);
-	AddToStateVector(AutoClimbStateInst);
-
-	DeliverState *DeliverClimberStateInst = new DeliverState(string("DeliverClimber"), 4, this, m_activeRobotId);
+	DeliverState *DeliverClimberStateInst = new DeliverState(string("DeliverClimber"), 3, this, m_activeRobotId);
 	AddToStateVector(DeliverClimberStateInst);
 
 	InitStateInst->RegisterTransitionState(OffStateInst);
 	OffStateInst->RegisterTransitionState(DeliverClimberStateInst);
-	ManualClimbStateInst->RegisterTransitionState(OffStateInst);
-	ManualClimbStateInst->RegisterTransitionState(AutoClimbStateInst);
-	AutoClimbStateInst->RegisterTransitionState(OffStateInst);
+	ClimbStateInst->RegisterTransitionState(OffStateInst);
 	DeliverClimberStateInst->RegisterTransitionState(OffStateInst);
-	DeliverClimberStateInst->RegisterTransitionState(AutoClimbStateInst);
-	DeliverClimberStateInst->RegisterTransitionState(ManualClimbStateInst);
+	DeliverClimberStateInst->RegisterTransitionState(ClimbStateInst);
 }
 
 ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::CLIMBER_MANAGER, std::string("ClimberManager")),
@@ -97,34 +90,9 @@ ClimberManager::ClimberManager(RobotIdentifier activeRobotId) : BaseMech(Mechani
 std::map<std::string, ClimberManager::STATE_NAMES> ClimberManager::stringToSTATE_NAMESEnumMap{
 	{"STATE_INIT", ClimberManager::STATE_NAMES::STATE_INIT},
 	{"STATE_OFF", ClimberManager::STATE_NAMES::STATE_OFF},
-	{"STATE_MANUAL_CLIMB", ClimberManager::STATE_NAMES::STATE_MANUAL_CLIMB},
-	{"STATE_AUTO_CLIMB", ClimberManager::STATE_NAMES::STATE_AUTO_CLIMB},
+	{"STATE_CLIMB", ClimberManager::STATE_NAMES::STATE_CLIMB},
 	{"STATE_DELIVER_CLIMBER", ClimberManager::STATE_NAMES::STATE_DELIVER_CLIMBER},
 };
-void ClimberManager::InitializeLogging()
-{
-	// wpi::log::DataLog &log = frc::DataLogManager::GetLog();
-
-	// m_ClimberManagerTotalEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalEnergy");
-	// m_ClimberManagerTotalEnergyLogEntry.Append(0.0);
-	// m_ClimberManagerTotalWattHoursLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/TotalWattHours");
-	// m_ClimberManagerTotalWattHoursLogEntry.Append(0.0);
-
-	// m_ClimberLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPosition");
-	// m_ClimberLogEntry.Append(0.0);
-
-	// m_ClimberTargetLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberTarget");
-	// m_ClimberTargetLogEntry.Append(0.0);
-
-	// m_ClimberPowerLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberPower");
-	// m_ClimberPowerLogEntry.Append(0.0);
-
-	// m_ClimberEnergyLogEntry = wpi::log::DoubleLogEntry(log, "mechanisms/ClimberManager/ClimberEnergy");
-	// m_ClimberEnergyLogEntry.Append(0.0);
-
-	// m_ClimberManagerStateLogEntry = wpi::log::IntegerLogEntry(log, "mechanisms/ClimberManager/State");
-	// m_ClimberManagerStateLogEntry.Append(0);
-}
 
 void ClimberManager::CreatePRACTICE_BOT9999()
 {
@@ -423,26 +391,6 @@ void ClimberManager::SetControlConstants(RobotElementNames::MOTOR_CONTROLLER_USA
 void ClimberManager::Update()
 {
 	m_Climber->SetControl(*m_ClimberActiveTarget);
-}
-
-bool ClimberManager::IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
-{
-	// auto motor = GetMotorMech(identifier);
-	// if (motor != nullptr)
-	// {
-	//     return motor->IsAtMinTravel();
-	// }
-	return false;
-}
-
-bool ClimberManager::IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const
-{
-	// auto motor = GetMotorMech(identifier);
-	// if (motor != nullptr)
-	// {
-	//     return motor->IsAtMaxTravel();
-	// }
-	return false;
 }
 
 void ClimberManager::Cyclic()

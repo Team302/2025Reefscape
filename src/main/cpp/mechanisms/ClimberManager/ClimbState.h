@@ -25,15 +25,15 @@ using namespace std;
 
 namespace ClimberManagerStates
 {
-	class ManualClimbState : public State
+	class ClimbState : public State
 	{
 	public:
-		ManualClimbState() = delete;
-		ManualClimbState(std::string stateName,
-						 int stateId,
-						 ClimberManager *mech,
-						 RobotIdentifier activeRobotId);
-		~ManualClimbState() = default;
+		ClimbState() = delete;
+		ClimbState(std::string stateName,
+				   int stateId,
+				   ClimberManager *mech,
+				   RobotIdentifier activeRobotId);
+		~ClimbState() = default;
 		void Init() override;
 		void Run() override;
 		void Exit() override;
@@ -46,6 +46,7 @@ namespace ClimberManagerStates
 		void InitCOMP_BOT302();
 
 		RobotIdentifier m_RobotId;
-		const double m_ClimberTarget = -0.75;
+		const units::angle::turn_t m_ClimberTarget{-10.0};
+		const double m_percentOutScale = -0.75;
 	};
 }

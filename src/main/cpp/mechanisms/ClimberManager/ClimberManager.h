@@ -51,8 +51,7 @@ public:
 	{
 		STATE_INIT,
 		STATE_OFF,
-		STATE_MANUAL_CLIMB,
-		STATE_AUTO_CLIMB,
+		STATE_CLIMB,
 		STATE_DELIVER_CLIMBER
 	};
 
@@ -90,9 +89,6 @@ public:
 		m_ClimberActiveTarget = &m_ClimberPositionDegreeUp.WithSlot(1);
 	}
 
-	virtual bool IsAtMinPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
-	virtual bool IsAtMaxPosition(RobotElementNames::MOTOR_CONTROLLER_USAGE identifier) const;
-
 	void CreateAndRegisterStates();
 	void Cyclic();
 	void RunCommonTasks() override;
@@ -102,7 +98,6 @@ public:
 
 	bool IsClimbMode() const { return m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn; }
 	bool IsTeleop() { return m_gameMode == RobotStateChanges::GamePeriod::Teleop; };
-	bool GetClimbDoneSensor() { return false; } // update once we know what this will be
 	void NotifyStateUpdate(RobotStateChanges::StateChange stchange, int value) override;
 
 	RobotIdentifier getActiveRobotId() { return m_activeRobotId; }
@@ -142,20 +137,4 @@ private:
 	ctre::phoenix6::controls::ControlRequest *m_ClimberActiveTarget;
 
 	units::angle::turn_t m_climberThreshold{3.0};
-
-	void InitializeLogging();
-
-	frc::Timer m_powerTimer;
-	double m_power = 0.0;
-	double m_energy = 0.0;
-	double m_totalEnergy = 0.0;
-	double m_totalWattHours = 0.0;
-
-	auto LogClimber(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberTarget(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberPower(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberEnergy(std::string name, std::string units, double value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerTotalEnergy(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerTotalWattHours(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
-	auto LogClimberManagerState(std::string name, std::string units, int value) { return SignalLogger::WriteDouble(name, value, units, units::time::second_t(0.0_s)); }
 };
