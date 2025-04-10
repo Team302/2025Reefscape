@@ -166,7 +166,7 @@ void HolonomicDrive::Run()
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_CENTER_CAGE);
         }
-        else if (driveToBarge)
+        else if (driveToBarge && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
             m_bargeHelper->IsInZone();
@@ -225,11 +225,6 @@ void HolonomicDrive::Run()
                 {
                     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
                 }
-                if (m_mlPipeline)
-                {
-                    DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
-                    m_mlPipeline = false;
-                }
 
                 m_resetPathplannerTrajectory = true;
                 m_bargeHelper->IsInZone();
@@ -261,6 +256,11 @@ void HolonomicDrive::Run()
             CheckTipping(checkTipping);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Drive State"), m_moveInfo.driveOption);
             Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("HolonomicDrive"), string("Heading State"), m_moveInfo.headingOption);
+        }
+        if (!driveToAlgae && m_mlPipeline)
+        {
+            DragonVision::GetDragonVision()->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
+            m_mlPipeline = false;
         }
         m_swerve->Drive(m_moveInfo);
         m_previousDriveState = m_moveInfo.driveOption;
