@@ -32,6 +32,7 @@
 #include "units/angle.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
+#include "utils/DragonField.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -142,6 +143,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             }
         }
     }
+
     else if (item == DragonTargetFinderTarget::REEF_CENTER)
     {
         auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
@@ -229,6 +231,39 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, cagepose);
         }
     }
+    else if (item == DragonTargetFinderTarget::ALGAE)
+    {
+
+        auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::ALGAE);
+        if (visiondata.has_value())
+        {
+
+            // visiondata.value().transformToTarget.X() - units::length::inch_t(16.0);
+            // visiondata.value().transformToTarget.Y() - units::length::inch_t(12.0);
+            m_algaePose = GetVisonPose(visiondata);
+
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("finder rotation"), "reached");
+            if (m_algaePose.has_value())
+            {
+                m_goalPose = frc::Pose2d(m_algaePose.value().X(), m_algaePose.value().Y(), m_algaePose.value().Rotation());
+                DragonVisionStructLogger::logPose2d("Algae", m_algaePose.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("X"), m_goalPose.value().X().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("Y"), m_goalPose.value().Y().value());
+                SignalLogger::WriteString(m_driveStatePath, "Algae", m_latency);
+                auto field = DragonField::GetInstance();
+                field->UpdateObject("algae", m_goalPose.value());
+                return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
+            }
+        }
+
+        else
+        {
+            if (!m_goalPose.has_value())
+                return make_tuple(DragonTargetFinderData::NOT_FOUND, frc::Pose2d()); // TODO JW come back to this one when we have machine learning
+            else
+                return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
+        }
+    }
     else if (item == DragonTargetFinderTarget::PROCESSOR)
     {
         frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();
@@ -239,7 +274,6 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
     targetInfo = make_tuple(DragonTargetFinderData::NOT_FOUND, pose2d);
     return targetInfo;
 }
-
 std::optional<FieldConstants::AprilTagIDs> DragonTargetFinder::GetAprilTag(DragonVision::VISION_ELEMENT item)
 {
     SetChassis();
@@ -302,21 +336,28 @@ units::angle::degree_t DragonTargetFinder::AdjustRobotRelativeAngleForIntake(uni
     }
     return robotRelativeAngle;
 }
+void DragonTargetFinder::ResetGoalPose()
+{
+    m_goalPose = std::nullopt;
+}
 
-std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(VisionData data)
+std::optional<frc::Pose2d> DragonTargetFinder::GetVisonPose(std::optional<VisionData> data)
 {
     SetChassis();
-
-    if (m_chassis != nullptr)
+    if (data.has_value())
     {
-        auto currentPose{Pose3d(m_chassis->GetPose())};
+        if (m_chassis != nullptr)
+        {
+            auto currentPose{Pose3d(m_chassis->GetPose())};
 
-        auto trans3d = data.transformToTarget;
-        auto targetPose = currentPose + trans3d;
-        units::angle::degree_t robotRelativeAngle = data.rotationToTarget.Z(); // value is robot to target
+            auto trans3d = data.value().transformToTarget;
+            auto targetPose = currentPose + trans3d + m_calcAlgaeOffset;
+            auto distanceY = targetPose.ToPose2d().Translation().Y() - currentPose.ToPose2d().Translation().Y(); // value is robot to target
+            auto distanceX = targetPose.ToPose2d().Translation().X() - currentPose.ToPose2d().Translation().X();
+            auto angle = atan2(distanceY.value(), distanceX.value());
 
-        units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
-        return frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
+            return frc::Pose2d(targetPose.X(), targetPose.Y(), (units::angle::radian_t(angle)));
+        }
     }
     return std::nullopt;
 }

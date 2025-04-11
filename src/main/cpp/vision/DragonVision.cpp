@@ -111,6 +111,8 @@ std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 {
 	if (element == VISION_ELEMENT::ALGAE)
 	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("GetVisionData"), std::string("reached"));
+
 		return GetVisionDataFromAlgae(element);
 	}
 	else if (element == VISION_ELEMENT::NEAREST_APRILTAG) // nearest april tag
@@ -273,25 +275,40 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("getVisionDataFrom Algae"), std::string("Machine Learning"));
+
+	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
+
 	for (auto cam : cameras)
 	{
-		// create translation using 3 estimated distances
-		if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
-			cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
-			cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
+		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
 		{
-			frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
-																	   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
-																	   cam->EstimateTargetZDistance_RelToRobotCoords().value());
-			frc::Rotation3d rotationToAlgae = frc::Rotation3d();
-			// create rotation3d with pitch and yaw (don't have access to roll)
-			rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
-											  cam->GetTargetPitchRobotFrame().value(),
-											  cam->GetTargetYawRobotFrame().value());
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("pipeline"), std::string("Machine learning"));
+			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("Has Target"), cam->HasTarget());
 
-			// return VisionData with new translation and rotation
-			return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
+			if (cam->HasTarget())
+			{
+				// create translation using 3 estimated distances
+
+				if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
+					cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
+					cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
+				{
+					frc::Translation3d translationToAlgae = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
+																			   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
+																			   cam->EstimateTargetZDistance_RelToRobotCoords().value());
+					frc::Rotation3d rotationToAlgae = frc::Rotation3d();
+					Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("rotation"), cam->GetTargetYawRobotFrame().value().to<double>());
+
+					// create rotation3d with pitch and yaw (don't have access to roll)
+					rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
+													  cam->GetTargetPitchRobotFrame().value(),
+													  cam->GetTargetYawRobotFrame().value());
+
+					// return VisionData with new translation and rotation
+					return VisionData{frc::Transform3d(translationToAlgae, rotationToAlgae), translationToAlgae, rotationToAlgae, -1};
+				}
+			}
 		}
 	}
 	// if we don't have a selected cam
@@ -646,4 +663,18 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 	}
 
 	return std::nullopt;
+}
+
+void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline)
+{
+	auto cameras = GetCameras(position);
+	for (auto cam : cameras)
+	{
+		if (cam->GetPipeline() != pipeline)
+		{
+			cam->SetPipeline(pipeline);
+			// hopefully will update the target
+			cam->PeriodicCacheData();
+		}
+	}
 }
