@@ -37,15 +37,17 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveModule.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 // #include "mechanisms/MechanismTypes.h"
 
 // Third Party Includes
+#include "ctre/phoenix6/SignalLogger.hpp"
 
+using ctre::phoenix6::SignalLogger;
 using frc::DriverStation;
 using frc::Timer;
 using std::make_unique;
 using std::string;
+
 #include <pugixml/pugixml.hpp>
 using namespace pugi;
 
@@ -72,6 +74,8 @@ void CyclePrimitives::Init()
 	m_currentPrimSlot = 0; // Reset current prim
 	m_currentPrim = nullptr;
 	m_zones.clear();
+
+	SignalLogger::WriteString("/Auton/SelectedFile", m_autonSelector->GetSelectedAutoFile(), units::time::second_t(0.0));
 
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("CyclePrim"), string("About to parse XML file "), m_autonSelector->GetSelectedAutoFile().c_str());
 
@@ -196,8 +200,6 @@ void CyclePrimitives::RunDriveStop()
 										  ZoneParamsVector(),
 										  PrimitiveParams::VISION_ALIGNMENT::UNKNOWN,
 										  false,
-										  IntakeManager::STATE_NAMES::STATE_OFF,
-										  false,
 										  DragonTale::STATE_NAMES::STATE_READY,
 										  ChassisOptionEnums::DriveStateType::STOP_DRIVE,
 										  DriveStopDelay::DelayOption::START);
@@ -213,14 +215,6 @@ void CyclePrimitives::SetMechanismStatesFromParam(PrimitiveParams *params)
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
-		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
-
-		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
-		{
-			intakeMgr->SetCurrentState(params->GetIntakeState(), true);
-		}
-
 		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
 		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
 
@@ -235,14 +229,6 @@ void CyclePrimitives::SetMechanismStatesFromZone(ZoneParams *params)
 	auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
 	if (params != nullptr && config != nullptr)
 	{
-		auto intakeStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::INTAKE_MANAGER);
-		auto intakeMgr = intakeStateMgr != nullptr ? dynamic_cast<IntakeManager *>(intakeStateMgr) : nullptr;
-
-		if (intakeMgr != nullptr && params->IsIntakeStateChanging())
-		{
-			intakeMgr->SetCurrentState(params->GetIntakeOption(), true);
-		}
-
 		auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
 		auto taleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
 

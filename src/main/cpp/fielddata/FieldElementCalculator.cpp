@@ -159,7 +159,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_RIGHT_CAGE] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_calcCageRight);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_CENTER_CAGE] =
-        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_noTransform);
+        TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_calcCageCenter);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT, m_calcBargeFront);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED] =
@@ -217,7 +217,7 @@ void FieldElementCalculator::InitializeTransforms()
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcCageRight);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CENTER_CAGE] =
-        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_noTransform);
+        TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcCageCenter);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcBargeFront);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED] =

@@ -42,11 +42,11 @@ units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovemen
         {
             auto targetpose = get<1>(info.value());
 
-            chassisMovement.yawAngle = (get<0>(info.value()) == DragonTargetFinderData::ODOMETRY_BASED) ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
+            chassisMovement.yawAngle = targetpose.Rotation().Degrees();
 
             if (chassisMovement.IsClimbMode)
             {
-                chassisMovement.yawAngle -= 90_deg;
+                chassisMovement.yawAngle = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? -90_deg : 90_deg;
             }
 
             return chassisMovement.yawAngle;

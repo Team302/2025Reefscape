@@ -103,15 +103,22 @@ private:
 
     frc::Transform3d m_calcCageLeft = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-41.5),
+            units::length::inch_t(-20.0),
+            units::length::inch_t(-42.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCageRight = frc::Transform3d(
         frc::Translation3d(
+            units::length::inch_t(-20.0),
+            units::length::inch_t(42.0),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    frc::Transform3d m_calcCageCenter = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(-20.0),
             units::length::inch_t(0.0),
-            units::length::inch_t(41.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
