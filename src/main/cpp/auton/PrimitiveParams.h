@@ -29,7 +29,6 @@
 #include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 #include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
@@ -55,8 +54,6 @@ public:
                     ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
                     VISION_ALIGNMENT visionAlignment,
-                    bool changeIntakeState,
-                    IntakeManager::STATE_NAMES intakeState,
                     bool changeTaleState,
                     DragonTale::STATE_NAMES taleState,
                     ChassisOptionEnums::DriveStateType pathUpdateOption,
@@ -87,8 +84,6 @@ public:
     units::time::second_t GetReefDelay() const { return m_reefDelay; }
     units::time::second_t GetCoralStationDelay() const { return m_coralStationDelay; }
 
-    bool IsIntakeStateChanging() const { return m_changeIntakeState; }
-    IntakeManager::STATE_NAMES GetIntakeState() const { return m_intakeState; }
     bool IsTaleStateChanging() const { return m_changeTaleState; }
     DragonTale::STATE_NAMES GetTaleState() const { return m_taleState; }
     // Setters
@@ -116,10 +111,8 @@ private:
     ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
 
-    bool m_changeIntakeState;
     bool m_changeTaleState;
 
-    IntakeManager::STATE_NAMES m_intakeState;
     DragonTale::STATE_NAMES m_taleState;
 
     ZoneParamsVector m_zones;

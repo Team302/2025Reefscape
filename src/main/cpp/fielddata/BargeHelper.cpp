@@ -119,13 +119,16 @@ frc::Pose2d BargeHelper::CalcBargePose()
 {
     auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
     frc::Pose2d pose2d{};
+    bool backBarge = m_chassis->GetPose().X() > m_centerLine;
     if (allianceColor == frc::DriverStation::Alliance::kRed)
     {
-        pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED) : m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED);
+        pose2d = backBarge ? m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED) : m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_BARGE_BACK_CALCULATED);
+        pose2d = frc::Pose2d(pose2d.X(), pose2d.Y(), backBarge ? m_redBackBargeRotation : m_redFrontBargeRotation);
     }
     else
     {
         pose2d = m_chassis->GetPose().X() > m_centerLine ? m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_BACK_CALCULATED) : m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED);
+        pose2d = frc::Pose2d(pose2d.X(), pose2d.Y(), backBarge ? m_blueBackBargeRotation : m_blueFrontBargeRotation);
     }
 
     auto clampY = ClampChassisY();

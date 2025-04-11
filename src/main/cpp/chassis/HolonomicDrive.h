@@ -72,6 +72,7 @@ private:
     double m_dynamicSpeed = 1.0;
     bool m_climbMode = false;
     const units::length::inch_t m_tippingElevatorThreshold{12.0};
+    bool m_mlPipeline = false;
     ReefHelper *m_reefHelper;
     BargeHelper *m_bargeHelper;
 };

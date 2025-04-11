@@ -44,6 +44,7 @@ public:
         DRIVE_TO_RIGHT_CAGE,
         DRIVE_TO_CENTER_CAGE,
         DRIVE_TO_BARGE,
+        DRIVE_TO_ALGAE,
         DRIVE_TO_PROCESSOR,
         STOP_DRIVE
     };

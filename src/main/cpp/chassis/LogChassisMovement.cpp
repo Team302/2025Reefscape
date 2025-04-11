@@ -24,18 +24,18 @@ using std::string;
 
 void LogChassisMovement::Print(ChassisMovement &moveinfo)
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("driveOption"), moveinfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("vx"), moveinfo.chassisSpeeds.vx.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("vy"), moveinfo.chassisSpeeds.vy.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("omega"), moveinfo.chassisSpeeds.omega.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("driveOption"), moveinfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("vx"), moveinfo.chassisSpeeds.vx.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("vy"), moveinfo.chassisSpeeds.vy.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("omega"), moveinfo.chassisSpeeds.omega.to<double>());
     auto ppstates = moveinfo.pathplannerTrajectory.getStates();
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("trajectory"), ppstates.empty() ? string("false") : string("true"));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("centerOfRotationOffset X"), moveinfo.centerOfRotationOffset.X().to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("centerOfRotationOffset Y"), moveinfo.centerOfRotationOffset.Y().to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("headingOption"), moveinfo.headingOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("noMovementOption"), moveinfo.noMovementOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("controllerType"), moveinfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("yawAngle"), moveinfo.yawAngle.to<double>());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("checkTipping"), moveinfo.checkTipping ? string("true") : string("false"));
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassiMovement"), string("tippingCorrection"), moveinfo.tippingCorrection);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("trajectory"), ppstates.empty() ? string("false") : string("true"));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("centerOfRotationOffset X"), moveinfo.centerOfRotationOffset.X().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("centerOfRotationOffset Y"), moveinfo.centerOfRotationOffset.Y().to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("headingOption"), moveinfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("noMovementOption"), moveinfo.noMovementOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("controllerType"), moveinfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("yawAngle"), moveinfo.yawAngle.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("checkTipping"), moveinfo.checkTipping ? string("true") : string("false"));
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ChassisMovement"), string("tippingCorrection"), moveinfo.tippingCorrection);
 }

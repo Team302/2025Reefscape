@@ -26,7 +26,6 @@
 #include "teleopcontrol/TeleopControl.h"
 #include "configs/MechanismConfigMgr.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "mechanisms/IntakeManager/IntakeManager.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
@@ -61,6 +60,10 @@ void DriverFeedback::UpdateRumble()
         controller->SetRumble(0, false, false);
         controller->SetRumble(1, false, false);
     }
+    else
+    {
+        controller->SetRumble(1, m_driveToIsDone, m_driveToIsDone);
+    }
 }
 
 void DriverFeedback::UpdateLEDStates()
@@ -89,7 +92,7 @@ void DriverFeedback::UpdateLEDStates()
             else if (((m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION) || (m_driveStateType == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE)) && frc::DriverStation::IsAutonomous())
             {
                 currentState = frc::Color::kGreen;
-                if (m_DriveToIsDone)
+                if (m_driveToIsDone)
                 {
                     m_LEDStates->SetBlinkingPattern(currentState, m_blinkingPeriod);
                 }
@@ -203,7 +206,7 @@ void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, in
 void DriverFeedback::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
 {
     if (RobotStateChanges::StateChange::DriveToFieldElementIsDone_Bool == change)
-        m_DriveToIsDone = value;
+        m_driveToIsDone = value;
 }
 
 void DriverFeedback::CheckControllers()
