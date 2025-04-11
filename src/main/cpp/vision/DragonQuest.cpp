@@ -16,6 +16,7 @@
 #include "utils/AngleUtils.h"
 #include "vision/DragonQuest.h"
 #include "utils/DragonField.h"
+#include "frc/RobotController.h"
 
 DragonQuest::DragonQuest(
     units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
@@ -157,6 +158,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+        str.m_timeStamp = units::time::second_t(frc::Timer::GetFPGATimestamp() * 1000000);
     }
     return str;
 }
