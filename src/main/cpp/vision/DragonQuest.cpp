@@ -157,6 +157,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+        str.m_timeStamp = units::time::second_t(frc::Timer::GetFPGATimestamp() * 1000000);
     }
     return str;
 }
