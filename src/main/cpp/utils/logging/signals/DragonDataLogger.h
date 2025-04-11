@@ -41,7 +41,8 @@ public:
 
     enum BoolSignals
     {
-        IS_BROWNOUT
+        IS_BROWNOUT,
+        DRIVE_TO_IS_DONE
     };
 
     enum DoubleSignals
@@ -255,6 +256,7 @@ public:
     string m_swerveChassisTotalCurrentUnits = "Watts";
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
+    string m_IsDonePath = "/Chassis/IsDone";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";

@@ -95,6 +95,8 @@ public:
     bool HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     bool HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier);
 
+    void SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline);
+
 private:
     DragonVision();
     ~DragonVision() = default;

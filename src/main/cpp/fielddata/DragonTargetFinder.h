@@ -29,6 +29,7 @@
 
 enum class DragonTargetFinderTarget
 {
+    ALGAE,
     BARGE,
     CLOSEST_LEFT_REEF_BRANCH,
     CLOSEST_RIGHT_REEF_BRANCH,
@@ -59,6 +60,8 @@ public:
     static DragonTargetFinder *GetInstance();
     std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> GetPose(DragonTargetFinderTarget item);
 
+    void ResetGoalPose();
+
 private:
     DragonTargetFinder();
     ~DragonTargetFinder() = default;
@@ -71,13 +74,23 @@ private:
     std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
-    std::optional<frc::Pose2d> GetVisonPose(VisionData data);
+    std::optional<frc::Pose2d> GetVisonPose(std::optional<VisionData> data);
     bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
 
     void SetChassis();
 
     std::optional<frc::Pose2d> m_goalPose;
+    std::optional<frc::Pose2d> m_algaePose;
+
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
+    const frc::Transform3d m_calcAlgaeOffset = frc::Transform3d(
+        frc::Translation3d(
+            units::length::inch_t(0.0),
+            units::length::inch_t(6.5),
+            units::length::inch_t(0.0)),
+        frc::Rotation3d());
+
+    const units::length::inch_t m_armoffset = units::length::inch_t(12);
 };
