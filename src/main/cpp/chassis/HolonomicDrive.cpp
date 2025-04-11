@@ -122,7 +122,7 @@ void HolonomicDrive::Run()
         auto isFaceForward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_FORWARD);
         auto isFaceBackward = controller->IsButtonPressed(TeleopControlFunctions::AUTO_TURN_BACKWARD);
         auto isSlowMode = controller->IsButtonPressed(TeleopControlFunctions::SLOW_MODE);
-        auto checkTipping = !controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
+        auto checkTipping = controller->IsButtonPressed(TeleopControlFunctions::TIPCORRECTION_TOGGLE);
         auto isPolarDriveSelected = controller->IsButtonPressed(TeleopControlFunctions::POLAR_DRIVE);
         auto driveToRightReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
         auto driveToLeftReefBranch = controller->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_LEFT);
@@ -258,7 +258,7 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = m_swerve->GetYaw();
-    m_moveInfo.checkTipping = true;
+    m_moveInfo.checkTipping = false;
     m_moveInfo.tippingTolerance = units::angle::degree_t(15.0);
     m_moveInfo.tippingCorrection = -0.1;
     m_moveInfo.targetPose = frc::Pose2d();
@@ -378,18 +378,19 @@ void HolonomicDrive::PolarDrive()
 
 void HolonomicDrive::CheckTipping(bool isSelected)
 {
-    if (isSelected)
-    {
-        if (m_checkTippingLatch == false)
-        {
-            m_CheckTipping = !m_CheckTipping;
-            m_checkTippingLatch = true;
-        }
-    }
-    else
-    {
-        m_checkTippingLatch = false;
-    }
+    // if (isSelected)
+    // {
+    //     if (!m_checkTippingLatch)
+    //     {
+    //         m_CheckTipping = !m_CheckTipping;
+    //         m_checkTippingLatch = true;
+    //     }
+    // }
+    // else
+    // {
+    //     m_checkTippingLatch = false;
+    // }
+    m_CheckTipping = m_elevatorHeight >= m_tippingElevatorThreshold;
     m_moveInfo.checkTipping = m_CheckTipping;
 }
 
