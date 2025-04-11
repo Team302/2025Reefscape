@@ -444,7 +444,7 @@ void DragonTale::CreateCOMP_BOT302()
 	m_BranchCANRange = new ctre::phoenix6::hardware::CANrange(32, "canivore");
 
 	ctre::phoenix6::configs::CANcoderConfiguration ArmAngleSensorConfigs{};
-	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.442383);
+	ArmAngleSensorConfigs.MagnetSensor.MagnetOffset = units::angle::turn_t(0.446289);
 	ArmAngleSensorConfigs.MagnetSensor.SensorDirection = ctre::phoenix6::signals::SensorDirectionValue::CounterClockwise_Positive;
 	m_ArmAngleSensor = new ctre::phoenix6::hardware::CANcoder(17, "canivore");
 	m_ArmAngleSensor->GetConfigurator().Apply(ArmAngleSensorConfigs);
@@ -1432,4 +1432,6 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "At Target", AtTarget());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "IsInBargeZone", m_isInBargeZone);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "IsInReefZone", m_isInReefZone);
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Velocity", m_ElevatorLeader->GetVelocity().GetValueAsDouble());
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator Acceleration", m_ElevatorLeader->GetAcceleration().GetValueAsDouble());
 }
