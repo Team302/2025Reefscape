@@ -66,6 +66,17 @@ void GrabAlgaeFloorState::InitCOMP_BOT302()
 
 void GrabAlgaeFloorState::Run()
 {
+	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_HIGH))
+	{
+		m_mechanism->SetArmTarget(m_ArmTargetLollipop);
+		m_mechanism->SetElevatorTarget(m_ElevatorLeaderTargetLollipop);
+	}
+	else if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::ALGAE_LOW))
+	{
+		m_mechanism->SetArmTarget(m_ArmTarget);
+		m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
+	}
+
 	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("GrabAlgaeFloorState"), string("Run"));
 }
 
