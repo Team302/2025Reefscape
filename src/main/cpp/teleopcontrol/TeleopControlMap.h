@@ -22,11 +22,10 @@
 
 // Team 302 includes
 // #include <gamepad/IDragonGamepad.h>
+#include <RobinHood/robin_hood.h>
 #include <teleopcontrol/TeleopControlAxis.h>
 #include <teleopcontrol/TeleopControlButton.h>
 #include <teleopcontrol/TeleopControlFunctions.h>
-
-#include <RobinHood/robin_hood.h>
 
 const TeleopControlButton driverAButton = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::A_BUTTON, TeleopControlMappingEnums::STANDARD};
 const TeleopControlButton driverBButton = {TeleopControlMappingEnums::DRIVER, TeleopControlMappingEnums::B_BUTTON, TeleopControlMappingEnums::STANDARD};
@@ -189,7 +188,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::GRAB_ALGAE_REEF, copilotDPad90},
     {TeleopControlFunctions::ALGAE_LOW, copilotDPad180},
     {TeleopControlFunctions::FORCE_ELEVATOR, copilotDPad270},
-    {TeleopControlFunctions::FAILED_INTAKE_SENSOR, driverRStickPressed},
     {TeleopControlFunctions::TIPCORRECTION_TOGGLE, driverLStickPressed}
 
 };
