@@ -620,7 +620,9 @@ void DragonLimelight::DataLog(uint64_t timestamp)
             Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
         }
     }
+
     DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LIMELIGHT1_NUMBER_OF_TAGS, m_numberOfTags);
+    DragonDataLogger::LogBoolData(timestamp, DragonDataLogger::BoolSignals::IS_ALGAE_DETECTED, m_tv);
 }
 
 void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)

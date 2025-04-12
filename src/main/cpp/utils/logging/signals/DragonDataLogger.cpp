@@ -42,6 +42,9 @@ void DragonDataLogger::LogBoolData(uint64_t timestamp, DragonDataLogger::BoolSig
             SignalLogger::WriteBoolean(m_IsDonePath, value, m_latency);
         default:
             break;
+        case DragonDataLogger::BoolSignals::IS_ALGAE_DETECTED:
+            SignalLogger::WriteBoolean(m_IsAlgaeDetected, value, m_latency);
+            break;
         }
     }
 }

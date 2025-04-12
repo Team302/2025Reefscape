@@ -42,7 +42,8 @@ public:
     enum BoolSignals
     {
         IS_BROWNOUT,
-        DRIVE_TO_IS_DONE
+        DRIVE_TO_IS_DONE,
+        IS_ALGAE_DETECTED
     };
 
     enum DoubleSignals
@@ -263,6 +264,7 @@ public:
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
     string m_IsDonePath = "/Chassis/IsDone";
+    string m_IsAlgaeDetected = "/Chassis/IsAlgaeDetected";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
