@@ -47,8 +47,10 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
     m_translationPIDX.SetIZone(0.10);
     m_translationPIDY.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
+#ifdef SHUFFLEBOARD_PIDS
     frc::SmartDashboard::PutNumber(m_iGainKey, m_translationKI);
     frc::SmartDashboard::PutNumber(m_pGainKey, m_translationKP);
+#endif
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
@@ -58,6 +60,8 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = dragonTargetFinderInst->GetPose(GetDriveToTarget());
 
     m_hasTarget = false;
+
+#ifdef SHUFFLEBOARD_PIDS
     auto pGainShuffleboard = frc::SmartDashboard::GetNumber(m_pGainKey, 0);
     auto iGainShuffleboard = frc::SmartDashboard::GetNumber(m_iGainKey, 0);
 
@@ -66,6 +70,7 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
         m_translationKP = pGainShuffleboard;
         m_translationKI = iGainShuffleboard;
     }
+#endif
 
     if (info.has_value())
     {

@@ -34,6 +34,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 
+// #define SHUFFLEBOARD_PIDS //for tuning :)
 class DriveToFieldElement : public RobotDrive
 {
 public:
@@ -86,10 +87,13 @@ private:
     std::string m_pGainKey = "P_Gain";
     bool runOnceLatch = false;
 
-    // const double m_translationKP = 2.0;
-    // const double m_translationKI = 2.0;
+#ifdef SHUFFLEBOARD_PIDS
     double m_translationKP = 2.0;
     double m_translationKI = 2.0;
+#else
+    const double m_translationKP = 2.0;
+    const double m_translationKI = 2.0;
+#endif
     const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
