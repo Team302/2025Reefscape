@@ -92,4 +92,6 @@ private:
     int m_loopCounter = 0;
 
     int m_lastProcessedHeartbeatId = 0;
+
+    frc::Pose2d m_rawQuestPose;
 };
