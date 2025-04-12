@@ -94,7 +94,9 @@ public:
         RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
         SWERVE_CHASSIS_TOTAL_CURRENT,
-        SWERVE_CHASSIS_WATT_HOURS
+        SWERVE_CHASSIS_WATT_HOURS,
+        LIMELIGHT1_NUMBER_OF_TAGS,
+        LIMELIGHT1_NUMBER_OF_ALGAE
     };
 
     enum StringSignals
@@ -254,6 +256,10 @@ public:
     string m_swerveChassisWattHoursUnits = "";
     string m_swerveChassisTotalCurrentPath = "/Chassis/TotalCurrent";
     string m_swerveChassisTotalCurrentUnits = "Watts";
+    string m_limelight1NumberOfTagsPath = "LL1/NumberOfTags";
+    string m_limelight1NumberOfTagsUnits = "tags";
+    string m_limelight1NumberOfAlgaePath = "LL1/NumberOfAlgae";
+    string m_limelight1NumberOfAlgaeUnits = "algae";
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
     string m_IsDonePath = "/Chassis/IsDone";
