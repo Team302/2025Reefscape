@@ -54,6 +54,7 @@
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/DragonPower.h"
+#include "mechanisms/DragonTale/GrabAlgaeLollipopState.h"
 
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
@@ -136,6 +137,9 @@ void DragonTale::CreateAndRegisterStates()
 
 	ManualGrabAlgaeFloorState *ManualGrabAlgaeFloorStateInst = new ManualGrabAlgaeFloorState(string("ManualGrabAlgaeFloor"), 16, this, m_activeRobotId);
 	AddToStateVector(ManualGrabAlgaeFloorStateInst);
+
+	GrabAlgaeLollipopState *GrabAlgaeLollipopStateInst = new GrabAlgaeLollipopState(string("ManualGrabAlgaeLollipop"), 17, this, m_activeRobotId);
+	AddToStateVector(GrabAlgaeLollipopStateInst);
 
 	InitializeStateInst->RegisterTransitionState(ReadyStateInst);
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
@@ -230,6 +234,11 @@ void DragonTale::CreateAndRegisterStates()
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	GrabAlgaeLollipopStateInst->RegisterTransitionState(ReadyStateInst);
+	GrabAlgaeLollipopStateInst->RegisterTransitionState(ProcessStateInst);
+	GrabAlgaeLollipopStateInst->RegisterTransitionState(NetStateInst);
+	GrabAlgaeLollipopStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
+	GrabAlgaeLollipopStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
 }
 
 DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
@@ -330,7 +339,7 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_MANUAL_CORAL_LOAD", DragonTale::STATE_NAMES::STATE_MANUAL_CORAL_LOAD},
 	{"STATE_MANUAL_GRAB_ALGAE_REEF", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_REEF},
 	{"STATE_MANUAL_GRAB_ALGAE_FLOOR", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_FLOOR},
-};
+	{"STATE_GRAB_ALGAE_LOLLIPOP", DragonTale::STATE_NAMES::STATE_GRAB_ALGAE_LOLLIPOP}};
 
 void DragonTale::CreatePRACTICE_BOT9999()
 {
