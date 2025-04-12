@@ -34,6 +34,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 
+// #define SHUFFLEBOARD_PIDS //for tuning :)
 class DriveToFieldElement : public RobotDrive
 {
 public:
@@ -82,8 +83,17 @@ private:
     units::time::second_t m_lastResetTime = 0_s;
     units::time::second_t m_resetTime = 0.5_s;
 
+    std::string m_iGainKey = "I_Gain";
+    std::string m_pGainKey = "P_Gain";
+    bool runOnceLatch = false;
+
+#ifdef SHUFFLEBOARD_PIDS
+    double m_translationKP = 2.0;
+    double m_translationKI = 2.0;
+#else
     const double m_translationKP = 2.0;
     const double m_translationKI = 2.0;
+#endif
     const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
