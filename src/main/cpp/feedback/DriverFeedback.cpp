@@ -179,7 +179,7 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     if (chassisConfig != nullptr)
     {
         auto visionPoseEstitmators = chassisConfig->GetSwervePoseEstimator()->GetVisionPoseEstimators();
-        if (visionPoseEstitmators.size() > 0)
+        if (!visionPoseEstitmators.empty())
         {
             if (!CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs().empty())
             {
