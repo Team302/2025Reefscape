@@ -86,7 +86,7 @@ private:
     frc::Transform2d m_questTransform;
 
     const double m_stdxy = 0.02;
-    const double m_stddeg = 0.02;
+    const double m_stddeg = 1000;
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;
