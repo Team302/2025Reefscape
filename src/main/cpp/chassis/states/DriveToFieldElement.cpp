@@ -19,6 +19,7 @@
 #include <frc/geometry/Pose2d.h>
 #include <pathplanner/lib/path/PathConstraints.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 // Team302 Includes
 #include "chassis/definitions/ChassisConfig.h"
@@ -46,6 +47,8 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
     m_translationPIDX.SetIZone(0.10);
     m_translationPIDY.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
+    frc::SmartDashboard::PutNumber(m_iGainKey, m_translationKI);
+    frc::SmartDashboard::PutNumber(m_pGainKey, m_translationKP);
 }
 
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
@@ -55,6 +58,15 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
     auto info = dragonTargetFinderInst->GetPose(GetDriveToTarget());
 
     m_hasTarget = false;
+    auto pGainShuffleboard = frc::SmartDashboard::GetNumber(m_pGainKey, 0);
+    auto iGainShuffleboard = frc::SmartDashboard::GetNumber(m_iGainKey, 0);
+
+    if (pGainShuffleboard != 0 && iGainShuffleboard != 0)
+    {
+        m_translationKP = pGainShuffleboard;
+        m_translationKI = iGainShuffleboard;
+    }
+
     if (info.has_value())
     {
         InitChassisMovement(chassisMovement);
@@ -166,6 +178,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                                                                                         0.0_rad_per_s,
                                                                                         m_chassis->GetYaw());
         }
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
     }
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsDone());
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
