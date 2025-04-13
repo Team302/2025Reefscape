@@ -41,6 +41,7 @@ public:
     void ResetPose(const frc::Pose2d &pose);
     void ZeroYaw();
     void CalculateInitialPose();
+    std::vector<DragonVisionPoseEstimator *> GetVisionPoseEstimators() { return m_visionPoseEstimators; };
 
 private:
     void AddVisionMeasurements();

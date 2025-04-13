@@ -16,8 +16,8 @@
 
 #pragma once
 #include "vision/DragonVision.h"
-#include "vision/DragonQuest.h"
 
+class DragonQuest;
 class CameraConfig
 {
 public:
@@ -25,4 +25,6 @@ public:
     ~CameraConfig();
 
     virtual void BuildCameraConfig();
+    virtual std::vector<int> GetLimelightIndexs() = 0;
+    virtual int GetQuestIndex() = 0;
 };

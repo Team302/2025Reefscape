@@ -67,7 +67,8 @@ void ClimbState::Run()
 		if ((abs(manualClimberPercent) > 0.075))
 			m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_percentOutScale);
 		else
-			m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
+			// m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
+			m_mechanism->UpdateTargetClimberPercentOut(0.0);
 	}
 }
 

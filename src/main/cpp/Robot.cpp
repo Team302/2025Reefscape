@@ -39,6 +39,7 @@
 #include "vision/definitions/CameraConfig.h"
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 using std::string;
 
@@ -60,6 +61,18 @@ void Robot::RobotInit()
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
     auto path = AutonUtils::GetPathFromTrajectory("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
+
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        auto visionPoseEstitmators = m_dragonswerveposeestimator->GetVisionPoseEstimators();
+        if (!visionPoseEstitmators.empty())
+        {
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            {
+                m_quest = static_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+            }
+        }
+    }
 }
 
 /**
@@ -88,9 +101,14 @@ void Robot::RobotPeriodic()
         m_robotState->Run();
     }
 
+    if (m_quest != nullptr)
+    {
+        m_quest->HandleHeartBeat();
+        m_quest->RefreshNT();
+    }
+
     UpdateDriveTeamFeedback();
 }
-
 /**
  * This autonomous (along with the chooser code above) shows how to select
  * between different autonomous modes using the dashboard. The sendable chooser

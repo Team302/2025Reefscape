@@ -39,24 +39,34 @@ DragonQuest::DragonQuest(
 
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("euler angles");
     m_initialPosePublisher = m_networktable.get()->GetDoubleArrayTopic("resetpose").Publish();
+
+    m_heartbeatRequestSub = m_networktable.get()->GetDoubleTopic("heartbeat/quest_to_robot").Subscribe(0);
+    m_heartbeatResponsePub = m_networktable.get()->GetDoubleTopic("heartbeat/robot_to_quest").Publish();
+
+    // This transform is from the robot center to the Quest sensor
+    m_robotToQuestTransform = frc::Transform2d{
+        frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
+        frc::Rotation2d(m_mountingYaw)};
+    m_questTransform = m_robotToQuestTransform.Inverse(); // Invert to get Quest to robot transform
+
+    m_questMosi.Set(0); // initial idle state
 }
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
 {
-    RefreshNT();
 
     std::vector<double> posarray = m_posTopic.GetEntry(std::array<double, 3>{}).Get();
     std::vector<double> rotationarray = m_rotationTopic.GetEntry(std::array<double, 3>{}).Get();
 
     units::length::meter_t x{posarray[2]};
     units::length::meter_t y{-posarray[0]};
-    units::length::meter_t z{posarray[1]};
-    units::angle::degree_t roll{rotationarray[0]};
-    units::angle::degree_t pitch{rotationarray[2]};
     units::angle::degree_t yaw{-rotationarray[1]};
 
     frc::Pose2d questPose{x, y, yaw};
+    m_rawQuestPose = questPose;
+
     frc::Pose2d robotPose = questPose + m_questTransform;
+
     return robotPose;
 }
 
@@ -100,7 +110,21 @@ void DragonQuest::RefreshNT()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+}
 
+void DragonQuest::HandleHeartBeat()
+{
+    if (m_questMiso.Get() == 98)
+    {
+        m_questMosi.Set(0);
+    }
+    double requestId = m_heartbeatRequestSub.Get();
+    // Only respond to new requests to avoid flooding
+    if (requestId > 0 && requestId != m_lastProcessedHeartbeatId)
+    {
+        m_heartbeatResponsePub.Set(requestId);
+        m_lastProcessedHeartbeatId = requestId;
+    }
     SetIsConnected();
 }
 
@@ -108,13 +132,8 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        auto x = (pose.X() + m_mountingXOffset);
-        auto y = (pose.Y() + m_mountingYOffset);
-        auto rot = (pose.Rotation().Degrees() + m_mountingYaw);
-
-        m_initialPosePublisher.Set(std::array<double, 3>{x.value(), y.value(), rot.value()});
-
-        m_questTransform = pose - frc::Pose2d{x, y, frc::Rotation2d(rot)};
+        frc::Pose2d questPose = pose + m_robotToQuestTransform;
+        m_initialPosePublisher.Set(std::array<double, 3>{questPose.X().value(), questPose.Y().value(), questPose.Rotation().Degrees().value()});
 
         if (m_questMiso.Get() != 99)
         {
@@ -136,9 +155,10 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
+        str.m_timeStamp = units::time::second_t(frc::Timer::GetFPGATimestamp() * 1000000);
     }
     return str;
 }

@@ -19,10 +19,10 @@
 #include "vision/definitions/CameraConfig_302.h"
 #include "vision/DragonLimelight.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 
 void CameraConfig_302::BuildCameraConfig()
 {
-
     DragonLimelight *front = new DragonLimelight(std::string("limelight-front"), // networkTableName
                                                  DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4, // PIPELINE initialPipeline,
@@ -39,6 +39,7 @@ void CameraConfig_302::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    m_limelightIndexs.push_back(0);
 
     // DragonLimelight *back = new DragonLimelight(std::string("limelight-back"), // networkTableName
     //                                             DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA,
@@ -57,11 +58,12 @@ void CameraConfig_302::BuildCameraConfig()
     // ); // additional parameter
     // DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 
-    // new DragonQuest(units::length::meter_t(-.319),  // <I> x offset of Quest from robot center (forward relative to robot)
-    //                 units::length::meter_t(0.0384), // <I> y offset of Quest from robot center (left relative to robot)
-    //                 units::length::meter_t(0.238),  // <I> z offset of Quest from robot center (up relative to robot)
-    //                 units::angle::degree_t(0),      // <I> - Pitch of Quest
-    //                 units::angle::degree_t(180),    // <I> - Yaw of Quest
-    //                 units::angle::degree_t(0)       // <I> - Roll of Quest
+    // new DragonQuest(units::length::inch_t(-12.3),  // <I> x offset of Quest from robot center (forward relative to robot)
+    //                 units::length::inch_t(-2.5),   // <I> y offset of Quest from robot center (left relative to robot)
+    //                 units::length::inch_t(12.574), // <I> z offset of Quest from robot center (up relative to robot)
+    //                 units::angle::degree_t(0.0),   // <I> - Pitch of Quest
+    //                 units::angle::degree_t(180.0), // <I> - Yaw of Quest
+    //                 units::angle::degree_t(0.0)    // <I> - Roll of Quest
     // );
+    // m_questIndex = 1;
 }

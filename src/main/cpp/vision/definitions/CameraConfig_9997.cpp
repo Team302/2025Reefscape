@@ -39,4 +39,5 @@ void CameraConfig_9997::BuildCameraConfig()
 
     ); // additional parameter
     DragonVision::GetDragonVision()->AddLimelight(placer, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    m_limelightIndexs.push_back(0);
 }

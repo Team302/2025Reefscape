@@ -29,6 +29,10 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
+#include "chassis/SwerveChassis.h"
+#include "chassis/definitions/ChassisConfigMgr.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 using frc::DriverStation;
 
@@ -45,7 +49,6 @@ DriverFeedback *DriverFeedback::GetInstance()
 
 void DriverFeedback::UpdateFeedback()
 {
-    UpdateRumble();
     UpdateLEDStates();
     UpdateDiagnosticLEDs();
     CheckControllers();
@@ -55,7 +58,7 @@ void DriverFeedback::UpdateFeedback()
 void DriverFeedback::UpdateRumble()
 {
     auto controller = TeleopControl::GetInstance();
-    if (!frc::DriverStation::IsTeleop())
+    if (!frc::DriverStation::IsTeleop() || m_climbMode)
     {
         controller->SetRumble(0, false, false);
         controller->SetRumble(1, false, false);
@@ -158,6 +161,8 @@ void DriverFeedback::UpdateDiagnosticLEDs()
     bool coralInSensor = false;
     bool coralOutSensor = false;
     bool algaeSensor = false;
+    bool questStatus = false;
+    bool ll1Status = false;
     if (MechanismConfigMgr::GetInstance()->GetCurrentConfig() != nullptr)
     {
         StateMgr *taleStateManager = MechanismConfigMgr::GetInstance()->GetCurrentConfig()->GetMechanism(MechanismTypes::DRAGON_TALE);
@@ -169,13 +174,32 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
     }
-    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, m_questStatus, m_ll1Status);
-    if (m_timer == 20)
+    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
+    if (chassisConfig != nullptr)
     {
-        QueryNT();
-        m_timer = 0;
+        auto visionPoseEstitmators = chassisConfig->GetSwervePoseEstimator()->GetVisionPoseEstimators();
+        if (!visionPoseEstitmators.empty())
+        {
+            if (!CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs().empty())
+            {
+                auto limeLight = dynamic_cast<DragonLimelight *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs()[0]]);
+                if (limeLight != nullptr)
+                {
+                    ll1Status = limeLight->HealthCheck();
+                }
+            }
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            {
+                auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+                if (quest != nullptr)
+                {
+                    questStatus = quest->HealthCheck();
+                }
+            }
+        }
     }
-    m_timer++;
+
+    m_LEDStates->DiagnosticPattern(FMSData::GetInstance()->GetAllianceColor(), coralInSensor, coralOutSensor, algaeSensor, questStatus, ll1Status);
 }
 
 void DriverFeedback::ResetRequests(void)
@@ -224,19 +248,4 @@ void DriverFeedback::CheckControllers()
     {
         m_controllerCounter = 0;
     }
-}
-
-void DriverFeedback::QueryNT()
-{
-    m_ll1Nt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("limelight-front"));
-    m_llQuestNt = nt::NetworkTableInstance::GetDefault().GetTable(std::string("questnav"));
-
-    int ll1hb = m_ll1Nt.get()->GetEntry("hb").GetDouble(0);
-    int questhb = m_llQuestNt.get()->GetEntry("timestamp").GetDouble(0);
-
-    m_ll1Status = ll1hb != m_ll1hb;
-    m_questStatus = questhb != m_questhb;
-
-    m_ll1hb = ll1hb;
-    m_questhb = questhb;
 }

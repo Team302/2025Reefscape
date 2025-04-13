@@ -48,16 +48,18 @@ public:
     );
     frc::Pose2d GetEstimatedPose();
     void DataLog(uint64_t timestamp) override;
-    bool IsConnected() { return m_isConnected; };
+    bool HealthCheck() override { return m_isConnected; };
     void SetIsConnected();
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
     void SetRobotPose(const frc::Pose2d &pose) override;
 
+    void RefreshNT();
+    void HandleHeartBeat();
+
 private:
     DragonQuest() = delete;
     void ZeroPosition();
-    void RefreshNT();
 
     units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
     units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
@@ -74,15 +76,22 @@ private:
     nt::DoubleArrayTopic m_rotationTopic;
     nt::IntegerTopic m_frameCountTopic;
     nt::DoubleArrayPublisher m_initialPosePublisher;
+    nt::DoubleSubscriber m_heartbeatRequestSub;
+    nt::DoublePublisher m_heartbeatResponsePub;
 
     bool m_hasreset = false;
     bool m_isConnected = false;
 
+    frc::Transform2d m_robotToQuestTransform; // <I> Transform from robot center to Quest (used to calculate the quest pose from the robot pose)
     frc::Transform2d m_questTransform;
 
-    const double m_stdxy = 0.5;
-    const double m_stddeg = 6.0;
+    const double m_stdxy = 0.02;
+    const double m_stddeg = 1000;
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;
+
+    int m_lastProcessedHeartbeatId = 0;
+
+    frc::Pose2d m_rawQuestPose;
 };

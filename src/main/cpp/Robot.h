@@ -31,6 +31,7 @@ class RobotState;
 class SomeMech;
 class DragonDataLoggerMgr;
 class DragonSwervePoseEstimator;
+class DragonQuest;
 
 class Robot : public frc::TimedRobot
 {
@@ -70,4 +71,5 @@ private:
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
     DragonSwervePoseEstimator *m_dragonswerveposeestimator;
+    DragonQuest *m_quest;
 };
