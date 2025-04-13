@@ -27,10 +27,10 @@
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
 #include "utils/logging/debug/Logger.h"
+#include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonVisionStructs.h"
-#include "utils/logging/debug/Logger.h"
 
 using namespace std;
 
@@ -78,6 +78,7 @@ private:
     nt::DoubleArrayPublisher m_initialPosePublisher;
     nt::DoubleSubscriber m_heartbeatRequestSub;
     nt::DoublePublisher m_heartbeatResponsePub;
+    nt::DoubleSubscriber m_timestamp;
 
     bool m_hasreset = false;
     bool m_isConnected = false;
@@ -85,8 +86,8 @@ private:
     frc::Transform2d m_robotToQuestTransform; // <I> Transform from robot center to Quest (used to calculate the quest pose from the robot pose)
     frc::Transform2d m_questTransform;
 
-    const double m_stdxy = 0.02;
-    const double m_stddeg = 1000;
+    const double m_stdxy = 1.0; // use same values as DragonLimelight when seeing 1 tag close up
+    const double m_stddeg = 12; // use same values as DragonLimelight when seeing 1 tag close up
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;

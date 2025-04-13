@@ -14,8 +14,8 @@
 //====================================================================================================================================================
 #include "units/time.h"
 #include "utils/AngleUtils.h"
-#include "vision/DragonQuest.h"
 #include "utils/DragonField.h"
+#include "vision/DragonQuest.h"
 
 DragonQuest::DragonQuest(
     units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
@@ -42,6 +42,8 @@ DragonQuest::DragonQuest(
 
     m_heartbeatRequestSub = m_networktable.get()->GetDoubleTopic("heartbeat/quest_to_robot").Subscribe(0);
     m_heartbeatResponsePub = m_networktable.get()->GetDoubleTopic("heartbeat/robot_to_quest").Publish();
+
+    m_timestamp = m_networktable.get()->GetDoubleTopic("timestamp").Subscribe(0);
 
     // This transform is from the robot center to the Quest sensor
     m_robotToQuestTransform = frc::Transform2d{
@@ -158,7 +160,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-        str.m_timeStamp = units::time::second_t(frc::Timer::GetFPGATimestamp() * 1000000);
+        str.m_timeStamp = units::time::second_t(m_timestamp.GetAtomic().serverTime);
     }
     return str;
 }
