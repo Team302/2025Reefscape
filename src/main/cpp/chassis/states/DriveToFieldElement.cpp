@@ -85,6 +85,9 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
             if (m_chassis != nullptr)
             {
                 m_currentPose = m_chassis->GetPose();
+                m_translationPIDX.SetGoal(m_endPose.X());
+                m_translationPIDY.SetGoal(m_endPose.Y());
+
                 m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
                 m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
             }
@@ -103,19 +106,19 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             CalculateFeedForward(chassisMovement);
             auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
-            units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
+            // units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
 
-            // Reset the PID if resetTime in second has passed since the last reset
-            if (m_resetTime <= (currentTime - m_lastResetTime))
-            {
-                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-                m_lastResetTime = currentTime;
-            }
-            else
-            {
-                m_lastResetTime = currentTime;
-            }
+            // // Reset the PID if resetTime in second has passed since the last reset
+            // if (m_resetTime <= (currentTime - m_lastResetTime))
+            // {
+            //     m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+            //     m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+            //     m_lastResetTime = currentTime;
+            // }
+            // else
+            // {
+            //     m_lastResetTime = currentTime;
+            // }
 
             auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
             if (info.has_value())
@@ -128,6 +131,8 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                 if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
                 {
                     m_endPose = newEndPose;
+                    m_translationPIDX.SetGoal(m_endPose.X());
+                    m_translationPIDY.SetGoal(m_endPose.Y());
                 }
                 m_currentType = get<0>(info.value());
             }
@@ -139,8 +144,8 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             {
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
 
-                m_translationPIDX.SetGoal(m_endPose.X());
-                m_translationPIDY.SetGoal(m_endPose.Y());
+                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
 
                 chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
                 chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
@@ -152,11 +157,6 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                 {
                     chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
                 }
-                // if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
-                // {
-                //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("DriveState"), "IsFound");
-                //     // chassisSpeeds.omega = 0.0_deg_per_s;
-                // }
                 else
                 {
                     auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees() : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();

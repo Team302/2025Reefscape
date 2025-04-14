@@ -75,8 +75,8 @@ private:
     const units::length::meter_t m_ffMinRadius{0.05};
     const units::length::meter_t m_ffMaxRadius{2.0};
 
-    const units::velocity::meters_per_second_t kMaxVelocity = 3.5_mps;
-    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 3.5_mps_sq;
+    const units::velocity::meters_per_second_t kMaxVelocity = 4.5_mps;
+    const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 4_mps_sq;
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
 
@@ -91,8 +91,8 @@ private:
     double m_translationKP = 2.0;
     double m_translationKI = 2.0;
 #else
-    const double m_translationKP = 2.0;
-    const double m_translationKI = 2.0;
+    const double m_translationKP = 4.0;
+    const double m_translationKI = 0.0;
 #endif
     const double m_translationKD = 0.0;
 
