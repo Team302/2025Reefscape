@@ -72,29 +72,26 @@ private:
 
     const units::length::inch_t m_distanceThreshold{0.25};
     const units::length::inch_t m_regenerationDistanceThreshold{2.0};
-    const units::length::meter_t m_ffMinRadius{0.05};
-    const units::length::meter_t m_ffMaxRadius{2.0};
+    const units::length::meter_t m_ffMinRadius{0.0};
+    const units::length::meter_t m_ffMaxRadius{1.5};
 
-    const units::velocity::meters_per_second_t kMaxVelocity = 4.5_mps;
+    const units::velocity::meters_per_second_t kMaxVelocity = 4_mps;
     const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 4_mps_sq;
 
     const units::angular_velocity::degrees_per_second_t kMaxAngularVelocity = 540_deg_per_s;
-
-    units::time::second_t m_lastResetTime = 0_s;
-    units::time::second_t m_resetTime = 0.5_s;
 
     std::string m_iGainKey = "I_Gain";
     std::string m_pGainKey = "P_Gain";
     bool runOnceLatch = false;
 
 #ifdef SHUFFLEBOARD_PIDS
-    double m_translationKP = 2.0;
-    double m_translationKI = 2.0;
+    double m_translationKP = 4.5;
+    double m_translationKI = 0.0;
 #else
-    const double m_translationKP = 4.0;
+    const double m_translationKP = 4.5;
     const double m_translationKI = 0.0;
 #endif
-    const double m_translationKD = 0.0;
+    const double m_translationKD = 0.1;
 
     const double m_rotationKP = 6.0;
 

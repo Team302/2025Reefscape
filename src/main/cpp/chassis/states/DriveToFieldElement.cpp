@@ -142,8 +142,6 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
             if (m_currentType != DragonTargetFinderData::NOT_FOUND)
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
-
                 m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
                 m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
 
@@ -152,6 +150,9 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
                 chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
                 chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
 
                 if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
                 {
