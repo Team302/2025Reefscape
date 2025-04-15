@@ -289,9 +289,9 @@ public:
     string m_pose2dUnits = "X, Y, Rotation";
 
     string m_frontLeftTargetSpeedPath = "/Chassis/FrontLeftModule/TargetState/Speed";
-    string m_frontLeftTargetAnglePath;
+    string m_frontLeftTargetAnglePath = "/Chassis/FrontLeftModule/TargetState/Angle";
     string m_frontRightTargetSpeedPath = "/Chassis/FrontRightModule/TargetState/Speed";
-    string m_frontRightTargetAnglePath;
+    string m_frontRightTargetAnglePath = "/Chassis/FrontRightModule/TargetState/Angle";
     string m_backLeftTargetSpeedPath = "/Chassis/BackLeftModule/TargetState/Speed";
     string m_backLeftTargetAnglePath = "/Chassis/BackLeftModule/TargetState/Angle";
     string m_backRightTargetSpeedPath = "/Chassis/BackRightModule/TargetState/Speed";
