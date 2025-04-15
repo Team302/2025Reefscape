@@ -85,11 +85,11 @@ private:
     bool runOnceLatch = false;
 
 #ifdef SHUFFLEBOARD_PIDS
-    double m_translationKP = 4.5;
-    double m_translationKI = 0.0;
+    double m_translationKP = 0.35;
+    double m_translationKI = 0.25;
 #else
-    const double m_translationKP = 4.5;
-    const double m_translationKI = 0.0;
+    const double m_translationKP = 0.35;
+    const double m_translationKI = 0.25;
 #endif
     const double m_translationKD = 0.0;
 

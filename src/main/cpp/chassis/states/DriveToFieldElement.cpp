@@ -45,6 +45,7 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
                                                                    m_robotDrive(robotDrive)
 {
     m_translationPID.SetIZone(0.10);
+    m_translationPID.SetTolerance(0.25_in);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
     m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
 
@@ -68,8 +69,8 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 
     if (pGainShuffleboard != 0 && iGainShuffleboard != 0)
     {
-        m_translationKP = pGainShuffleboard;
-        m_translationKI = iGainShuffleboard;
+        m_translationPID.SetP(pGainShuffleboard);
+        m_translationPID.SetI(iGainShuffleboard);
     }
 #endif
 
