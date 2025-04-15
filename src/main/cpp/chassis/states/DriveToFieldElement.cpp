@@ -128,14 +128,18 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
             if (m_currentType != DragonTargetFinderData::NOT_FOUND)
             {
-                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-
-                chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-                chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
-
-                chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
-                chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+                if (m_distanceError > m_pidResetThreshold)
+                {
+                    m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+                    m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+                }
+                else
+                {
+                    chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+                    chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+                    chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+                    chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+                }
 
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
@@ -222,13 +226,13 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
 {
     if (m_chassis != nullptr)
     {
-        units::meter_t distance = m_currentPose.Translation().Distance(m_endPose.Translation());
+        m_distanceError = m_currentPose.Translation().Distance(m_endPose.Translation());
 
         // Calculate feedforward speed based on distance
         units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
-        if (distance > m_ffMinRadius)
+        if (m_distanceError > m_ffMinRadius)
         {
-            double feedForwardScale = std::clamp(((distance - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
+            double feedForwardScale = std::clamp(((m_distanceError - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
             feedforwardSpeed = kMaxVelocity * feedForwardScale;
         }
 

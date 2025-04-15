@@ -97,6 +97,9 @@ private:
 
     units::angle::degree_t m_sweepDelta{90.0};
 
+    units::length::meter_t m_distanceError{0.0};
+    units::length::meter_t m_pidResetThreshold{0.25};
+
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
     frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
