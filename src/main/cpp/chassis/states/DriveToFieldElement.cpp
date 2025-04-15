@@ -44,10 +44,10 @@ using namespace std;
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                                    m_robotDrive(robotDrive)
 {
-    m_translationPIDX.SetIZone(0.10);
-    m_translationPIDY.SetIZone(0.10);
+    m_translationPID.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
     m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
+
 #ifdef SHUFFLEBOARD_PIDS
     frc::SmartDashboard::PutNumber(m_iGainKey, m_translationKI);
     frc::SmartDashboard::PutNumber(m_pGainKey, m_translationKP);
@@ -86,11 +86,12 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
             if (m_chassis != nullptr)
             {
                 m_currentPose = m_chassis->GetPose();
-                m_translationPIDX.SetGoal(m_endPose.X());
-                m_translationPIDY.SetGoal(m_endPose.Y());
+                m_distanceError = m_currentPose.Translation().Distance(m_endPose.Translation());
 
-                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+                m_translationPID.SetGoal(0_m);
+                auto speed = units::math::sqrt(chassisMovement.chassisSpeeds.vx * chassisMovement.chassisSpeeds.vx + chassisMovement.chassisSpeeds.vy * chassisMovement.chassisSpeeds.vy);
+
+                m_translationPID.Reset(m_distanceError, speed);
             }
         }
     }
@@ -106,6 +107,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             m_currentPose = m_chassis->GetPose();
             CalculateFeedForward(chassisMovement);
             auto chassisSpeeds = chassisMovement.chassisSpeeds;
+            auto speed = units::math::sqrt(chassisSpeeds.vx * chassisSpeeds.vx + chassisSpeeds.vy * chassisSpeeds.vy);
 
             auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
             if (info.has_value())
@@ -118,8 +120,6 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                 if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
                 {
                     m_endPose = newEndPose;
-                    m_translationPIDX.SetGoal(m_endPose.X());
-                    m_translationPIDY.SetGoal(m_endPose.Y());
                 }
                 m_currentType = get<0>(info.value());
             }
@@ -131,13 +131,15 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             {
                 if (m_distanceError > m_pidResetThreshold)
                 {
-                    m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-                    m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+                    m_translationPID.Reset(m_distanceError, speed);
                 }
                 else
                 {
-                    chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-                    chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+                    auto pidSpeed = units::velocity::meters_per_second_t(m_translationPID.Calculate(m_distanceError));
+
+                    chassisSpeeds.vx += pidSpeed * m_angleToTarget.Cos();
+                    chassisSpeeds.vy += pidSpeed * m_angleToTarget.Sin();
+
                     chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
                     chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
                 }
@@ -239,10 +241,10 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
 
         // Apply feedforward to the desired velocity
         frc::Translation2d translationError = m_endPose.Translation() - m_currentPose.Translation();
-        frc::Rotation2d angleToTarget = translationError.Angle();
+        frc::Rotation2d m_angleToTarget = translationError.Angle();
 
-        chassisMovement.chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
-        chassisMovement.chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
+        chassisMovement.chassisSpeeds.vx = feedforwardSpeed * m_angleToTarget.Cos();
+        chassisMovement.chassisSpeeds.vy = feedforwardSpeed * m_angleToTarget.Sin();
     }
 }
 

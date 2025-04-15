@@ -34,7 +34,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
 
-// #define SHUFFLEBOARD_PIDS //for tuning :)
+#define SHUFFLEBOARD_PIDS // for tuning :)
 class DriveToFieldElement : public RobotDrive
 {
 public:
@@ -73,7 +73,7 @@ private:
     const units::length::inch_t m_distanceThreshold{0.25};
     const units::length::inch_t m_regenerationDistanceThreshold{2.0};
     const units::length::meter_t m_ffMinRadius{0.0};
-    const units::length::meter_t m_ffMaxRadius{1.5};
+    const units::length::meter_t m_ffMaxRadius{1.0};
 
     const units::velocity::meters_per_second_t kMaxVelocity = 4_mps;
     const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 4_mps_sq;
@@ -91,7 +91,7 @@ private:
     const double m_translationKP = 4.5;
     const double m_translationKI = 0.0;
 #endif
-    const double m_translationKD = 0.1;
+    const double m_translationKD = 0.0;
 
     const double m_rotationKP = 6.0;
 
@@ -101,8 +101,9 @@ private:
     units::length::meter_t m_pidResetThreshold{0.25};
     units::length::meter_t m_feedForwardRange;
 
+    frc::Rotation2d m_angleToTarget;
+
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
-    frc::ProfiledPIDController<units::length::meters> m_translationPIDY{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
+    frc::ProfiledPIDController<units::length::meters> m_translationPID{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
 };
