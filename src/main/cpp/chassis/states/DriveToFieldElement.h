@@ -99,6 +99,7 @@ private:
 
     units::length::meter_t m_distanceError{0.0};
     units::length::meter_t m_pidResetThreshold{0.25};
+    units::length::meter_t m_feedForwardRange;
 
     frc::TrapezoidProfile<units::length::meters>::Constraints m_translationConstraints{kMaxVelocity, kMaxAcceleration};
 

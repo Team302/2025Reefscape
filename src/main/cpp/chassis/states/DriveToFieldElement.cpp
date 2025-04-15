@@ -47,6 +47,7 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
     m_translationPIDX.SetIZone(0.10);
     m_translationPIDY.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
+    m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
 #ifdef SHUFFLEBOARD_PIDS
     frc::SmartDashboard::PutNumber(m_iGainKey, m_translationKI);
     frc::SmartDashboard::PutNumber(m_pGainKey, m_translationKP);
@@ -232,7 +233,7 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
         units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
         if (m_distanceError > m_ffMinRadius)
         {
-            double feedForwardScale = std::clamp(((m_distanceError - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
+            double feedForwardScale = std::clamp(((m_distanceError - m_ffMinRadius) / (m_feedForwardRange)).value(), 0.0, 1.0);
             feedforwardSpeed = kMaxVelocity * feedForwardScale;
         }
 
