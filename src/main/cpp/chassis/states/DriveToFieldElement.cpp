@@ -47,6 +47,7 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
     m_translationPIDX.SetIZone(0.10);
     m_translationPIDY.SetIZone(0.10);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
+    m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
 #ifdef SHUFFLEBOARD_PIDS
     frc::SmartDashboard::PutNumber(m_iGainKey, m_translationKI);
     frc::SmartDashboard::PutNumber(m_pGainKey, m_translationKP);
@@ -85,6 +86,9 @@ void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
             if (m_chassis != nullptr)
             {
                 m_currentPose = m_chassis->GetPose();
+                m_translationPIDX.SetGoal(m_endPose.X());
+                m_translationPIDY.SetGoal(m_endPose.Y());
+
                 m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
                 m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
             }
@@ -103,20 +107,6 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
             CalculateFeedForward(chassisMovement);
             auto chassisSpeeds = chassisMovement.chassisSpeeds;
 
-            units::time::second_t currentTime = frc::Timer::GetFPGATimestamp();
-
-            // Reset the PID if resetTime in second has passed since the last reset
-            if (m_resetTime <= (currentTime - m_lastResetTime))
-            {
-                m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
-                m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
-                m_lastResetTime = currentTime;
-            }
-            else
-            {
-                m_lastResetTime = currentTime;
-            }
-
             auto info = DragonTargetFinder::GetInstance()->GetPose(GetDriveToTarget());
             if (info.has_value())
             {
@@ -128,6 +118,8 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                 if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
                 {
                     m_endPose = newEndPose;
+                    m_translationPIDX.SetGoal(m_endPose.X());
+                    m_translationPIDY.SetGoal(m_endPose.Y());
                 }
                 m_currentType = get<0>(info.value());
             }
@@ -137,26 +129,26 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
 
             if (m_currentType != DragonTargetFinderData::NOT_FOUND)
             {
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("state"), "not not found");
+                if (m_distanceError > m_pidResetThreshold)
+                {
+                    m_translationPIDX.Reset(m_currentPose.X(), chassisMovement.chassisSpeeds.vx);
+                    m_translationPIDY.Reset(m_currentPose.Y(), chassisMovement.chassisSpeeds.vy);
+                }
+                else
+                {
+                    chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+                    chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+                    chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+                    chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+                }
 
-                m_translationPIDX.SetGoal(m_endPose.X());
-                m_translationPIDY.SetGoal(m_endPose.Y());
-
-                chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
-                chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
-
-                chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
-                chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
 
                 if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
                 {
                     chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
                 }
-                // if (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE)
-                // {
-                //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("Algae"), std::string("DriveState"), "IsFound");
-                //     // chassisSpeeds.omega = 0.0_deg_per_s;
-                // }
                 else
                 {
                     auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees() : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();
@@ -235,13 +227,13 @@ void DriveToFieldElement::CalculateFeedForward(ChassisMovement &chassisMovement)
 {
     if (m_chassis != nullptr)
     {
-        units::meter_t distance = m_currentPose.Translation().Distance(m_endPose.Translation());
+        m_distanceError = m_currentPose.Translation().Distance(m_endPose.Translation());
 
         // Calculate feedforward speed based on distance
         units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
-        if (distance > m_ffMinRadius)
+        if (m_distanceError > m_ffMinRadius)
         {
-            double feedForwardScale = std::clamp(((distance - m_ffMinRadius) / (m_ffMaxRadius - m_ffMinRadius)).value(), 0.0, 1.0);
+            double feedForwardScale = std::clamp(((m_distanceError - m_ffMinRadius) / (m_feedForwardRange)).value(), 0.0, 1.0);
             feedforwardSpeed = kMaxVelocity * feedForwardScale;
         }
 

@@ -65,7 +65,10 @@ void ClimbState::Run()
 	else
 	{
 		if ((abs(manualClimberPercent) > 0.075))
-			m_mechanism->UpdateTargetClimberPercentOut(manualClimberPercent * m_percentOutScale);
+		{
+			double climberPercentOutTarget = m_mechanism->GetClimber()->GetPosition().GetValue() > 90.0_tr ? std::clamp(manualClimberPercent * m_percentOutScale, -0.35, 0.35) : manualClimberPercent * m_percentOutScale;
+			m_mechanism->UpdateTargetClimberPercentOut(climberPercentOutTarget);
+		}
 		else
 			// m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
 			m_mechanism->UpdateTargetClimberPercentOut(0.0);

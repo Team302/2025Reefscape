@@ -268,12 +268,13 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                     xyStds = 1.0;
                     degStds = 12;
                 }
+                // TODO: tune this!
                 // 1 target with medium area (somewhat close to camera))
-                else if (averageTagTargetArea > 0.45)
-                {
-                    xyStds = 1.5;
-                    degStds = 21;
-                }
+                // else if (averageTagTargetArea > 0.45)
+                // {
+                //     xyStds = 1.5;
+                //     degStds = 21;
+                // }
                 // 1 target small area (farther away from camera)
                 else if (averageTagTargetArea > 0.1)
                 {
