@@ -57,7 +57,7 @@ time = "3.0"/> -->
 
  <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterJ_Barge"
-time = "2.10">
+time = "2.20">
 <zone filename = "BlueBarge.xml"/>
 </primitive> 
 
