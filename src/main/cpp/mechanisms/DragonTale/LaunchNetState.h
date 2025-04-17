@@ -19,36 +19,21 @@
 #include <string>
 
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "state/State.h"
+#include "mechanisms/DragonTale/NetState.h"
 
 using namespace std;
 
 namespace DragonTaleStates
 {
-	class ScoreAlgaeState : public State
+	class LaunchNetState : public NetState
 	{
 	public:
-		ScoreAlgaeState() = delete;
-		ScoreAlgaeState(std::string stateName,
-						int stateId,
-						DragonTale *mech,
-						RobotIdentifier activeRobotId);
-		~ScoreAlgaeState() = default;
-		void Init() override;
-		void Run() override;
-		void Exit() override;
-		bool AtTarget() override;
+		LaunchNetState() = delete;
+		LaunchNetState(std::string stateName,
+					   int stateId,
+					   DragonTale *mech,
+					   RobotIdentifier activeRobotId);
+		~LaunchNetState() = default;
 		bool IsTransitionCondition(bool considerGamepadTransitions) override;
-
-	private:
-		DragonTale *m_mechanism;
-		void InitPRACTICE_BOT9999();
-		void InitCOMP_BOT302();
-		RobotIdentifier m_RobotId;
-		const units::angle::degree_t m_ArmTarget = units::angle::degree_t(70); // same target as state net
-		const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t(0);
-		const units::angle::degree_t m_armThreshold{3.0}; // we need to tune
-		const double m_CoralTarget = double(0);
-		const double m_AlgaeTarget = double(-1);
 	};
 }
