@@ -46,7 +46,9 @@ namespace ClimberManagerStates
 		void InitCOMP_BOT302();
 
 		RobotIdentifier m_RobotId;
-		const units::angle::turn_t m_ClimberTarget{-10.0};
 		const double m_percentOutScale = -0.75;
+		const double m_holdPercentOut = -0.3;
+		const units::angle::turn_t m_minClimbPosition{-100.0};
+		const units::angle::turn_t m_ClimberTarget{-70.0};
 	};
 }

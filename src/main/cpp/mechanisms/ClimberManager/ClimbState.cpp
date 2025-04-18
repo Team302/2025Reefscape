@@ -57,21 +57,33 @@ void ClimbState::Run()
 {
 
 	double manualClimberPercent = TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB_UP) - TeleopControl::GetInstance()->GetAxisValue(TeleopControlFunctions::MANUAL_CLIMB_DOWN);
+	auto climberPosition = m_mechanism->GetClimber()->GetPosition().GetValue();
 
-	if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE)) // Auto Climb button is Y (Mapped to Drive To Barge)
-	{
-		m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
-	}
-	else
+	// if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::AUTO_ALIGN_BARGE)) // Auto Climb button is Y (Mapped to Drive To Barge)
+	// {
+	// 	m_mechanism->UpdateTargetClimberPositionDegree(m_ClimberTarget);
+	// }
+	// else
+	// {
+
+	if (climberPosition < m_ClimberTarget)
+		m_mechanism->UpdateTargetClimberPercentOut(m_holdPercentOut);
+
+	if (climberPosition > m_minClimbPosition)
 	{
 		if ((abs(manualClimberPercent) > 0.075))
 		{
-			double climberPercentOutTarget = m_mechanism->GetClimber()->GetPosition().GetValue() > 90.0_tr ? std::clamp(manualClimberPercent * m_percentOutScale, -0.35, 0.35) : manualClimberPercent * m_percentOutScale;
+			// double climberPercentOutTarget = m_mechanism->GetClimber()->GetPosition().GetValue() > 90.0_tr ? std::clamp(manualClimberPercent * m_percentOutScale, -0.35, 0.35) : manualClimberPercent * m_percentOutScale;
+			double climberPercentOutTarget = manualClimberPercent * m_percentOutScale;
 			m_mechanism->UpdateTargetClimberPercentOut(climberPercentOutTarget);
 		}
 		else
 			// m_mechanism->UpdateTargetClimberPositionDegree(m_mechanism->GetClimber()->GetPosition().GetValue());
 			m_mechanism->UpdateTargetClimberPercentOut(0.0);
+	}
+	else
+	{
+		m_mechanism->UpdateTargetClimberPercentOut(0.0);
 	}
 }
 
