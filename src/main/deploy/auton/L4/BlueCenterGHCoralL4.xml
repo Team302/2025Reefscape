@@ -61,8 +61,8 @@ time = "2.20">
 <zone filename = "BlueBarge.xml"/>
 </primitive> 
 
-<primitive id = "DRIVE_STOP_MECH"
+<!-- <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_ALGAE"
-time = "1.5"/> 
+time = "1.5"/>  -->
 
 </auton>
