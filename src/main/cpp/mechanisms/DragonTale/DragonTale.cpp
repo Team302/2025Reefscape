@@ -51,6 +51,7 @@
 #include "mechanisms/DragonTale/ManualCoralLoadState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeReefState.h"
 #include "mechanisms/DragonTale/ManualGrabAlgaeFloorState.h"
+#include "mechanisms/DragonTale/LaunchNetState.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/DragonPower.h"
@@ -136,6 +137,9 @@ void DragonTale::CreateAndRegisterStates()
 
 	ManualGrabAlgaeFloorState *ManualGrabAlgaeFloorStateInst = new ManualGrabAlgaeFloorState(string("ManualGrabAlgaeFloor"), 16, this, m_activeRobotId);
 	AddToStateVector(ManualGrabAlgaeFloorStateInst);
+
+	LaunchNetState *LaunchNetStateInst = new LaunchNetState(string("LaunchNet"), 17, this, m_activeRobotId);
+	AddToStateVector(LaunchNetStateInst);
 
 	InitializeStateInst->RegisterTransitionState(ReadyStateInst);
 	ReadyStateInst->RegisterTransitionState(HumanPlayerLoadStateInst);
@@ -230,6 +234,13 @@ void DragonTale::CreateAndRegisterStates()
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(NetStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualCoralLoadStateInst);
 	ManualGrabAlgaeFloorStateInst->RegisterTransitionState(ManualGrabAlgaeReefStateInst);
+	LaunchNetStateInst->RegisterTransitionState(ReadyStateInst);
+	LaunchNetStateInst->RegisterTransitionState(HoldStateInst);
+	LaunchNetStateInst->RegisterTransitionState(ProcessStateInst);
+	LaunchNetStateInst->RegisterTransitionState(ScoreAlgaeStateInst);
+	LaunchNetStateInst->RegisterTransitionState(L2ScoringPositionStateInst);
+	LaunchNetStateInst->RegisterTransitionState(L3ScoringPositionStateInst);
+	LaunchNetStateInst->RegisterTransitionState(L4ScoringPositionStateInst);
 }
 
 DragonTale::DragonTale(RobotIdentifier activeRobotId) : BaseMech(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE, std::string("DragonTale")),
@@ -330,6 +341,8 @@ std::map<std::string, DragonTale::STATE_NAMES> DragonTale::stringToSTATE_NAMESEn
 	{"STATE_MANUAL_CORAL_LOAD", DragonTale::STATE_NAMES::STATE_MANUAL_CORAL_LOAD},
 	{"STATE_MANUAL_GRAB_ALGAE_REEF", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_REEF},
 	{"STATE_MANUAL_GRAB_ALGAE_FLOOR", DragonTale::STATE_NAMES::STATE_MANUAL_GRAB_ALGAE_FLOOR},
+	{"STATE_LAUNCH_NET", DragonTale::STATE_NAMES::STATE_LAUNCH_NET},
+
 };
 
 void DragonTale::CreatePRACTICE_BOT9999()
