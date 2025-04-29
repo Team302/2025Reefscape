@@ -22,7 +22,7 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "chassis/SwerveChassis.h"
-#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "chassis/states/TrajectoryDrive.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "fielddata/DragonTargetFinder.h"
 #include "chassis/states/DriveToFieldElement.h"
@@ -34,7 +34,8 @@
 #include "units/time.h"
 
 // third party includes
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include <choreo/Choreo.h>
+#include <choreo/trajectory/Trajectory.h>
 
 class DrivePathPlanner : public IPrimitive, public DragonDataLogger
 {
@@ -60,9 +61,8 @@ private:
 
     int m_currentPrim = 0;
 
-    TrajectoryDrivePathPlanner *m_trajectoryDrivePathPlanner;
+    TrajectoryDrive *m_TrajectoryDrive;
     std::unique_ptr<frc::Timer> m_timer;
-    pathplanner::PathPlannerTrajectory m_trajectory;
     std::string m_pathname;
     std::string m_choreoTrajectoryName;
     ChassisOptionEnums::PathGainsType m_pathGainsType;
@@ -84,7 +84,7 @@ private:
 
     DriveToFieldElement *m_driveToObject;
 
-    std::tuple<TrajectoryDrivePathPlanner *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
+    std::tuple<TrajectoryDrive *, ChassisOptionEnums::DriveStateType> m_driveToInfo;
 
     ZoneParams *m_zone;
 };

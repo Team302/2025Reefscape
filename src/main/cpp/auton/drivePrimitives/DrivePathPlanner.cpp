@@ -35,7 +35,7 @@
 #include "chassis/states/DriveToRightReefBranch.h"
 #include "chassis/states/DriveToLeftReefBranch.h"
 #include "chassis/states/DriveToBarge.h"
-#include "chassis/states/TrajectoryDrivePathPlanner.h"
+#include "chassis/states/TrajectoryDrive.h"
 #include "chassis/states/DriveToCoralStation.h"
 #include "configs/MechanismConfig.h"
 #include "configs/MechanismConfigMgr.h"
@@ -47,14 +47,6 @@
 #include "chassis/states/RobotDrive.h"
 
 // third party includes
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
-#include "pathplanner/lib/config/ModuleConfig.h"
-#include "pathplanner/lib/path/PathPlannerPath.h"
-#include "pathplanner/lib/config/RobotConfig.h"
-
-using pathplanner::ModuleConfig;
-using pathplanner::PathPlannerPath;
-using pathplanner::PathPlannerTrajectory;
 
 using namespace std;
 using namespace frc;
@@ -64,7 +56,6 @@ using namespace wpi::math;
 DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
                                        m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis()),
                                        m_timer(make_unique<Timer>()),
-                                       m_trajectory(),
                                        m_pathname(),
                                        m_choreoTrajectoryName(),
                                        m_pathGainsType(ChassisOptionEnums::PathGainsType::LONG),
@@ -177,19 +168,15 @@ void DrivePathPlanner::InitMoveInfo()
         auto pose = m_chassis->GetPose();
         auto speed = m_chassis->GetChassisSpeeds();
 
-        pathplanner::PathPlannerTrajectory trajectory;
+        auto trajectory = AutonUtils::GetTrajectoryFromPathFile(m_pathname);
 
-        auto path = m_pathname.empty() ? AutonUtils::GetPathFromTrajectory(m_choreoTrajectoryName) : AutonUtils::GetPathFromPathFile(m_pathname);
-
-        if (AutonUtils::IsValidPath(path))
+        if (trajectory.has_value())
         {
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), string("Valid Path"), true);
 
-            trajectory = path.get()->generateTrajectory(speed, pose.Rotation(), m_chassis->GetRobotConfig());
-            m_moveInfo.pathplannerTrajectory = trajectory;
-            auto endstate = trajectory.getEndState();
-            m_finalPose = endstate.pose;
-            m_totalTrajectoryTime = trajectory.getTotalTime();
+            m_moveInfo.trajectory = trajectory;
+            m_finalPose = trajectory.value().GetFinalPose().value();
+            m_totalTrajectoryTime = trajectory.value().GetTotalTime();
         }
         else
         {
@@ -227,7 +214,7 @@ bool DrivePathPlanner::IsDone()
     }
     else if (!m_isVisionDrive)
     {
-        auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrivePathPlanner *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
+        auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrive *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
 
         if (((m_timer.get()->Get() / m_maxTime) < 0.90))
         {
@@ -239,7 +226,7 @@ bool DrivePathPlanner::IsDone()
         }
     }
 
-    return true; // TODO: Add logic for IsDone() from TrajectoryDrivePathPlanner
+    return true; // TODO: Add logic for IsDone() from TrajectoryDrive
 }
 
 void DrivePathPlanner::CheckForDriveTo()
