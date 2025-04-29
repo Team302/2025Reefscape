@@ -226,7 +226,7 @@ void HolonomicDrive::Run()
                     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
                 }
             }
-            m_resetPathplannerTrajectory = true;
+            m_resetTrajectory = true;
             if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             {
                 m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
@@ -269,7 +269,7 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
     m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
-    m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
+    m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = m_swerve->GetYaw();
@@ -319,9 +319,9 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.chassisSpeeds.vy = strafeScale * maxSpeed * scale;
     m_moveInfo.chassisSpeeds.omega = rotateScale * maxAngSpeed;
 
-    if (m_resetPathplannerTrajectory)
+    if (m_resetTrajectory)
     {
-        m_moveInfo.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
+        m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
     }
 
     m_moveInfo.IsClimbMode = m_climbMode;
@@ -436,10 +436,10 @@ bool HolonomicDrive::AtTarget()
 }
 void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState)
 {
-    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || !m_resetPathplannerTrajectory)
+    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || !m_resetTrajectory)
     {
         m_moveInfo.driveOption = driveState;
-        m_resetPathplannerTrajectory = false;
+        m_resetTrajectory = false;
     }
     else
     {

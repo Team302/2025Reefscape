@@ -37,10 +37,6 @@
 #include "chassis/SwerveChassis.h"
 
 // Thirdparty includes
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
-#include "pathplanner/lib/path/PathPlannerPath.h"
-
-using namespace pathplanner;
 using frc::ChassisSpeeds;
 using frc::Rotation2d;
 using frc::Trajectory;
@@ -87,52 +83,41 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
-    if (chassis != nullptr)
-    {
-        auto swMod = chassis->GetFrontLeft();
-        if (swMod != nullptr)
-        {
-            auto moduleConfig = ModuleConfig(swMod->GetWheelDiameter() / 2.0,
-                                             swMod->GetMaxSpeed(),
-                                             swMod->GetCoefficientOfFriction(),
-                                             swMod->GetDriveMotorDef(),
-                                             swMod->GetDriveCurrentLimit(), 1);
-            auto robotConfig = pathplanner::RobotConfig(chassis->GetMass(), chassis->GetMomenOfInertia(), moduleConfig, chassis->GetTrack());
+    // if (chassis != nullptr)
+    // {
+    // auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
 
-            auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
+    // for (auto param : params)
+    // {
+    //     std::vector<Trajectory::State> states;
 
-            for (auto param : params)
-            {
-                std::vector<Trajectory::State> states;
+    //     if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER && false)
+    //     {
+    //         auto pathname = param->GetPathName();
+    //         auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);
+    //         if (path.has_value())
+    //         {
+    //             auto trajectory = path.value();
+    //             auto endstate = trajectory.GetFinalSample().value();
+    //             heading = endstate.heading;
+    //             speeds.vx = endstate.vx;
+    //             speeds.vy = endstate.vy;
 
-                if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER && false)
-                {
-                    auto pathname = param->GetPathName();
-                    auto path = AutonUtils::GetPathFromPathFile(pathname);
-                    if (AutonUtils::IsValidPath(path))
-                    {
-                        auto trajectory = path.get()->generateTrajectory(speeds, chassis->GetPose().Rotation(), robotConfig);
-                        auto endstate = trajectory.getEndState();
-                        heading = endstate.heading;
-                        speeds.vx = endstate.linearVelocity * heading.Cos();
-                        speeds.vy = endstate.linearVelocity * heading.Sin();
+    //             auto samples = trajectory.samples;
+    //             for (auto sample : samples)
+    //             {
+    //                 Trajectory::State state;
+    //                 state.t = sample.timestamp;
+    //                 state.acceleration = sample.ax * sample.ax + sample.ay * sample.ay;
+    //                 state.velocity = sample.vx * sample.vx + sample.vy * sample.vy;
+    //                 state.pose = sample.GetPose();
+    //                 state.curvature = units::curvature_t(0.1); // ppstate.constraints. curvature;
 
-                        auto ppstates = trajectory.getStates();
-                        for (auto ppstate : ppstates)
-                        {
-                            Trajectory::State state;
-                            state.t = ppstate.time;
-                            state.acceleration = ppstate.constraints.getMaxAcceleration();
-                            state.velocity = ppstate.linearVelocity;
-                            state.pose = ppstate.pose;
-                            state.curvature = units::curvature_t(0.1); // ppstate.constraints. curvature;
-
-                            states.emplace_back(state);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //                 states.emplace_back(state);
+    //             }
+    //         }
+    //     }
+    // }
+    // }
     return trajectories;
 }

@@ -30,11 +30,9 @@
 #include "utils/FMSData.h"
 
 // Third Party Includes
-#include "pathplanner/lib/path/PathPlannerPath.h"
 
 using namespace std;
 using namespace frc;
-using namespace pathplanner;
 
 ResetPositionPathPlanner::ResetPositionPathPlanner() : IPrimitive()
 {
@@ -48,18 +46,13 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
     if (chassis != nullptr)
     {
 
-        auto path = param->GetTrajectoryName().empty() ? AutonUtils::GetPathFromPathFile(param->GetPathName()) : AutonUtils::GetPathFromTrajectory(param->GetTrajectoryName());
+        auto path = AutonUtils::GetTrajectoryFromPathFile(param->GetPathName());
 
-        if (AutonUtils::IsValidPath(path))
+        if (path.has_value())
         {
-            auto initialPose = path.get()->getStartingHolonomicPose();
+            auto initialPose = path.value().GetInitialPose();
             if (initialPose)
             {
-                // debugging
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "X", initialPose.value().X().value());
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Y", initialPose.value().Y().value());
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Theta", initialPose.value().Rotation().Degrees().value());
-
                 // Check to see if current pose is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
                 const units::length::meter_t poseDiff = units::math::abs(actualPose.X() - m_centerline);

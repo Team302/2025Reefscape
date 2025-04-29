@@ -15,6 +15,8 @@
 #include <cmath>
 #include <string>
 
+constexpr double PI = 3.14159265358979323846; // Define PI as a constant
+
 // Team302 Includes
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
