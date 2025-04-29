@@ -190,7 +190,6 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
-    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
     chassisMovement.checkTipping = false;
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);

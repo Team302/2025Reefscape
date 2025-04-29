@@ -82,26 +82,29 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrive::UpdateSwerveModuleStates(
         }
 
         auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get() + units::time::second_t(0.02)).value();
-        auto currentPose = m_chassis != nullptr ? m_chassis->GetPose() : Pose2d();
-
-        units::meters_per_second_t xFeedback{xController.Calculate(currentPose.X().value(), desiredState.x.value())};
-        units::meters_per_second_t yFeedback{yController.Calculate(currentPose.Y().value(), desiredState.y.value())};
-        units::radians_per_second_t headingFeedback{headingController.Calculate(currentPose.Rotation().Radians().value(), desiredState.heading.value())};
-
-        // Generate the next speeds for the robot
-        frc::ChassisSpeeds refChassisSpeeds{
-            desiredState.vx + xFeedback,
-            desiredState.vy + yFeedback,
-            desiredState.omega + headingFeedback};
-
-        if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
+        if (m_chassis != nullptr)
         {
-            chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
-            chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
-        }
-        else
-        {
-            chassisMovement.chassisSpeeds = refChassisSpeeds;
+            auto currentPose = m_chassis->GetPose();
+
+            units::meters_per_second_t xFeedback{xController.Calculate(currentPose.X().value(), desiredState.x.value())};
+            units::meters_per_second_t yFeedback{yController.Calculate(currentPose.Y().value(), desiredState.y.value())};
+            units::radians_per_second_t headingFeedback{headingController.Calculate(currentPose.Rotation().Radians().value(), desiredState.heading.value())};
+
+            // Generate the next speeds for the robot
+            frc::ChassisSpeeds refChassisSpeeds{
+                desiredState.vx + xFeedback,
+                desiredState.vy + yFeedback,
+                desiredState.omega + headingFeedback};
+
+            if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
+            {
+                chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
+                chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
+            }
+            else
+            {
+                chassisMovement.chassisSpeeds = refChassisSpeeds;
+            }
         }
     }
     else // If we don't have states to run, don't move the robot

@@ -54,11 +54,11 @@ private:
 
     void LogPose(frc::Pose2d pose) const;
 
+    RobotDrive *m_robotDrive;
     std::optional<choreo::Trajectory<choreo::SwerveSample>> m_trajectory;
     choreo::SwerveSample m_finalState;
     std::vector<choreo::SwerveSample> m_trajectoryStates;
 
-    RobotDrive *m_robotDrive;
     frc::Pose2d m_prevPose;
     bool m_wasMoving;
     frc::Transform2d m_delta;

@@ -56,9 +56,7 @@ using namespace wpi::math;
 DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
                                        m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis()),
                                        m_timer(make_unique<Timer>()),
-                                       m_pathname(),
                                        m_choreoTrajectoryName(),
-                                       m_pathGainsType(ChassisOptionEnums::PathGainsType::LONG),
                                        // max velocity of 1 rotation per second and a max acceleration of 180 degrees per second squared.
                                        m_maxTime(units::time::second_t(-1.0)),
                                        m_ntName("DrivePathPlanner"),
@@ -116,11 +114,9 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
         }
     }
 
-    m_pathname = params->GetPathName(); // Grabs path name from auton xml
     m_choreoTrajectoryName = params->GetTrajectoryName();
-    m_pathGainsType = params->GetPathGainsType();
 
-    m_ntName = string("DrivePathPlanner: ") + m_pathname;
+    m_ntName = string("DrivePathPlanner: ") + m_choreoTrajectoryName;
     m_maxTime = params->GetTime();
 
     m_isVisionDrive = false;
@@ -139,12 +135,11 @@ void DrivePathPlanner::LogMoveInfo()
 {
     m_currentPrim++;
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Drive Option", m_moveInfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Gain Type", m_moveInfo.pathnamegains);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Heading Option", m_moveInfo.headingOption);
 }
 void DrivePathPlanner::DataLog(uint64_t timestamp)
 {
-    LogStringData(timestamp, DragonDataLogger::StringSignals::AUTON_PATH_NAME, m_pathname);
+    LogStringData(timestamp, DragonDataLogger::StringSignals::AUTON_PATH_NAME, m_choreoTrajectoryName);
 }
 
 void DrivePathPlanner::InitMoveInfo()
@@ -163,11 +158,6 @@ void DrivePathPlanner::InitMoveInfo()
         m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
         m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::TRAJECTORY_DRIVE_PLANNER;
 
-        m_moveInfo.pathnamegains = m_pathGainsType;
-
-        auto pose = m_chassis->GetPose();
-        auto speed = m_chassis->GetChassisSpeeds();
-
         auto trajectory = AutonUtils::GetTrajectoryFromPathFile(m_choreoTrajectoryName);
 
         if (trajectory.has_value())
@@ -180,7 +170,7 @@ void DrivePathPlanner::InitMoveInfo()
         }
         else
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), string("Path not found"), m_pathname);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), string("Path not found"), m_choreoTrajectoryName);
         }
     }
 }

@@ -49,9 +49,7 @@ public:
                     units::time::second_t time,
                     ChassisOptionEnums::HeadingOption headingOption,
                     float heading,
-                    std::string pathName,
                     std::string choreoTrajectoryName,
-                    ChassisOptionEnums::PathGainsType pahtgainsType,
                     ZoneParamsVector zones, // create zones parameter of type
                     VISION_ALIGNMENT visionAlignment,
                     bool changeTaleState,
@@ -71,7 +69,6 @@ public:
     float GetHeading() const { return m_heading; };
     std::string GetPathName() const { return m_pathName; };
     std::string GetTrajectoryName() const { return m_choreoTrajectoryName; };
-    ChassisOptionEnums::PathGainsType GetPathGainsType() const { return m_pathGainsType; }
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
 
@@ -108,7 +105,6 @@ private:
 
     std::string m_pathName;
     std::string m_choreoTrajectoryName;
-    ChassisOptionEnums::PathGainsType m_pathGainsType;
     VISION_ALIGNMENT m_visionAlignment;
 
     bool m_changeTaleState;

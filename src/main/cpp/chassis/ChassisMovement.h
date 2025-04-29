@@ -37,7 +37,6 @@ struct ChassisMovement
     ChassisOptionEnums::DriveStateType previousDriveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
     frc::ChassisSpeeds chassisSpeeds = frc::ChassisSpeeds();
     std::optional<choreo::Trajectory<choreo::SwerveSample>> trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
-    ChassisOptionEnums::PathGainsType pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     frc::Translation2d centerOfRotationOffset = frc::Translation2d();
     ChassisOptionEnums::HeadingOption headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     ChassisOptionEnums::NoMovementOption noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;

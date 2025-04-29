@@ -73,12 +73,6 @@ public:
         NO_AVOID_OPTION
     };
 
-    enum PathGainsType
-    {
-        SHORT,
-        LONG
-    };
-
     enum PathUpdateOption
     {
         NONE

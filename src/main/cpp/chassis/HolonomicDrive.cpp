@@ -226,7 +226,6 @@ void HolonomicDrive::Run()
                     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
                 }
             }
-            m_resetTrajectory = true;
             if (m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH || m_previousDriveState == ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH)
             {
                 m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
@@ -318,11 +317,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.chassisSpeeds.vx = forwardScale * maxSpeed * scale;
     m_moveInfo.chassisSpeeds.vy = strafeScale * maxSpeed * scale;
     m_moveInfo.chassisSpeeds.omega = rotateScale * maxAngSpeed;
-
-    if (m_resetTrajectory)
-    {
-        m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
-    }
+    m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
 
     m_moveInfo.IsClimbMode = m_climbMode;
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
@@ -436,10 +431,9 @@ bool HolonomicDrive::AtTarget()
 }
 void HolonomicDrive::DriveToFieldElement(double forward, double strafe, double rot, ChassisOptionEnums::DriveStateType driveState)
 {
-    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35) || !m_resetTrajectory)
+    if ((abs(forward) < 0.35 && abs(strafe) < 0.35 && abs(rot) < 0.35))
     {
         m_moveInfo.driveOption = driveState;
-        m_resetTrajectory = false;
     }
     else
     {
