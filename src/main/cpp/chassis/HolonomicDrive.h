@@ -76,8 +76,8 @@ private:
     ReefHelper *m_reefHelper;
     BargeHelper *m_bargeHelper;
 
-    frc::SlewRateLimiter<units::velocity::meters_per_second> m_forwardLimiter{5_mps / 0.5_s,
-                                                                              -(5_mps / 0.5_s)};
-    frc::SlewRateLimiter<units::velocity::meters_per_second> m_strafeLimiter{5_mps / 0.5_s,
-                                                                             -(5_mps / 0.5_s)};
+    frc::SlewRateLimiter<units::velocity::meters_per_second> m_forwardLimiter{5_mps / 0.35_s,
+                                                                              -(5_mps / 0.35_s)};
+    frc::SlewRateLimiter<units::velocity::meters_per_second> m_strafeLimiter{5_mps / 0.35_s,
+                                                                             -(5_mps / 0.35_s)};
 };
