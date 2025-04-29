@@ -168,7 +168,7 @@ void DrivePathPlanner::InitMoveInfo()
         auto pose = m_chassis->GetPose();
         auto speed = m_chassis->GetChassisSpeeds();
 
-        auto trajectory = AutonUtils::GetTrajectoryFromPathFile(m_pathname);
+        auto trajectory = AutonUtils::GetTrajectoryFromPathFile(m_choreoTrajectoryName);
 
         if (trajectory.has_value())
         {

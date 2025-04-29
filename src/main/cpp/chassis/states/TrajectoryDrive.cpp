@@ -115,6 +115,13 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrive::UpdateSwerveModuleStates(
     }
     m_chassis->SetStoredHeading(m_chassis->GetPose().Rotation().Degrees());
 
+    auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
+
+    chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
+                                                                                chassisMovement.chassisSpeeds.vy,
+                                                                                chassisMovement.chassisSpeeds.omega,
+                                                                                rot2d);
+
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
