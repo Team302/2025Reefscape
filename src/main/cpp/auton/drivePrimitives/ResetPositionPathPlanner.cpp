@@ -46,7 +46,7 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
     if (chassis != nullptr)
     {
 
-        auto path = AutonUtils::GetTrajectoryFromPathFile(param->GetPathName());
+        auto path = AutonUtils::GetTrajectoryFromPathFile(param->GetTrajectoryName());
 
         if (path.has_value())
         {

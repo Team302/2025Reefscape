@@ -67,7 +67,6 @@ public:
     units::time::second_t GetTime() const { return m_time; };
     ChassisOptionEnums::HeadingOption GetHeadingOption() const { return m_headingOption; };
     float GetHeading() const { return m_heading; };
-    std::string GetPathName() const { return m_pathName; };
     std::string GetTrajectoryName() const { return m_choreoTrajectoryName; };
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
@@ -83,11 +82,7 @@ public:
 
     bool IsTaleStateChanging() const { return m_changeTaleState; }
     DragonTale::STATE_NAMES GetTaleState() const { return m_taleState; }
-    // Setters
-    void SetPathName(std::string path)
-    {
-        m_pathName = path;
-    }
+
     void SetVisionAlignment(VISION_ALIGNMENT visionAlignment) { m_visionAlignment = visionAlignment; }
 
 private:
@@ -103,7 +98,6 @@ private:
     units::time::second_t m_reefDelay;
     units::time::second_t m_coralStationDelay;
 
-    std::string m_pathName;
     std::string m_choreoTrajectoryName;
     VISION_ALIGNMENT m_visionAlignment;
 

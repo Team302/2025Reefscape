@@ -83,41 +83,42 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
-    // if (chassis != nullptr)
-    // {
-    // auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
+    if (chassis != nullptr)
+    {
+        auto params = PrimitiveParser::ParseXML(m_selector->GetSelectedAutoFile());
 
-    // for (auto param : params)
-    // {
-    //     std::vector<Trajectory::State> states;
+        for (auto param : params)
+        {
+            std::vector<Trajectory::State> states;
 
-    //     if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER && false)
-    //     {
-    //         auto pathname = param->GetPathName();
-    //         auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);
-    //         if (path.has_value())
-    //         {
-    //             auto trajectory = path.value();
-    //             auto endstate = trajectory.GetFinalSample().value();
-    //             heading = endstate.heading;
-    //             speeds.vx = endstate.vx;
-    //             speeds.vy = endstate.vy;
+            if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER)
+            {
+                auto pathname = param->GetTrajectoryName();
+                auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);
+                if (path.has_value())
+                {
+                    auto trajectory = path.value();
+                    auto endstate = trajectory.GetFinalSample().value();
+                    heading = endstate.heading;
+                    speeds.vx = endstate.vx;
+                    speeds.vy = endstate.vy;
 
-    //             auto samples = trajectory.samples;
-    //             for (auto sample : samples)
-    //             {
-    //                 Trajectory::State state;
-    //                 state.t = sample.timestamp;
-    //                 state.acceleration = sample.ax * sample.ax + sample.ay * sample.ay;
-    //                 state.velocity = sample.vx * sample.vx + sample.vy * sample.vy;
-    //                 state.pose = sample.GetPose();
-    //                 state.curvature = units::curvature_t(0.1); // ppstate.constraints. curvature;
+                    auto samples = trajectory.samples;
+                    for (auto sample : samples)
+                    {
+                        Trajectory::State state;
+                        state.t = sample.timestamp;
+                        state.acceleration = units::math::sqrt(sample.ax * sample.ax + sample.ay * sample.ay);
+                        state.velocity = units::math::sqrt(sample.vx * sample.vx + sample.vy * sample.vy);
+                        state.pose = sample.GetPose();
+                        state.curvature = units::curvature_t(0.1);
 
-    //                 states.emplace_back(state);
-    //             }
-    //         }
-    //     }
-    // }
-    // }
+                        states.emplace_back(state);
+                    }
+                    trajectories.emplace_back(states);
+                }
+            }
+        }
+    }
     return trajectories;
 }
