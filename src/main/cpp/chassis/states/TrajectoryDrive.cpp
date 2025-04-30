@@ -81,7 +81,7 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrive::UpdateSwerveModuleStates(
             Init(chassisMovement);
         }
 
-        auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get() + units::time::second_t(0.02)).value();
+        auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get()).value();
         if (m_chassis != nullptr)
         {
             auto currentPose = m_chassis->GetPose();
