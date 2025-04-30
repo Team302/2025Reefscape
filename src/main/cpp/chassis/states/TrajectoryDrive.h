@@ -54,8 +54,8 @@ private:
 
     void LogPose(frc::Pose2d pose) const;
 
-    RobotDrive *m_robotDrive;
     std::optional<choreo::Trajectory<choreo::SwerveSample>> m_trajectory;
+    RobotDrive *m_robotDrive;
     choreo::SwerveSample m_finalState;
     std::vector<choreo::SwerveSample> m_trajectoryStates;
 
@@ -73,7 +73,7 @@ private:
     int m_samePoseCount = 0;
     const int m_samePoseCountThreshold = 50; // TODO come back and tune this
 
-    frc::PIDController xController{1.0, 0.0, 0.0};
-    frc::PIDController yController{1.0, 0.0, 0.0};
-    frc::PIDController headingController{2.0, 0.0, 0.0};
+    frc::PIDController xController{0.75, 0.0, 0.0};
+    frc::PIDController yController{0.75, 0.0, 0.0};
+    frc::PIDController headingController{0.1, 0.0, 0.0};
 };
