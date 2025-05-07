@@ -20,7 +20,7 @@
 // Team 302 includes
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlanner.h"
+#include "auton/drivePrimitives/ResetPositionTrajectory.h"
 #include "auton/PrimitiveParams.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
@@ -34,11 +34,11 @@
 using namespace std;
 using namespace frc;
 
-ResetPositionPathPlanner::ResetPositionPathPlanner() : IPrimitive()
+ResetPositionTrajectory::ResetPositionTrajectory() : IPrimitive()
 {
 }
 
-void ResetPositionPathPlanner::Init(PrimitiveParams *param)
+void ResetPositionTrajectory::Init(PrimitiveParams *param)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
@@ -67,7 +67,7 @@ void ResetPositionPathPlanner::Init(PrimitiveParams *param)
     }
 }
 
-void ResetPositionPathPlanner::ResetPose(Pose2d pose)
+void ResetPositionTrajectory::ResetPose(Pose2d pose)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
@@ -78,11 +78,11 @@ void ResetPositionPathPlanner::ResetPose(Pose2d pose)
     }
 }
 
-void ResetPositionPathPlanner::Run()
+void ResetPositionTrajectory::Run()
 {
 }
 
-bool ResetPositionPathPlanner::IsDone()
+bool ResetPositionTrajectory::IsDone()
 {
     return true;
 }

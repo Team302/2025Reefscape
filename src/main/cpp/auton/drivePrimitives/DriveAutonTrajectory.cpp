@@ -26,7 +26,7 @@
 
 // 302 Includes
 #include "auton/drivePrimitives/AutonUtils.h"
-#include "auton/drivePrimitives/DrivePathPlanner.h"
+#include "auton/drivePrimitives/DriveAutonTrajectory.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/ChassisMovement.h"
@@ -53,19 +53,19 @@ using namespace frc;
 
 using namespace wpi::math;
 
-DrivePathPlanner::DrivePathPlanner() : IPrimitive(),
-                                       m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis()),
-                                       m_timer(make_unique<Timer>()),
-                                       m_choreoTrajectoryName(),
-                                       // max velocity of 1 rotation per second and a max acceleration of 180 degrees per second squared.
-                                       m_maxTime(units::time::second_t(-1.0)),
-                                       m_ntName("DrivePathPlanner"),
-                                       m_isVisionDrive(false),
-                                       m_visionAlignment(PrimitiveParams::VISION_ALIGNMENT::UNKNOWN)
+DriveAutonTrajectory::DriveAutonTrajectory() : IPrimitive(),
+                                               m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis()),
+                                               m_timer(make_unique<Timer>()),
+                                               m_choreoTrajectoryName(),
+                                               // max velocity of 1 rotation per second and a max acceleration of 180 degrees per second squared.
+                                               m_maxTime(units::time::second_t(-1.0)),
+                                               m_ntName("DriveAutonTrajectory"),
+                                               m_isVisionDrive(false),
+                                               m_visionAlignment(PrimitiveParams::VISION_ALIGNMENT::UNKNOWN)
 
 {
 }
-DriveToFieldElement *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType)
+DriveToFieldElement *DriveAutonTrajectory::GetDriveToObject(ChassisOptionEnums::DriveStateType driveToType)
 {
     switch (driveToType)
     {
@@ -81,7 +81,7 @@ DriveToFieldElement *DrivePathPlanner::GetDriveToObject(ChassisOptionEnums::Driv
         return nullptr;
     }
 }
-int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
+int DriveAutonTrajectory::FindDriveToZoneIndex(ZoneParamsVector zones)
 {
     if (!zones.empty())
     {
@@ -96,7 +96,7 @@ int DrivePathPlanner::FindDriveToZoneIndex(ZoneParamsVector zones)
     // if we don't have an update option
     return -1;
 }
-void DrivePathPlanner::Init(PrimitiveParams *params)
+void DriveAutonTrajectory::Init(PrimitiveParams *params)
 {
     m_zone = nullptr;
     m_updateTimeLatch = false;
@@ -116,7 +116,7 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
 
     m_choreoTrajectoryName = params->GetTrajectoryName();
 
-    m_ntName = string("DrivePathPlanner: ") + m_choreoTrajectoryName;
+    m_ntName = string("DriveAutonTrajectory: ") + m_choreoTrajectoryName;
     m_maxTime = params->GetTime();
 
     m_isVisionDrive = false;
@@ -131,18 +131,18 @@ void DrivePathPlanner::Init(PrimitiveParams *params)
     m_timer.get()->Start();
 }
 
-void DrivePathPlanner::LogMoveInfo()
+void DriveAutonTrajectory::LogMoveInfo()
 {
     m_currentPrim++;
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Drive Option", m_moveInfo.driveOption);
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner " + to_string(m_currentPrim), "Heading Option", m_moveInfo.headingOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveAutonTrajectory " + to_string(m_currentPrim), "Drive Option", m_moveInfo.driveOption);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveAutonTrajectory " + to_string(m_currentPrim), "Heading Option", m_moveInfo.headingOption);
 }
-void DrivePathPlanner::DataLog(uint64_t timestamp)
+void DriveAutonTrajectory::DataLog(uint64_t timestamp)
 {
     LogStringData(timestamp, DragonDataLogger::StringSignals::AUTON_PATH_NAME, m_choreoTrajectoryName);
 }
 
-void DrivePathPlanner::InitMoveInfo()
+void DriveAutonTrajectory::InitMoveInfo()
 {
     if (m_isVisionDrive)
     {
@@ -162,7 +162,7 @@ void DrivePathPlanner::InitMoveInfo()
 
         if (trajectory.has_value())
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DrivePathPlanner"), string("Valid Path"), true);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DriveAutonTrajectory"), string("Valid Path"), true);
 
             m_moveInfo.trajectory = trajectory;
             m_finalPose = trajectory.value().GetFinalPose().value();
@@ -170,11 +170,11 @@ void DrivePathPlanner::InitMoveInfo()
         }
         else
         {
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DrivePathPlanner"), string("Path not found"), m_choreoTrajectoryName);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("DriveAutonTrajectory"), string("Path not found"), m_choreoTrajectoryName);
         }
     }
 }
-void DrivePathPlanner::Run()
+void DriveAutonTrajectory::Run()
 {
     if (m_chassis != nullptr)
     {
@@ -187,10 +187,10 @@ void DrivePathPlanner::Run()
     }
 }
 
-bool DrivePathPlanner::IsDone()
+bool DriveAutonTrajectory::IsDone()
 {
 
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", "Max Time", m_maxTime.value());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveAutonTrajectory", "Max Time", m_maxTime.value());
     if (m_timer.get()->Get() > m_maxTime && m_timer.get()->Get().to<double>() > 0.0)
     {
 
@@ -199,27 +199,27 @@ bool DrivePathPlanner::IsDone()
 
     if (m_isVisionDrive && m_driveToObject != nullptr)
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DrivePathPlanner", m_driveToObject->GetDriveStateName(), m_driveToObject->IsDone());
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveAutonTrajectory", m_driveToObject->GetDriveStateName(), m_driveToObject->IsDone());
         return m_driveToObject->IsDone();
     }
     else if (!m_isVisionDrive)
     {
-        auto trajDrivePathPlanner = dynamic_cast<TrajectoryDrive *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
+        auto trajDrive = dynamic_cast<TrajectoryDrive *>(m_chassis->GetSpecifiedDriveState(ChassisOptionEnums::TRAJECTORY_DRIVE_PLANNER));
 
         if (((m_timer.get()->Get() / m_maxTime) < 0.90))
         {
             return false;
         }
-        else if (trajDrivePathPlanner != nullptr)
+        else if (trajDrive != nullptr)
         {
-            return trajDrivePathPlanner->IsDone();
+            return trajDrive->IsDone();
         }
     }
 
     return true; // TODO: Add logic for IsDone() from TrajectoryDrive
 }
 
-void DrivePathPlanner::CheckForDriveTo()
+void DriveAutonTrajectory::CheckForDriveTo()
 {
     if (IsInZone()) // switch to the selected drive to option
     {
@@ -236,7 +236,7 @@ void DrivePathPlanner::CheckForDriveTo()
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Distance To Reef Branch", "Switch to Drive To Reef Branch: ", false);
     }
 }
-bool DrivePathPlanner::IsInZone()
+bool DriveAutonTrajectory::IsInZone()
 {
     if (m_zone->GetZoneMode() != ZoneMode::NOTHING && m_chassis != nullptr)
     {

@@ -37,11 +37,11 @@
 #include <choreo/Choreo.h>
 #include <choreo/trajectory/Trajectory.h>
 
-class DrivePathPlanner : public IPrimitive, public DragonDataLogger
+class DriveAutonTrajectory : public IPrimitive, public DragonDataLogger
 {
 public:
-    DrivePathPlanner();
-    ~DrivePathPlanner() = default;
+    DriveAutonTrajectory();
+    ~DriveAutonTrajectory() = default;
 
     void Init(PrimitiveParams *params) override;
     void Run() override;

@@ -16,12 +16,12 @@
 
 // Team 302 includes
 #include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/DrivePathPlanner.h"
+#include "auton/drivePrimitives/DriveAutonTrajectory.h"
 #include "auton/drivePrimitives/DriveStop.h"
 #include "auton/drivePrimitives/DriveStopDelay.h"
 #include "auton/drivePrimitives/DriveStopMech.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionPathPlanner.h"
+#include "auton/drivePrimitives/ResetPositionTrajectory.h"
 #include "auton/drivePrimitives/VisionDrivePrimitive.h"
 #include "auton/PrimitiveEnums.h"
 #include "auton/PrimitiveFactory.h"
@@ -41,8 +41,8 @@ PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
                                        m_DriveStopDelay(nullptr),
                                        m_driveStopMech(nullptr),
                                        m_DriveHoldPosition(nullptr),
-                                       m_resetPositionPathPlanner(nullptr),
-                                       m_drivePathPlanner(nullptr)
+                                       m_resetPositionTrajectory(nullptr),
+                                       m_driveAutonTrajectory(nullptr)
 {
 }
 
@@ -87,19 +87,19 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
         break;
 
     case RESET_POSITION_PATH_PLANNER:
-        if (m_resetPositionPathPlanner == nullptr)
+        if (m_resetPositionTrajectory == nullptr)
         {
-            m_resetPositionPathPlanner = new ResetPositionPathPlanner();
+            m_resetPositionTrajectory = new ResetPositionTrajectory();
         }
-        primitive = m_resetPositionPathPlanner;
+        primitive = m_resetPositionTrajectory;
         break;
 
     case DRIVE_PATH_PLANNER:
-        if (m_drivePathPlanner == nullptr)
+        if (m_driveAutonTrajectory == nullptr)
         {
-            m_drivePathPlanner = new DrivePathPlanner();
+            m_driveAutonTrajectory = new DriveAutonTrajectory();
         }
-        primitive = m_drivePathPlanner;
+        primitive = m_driveAutonTrajectory;
         break;
 
     case VISION_ALIGN:
