@@ -26,7 +26,7 @@
 #include "chassis/ChassisOptionEnums.h"
 
 // Third party includes
-#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include <choreo/trajectory/Trajectory.h>
 
 /// @brief This is used to give all neccessary data to ISwerveDriveStates
 
@@ -36,8 +36,7 @@ struct ChassisMovement
     ChassisOptionEnums::DriveStateType driveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
     ChassisOptionEnums::DriveStateType previousDriveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
     frc::ChassisSpeeds chassisSpeeds = frc::ChassisSpeeds();
-    pathplanner::PathPlannerTrajectory pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
-    ChassisOptionEnums::PathGainsType pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
+    std::optional<choreo::Trajectory<choreo::SwerveSample>> trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
     frc::Translation2d centerOfRotationOffset = frc::Translation2d();
     ChassisOptionEnums::HeadingOption headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
     ChassisOptionEnums::NoMovementOption noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;

@@ -19,32 +19,13 @@
 
 using namespace std;
 using namespace frc;
-using namespace pathplanner;
 
-shared_ptr<PathPlannerPath> AutonUtils::GetPathFromPathFile(string pathName)
+std::optional<choreo::Trajectory<choreo::SwerveSample>> AutonUtils::GetTrajectoryFromPathFile(std::string pathName)
 {
-    auto path = PathPlannerPath::fromPathFile(pathName);
-    if (path.get() != nullptr && FMSData::GetInstance()->GetAllianceColor() == DriverStation::Alliance::kRed)
+    auto trajectory = choreo::Choreo::LoadTrajectory<choreo::SwerveSample>(pathName);
+    if (trajectory.has_value() && FMSData::GetInstance()->GetAllianceColor() == DriverStation::Alliance::kRed)
     {
-        return path.get()->flipPath();
+        return trajectory.value().Flipped();
     }
-    return path;
-}
-shared_ptr<PathPlannerPath> AutonUtils::GetPathFromTrajectory(string trajectoryName)
-{
-    auto path = PathPlannerPath::fromChoreoTrajectory(trajectoryName);
-    if (path.get() != nullptr && FMSData::GetInstance()->GetAllianceColor() == DriverStation::Alliance::kRed)
-    {
-        return path.get()->flipPath();
-    }
-    return path;
-}
-
-bool AutonUtils::IsValidPath(shared_ptr<pathplanner::PathPlannerPath> path)
-{
-    if (path.get() != nullptr)
-    {
-        return path.get()->numPoints() > 0;
-    }
-    return false;
+    return trajectory;
 }

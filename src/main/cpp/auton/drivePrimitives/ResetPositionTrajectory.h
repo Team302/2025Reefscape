@@ -22,11 +22,11 @@
 // Forward Declares
 class PrimitiveParams;
 
-class ResetPositionPathPlanner : public IPrimitive
+class ResetPositionTrajectory : public IPrimitive
 {
 public:
-    ResetPositionPathPlanner();
-    virtual ~ResetPositionPathPlanner() = default;
+    ResetPositionTrajectory();
+    virtual ~ResetPositionTrajectory() = default;
 
     void Init(PrimitiveParams *param) override;
     void Run() override;

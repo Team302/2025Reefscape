@@ -67,7 +67,6 @@ private:
 
     bool m_robotOrientedLatch = false;
     bool m_robotOrientedDrive = false;
-    bool m_resetPathplannerTrajectory = false;
     units::length::inch_t m_elevatorHeight;
     units::length::inch_t m_elevatorHeightThreshold = units::length::inch_t(20.0);
     double m_dynamicSpeed = 1.0;
