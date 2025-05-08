@@ -71,7 +71,7 @@ void HolonomicDrive::Run()
     if (controller != nullptr && m_swerve != nullptr)
     {
         auto forward = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);
-        auto strafe = -1 * controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
+        auto strafe = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
 
         if (abs(forward) < 0.01)
         {
@@ -109,7 +109,7 @@ void HolonomicDrive::Run()
                 strafe = -1;
         }
         forward = pow(forward, 3.0);
-        strafe = -1 * pow(strafe, 3.0);
+        strafe = pow(strafe, 3.0);
         auto rotate = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE);
 
         InitSpeeds(forward, strafe, rotate);
@@ -315,8 +315,12 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     auto maxSpeed = m_swerve->GetMaxSpeed();
     auto maxAngSpeed = m_swerve->GetMaxAngularSpeed();
     auto scale = (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue) ? 1.0 : -1.0;
-    m_moveInfo.chassisSpeeds.vx = forwardScale * maxSpeed * scale;
-    m_moveInfo.chassisSpeeds.vy = strafeScale * maxSpeed * scale;
+
+    auto forwardSpeed = forwardScale * maxSpeed * scale;
+    auto strafeSpeed = strafeScale * maxSpeed * scale;
+
+    m_moveInfo.chassisSpeeds.vx = m_forwardLimiter.Calculate(forwardSpeed);
+    m_moveInfo.chassisSpeeds.vy = m_strafeLimiter.Calculate(strafeSpeed);
     m_moveInfo.chassisSpeeds.omega = rotateScale * maxAngSpeed;
 
     if (m_resetPathplannerTrajectory)
