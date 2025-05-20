@@ -46,10 +46,13 @@ DragonQuest::DragonQuest(
     m_timestamp = m_networktable.get()->GetDoubleTopic("timestamp").Subscribe(0);
 
     // This transform is from the robot center to the Quest sensor
-    m_robotToQuestTransform = frc::Transform2d{
+    // m_robotToQuestTransform = frc::Transform2d{
+    //     frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
+    //     frc::Rotation2d(m_mountingYaw)};
+    // m_questTransform = m_robotToQuestTransform.Inverse(); // Invert to get Quest to robot transform
+    m_questToRobotTransform = frc::Transform2d{
         frc::Translation2d(m_mountingXOffset, m_mountingYOffset),
         frc::Rotation2d(m_mountingYaw)};
-    m_questTransform = m_robotToQuestTransform.Inverse(); // Invert to get Quest to robot transform
 
     m_questMosi.Set(0); // initial idle state
 }
@@ -67,7 +70,8 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     frc::Pose2d questPose{x, y, yaw};
     m_rawQuestPose = questPose;
 
-    frc::Pose2d robotPose = questPose + m_questTransform;
+    // frc::Pose2d robotPose = questPose + m_questTransform;
+    frc::Pose2d robotPose = questPose.TransformBy(m_questToRobotTransform.Inverse());
 
     return robotPose;
 }
@@ -112,6 +116,7 @@ void DragonQuest::RefreshNT()
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
     auto field = DragonField::GetInstance();
     field->AddPose("Quest", GetEstimatedPose());
+    field->AddPose("QuestRaw", m_rawQuestPose);
 }
 
 void DragonQuest::HandleHeartBeat()
@@ -134,7 +139,8 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
     if (!m_hasreset)
     {
-        frc::Pose2d questPose = pose + m_robotToQuestTransform;
+        // frc::Pose2d questPose = pose + m_robotToQuestTransform;
+        frc::Pose2d questPose = pose.TransformBy(m_questToRobotTransform);
         m_initialPosePublisher.Set(std::array<double, 3>{questPose.X().value(), questPose.Y().value(), questPose.Rotation().Degrees().value()});
 
         if (m_questMiso.Get() != 99)
@@ -157,7 +163,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
         str.m_timeStamp = units::time::second_t(m_timestamp.GetAtomic().serverTime);
