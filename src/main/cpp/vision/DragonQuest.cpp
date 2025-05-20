@@ -63,7 +63,6 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
     units::angle::degree_t yaw{-rotationarray[1]};
 
     frc::Pose2d questPose{x, y, yaw};
-    m_rawQuestPose = questPose;
 
     frc::Pose2d robotPose = questPose.TransformBy(m_questToRobotTransform.Inverse());
 
@@ -109,7 +108,7 @@ void DragonQuest::RefreshNT()
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
     auto field = DragonField::GetInstance();
-    field->AddPose("Quest", GetEstimatedPose()); // Should we remove this?
+    field->AddPose("Quest", GetEstimatedPose()); // Should probably remove this, I think it is causing loop overruns
 }
 
 void DragonQuest::HandleHeartBeat()

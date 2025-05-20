@@ -53,7 +53,11 @@ void AutonPreviewer::CheckCurrentAuton()
     // If the robot is not disabled, clear the field and return
     if (!frc::DriverStation::IsDisabled())
     {
-        m_field->ResetField();
+        if (m_clearField)
+        {
+            m_field->ResetField();
+            m_clearField = false;
+        }
         m_prevChoice = ""; // Optional: force re-population once disabled again
         return;
     }
@@ -63,6 +67,7 @@ void AutonPreviewer::CheckCurrentAuton()
     {
         PopulateField();
         m_prevChoice = currentChoice;
+        m_clearField = true;
     }
 }
 

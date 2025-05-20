@@ -40,4 +40,5 @@ private:
     AutonSelector *m_selector;
     std::string m_prevChoice;
     DragonField *m_field;
+    bool m_clearField = false;
 };
