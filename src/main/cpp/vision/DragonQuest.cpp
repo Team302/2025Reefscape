@@ -103,8 +103,6 @@ void DragonQuest::ZeroPosition()
 void DragonQuest::DataLog(uint64_t timestamp)
 {
     Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
-    auto field = DragonField::GetInstance();
-    field->AddPose("Quest", GetEstimatedPose());
 }
 
 void DragonQuest::RefreshNT()
@@ -112,6 +110,8 @@ void DragonQuest::RefreshNT()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
+    auto field = DragonField::GetInstance();
+    field->AddPose("Quest", GetEstimatedPose());
 }
 
 void DragonQuest::HandleHeartBeat()
@@ -157,7 +157,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     }
     else
     {
-        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
+        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
         str.m_timeStamp = units::time::second_t(m_timestamp.GetAtomic().serverTime);

@@ -246,7 +246,7 @@ void Robot::UpdateDriveTeamFeedback()
 {
     if (m_previewer != nullptr)
     {
-        m_previewer->CheckCurrentAuton();
+        // m_previewer->CheckCurrentAuton();
     }
     if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
     {
