@@ -83,9 +83,6 @@ private:
     bool m_hasreset = false;
     bool m_isConnected = false;
 
-    frc::Transform2d m_robotToQuestTransform; // <I> Transform from robot center to Quest (used to calculate the quest pose from the robot pose)
-    frc::Transform2d m_questTransform;
-
     frc::Transform2d m_questToRobotTransform; // <I> Transform from Quest to robot (used to calculate the robot pose from the quest pose)
 
     const double m_stdxy = .02;   // use same values as DragonLimelight when seeing 1 tag close up
