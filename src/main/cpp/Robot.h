@@ -72,4 +72,5 @@ private:
     bool isFMSAttached = false;
     DragonSwervePoseEstimator *m_dragonswerveposeestimator;
     DragonQuest *m_quest;
+    DragonVision *m_vision;
 };

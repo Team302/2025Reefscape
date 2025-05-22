@@ -472,7 +472,11 @@ units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	}
 	return minTx;
 }
-
+double DragonVision::GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
+{
+	auto cameras = GetCameras(usage);
+	return m_dragonLimelightMap[usage]->GetDistanceToCamera();
+}
 units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCameras(usage);

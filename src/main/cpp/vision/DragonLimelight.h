@@ -174,11 +174,12 @@ public:
     units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
     std::string GetCameraName() const { return m_cameraName; }
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER GetCameraIdentifier() { return m_identifier; }
-
+    // use LimeLightHelper:: to get the distance and log, then test values with chassi bot
     void PeriodicCacheData() override;
 
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
+    double GetDistanceToCamera(std::string cameraName) const;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
@@ -205,6 +206,7 @@ protected:
     units::angle::degree_t m_tx;
     units::angle::degree_t m_ty;
     int m_tagid;
+    double m_distToCalmera;
     bool m_megatag2PosBool = false;
     bool m_megatag1PosBool = false;
     VisionPose m_megatag2Pos;

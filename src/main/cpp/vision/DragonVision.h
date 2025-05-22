@@ -87,7 +87,7 @@ public:
 
     units::angle::degree_t GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     units::angle::degree_t GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE position);
-
+    double GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     static frc::AprilTagFieldLayout m_aprilTagLayout;
 
     void testAndLogVisionData();

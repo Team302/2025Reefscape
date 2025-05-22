@@ -40,6 +40,7 @@
 #include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
+#include "vision/DragonLimelight.h"
 
 using std::string;
 
@@ -57,9 +58,8 @@ void Robot::RobotInit()
 
     BargeHelper::GetInstance();
     ReefHelper::GetInstance();
-
+    m_vision = DragonVision::GetDragonVision();
     m_datalogger = DragonDataLoggerMgr::GetInstance();
-
     auto path = AutonUtils::GetTrajectoryFromPathFile("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
 
     if (m_dragonswerveposeestimator != nullptr)
@@ -85,6 +85,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("distance to camer"), m_vision->GetDistanceToCamera());
+
     isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)
     {
