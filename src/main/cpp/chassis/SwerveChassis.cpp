@@ -303,6 +303,16 @@ Pose2d SwerveChassis::GetPose() const
     }
     return Pose2d();
 }
+//==================================================================================
+
+Pose2d SwerveChassis::GetEncoderPose() const
+{
+    if (m_swervePoseEstimator != nullptr)
+    {
+        return m_swervePoseEstimator->GetNoVisionPose();
+    }
+    return Pose2d();
+}
 
 //==================================================================================
 units::angle::degree_t SwerveChassis::GetYaw() const
@@ -489,7 +499,7 @@ bool SwerveChassis::IsSamePose(units::length::inch_t distanceThreshold)
 void SwerveChassis::DataLog(uint64_t timestamp)
 {
     Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_POSE2D, GetPose());
-
+    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_ENCODER_POSE2D, GetEncoderPose());
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_STORED_HEADING_DEGREES, GetStoredHeading().value());
     LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::CHASSIS_YAW_DEGREES, AngleUtils::GetEquivAngle(GetYaw()).value());
 

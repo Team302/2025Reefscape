@@ -287,6 +287,15 @@ void DragonDataLogger::Log2DPoseData(uint64_t timestamp, DragonDataLogger::PoseS
             SignalLogger::WriteDoubleArray(m_chassisPose2dPath, pose, m_pose2dUnits, m_latency);
             break;
         }
+        case DragonDataLogger::PoseSingals::CURRENT_CHASSIS_ENCODER_POSE2D:
+        {
+            double x = value.X().value();
+            double y = value.Y().value();
+            double rot = value.Rotation().Radians().value();
+            std::vector<double> pose = {x, y, rot};
+            SignalLogger::WriteDoubleArray(m_chassisEncoderPose2dPath, pose, m_pose2dUnits, m_latency);
+            break;
+        }
         case DragonDataLogger::PoseSingals::VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE:
         {
             double x = value.X().value();

@@ -37,6 +37,7 @@ public:
 
     void Update();
     frc::Pose2d GetPose() const;
+    frc::Pose2d GetNoVisionPose() { return m_encoderPose; };
     void ResetPosition(const frc::Pose2d &pose);
     void ResetPose(const frc::Pose2d &pose);
     void ZeroYaw();
@@ -59,6 +60,8 @@ private:
     SwerveModule *m_backRight;
     frc::SwerveDriveKinematics<4> m_kinematics;
     frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
+    // chassis pose with just encoders (created before vision is added)
+    frc::Pose2d m_encoderPose;
 
     std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
 };

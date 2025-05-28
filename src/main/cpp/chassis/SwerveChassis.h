@@ -103,6 +103,7 @@ public:
     SwerveModule *GetBackLeft() const { return m_backLeft; }
     SwerveModule *GetBackRight() const { return m_backRight; }
     frc::Pose2d GetPose() const;
+    frc::Pose2d GetEncoderPose() const;
     units::angle::degree_t GetYaw() const override;
     units::angle::degree_t GetRawYaw();
 

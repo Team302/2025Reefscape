@@ -110,6 +110,7 @@ public:
         CURRENT_CHASSIS_LIMELIGHT_POSE3D,
         CURRENT_CHASSIS_LIMELIGHT2_POSE3D,
         CURRENT_CHASSIS_QUEST_POSE2D,
+        CURRENT_CHASSIS_ENCODER_POSE2D,
         VISION_DRIVE_TO_LEFT_REEF_BRANCH_TARGET_POSE,
         VISION_DRIVE_TO_RIGHT_REEF_BRANCH_TARGET_POSE,
         VISION_DRIVE_TO_CORAL_STATION_TARGET_POSE,
@@ -259,6 +260,7 @@ public:
     string m_IsDonePath = "/Chassis/IsDone";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
+    string m_chassisEncoderPose2dPath = "/Chassis/EncoderPose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
     string m_visionDriveLBranchPose2dUnits = "X, Y, Rotation";
     string m_visionDriveRBranchPose2dPath = "/Vision/DriveToRightReefBranchPose2d";

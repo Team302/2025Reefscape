@@ -75,6 +75,7 @@ void DragonSwervePoseEstimator::Update()
                                                                                m_backLeft->GetPosition(),
                                                                                m_backRight->GetPosition()});
     }
+    m_encoderPose = m_poseEstimator.GetEstimatedPosition();
     AddVisionMeasurements();
 
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::ChassisPose_Pose2D, GetPose());
