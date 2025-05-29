@@ -30,6 +30,7 @@
 #include "utils/AngleUtils.h"
 #include "state/RobotState.h"
 #include "fielddata/ProcessorHelper.h"
+#include "vision/DragonVision.h"
 
 #include "utils/logging/debug/Logger.h"
 #include "utils/logging/debug/LoggerData.h"
@@ -54,6 +55,8 @@ DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(ro
 void DriveToFieldElement::Init(ChassisMovement &chassisMovement)
 {
     auto dragonTargetFinderInst = DragonTargetFinder::GetInstance();
+    m_vision = DragonVision::GetDragonVision();
+
     dragonTargetFinderInst->ResetGoalPose();
     auto info = dragonTargetFinderInst->GetPose(GetDriveToTarget());
 
@@ -204,9 +207,9 @@ bool DriveToFieldElement::IsDone()
 
     if (m_hasTarget && m_chassis != nullptr)
     {
-        auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
+        auto distance = m_vision->GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 
-        isDone = distance < m_distanceThreshold;
+        isDone = distance < m_distanceThreshold.to<double>();
         isSamePose = m_chassis->IsSamePose();
         m_prevPose = m_currentPose;
     }

@@ -85,6 +85,10 @@ public:
     bool HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     std::optional<double> GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE position);
 
+    units::length::inch_t EstimateTargetXDistance(DRAGON_LIMELIGHT_CAMERA_USAGE position);
+    units::length::inch_t EstimateTargetYDistance(DRAGON_LIMELIGHT_CAMERA_USAGE position);
+    units::length::inch_t EstimateTargetZDistance(DRAGON_LIMELIGHT_CAMERA_USAGE position);
+
     units::angle::degree_t GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     units::angle::degree_t GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE position);
     double GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE position);

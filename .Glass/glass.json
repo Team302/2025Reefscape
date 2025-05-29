@@ -1,8 +1,5 @@
 {
-  "NetworkTables Info": {
-    "visible": true
-  },
-  "NetworkTables Log": {
-    "visible": true
+  "NetworkTables View": {
+    "visible": false
   }
 }

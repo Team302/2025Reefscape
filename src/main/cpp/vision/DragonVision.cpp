@@ -439,7 +439,48 @@ void DragonVision::testAndLogVisionData()
 }
 
 // Limelight raw data functions
-
+units::length::inch_t DragonVision::EstimateTargetXDistance(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
+{
+	auto cameras = GetCameras(usage);
+	units::length::inch_t minXDist = units::length::inch_t(1200); // arbitrary large value
+	for (auto cam : cameras)
+	{
+		auto thisXDist = cam->EstimateTargetXDistance_RelToRobotCoords();
+		if (thisXDist.has_value() && thisXDist.value() < minXDist)
+		{
+			minXDist = thisXDist.value();
+		}
+	}
+	return minXDist;
+}
+units::length::inch_t DragonVision::EstimateTargetYDistance(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
+{
+	auto cameras = GetCameras(usage);
+	units::length::inch_t minYDist = units::length::inch_t(1200); // arbitrary large value
+	for (auto cam : cameras)
+	{
+		auto thisYDist = cam->EstimateTargetYDistance_RelToRobotCoords();
+		if (thisYDist.has_value() && thisYDist.value() < minYDist)
+		{
+			minYDist = thisYDist.value();
+		}
+	}
+	return minYDist;
+}
+units::length::inch_t DragonVision::EstimateTargetZDistance(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
+{
+	auto cameras = GetCameras(usage);
+	units::length::inch_t minZDist = units::length::inch_t(240); // arbitrary large value
+	for (auto cam : cameras)
+	{
+		auto thisZDist = cam->EstimateTargetZDistance_RelToRobotCoords();
+		if (thisZDist.has_value() && thisZDist.value() < minZDist)
+		{
+			minZDist = thisZDist.value();
+		}
+	}
+	return minZDist;
+}
 // TODO:  these need to be smarter to deal with multiple cameras with the same usage
 std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {

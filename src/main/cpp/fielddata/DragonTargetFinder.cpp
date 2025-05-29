@@ -78,19 +78,19 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tagpose{fieldconst->GetAprilTagPose2d(tag)};
             m_switchToVision = false;
 
-            // auto visTagPose{m_vision->GetAprilTagPose(tag)};
-            // m_switchToVision = SwitchToVision(visTagPose);
-            // Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", m_switchToVision ? "true" : "false");
+            auto visTagPose{m_vision->GetAprilTagPose(tag)};
+            m_switchToVision = SwitchToVision(visTagPose);
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "SwitchToVision", m_switchToVision ? "true" : "false");
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
                 // if (m_switchToVision)
-                //{
+                // {
                 //     units::angle::degree_t fieldRelativeAngle = m_chassis->GetYaw() - visTagPose.value().ToPose2d().Rotation().Degrees(); // Need to verify if it works for Red and Blue and all the way around the reef
                 //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
                 //  return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
-                //}
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
+                // }
+                // return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
@@ -181,19 +181,19 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
             auto tagpose{fieldconst->GetAprilTagPose2d(tag)};
             if (item == DragonTargetFinderTarget::CLOSEST_CORAL_STATION_MIDDLE)
             {
-                // auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::CORAL_STATION);
-                // if (visiondata.has_value())
-                //{
-                // auto visiontagpose = GetVisonPose(visiondata.value());
-                // if (visiontagpose)
-                //{
-                //     if (visiontagpose.value().Translation().Distance(tagpose.Translation()) < 1_m)
-                //     {
-                //         m_goalPose = visiontagpose.value();
-                //         return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
-                //     }
-                //  }
-                //}
+                auto visiondata = m_vision->GetVisionData(DragonVision::VISION_ELEMENT::CORAL_STATION);
+                if (visiondata.has_value())
+                {
+                    auto visiontagpose = GetVisonPose(visiondata.value());
+                    if (visiontagpose)
+                    {
+                        if (m_vision->GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS) < 1)
+                        {
+                            m_goalPose = visiontagpose.value();
+                            return make_tuple(DragonTargetFinderData::VISION_BASED, visiontagpose.value());
+                        }
+                    }
+                }
 
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
             }

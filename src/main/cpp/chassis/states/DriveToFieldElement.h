@@ -33,7 +33,7 @@
 #include "chassis/states/RobotDrive.h"
 #include "chassis/ChassisOptionEnums.h"
 #include "fielddata/DragonTargetFinder.h"
-
+#include "vision/DragonVision.h"
 // #define SHUFFLEBOARD_PIDS //for tuning :)
 class DriveToFieldElement : public RobotDrive
 {
@@ -55,7 +55,7 @@ private:
     void LogMoveInfo(ChassisMovement &moveInfo);
 
     RobotDrive *m_robotDrive;
-
+    DragonVision *m_vision;
     void InitChassisMovement(ChassisMovement &chassisMovement);
     void CalculateFeedForward(ChassisMovement &chassisMovement);
 
