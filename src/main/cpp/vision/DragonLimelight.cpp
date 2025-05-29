@@ -96,9 +96,9 @@ void DragonLimelight::PeriodicCacheData()
     m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
     m_pipeline = static_cast<DRAGON_LIMELIGHT_PIPELINE>(LimelightHelpers::getCurrentPipelineIndex(m_cameraName));
 }
-double GetDistanceToCamera(std::string cameraName)
+double DragonLimelight::GetDistanceToCamera() const
 {
-    auto m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(cameraName);
+    auto m_networktable = nt::NetworkTableInstance::GetDefault().GetTable(GetCameraName());
     auto doubleArray = m_networktable.get()->GetDoubleArrayTopic("rawfiducials");
     std::vector<double> position = doubleArray.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
     return position[4];

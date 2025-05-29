@@ -85,7 +85,9 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("distance to camer"), m_vision->GetDistanceToCamera());
+    double distanceToCamera = m_vision->GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("distance to camera"), distanceToCamera);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("robot periodic"), string("robot bad"));
 
     isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)

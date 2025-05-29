@@ -474,8 +474,17 @@ units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 }
 double DragonVision::GetDistanceToCamera(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
+	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("limelight"), string("reached"));
+
 	auto cameras = GetCameras(usage);
-	return m_dragonLimelightMap[usage]->GetDistanceToCamera();
+	double distToCam = 0.0;
+	for (auto cam : cameras)
+	{
+		distToCam = cam->GetDistanceToCamera();
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("fiducial"), string("status"), string("reached"));
+	}
+
+	return distToCam;
 }
 units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {

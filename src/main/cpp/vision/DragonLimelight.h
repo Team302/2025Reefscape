@@ -179,7 +179,7 @@ public:
 
     units::angle::degree_t GetTx() const;
     units::angle::degree_t GetTy() const;
-    double GetDistanceToCamera(std::string cameraName) const;
+    double GetDistanceToCamera() const;
 
     void PrintValues(); // Prints out all values to ensure everything is working and connected
 
