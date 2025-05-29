@@ -49,11 +49,6 @@ taleOption="STATE_GRAB_ALGAE_REEF">
 <zone filename = "RedReefDriveToLeftAlgae.xml"/>
 </primitive>
 
-<!-- so we get the auto ranking point :( -->
-<!-- <primitive id = "DRIVE_PATH_PLANNER"
-choreoname = "BlueCenterJ_Barge_2"
-time = "3.0"/> -->
-
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueCenterJ_Barge"
 time = "3.0">

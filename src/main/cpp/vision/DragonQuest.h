@@ -85,8 +85,8 @@ private:
 
     frc::Transform2d m_questToRobotTransform; // <I> Transform from Quest to robot (used to calculate the robot pose from the quest pose)
 
-    const double m_stdxy = .02;   // use same values as DragonLimelight when seeing 1 tag close up
-    const double m_stddeg = .035; // use same values as DragonLimelight when seeing 1 tag close up
+    const double m_stdxy = 0.02;
+    const double m_stddeg = 0.035;
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;

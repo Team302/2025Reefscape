@@ -107,8 +107,6 @@ void DragonQuest::RefreshNT()
     m_posTopic = m_networktable.get()->GetDoubleArrayTopic("position");
     m_rotationTopic = m_networktable.get()->GetDoubleArrayTopic("eulerAngles");
     m_frameCountTopic = m_networktable.get()->GetIntegerTopic("frameCount");
-    auto field = DragonField::GetInstance();
-    field->AddPose("Quest", GetEstimatedPose()); // Should probably remove this, I think it is causing loop overruns
 }
 
 void DragonQuest::HandleHeartBeat()
