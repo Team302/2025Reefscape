@@ -3,10 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include <frc2/command/CommandScheduler.h>
 
 #include <string>
-
-#include <Robot.h>
 
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
@@ -148,15 +147,19 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+    if (m_autonomousCommand)
+    {
+        m_autonomousCommand->Cancel();
+    }
     if (m_controller == nullptr)
     {
         m_controller = TeleopControl::GetInstance();
     }
 
-    if (m_chassis != nullptr && m_controller != nullptr && m_holonomic != nullptr)
-    {
-        m_holonomic->Init();
-    }
+    // if (m_chassis != nullptr && m_controller != nullptr && m_holonomic != nullptr)
+    // {
+    //     m_holonomic->Init();
+    // }
 
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
@@ -190,6 +193,7 @@ void Robot::DisabledPeriodic()
 
 void Robot::TestInit()
 {
+    frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
 void Robot::TestPeriodic()

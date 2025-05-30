@@ -17,6 +17,8 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc2/command/CommandPtr.h>
+#include "chassis/RobotContainer.h"
 
 #include "frc/geometry/Pose2d.h"
 
@@ -57,6 +59,10 @@ private:
     void InitializeAutonOptions();
     void InitializeDriveteamFeedback();
     void UpdateDriveTeamFeedback();
+
+    std::optional<frc2::CommandPtr> m_autonomousCommand;
+
+    RobotContainer m_container;
 
     TeleopControl *m_controller;
     SwerveChassis *m_chassis;
