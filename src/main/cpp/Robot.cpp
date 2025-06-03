@@ -10,8 +10,6 @@
 #include "auton/AutonPreviewer.h"
 #include "auton/CyclePrimitives.h"
 #include "auton/drivePrimitives/AutonUtils.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/HolonomicDrive.h"
 #include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "chassis/SwerveChassis.h"
@@ -216,10 +214,6 @@ void Robot::InitializeRobot()
     FieldConstants::GetInstance();
     RoboRio::GetInstance();
 
-    ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
-    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    m_chassis = chassisConfig != nullptr ? chassisConfig->GetSwerveChassis() : nullptr;
-    m_holonomic = nullptr;
     m_dragonswerveposeestimator = nullptr;
     if (m_chassis != nullptr)
     {

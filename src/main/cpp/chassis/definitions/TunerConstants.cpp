@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,42 +12,32 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
+#include "chassis/CommandSwerveDrivetrain.h"
+#include "RobotIdentifier.h"
+#include "frc/RobotController.h"
+#include "utils/logging/debug/Logger.h"
 
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/SwerveChassis.h"
-
-ChassisConfig::ChassisConfig()
+subsystems::CommandSwerveDrivetrain TunerConstants::CreateDrivetrain()
 {
-}
+    int32_t teamNumber = frc::RobotController::GetTeamNumber();
+    RobotIdentifier id = static_cast<RobotIdentifier>(teamNumber);
 
-void ChassisConfig::BuildChassis()
-{
-    DefinePigeon();
-    DefineChassis();
-}
+    switch (id)
+    {
+    case RobotIdentifier::COMP_BOT_302:
+        return TunerConstants302::CreateDrivetrain();
+        break;
 
-ChassisConfig::~ChassisConfig()
-{
-}
+    case RobotIdentifier::CHASSIS_BOT_9998:
+        return TunerConstants9998::CreateDrivetrain();
+        break;
 
-void ChassisConfig::DefinePigeon()
-{
-}
+    case RobotIdentifier::SIM_BOT_0:
+        return TunerConstants302::CreateDrivetrain();
+        break;
 
-void ChassisConfig::DefineChassis()
-{
-}
-
-SwerveModule *ChassisConfig::GetSwerveModule(ChassisConfig::SWERVE_MODULE module) const
-{
-    if (module == SWERVE_MODULE::LEFT_BACK)
-        return m_leftBackModule;
-
-    if (module == SWERVE_MODULE::LEFT_FRONT)
-        return m_leftFrontModule;
-
-    if (module == SWERVE_MODULE::RIGHT_BACK)
-        return m_rightBackModule;
-
-    return m_rightFrontModule;
+    default:
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, std::string("Skipping chassis initialization because of unknown robot id "), std::string(""), static_cast<int>(id));
+        break;
+    }
 }

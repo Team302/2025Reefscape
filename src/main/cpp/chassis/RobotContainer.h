@@ -8,6 +8,7 @@
 #include <frc2/command/button/CommandXboxController.h>
 #include "chassis/CommandSwerveDrivetrain.h"
 #include "chassis/Telemetry.h"
+#include "chassis/definitions/TunerConstants.h"
 
 class RobotContainer
 {
