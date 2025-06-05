@@ -14,68 +14,44 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
+
+#include <optional>
 
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
+
 #include "chassis/RobotContainer.h"
+#include "networktables/NetworkTableInstance.h"
 
-#include "frc/geometry/Pose2d.h"
-
-class CyclePrimitives;
-class HolonomicDrive;
-class SwerveChassis;
 class TeleopControl;
-class FMSData;
-class DragonField;
-class AutonPreviewer;
-class RobotState;
-class SomeMech;
-class DragonDataLoggerMgr;
-class DragonSwervePoseEstimator;
-class DragonQuest;
 
 class Robot : public frc::TimedRobot
 {
 public:
-    Robot() = default;
-    ~Robot() = default;
-
-    void RobotInit() override;
+    Robot();
     void RobotPeriodic() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
     void DisabledInit() override;
     void DisabledPeriodic() override;
+    void DisabledExit() override;
+    void AutonomousInit() override;
+    void AutonomousPeriodic() override;
+    void AutonomousExit() override;
+    void TeleopInit() override;
+    void TeleopPeriodic() override;
+    void TeleopExit() override;
     void TestInit() override;
     void TestPeriodic() override;
-    void SimulationInit() override;
-    void SimulationPeriodic() override;
+    void TestExit() override;
 
 private:
-    void InitializeRobot();
-    void InitializeAutonOptions();
-    void InitializeDriveteamFeedback();
-    void UpdateDriveTeamFeedback();
-
     std::optional<frc2::CommandPtr> m_autonomousCommand;
 
-    RobotContainer m_container;
-
     TeleopControl *m_controller;
-    SwerveChassis *m_chassis;
-    CyclePrimitives *m_cyclePrims;
-    HolonomicDrive *m_holonomic;
 
-    FMSData *m_fmsData;
-    DragonField *m_field;
-    AutonPreviewer *m_previewer;
-    RobotState *m_robotState;
-    SomeMech *m_someMech;
-    DragonDataLoggerMgr *m_datalogger;
-    bool isFMSAttached = false;
-    DragonSwervePoseEstimator *m_dragonswerveposeestimator;
-    DragonQuest *m_quest;
+    RobotContainer m_container;
 };
