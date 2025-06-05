@@ -9,9 +9,9 @@
 
 RobotContainer::RobotContainer()
 {
-    drivetrain = ChassisConfigMgr::GetInstance()->CreateDrivetrain();
+    m_chassis = ChassisConfigMgr::GetInstance()->CreateDrivetrain();
     m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed();
-    if (drivetrain != nullptr)
+    if (m_chassis != nullptr)
     {
         ConfigureBindings();
     }
@@ -21,40 +21,40 @@ void RobotContainer::ConfigureBindings()
 {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
-    drivetrain->SetDefaultCommand(
+    m_chassis->SetDefaultCommand(
         // Drivetrain will execute this command periodically
-        drivetrain->ApplyRequest([this]() -> auto &&
-                                 {
-                                     return drive.WithVelocityX(-joystick.GetLeftY() * m_maxSpeed)    // Drive forward with negative Y (forward)
-                                         .WithVelocityY(-joystick.GetLeftX() * m_maxSpeed)            // Drive left with negative X (left)
-                                         .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
-                                 }));
+        m_chassis->ApplyRequest([this]() -> auto &&
+                                {
+                                    return drive.WithVelocityX(-joystick.GetLeftY() * m_maxSpeed)    // Drive forward with negative Y (forward)
+                                        .WithVelocityY(-joystick.GetLeftX() * m_maxSpeed)            // Drive left with negative X (left)
+                                        .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
+                                }));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     frc2::RobotModeTriggers::Disabled().WhileTrue(
-        drivetrain->ApplyRequest([]
-                                 { return swerve::requests::Idle{}; })
+        m_chassis->ApplyRequest([]
+                                { return swerve::requests::Idle{}; })
             .IgnoringDisable(true));
 
-    joystick.A().WhileTrue(drivetrain->ApplyRequest([this]() -> auto &&
-                                                    { return brake; }));
-    joystick.B().WhileTrue(drivetrain->ApplyRequest([this]() -> auto &&
-                                                    { return point.WithModuleDirection(frc::Rotation2d{-joystick.GetLeftY(), -joystick.GetLeftX()}); }));
+    joystick.A().WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
+                                                   { return brake; }));
+    joystick.B().WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
+                                                   { return point.WithModuleDirection(frc::Rotation2d{-joystick.GetLeftY(), -joystick.GetLeftX()}); }));
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
-    (joystick.Back() && joystick.Y()).WhileTrue(drivetrain->SysIdDynamic(frc2::sysid::Direction::kForward));
-    (joystick.Back() && joystick.X()).WhileTrue(drivetrain->SysIdDynamic(frc2::sysid::Direction::kReverse));
-    (joystick.Start() && joystick.Y()).WhileTrue(drivetrain->SysIdQuasistatic(frc2::sysid::Direction::kForward));
-    (joystick.Start() && joystick.X()).WhileTrue(drivetrain->SysIdQuasistatic(frc2::sysid::Direction::kReverse));
+    (joystick.Back() && joystick.Y()).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kForward));
+    (joystick.Back() && joystick.X()).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kReverse));
+    (joystick.Start() && joystick.Y()).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kForward));
+    (joystick.Start() && joystick.X()).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));
 
     // reset the field-centric heading on left bumper press
-    joystick.LeftBumper().OnTrue(drivetrain->RunOnce([this]
-                                                     { drivetrain->SeedFieldCentric(); }));
+    joystick.LeftBumper().OnTrue(m_chassis->RunOnce([this]
+                                                    { m_chassis->SeedFieldCentric(); }));
 
-    drivetrain->RegisterTelemetry([this](auto const &state)
-                                  { logger.Telemeterize(state); });
+    m_chassis->RegisterTelemetry([this](auto const &state)
+                                 { logger.Telemeterize(state); });
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()

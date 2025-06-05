@@ -26,14 +26,14 @@ private:
     swerve::requests::SwerveDriveBrake brake{};
     swerve::requests::PointWheelsAt point{};
 
-    /* Note: This must be constructed before the drivetrain, otherwise we need to
-     *       define a destructor to un-register the telemetry from the drivetrain */
+    /* Note: This must be constructed before the chassis, otherwise we need to
+     *       define a destructor to un-register the telemetry from the chassis */
     Telemetry logger;
 
     frc2::CommandXboxController joystick{0};
 
 public:
-    std::unique_ptr<subsystems::CommandSwerveDrivetrain> drivetrain;
+    std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
 
     RobotContainer();
 
