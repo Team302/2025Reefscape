@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -14,47 +13,18 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+#include "DragonHybridController.h"
 
-#pragma once
-
-#include <optional>
-
-#include <frc/TimedRobot.h>
-#include <frc2/command/CommandPtr.h>
-
-#include "chassis/RobotContainer.h"
-#include "networktables/NetworkTableInstance.h"
-
-class TeleopControl;
-
-class Robot : public frc::TimedRobot
+DragonHybridController::DragonHybridController(int port)
+    : m_commandController(new frc2::CommandXboxController(port)), m_nonCommandController(new DragonXBox(port))
 {
-public:
-    Robot();
-    void RobotPeriodic() override;
-    void DisabledInit() override;
-    void DisabledPeriodic() override;
-    void DisabledExit() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void AutonomousExit() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
-    void TeleopExit() override;
-    void TestInit() override;
-    void TestPeriodic() override;
-    void TestExit() override;
 
-private:
-    void InitializeRobot();
+frc2::CommandXboxController *DragonHybridController::GetCommandController()
+{
+    return m_commandController;
+}
 
-    std::optional<frc2::CommandPtr> m_autonomousCommand;
-
-    TeleopControl *m_controller;
-    bool isFMSAttached = false;
-
-    RobotContainer m_container;
-};
+DragonXBox *DragonHybridController::GetNonCommandController()
+{
+    return m_nonCommandController;
+}

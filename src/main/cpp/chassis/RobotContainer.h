@@ -11,6 +11,7 @@
 #include "chassis/CommandSwerveDrivetrain.h"
 #include "chassis/pose/Telemetry.h"
 #include "chassis/ChassisConfigMgr.h"
+#include "teleopcontrol/TeleopControl.h"
 
 class RobotContainer
 {
@@ -30,7 +31,7 @@ private:
      *       define a destructor to un-register the telemetry from the chassis */
     Telemetry logger;
 
-    frc2::CommandXboxController joystick{0};
+    frc2::CommandXboxController *joystick = TeleopControl::GetInstance()->GetHybridController()->GetCommandController();
 
 public:
     std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;

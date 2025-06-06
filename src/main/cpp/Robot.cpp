@@ -6,11 +6,31 @@
 
 #include <frc2/command/CommandScheduler.h>
 
-Robot::Robot() {}
+#include "utils/logging/debug/Logger.h"
+#include "teleopcontrol/TeleopControl.h"
+#include "frc/DriverStation.h"
+
+Robot::Robot()
+{
+    Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
+
+    m_controller = nullptr;
+
+    isFMSAttached = frc::DriverStation::IsFMSAttached();
+}
 
 void Robot::RobotPeriodic()
 {
     frc2::CommandScheduler::GetInstance().Run();
+
+    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    if (!isFMSAttached)
+    {
+        Logger::GetLogger()->PeriodicLog();
+    }
+
+    auto hybridController = TeleopControl::GetInstance()->GetHybridController()->GetCommandController();
+    auto driveForward = hybridController->GetLeftY();
 }
 
 void Robot::DisabledInit() {}
@@ -39,6 +59,10 @@ void Robot::TeleopInit()
     {
         m_autonomousCommand->Cancel();
     }
+    if (m_controller == nullptr)
+    {
+        m_controller = TeleopControl::GetInstance();
+    }
 }
 
 void Robot::TeleopPeriodic() {}
@@ -53,6 +77,11 @@ void Robot::TestInit()
 void Robot::TestPeriodic() {}
 
 void Robot::TestExit() {}
+
+void Robot::InitializeRobot()
+{
+    int32_t teamNumber = frc::RobotController::GetTeamNumber();
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main()
