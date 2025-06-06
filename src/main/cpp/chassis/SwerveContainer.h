@@ -13,7 +13,7 @@
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
 
-class RobotContainer
+class SwerveContainer
 {
 private:
     units::meters_per_second_t m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed(); // kSpeedAt12Volts desired top speed
@@ -34,7 +34,7 @@ private:
 public:
     std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
 
-    RobotContainer();
+    SwerveContainer();
 
     frc2::CommandPtr GetAutonomousCommand();
 

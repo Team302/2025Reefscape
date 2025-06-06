@@ -25,7 +25,7 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
-#include "chassis/RobotContainer.h"
+#include "chassis/SwerveContainer.h"
 #include "networktables/NetworkTableInstance.h"
 
 class TeleopControl;
@@ -56,5 +56,5 @@ private:
     TeleopControl *m_controller;
     bool isFMSAttached = false;
 
-    RobotContainer m_container;
+    SwerveContainer m_container;
 };

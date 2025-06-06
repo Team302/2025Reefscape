@@ -2,12 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "chassis/RobotContainer.h"
+#include "chassis/SwerveContainer.h"
 
 #include <frc2/command/Commands.h>
 #include <frc2/command/button/RobotModeTriggers.h>
 
-RobotContainer::RobotContainer()
+SwerveContainer::SwerveContainer()
 {
     m_chassis = ChassisConfigMgr::GetInstance()->CreateDrivetrain();
     m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed();
@@ -17,7 +17,7 @@ RobotContainer::RobotContainer()
     }
 }
 
-void RobotContainer::ConfigureBindings()
+void SwerveContainer::ConfigureBindings()
 {
     auto controller = TeleopControl::GetInstance();
 
@@ -65,7 +65,7 @@ void RobotContainer::ConfigureBindings()
                                  { logger.Telemeterize(state); });
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand()
+frc2::CommandPtr SwerveContainer::GetAutonomousCommand()
 {
     return frc2::cmd::Print("No autonomous command configured");
 }
