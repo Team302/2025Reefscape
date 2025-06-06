@@ -31,8 +31,6 @@ private:
      *       define a destructor to un-register the telemetry from the chassis */
     Telemetry logger;
 
-    frc2::CommandXboxController *joystick = TeleopControl::GetInstance()->GetHybridController()->GetCommandController();
-
 public:
     std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
 

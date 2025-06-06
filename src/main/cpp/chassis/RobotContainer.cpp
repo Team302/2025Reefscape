@@ -44,17 +44,18 @@ void RobotContainer::ConfigureBindings()
                                 { return swerve::requests::Idle{}; })
             .IgnoringDisable(true));
 
-    joystick->A().WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
-                                                    { return brake; }));
-    joystick->B().WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
-                                                    { return point.WithModuleDirection(frc::Rotation2d{-joystick->GetLeftY(), -joystick->GetLeftX()}); }));
+    controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION).WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
+                                                                                                           { return brake; }));
 
-    // Run SysId routines when holding back/start and X/Y.
+    // Point the wheels to a certain direciton, but don't move the chassis.  TO DO, probably update this to not be based on teleop control, but a command we can send
+    //  controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT).WhileTrue(m_chassis->ApplyRequest([this, controller]() -> auto && { return point.WithModuleDirection(frc::Rotation2d{controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD), controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE)}); }));
+
+    // Run SysId routines when holding Select and A,X,Y,B.
     // Note that each routine should be run exactly once in a single log.
-    (joystick->Back() && joystick->Y()).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kForward));
-    (joystick->Back() && joystick->X()).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kReverse));
-    (joystick->Start() && joystick->Y()).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kForward));
-    (joystick->Start() && joystick->X()).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));
+    (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION)).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kForward)); // A
+    (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT)).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kReverse));                 // B
+    (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_CLIMB)).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kForward));                  // Y
+    (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT)).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));            // X
 
     // reset the field-centric heading on left bumper press
     controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION).OnTrue(m_chassis->RunOnce([this, controller]

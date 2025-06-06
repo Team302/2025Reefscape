@@ -50,6 +50,7 @@ public:
         MANUAL_CLIMB_UP,
         MANUAL_CLIMB_DOWN,
         SWEEP,
+        SYSID_MODIFER,
 
         // tip correction controls
         TIPCORRECTION_TOGGLE,
