@@ -29,8 +29,9 @@ void Robot::RobotPeriodic()
         Logger::GetLogger()->PeriodicLog();
     }
 
-    auto hybridController = TeleopControl::GetInstance()->GetHybridController()->GetCommandController();
-    auto driveForward = hybridController->GetLeftY();
+    auto controller = TeleopControl::GetInstance();
+    auto resetPose = controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION).Get();
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Test", "ResetPose", resetPose ? "true" : "false");
 }
 
 void Robot::DisabledInit() {}

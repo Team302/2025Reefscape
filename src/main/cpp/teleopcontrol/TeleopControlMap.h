@@ -158,7 +158,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     // {TeleopControlFunctions::ALIGN_FLOOR_GAME_PIECE, driverYButton},
 
     {TeleopControlFunctions::RESET_POSITION, driverDPad90},
-    {TeleopControlFunctions::RESET_POSITION, driverDPad270},
 
     {TeleopControlFunctions::SWEEP, driverDPad180},
 

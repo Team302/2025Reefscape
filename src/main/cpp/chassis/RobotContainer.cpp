@@ -57,8 +57,8 @@ void RobotContainer::ConfigureBindings()
     (joystick->Start() && joystick->X()).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));
 
     // reset the field-centric heading on left bumper press
-    joystick->LeftBumper().OnTrue(m_chassis->RunOnce([this]
-                                                     { m_chassis->SeedFieldCentric(); }));
+    controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION).OnTrue(m_chassis->RunOnce([this, controller]
+                                                                                                    { m_chassis->SeedFieldCentric(); }));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });
