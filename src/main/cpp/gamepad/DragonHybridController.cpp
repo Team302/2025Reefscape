@@ -18,6 +18,7 @@
 DragonHybridController::DragonHybridController(int port)
     : m_commandController(new frc2::CommandXboxController(port)), m_nonCommandController(new DragonXBox(port))
 {
+}
 
 frc2::CommandXboxController *DragonHybridController::GetCommandController()
 {
