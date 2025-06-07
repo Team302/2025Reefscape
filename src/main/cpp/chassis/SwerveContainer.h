@@ -12,32 +12,27 @@
 #include "chassis/pose/Telemetry.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
+#include "chassis/states/FieldDrive.h"
 
 class SwerveContainer
 {
-private:
-    units::meters_per_second_t m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed(); // kSpeedAt12Volts desired top speed
-    units::radians_per_second_t MaxAngularRate = 0.75_tps;                                  // 3/4 of a rotation per second max angular velocity
-
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    swerve::requests::FieldCentric drive = swerve::requests::FieldCentric{}
-                                               .WithDeadband(m_maxSpeed * 0.1)
-                                               .WithRotationalDeadband(MaxAngularRate * 0.1)                     // Add a 10% deadband
-                                               .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage); // Use open-loop control for drive motors
-    swerve::requests::SwerveDriveBrake brake{};
-    swerve::requests::PointWheelsAt point{};
-
-    /* Note: This must be constructed before the chassis, otherwise we need to
-     *       define a destructor to un-register the telemetry from the chassis */
-    Telemetry logger;
-
 public:
-    std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
-
     SwerveContainer();
 
     frc2::CommandPtr GetAutonomousCommand();
 
 private:
+    std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
+
+    units::meters_per_second_t m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed(); // kSpeedAt12Volts desired top speed
+    units::radians_per_second_t m_maxAngularRate = 0.75_tps;                                // 3/4 of a rotation per second max angular velocity
+
+    swerve::requests::SwerveDriveBrake brake{};
+    swerve::requests::PointWheelsAt point{};
+
+    Telemetry logger;
+
+    frc2::CommandPtr m_fieldDrive;
+
     void ConfigureBindings();
 };

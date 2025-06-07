@@ -6,11 +6,17 @@
 
 #include <frc2/command/Commands.h>
 #include <frc2/command/button/RobotModeTriggers.h>
+#include <memory>
 
-SwerveContainer::SwerveContainer()
+SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->CreateDrivetrain()),
+                                     m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
+                                     m_fieldDrive(std::make_unique<FieldDrive>(
+                                         m_chassis.get(),
+                                         TeleopControl::GetInstance(),
+                                         m_maxSpeed, // This is now the correct value
+                                         m_maxAngularRate))
+
 {
-    m_chassis = ChassisConfigMgr::GetInstance()->CreateDrivetrain();
-    m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed();
     if (m_chassis != nullptr)
     {
         ConfigureBindings();
@@ -21,21 +27,7 @@ void SwerveContainer::ConfigureBindings()
 {
     auto controller = TeleopControl::GetInstance();
 
-    // Note that X is defined as forward according to WPILib convention,
-    // and Y is defined as to the left according to WPILib convention.
-    m_chassis->SetDefaultCommand(
-        // Drivetrain will execute this command periodically
-        m_chassis->ApplyRequest([this, controller]() -> auto &&
-                                {
-                                    // Use the TeleopControl functions inside the lambda.
-                                    // This lambda is called every 20ms, so GetAxisValue is also called every 20ms.
-                                    double forward = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);
-                                    double strafe = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
-                                    double rotate = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE);
-
-                                    return drive.WithVelocityX(forward * m_maxSpeed)
-                                        .WithVelocityY(strafe * m_maxSpeed)
-                                        .WithRotationalRate(rotate * MaxAngularRate); }));
+    m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
@@ -47,7 +39,7 @@ void SwerveContainer::ConfigureBindings()
     controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION).WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
                                                                                                            { return brake; }));
 
-    // Point the wheels to a certain direciton, but don't move the chassis.  TO DO, probably update this to not be based on teleop control, but a command we can send
+    // Point the wheels to a certain direciton, but don't move the chassis.  TO DO, probably update this to not be based on teleop control, but a command we can send (Maybe for starting auton)
     //  controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT).WhileTrue(m_chassis->ApplyRequest([this, controller]() -> auto && { return point.WithModuleDirection(frc::Rotation2d{controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD), controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE)}); }));
 
     // Run SysId routines when holding Select and A,X,Y,B.
