@@ -3,18 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "chassis/SwerveContainer.h"
-
 #include <frc2/command/Commands.h>
 #include <frc2/command/button/RobotModeTriggers.h>
-#include <memory>
+#include "chassis/states/FieldDrive.h"
+#include "chassis/states/RobotDrive.h"
 
 SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->CreateDrivetrain()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
-                                     m_fieldDrive(std::make_unique<FieldDrive>(
-                                         m_chassis.get(),
-                                         TeleopControl::GetInstance(),
-                                         m_maxSpeed, // This is now the correct value
-                                         m_maxAngularRate))
+                                     m_fieldDrive(std::make_unique<FieldDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
+                                     m_robotDrive(std::make_unique<RobotDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate))
 
 {
     if (m_chassis != nullptr)
@@ -52,6 +49,8 @@ void SwerveContainer::ConfigureBindings()
     // reset the field-centric heading on left bumper press
     controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION).OnTrue(m_chassis->RunOnce([this, controller]
                                                                                                     { m_chassis->SeedFieldCentric(); }));
+
+    controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE).WhileTrue(std::move(m_robotDrive));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });

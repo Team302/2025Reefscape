@@ -12,7 +12,6 @@
 #include "chassis/pose/Telemetry.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
-#include "chassis/states/FieldDrive.h"
 
 class SwerveContainer
 {
@@ -33,6 +32,7 @@ private:
     Telemetry logger;
 
     frc2::CommandPtr m_fieldDrive;
+    frc2::CommandPtr m_robotDrive;
 
     void ConfigureBindings();
 };
