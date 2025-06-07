@@ -10,7 +10,8 @@
 #include <networktables/StructArrayTopic.h>
 #include <networktables/StructTopic.h>
 
-#include "chassis/CommandSwerveDrivetrain.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
+
 #include "chassis/ChassisConfigMgr.h"
 
 class Telemetry

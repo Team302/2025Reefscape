@@ -1,4 +1,4 @@
-#include "chassis/CommandSwerveDrivetrain.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 #include <frc/RobotController.h>
 
 using namespace subsystems;

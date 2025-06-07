@@ -1,4 +1,4 @@
-#include "chassis/pose/Telemetry.h"
+#include "chassis/generated/Telemetry.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix6;
