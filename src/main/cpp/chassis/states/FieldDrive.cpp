@@ -27,7 +27,6 @@ FieldDrive::FieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
 {
     AddRequirements(m_chassis);
 }
-
 void FieldDrive::Execute()
 {
     double forward = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);

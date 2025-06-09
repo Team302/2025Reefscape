@@ -18,11 +18,13 @@
 #include <frc2/command/button/RobotModeTriggers.h>
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/RobotDrive.h"
+#include "chassis/states/PolarDrive.h"
 
 SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->CreateDrivetrain()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
                                      m_fieldDrive(std::make_unique<FieldDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
-                                     m_robotDrive(std::make_unique<RobotDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate))
+                                     m_robotDrive(std::make_unique<RobotDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
+                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed))
 
 {
     if (m_chassis != nullptr)
@@ -35,6 +37,11 @@ void SwerveContainer::ConfigureBindings()
 {
     auto controller = TeleopControl::GetInstance();
 
+    auto isResetYawSelected = controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION);
+    auto isRobotOriented = controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
+    auto isHoldPositionSelected = controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION);
+    auto isPolarDriveSelected = controller->GetCommandTrigger(TeleopControlFunctions::POLAR_DRIVE);
+
     m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
 
     // Idle while the robot is disabled. This ensures the configured
@@ -43,13 +50,15 @@ void SwerveContainer::ConfigureBindings()
                                                                           { return swerve::requests::Idle{}; })
                                                       .IgnoringDisable(true));
 
-    controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION).WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
-                                                                                                           { return brake; }));
+    isHoldPositionSelected.WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
+                                                             { return m_brakeRequest; }));
 
-    controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION).OnTrue(m_chassis->RunOnce([this, controller]
-                                                                                                    { m_chassis->SeedFieldCentric(); }));
+    isResetYawSelected.OnTrue(m_chassis->RunOnce([this, controller]
+                                                 { m_chassis->SeedFieldCentric(); }));
 
-    controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE).WhileTrue(std::move(m_robotDrive));
+    isRobotOriented.WhileTrue(std::move(m_robotDrive));
+
+    isPolarDriveSelected.WhileTrue(std::move(m_polarDrive));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });

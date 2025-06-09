@@ -12,41 +12,33 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
 
-#include <memory>
-
-#include <frc2/command/CommandPtr.h>
-#include <frc2/command/button/CommandXboxController.h>
+#include <frc2/command/CommandHelper.h>
+#include <frc2/command/Command.h>
 #include "chassis/generated/CommandSwerveDrivetrain.h"
-
-#include "chassis/generated/Telemetry.h"
-
-#include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
+#include "frc/geometry/Translation2d.h"
 
-class SwerveContainer
+class PolarDrive : public frc2::CommandHelper<frc2::Command, PolarDrive>
 {
 public:
-    SwerveContainer();
+    PolarDrive(subsystems::CommandSwerveDrivetrain *chassis, TeleopControl *controller, units::velocity::meters_per_second_t maxSpeed);
 
-    frc2::CommandPtr GetAutonomousCommand();
+    void Initialize() override;
+    void Execute() override;
+    bool IsFinished() override;
+    void End(bool interrupted) override;
 
 private:
-    std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
+    subsystems::CommandSwerveDrivetrain *m_chassis;
+    TeleopControl *m_controller;
 
-    units::meters_per_second_t m_maxSpeed = ChassisConfigMgr::GetInstance()->GetMaxSpeed(); // kSpeedAt12Volts desired top speed
-    units::radians_per_second_t m_maxAngularRate = 1_tps;                                   // 3/4 of a rotation per second max angular velocity
+    frc::Translation2d m_reefCenter;
 
-    swerve::requests::SwerveDriveBrake m_brakeRequest{};
-
-    Telemetry logger;
-
-    frc2::CommandPtr m_fieldDrive;
-    frc2::CommandPtr m_robotDrive;
-    frc2::CommandPtr m_polarDrive;
-
-    void ConfigureBindings();
-    void SetSysIDBinding(TeleopControl *controller);
+    swerve::requests::RobotCentricFacingAngle m_polarDrive = swerve::requests::RobotCentricFacingAngle{}
+                                                                 .WithDeadband(m_maxSpeed * 0.1)
+                                                                 .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
+                                                                 .WithDesaturateWheelSpeeds(true);
+    units::velocity::meters_per_second_t m_maxSpeed;
 };

@@ -46,6 +46,7 @@ private:
     // The request object itself
     swerve::requests::FieldCentric m_fieldDriveRequest = swerve::requests::FieldCentric{}
                                                              .WithDeadband(m_maxSpeed * 0.1)
-                                                             .WithRotationalDeadband(m_maxAngularRate * 0.1)                   // Add a 10% deadband
-                                                             .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage); // Use open-loop control for drive motors
+                                                             .WithRotationalDeadband(m_maxAngularRate * 0.1)                  // Add a 10% deadband
+                                                             .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
+                                                             .WithDesaturateWheelSpeeds(true);
 };
