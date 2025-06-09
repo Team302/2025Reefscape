@@ -73,7 +73,7 @@ frc2::CommandPtr SwerveContainer::GetAutonomousCommand()
 
 void SwerveContainer::SetSysIDBinding(TeleopControl *controller)
 {
-    if (controller == nullptr)
+    if (controller != nullptr)
     {
         // Run SysId routines when holding Select and A,X,Y,B.
         // Note that each routine should be run exactly once in a single log.
