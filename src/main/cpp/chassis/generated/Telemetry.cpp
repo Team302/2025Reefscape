@@ -1,5 +1,6 @@
 #include "chassis/generated/Telemetry.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "utils/DragonField.h"
 
 using namespace ctre::phoenix6;
 
@@ -43,12 +44,11 @@ void Telemetry::Telemeterize(subsystems::CommandSwerveDrivetrain::SwerveDriveSta
     SignalLogger::WriteDoubleArray("DriveState/ModuleTargets", moduleTargetsArray);
     SignalLogger::WriteValue("DriveState/OdometryPeriod", state.OdometryPeriod);
 
-    /* Telemeterize the pose to a Field2d */
-    fieldTypePub.Set("Field2d");
-    fieldPub.Set(std::array{
-        state.Pose.X().value(),
-        state.Pose.Y().value(),
-        state.Pose.Rotation().Degrees().value()});
+    auto field = DragonField::GetInstance();
+    if (field != nullptr)
+    {
+        field->UpdateRobotPosition(state.Pose);
+    }
 
     /* Telemeterize each module state to a Mechanism2d */
     for (size_t i = 0; i < m_moduleSpeeds.size(); ++i)

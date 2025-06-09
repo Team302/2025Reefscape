@@ -28,7 +28,18 @@
 #include "chassis/SwerveContainer.h"
 #include "networktables/NetworkTableInstance.h"
 
+class CyclePrimitives;
+class HolonomicDrive;
+class SwerveChassis;
 class TeleopControl;
+class FMSData;
+class DragonField;
+class AutonPreviewer;
+class RobotState;
+class SomeMech;
+class DragonDataLoggerMgr;
+class DragonSwervePoseEstimator;
+class DragonQuest;
 
 class Robot : public frc::TimedRobot
 {
@@ -50,10 +61,18 @@ public:
 
 private:
     void InitializeRobot();
+    void InitializeAutonOptions();
+    void InitializeDriveteamFeedback();
+    void UpdateDriveTeamFeedback();
 
     std::optional<frc2::CommandPtr> m_autonomousCommand;
 
     TeleopControl *m_controller;
+
+    FMSData *m_fmsData;
+    DragonField *m_field;
+    RobotState *m_robotState;
+
     bool isFMSAttached = false;
 
     SwerveContainer m_container;
