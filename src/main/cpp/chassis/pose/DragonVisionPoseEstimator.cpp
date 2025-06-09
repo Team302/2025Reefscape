@@ -13,40 +13,19 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
-#include <memory>
-
-#include <frc2/command/CommandPtr.h>
-#include <frc2/command/button/CommandXboxController.h>
-#include "chassis/generated/CommandSwerveDrivetrain.h"
-
-#include "chassis/generated/Telemetry.h"
-
 #include "chassis/ChassisConfigMgr.h"
-#include "teleopcontrol/TeleopControl.h"
+#include "chassis/SwerveContainer.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
 
-class SwerveContainer
+DragonVisionPoseEstimator::DragonVisionPoseEstimator()
 {
-public:
-    SwerveContainer();
-
-    frc2::CommandPtr GetAutonomousCommand();
-
-private:
-    subsystems::CommandSwerveDrivetrain *m_chassis;
-
-    units::meters_per_second_t m_maxSpeed;
-    units::radians_per_second_t m_maxAngularRate = 1_tps;
-
-    swerve::requests::SwerveDriveBrake m_brakeRequest{};
-
-    Telemetry logger;
-
-    frc2::CommandPtr m_fieldDrive;
-    frc2::CommandPtr m_robotDrive;
-    frc2::CommandPtr m_polarDrive;
-
-    void ConfigureBindings();
-    void SetSysIDBinding(TeleopControl *controller);
-};
+    auto chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
+    if (chassis != nullptr)
+    {
+        // auto poseEst = chassis->GetSwervePoseEstimator();
+        // if (poseEst != nullptr)
+        // {
+        //     poseEst->RegisterVisionPoseEstimator(this);
+        // }
+    }
+}

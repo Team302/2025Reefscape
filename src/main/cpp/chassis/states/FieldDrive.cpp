@@ -33,6 +33,10 @@ void FieldDrive::Execute()
     double strafe = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
     double rotate = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE);
 
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Test", "Chassis", m_chassis != nullptr ? "Chassis is initialized" : "Chassis is not initialized");
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Test", "Max Speed", m_maxSpeed.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Test", "Max Angular Rate", m_maxAngularRate.to<double>());
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Test", "Forward", forward);
     m_chassis->SetControl(
         m_fieldDriveRequest.WithVelocityX(forward * m_maxSpeed)
             .WithVelocityY(strafe * m_maxSpeed)

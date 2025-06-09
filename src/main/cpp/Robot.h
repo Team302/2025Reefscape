@@ -25,13 +25,9 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
-#include "chassis/SwerveContainer.h"
-#include "networktables/NetworkTableInstance.h"
-
 class CyclePrimitives;
-class HolonomicDrive;
-class SwerveChassis;
 class TeleopControl;
+class SwerveContainer;
 class FMSData;
 class DragonField;
 class AutonPreviewer;
@@ -75,5 +71,5 @@ private:
 
     bool isFMSAttached = false;
 
-    SwerveContainer m_container;
+    std::unique_ptr<SwerveContainer> m_container;
 };

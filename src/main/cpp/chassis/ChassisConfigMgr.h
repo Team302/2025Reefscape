@@ -30,14 +30,17 @@ class ChassisConfigMgr
 public:
     static ChassisConfigMgr *GetInstance();
 
-    std::unique_ptr<subsystems::CommandSwerveDrivetrain> CreateDrivetrain();
+    void CreateDrivetrain();
+
+    subsystems::CommandSwerveDrivetrain *GetSwerveChassis() { return m_chassis.get(); }
 
     units::meters_per_second_t GetMaxSpeed() { return m_maxSpeed; }
 
 private:
     ChassisConfigMgr();
-    ~ChassisConfigMgr() = default;
+    virtual ~ChassisConfigMgr() = default;
 
     static ChassisConfigMgr *m_instance;
     units::meters_per_second_t m_maxSpeed;
+    std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
 };

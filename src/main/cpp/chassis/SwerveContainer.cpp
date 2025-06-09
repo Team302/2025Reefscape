@@ -20,11 +20,11 @@
 #include "chassis/states/RobotDrive.h"
 #include "chassis/states/PolarDrive.h"
 
-SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->CreateDrivetrain()),
+SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
-                                     m_fieldDrive(std::make_unique<FieldDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
-                                     m_robotDrive(std::make_unique<RobotDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
-                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis.get(), TeleopControl::GetInstance(), m_maxSpeed))
+                                     m_fieldDrive(std::make_unique<FieldDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
+                                     m_robotDrive(std::make_unique<RobotDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
+                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed))
 
 {
     if (m_chassis != nullptr)

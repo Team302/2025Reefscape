@@ -6,22 +6,26 @@
 
 #include <frc2/command/CommandScheduler.h>
 
+#include "chassis/ChassisConfigMgr.h"
 #include "utils/logging/debug/Logger.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
 #include "frc/DriverStation.h"
 #include "utils/RoboRio.h"
 #include "state/RobotState.h"
+#include "chassis/SwerveContainer.h"
 
 Robot::Robot()
 {
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
 
     m_controller = nullptr;
+    isFMSAttached = frc::DriverStation::IsFMSAttached();
 
+    InitializeRobot();
     InitializeDriveteamFeedback();
 
-    isFMSAttached = frc::DriverStation::IsFMSAttached();
+    m_container = std::make_unique<SwerveContainer>();
 }
 
 void Robot::RobotPeriodic()
@@ -43,7 +47,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit()
 {
-    m_autonomousCommand = m_container.GetAutonomousCommand();
+    m_autonomousCommand = m_container->GetAutonomousCommand();
 
     if (m_autonomousCommand)
     {
@@ -85,6 +89,8 @@ void Robot::InitializeRobot()
     // int32_t teamNumber = frc::RobotController::GetTeamNumber();
     // FieldConstants::GetInstance();
     RoboRio::GetInstance();
+    auto chassisConfig = ChassisConfigMgr::GetInstance();
+    chassisConfig->CreateDrivetrain();
 
     // m_dragonswerveposeestimator = nullptr;
 

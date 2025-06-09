@@ -34,10 +34,10 @@ ChassisConfigMgr *ChassisConfigMgr::GetInstance()
 }
 ChassisConfigMgr::ChassisConfigMgr() : m_maxSpeed(0_mps)
 {
-    // Constructor implementation can be empty or contain initialization logic
+    CreateDrivetrain();
 }
 
-std::unique_ptr<subsystems::CommandSwerveDrivetrain> ChassisConfigMgr::CreateDrivetrain()
+void ChassisConfigMgr::CreateDrivetrain()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
 
@@ -47,21 +47,23 @@ std::unique_ptr<subsystems::CommandSwerveDrivetrain> ChassisConfigMgr::CreateDri
     {
     case RobotIdentifier::COMP_BOT_302:
         m_maxSpeed = TunerConstants302::kSpeedAt12Volts;
-        return TunerConstants302::CreateDrivetrain();
+        m_chassis = TunerConstants302::CreateDrivetrain(); // This returns a unique_ptr
         break;
 
     case RobotIdentifier::CHASSIS_BOT_9998:
         m_maxSpeed = TunerConstants9998::kSpeedAt12Volts;
-        return TunerConstants9998::CreateDrivetrain();
+        m_chassis = TunerConstants9998::CreateDrivetrain();
         break;
 
     case RobotIdentifier::SIM_BOT_0:
         m_maxSpeed = TunerConstants302::kSpeedAt12Volts;
-        return TunerConstants302::CreateDrivetrain();
+        m_chassis = TunerConstants302::CreateDrivetrain();
         break;
 
     default:
-        return nullptr;
+        // Create a default or log an error if you want
+        m_maxSpeed = 0_mps;
+        m_chassis = nullptr;
         break;
     }
 }
