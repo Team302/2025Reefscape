@@ -30,11 +30,15 @@
 #include "wpi/array.h"
 
 using frc::DriverStation;
+using frc::Pose2d;
+using frc::Rotation2d;
+using frc::SwerveModulePosition;
+using frc::SwerveDriveKinematics;
 
-DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
-                                                     const frc::Rotation2d &gyroAngle,
-                                                     const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                                                     const frc::Pose2d &initialPose) : m_frontLeft(nullptr),
+DragonSwervePoseEstimator::DragonSwervePoseEstimator(SwerveDriveKinematics<4> kinematics,
+                                                     const Rotation2d &gyroAngle,
+                                                     const wpi::array<SwerveModulePosition, 4> &positions,
+                                                     const Pose2d &initialPose) : m_frontLeft(nullptr),
                                                                                        m_frontRight(nullptr),
                                                                                        m_backLeft(nullptr),
                                                                                        m_backRight(nullptr),
@@ -71,9 +75,9 @@ void DragonSwervePoseEstimator::Update()
         {
             SetServeModules(chassis);
         }
-        frc::Rotation2d rot2d{chassis->GetRawYaw()};
+        Rotation2d rot2d{chassis->GetRawYaw()};
 
-        m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
+        m_poseEstimator.Update(rot2d, wpi::array<SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
                                                                                m_frontRight->GetPosition(),
                                                                                m_backLeft->GetPosition(),
                                                                                m_backRight->GetPosition()});
