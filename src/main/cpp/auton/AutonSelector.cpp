@@ -40,6 +40,7 @@
 #include <pugixml/pugixml.hpp>
 
 using namespace std;
+using frc::DriverStation;
 
 //---------------------------------------------------------------------
 // Method: 		<<constructor>>
@@ -110,14 +111,7 @@ bool AutonSelector::FileValid(const std::string &name)
 
 string AutonSelector::GetAlianceColor()
 {
-	if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kRed)
-	{
-		return std::string("Red");
-	}
-	else
-	{
-		return std::string("Blue");
-	}
+	return (FMSData::GetAllianceColor() == DriverStation::Alliance::kRed) ? std::string("Red") : std::string("Blue");
 }
 
 string AutonSelector::GetStartPos()

@@ -144,7 +144,7 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestFieldElementAprilT
 		if (limelightData.has_value())
 		{
 			// get alliance color from FMSData
-			frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+			frc::DriverStation::Alliance allianceColor = FMSData::GetAllianceColor();
 
 			// initialize tags to check to null pointer
 			std::vector<int> tagIdsToCheck = {};
@@ -317,7 +317,7 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 
 std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT element)
 {
-	frc::DriverStation::Alliance allianceColor = FMSData::GetInstance()->GetAllianceColor();
+	frc::DriverStation::Alliance allianceColor = FMSData::GetAllianceColor();
 
 	// initialize selected field element to empty Pose3d
 	frc::Pose3d fieldElementPose = frc::Pose3d{};

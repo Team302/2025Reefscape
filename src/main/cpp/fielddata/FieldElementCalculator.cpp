@@ -62,7 +62,7 @@ frc::Pose3d FieldElementCalculator::CalcOffsetPositionForElement(frc::Pose3d &po
 void FieldElementCalculator::UpdateReefStickRobotTransforms()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    bool allianceIsBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+    bool allianceIsBlue = FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
 
     if ((RobotIdentifier)teamNumber == RobotIdentifier::COMP_BOT_302)
     {

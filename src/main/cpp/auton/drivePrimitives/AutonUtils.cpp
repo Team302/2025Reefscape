@@ -15,15 +15,16 @@
 //====================================================================================================================================================
 
 #include "auton/drivePrimitives/AutonUtils.h"
+#include "choreo/Choreo.h"
 #include "utils/FMSData.h"
 
-using namespace std;
-using namespace frc;
+using frc::DriverStation;
+using std::string;
 
-std::optional<choreo::Trajectory<choreo::SwerveSample>> AutonUtils::GetTrajectoryFromPathFile(std::string pathName)
+std::optional<choreo::Trajectory<choreo::SwerveSample>> AutonUtils::GetTrajectoryFromPathFile(string pathName)
 {
     auto trajectory = choreo::Choreo::LoadTrajectory<choreo::SwerveSample>(pathName);
-    if (trajectory.has_value() && FMSData::GetInstance()->GetAllianceColor() == DriverStation::Alliance::kRed)
+    if (trajectory.has_value() && FMSData::GetAllianceColor() == DriverStation::Alliance::kRed)
     {
         return trajectory.value().Flipped();
     }

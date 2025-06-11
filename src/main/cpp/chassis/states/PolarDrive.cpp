@@ -31,7 +31,6 @@ using std::string;
 PolarDrive::PolarDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
                                                  m_robotDrive(robotDrive)
 {
-    m_fmsData = FMSData::GetInstance();
     m_targetFinder = DragonTargetFinder::GetInstance();
 }
 
@@ -76,7 +75,7 @@ std::array<frc::SwerveModuleState, 4> PolarDrive::UpdateSwerveModuleStates(Chass
         double vyNew = radialVelocity * units::math::sin(angle).value() + (m_radiusTarget.value() * angularVelocity * units::math::cos(angle).value());
 
         // negative for blue and positive for red
-        if (m_fmsData->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+        if (FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
         {
             vxNew = -vxNew;
             vyNew = -vyNew;

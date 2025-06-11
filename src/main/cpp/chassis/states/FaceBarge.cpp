@@ -15,9 +15,10 @@
 
 // Team302 Includes
 #include "chassis/states/FaceBarge.h"
-#include "vision/DragonVision.h"
 #include "utils/AngleUtils.h"
 #include "utils/FMSData.h"
+#include "vision/DragonVision.h"
+
 FaceBarge::FaceBarge() : FaceTarget(ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION)
 {
 }
@@ -46,12 +47,12 @@ units::angle::degree_t FaceBarge::GetTargetAngle(ChassisMovement &chassisMovemen
 
             if (chassisMovement.IsClimbMode)
             {
-                chassisMovement.yawAngle = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? -90_deg : 90_deg;
+                chassisMovement.yawAngle = FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? -90_deg : 90_deg;
             }
 
             return chassisMovement.yawAngle;
         }
     }
 
-    return units::angle::degree_t(0);
+    return units::angle::degree_t(0.0);
 }
