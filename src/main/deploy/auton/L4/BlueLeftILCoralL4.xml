@@ -7,7 +7,7 @@ choreoname = "BlueLeftInside_I"/> -->
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftInside_I"
-time = "2.5">
+time = "3.0">
 <zone filename = "BlueReefDriveToRight.xml"/>
 </primitive>
 

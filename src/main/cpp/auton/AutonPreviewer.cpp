@@ -50,20 +50,22 @@ AutonPreviewer::AutonPreviewer(CyclePrimitives *cyclePrims) : m_selector(cyclePr
 
 void AutonPreviewer::CheckCurrentAuton()
 {
-    // If the robot is not disabled, clear the field and return
-    if (!frc::DriverStation::IsDisabled())
-    {
-        m_field->ResetField();
-        m_prevChoice = ""; // Optional: force re-population once disabled again
-        return;
-    }
 
     std::string currentChoice = m_selector->GetSelectedAutoFile();
-    if (currentChoice != m_prevChoice)
-    {
-        PopulateField();
-        m_prevChoice = currentChoice;
-    }
+
+    // If the robot is not disabled, clear the field and return
+    // if (!frc::DriverStation::IsDisabled())
+    // {
+    //     m_field->ResetField();
+    //     m_prevChoice = ""; // Optional: force re-population once disabled again
+    //     return;
+    // }
+
+    // if (currentChoice != m_prevChoice)
+    // {
+    //     PopulateField();
+    //     m_prevChoice = currentChoice;
+    // }
 }
 
 void AutonPreviewer::PopulateField()
