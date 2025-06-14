@@ -23,11 +23,16 @@ PolarDrive::PolarDrive(subsystems::CommandSwerveDrivetrain *chassis,
 
 {
     AddRequirements(m_chassis);
+    m_targetFinder = DragonTargetFinder::GetInstance();
 }
 
 void PolarDrive::Initialize()
 {
-    m_reefCenter = frc::Translation2d{13.10_m, 4.10_m}; // fixed for now, this can be set once DragonTargetFinder is in place
+    if (m_targetFinder != nullptr)
+    {
+        auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
+        m_reefCenter = get<1>(info.value());
+    }
 
     double heading_kP = 7.5;
     double heading_kI = 2.0;
@@ -41,7 +46,14 @@ void PolarDrive::Execute()
 
     units::meter_t x_diff = m_reefCenter.X() - currentPose.X();
     units::meter_t y_diff = m_reefCenter.Y() - currentPose.Y();
-    frc::Rotation2d angleToTarget = units::math::atan2(y_diff, x_diff);
+    frc::Rotation2d angleToTarget = 0_deg;
+
+    auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE);
+    if (info.has_value())
+    {
+        auto targetpose = get<1>(info.value());
+        angleToTarget = targetpose.Rotation().Degrees();
+    }
 
     auto radialVelocity = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD) * m_maxSpeed;
     auto angularVelocity = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE) * m_maxSpeed;

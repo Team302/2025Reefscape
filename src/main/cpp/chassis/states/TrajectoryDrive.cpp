@@ -43,7 +43,7 @@ TrajectoryDrive::TrajectoryDrive(
     // This command requires the chassis subsystem
     AddRequirements(m_chassis);
     // Enable continuous input for the heading controller for proper wrap-around
-    m_headingController.EnableContinuousInput(-M_PI, M_PI);
+    m_headingController.EnableContinuousInput(-std::numbers::pi, std::numbers::pi);
 }
 
 void TrajectoryDrive::Initialize()
@@ -63,7 +63,7 @@ void TrajectoryDrive::Initialize()
 
 void TrajectoryDrive::Execute()
 {
-    if (!m_trajectoryStates.empty() && !IsDone()) // If we have a path parsed / have states to run
+    if (!m_trajectoryStates.empty() && !IsFinished()) // If we have a path parsed / have states to run
     {
         auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get()).value();
         if (m_chassis != nullptr)

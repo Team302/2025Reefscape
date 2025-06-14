@@ -19,6 +19,7 @@
 #include "chassis/generated/CommandSwerveDrivetrain.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "frc/geometry/Translation2d.h"
+#include "fielddata/DragonTargetFinder.h"
 
 class PolarDrive : public frc2::CommandHelper<frc2::Command, PolarDrive>
 {
@@ -34,11 +35,12 @@ private:
     subsystems::CommandSwerveDrivetrain *m_chassis;
     TeleopControl *m_controller;
 
-    frc::Translation2d m_reefCenter;
+    frc::Pose2d m_reefCenter;
 
     swerve::requests::RobotCentricFacingAngle m_polarDrive = swerve::requests::RobotCentricFacingAngle{}
                                                                  .WithDeadband(m_maxSpeed * 0.1)
                                                                  .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
                                                                  .WithDesaturateWheelSpeeds(true);
     units::velocity::meters_per_second_t m_maxSpeed;
+    DragonTargetFinder *m_targetFinder;
 };

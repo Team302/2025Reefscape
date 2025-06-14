@@ -46,7 +46,6 @@ public:
     std::string GetDriveStateName();
 
     std::string WhyDone() const { return m_whyDone; };
-    virtual bool IsDone();
 
     units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
 
