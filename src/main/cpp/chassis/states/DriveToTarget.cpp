@@ -17,7 +17,8 @@
 #include "utils/logging/debug/Logger.h"
 #include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Translation2d.h"
-#include "vision/DragonVisionStructLogger.h"s
+#include "vision/DragonVisionStructLogger.h"
+#include "state/RobotState.h"
 
 DriveToTarget::DriveToTarget(
     subsystems::CommandSwerveDrivetrain *chassis,
@@ -132,7 +133,7 @@ void DriveToTarget::Execute()
                 .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
     }
-    // RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsFinished());
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsFinished());
 }
 
 bool DriveToTarget::IsFinished()
