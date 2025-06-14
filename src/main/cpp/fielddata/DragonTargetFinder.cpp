@@ -111,8 +111,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (leftbranch.has_value())
                 {
                     auto leftbranchpose = fieldconst->GetFieldElementPose2d(leftbranch.value());
-                    m_goalPose = leftbranchpose;
-                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, leftbranchpose);
+                    m_goalPose = frc::Pose2d(leftbranchpose.X(), leftbranchpose.Y(), frc::Rotation2d(leftbranchpose.Rotation().Degrees() + 180_deg));
+                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, m_goalPose.value());
                 }
             }
             else // right branch
@@ -135,8 +135,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 if (rightbranch.has_value())
                 {
                     auto rightbranchpose = fieldconst->GetFieldElementPose2d(rightbranch.value());
-                    m_goalPose = rightbranchpose;
-                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, rightbranchpose);
+                    m_goalPose = frc::Pose2d(rightbranchpose.X(), rightbranchpose.Y(), frc::Rotation2d(rightbranchpose.Rotation().Degrees() + 180_deg));
+                    return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, m_goalPose.value());
                 }
             }
         }

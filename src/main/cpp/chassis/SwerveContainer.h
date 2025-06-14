@@ -49,6 +49,7 @@ private:
     frc2::CommandPtr m_driveToCoralStation;
     frc2::CommandPtr m_driveToCoralLeftBranch;
     frc2::CommandPtr m_driveToCoralRightBranch;
+    frc2::CommandPtr m_driveToBarge;
 
     void ConfigureBindings();
     void SetSysIDBinding(TeleopControl *controller);

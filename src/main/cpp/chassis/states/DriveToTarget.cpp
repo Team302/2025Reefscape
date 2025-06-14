@@ -24,13 +24,12 @@ DriveToTarget::DriveToTarget(
     DragonTargetFinderTarget target) : m_chassis(chassis),
                                        m_target(target),
                                        m_targetFinder(DragonTargetFinder::GetInstance()),
-                                       m_hasTarget(false),
-                                       m_translationPIDX(4.5, 0.0, 0.0, {kMaxVelocity, kMaxAcceleration}),
-                                       m_translationPIDY(4.5, 0.0, 0.0, {kMaxVelocity, kMaxAcceleration})
+                                       m_hasTarget(false)
+
 {
     AddRequirements(m_chassis);
-    m_translationPIDX.SetIZone(0.10);
-    m_translationPIDY.SetIZone(0.10);
+    m_translationPIDX.SetIZone(0.20);
+    m_translationPIDY.SetIZone(0.20);
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
     m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
 }

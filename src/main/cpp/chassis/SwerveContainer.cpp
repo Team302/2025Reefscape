@@ -28,7 +28,8 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed)),
                                      m_driveToCoralStation(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
                                      m_driveToCoralRightBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)),
-                                     m_driveToCoralLeftBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH))
+                                     m_driveToCoralLeftBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)),
+                                     m_driveToBarge(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::BARGE))
 
 {
     if (m_chassis != nullptr)
@@ -48,6 +49,7 @@ void SwerveContainer::ConfigureBindings()
     auto driveToRightReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
     auto driveToLeftReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT);
     auto driveToCoralStation = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
+    auto driveToBarge = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_BARGE);
 
     m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
 
@@ -69,6 +71,7 @@ void SwerveContainer::ConfigureBindings()
     driveToCoralStation.WhileTrue(std::move(m_driveToCoralStation));
     driveToLeftReefBranch.WhileTrue(std::move(m_driveToCoralLeftBranch));
     driveToRightReefBranch.WhileTrue(std::move(m_driveToCoralRightBranch));
+    driveToBarge.WhileTrue(std::move(m_driveToBarge));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });
