@@ -125,7 +125,7 @@ void Robot::AutonomousPeriodic()
     // {
     //     m_cyclePrims->Run();
     // }
-    // PeriodicLooper::GetInstance()->AutonRunCurrentState();
+    PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
 void Robot::AutonomousExit() {}
@@ -151,6 +151,7 @@ void Robot::TeleopPeriodic()
     {
         m_dragonswerveposeestimator->Update();
     }
+    PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
 void Robot::TeleopExit() {}
