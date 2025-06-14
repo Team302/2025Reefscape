@@ -46,6 +46,9 @@ private:
     frc2::CommandPtr m_fieldDrive;
     frc2::CommandPtr m_robotDrive;
     frc2::CommandPtr m_polarDrive;
+    frc2::CommandPtr m_driveToCoralStation;
+    frc2::CommandPtr m_driveToCoralLeftBranch;
+    frc2::CommandPtr m_driveToCoralRightBranch;
 
     void ConfigureBindings();
     void SetSysIDBinding(TeleopControl *controller);

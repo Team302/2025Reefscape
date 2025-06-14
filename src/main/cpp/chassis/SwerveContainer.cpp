@@ -19,12 +19,16 @@
 #include "chassis/states/FieldDrive.h"
 #include "chassis/states/RobotDrive.h"
 #include "chassis/states/PolarDrive.h"
+#include "chassis/states/DriveToTarget.h"
 
 SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
                                      m_fieldDrive(std::make_unique<FieldDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
                                      m_robotDrive(std::make_unique<RobotDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
-                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed))
+                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed)),
+                                     m_driveToCoralStation(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
+                                     m_driveToCoralRightBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)),
+                                     m_driveToCoralLeftBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH))
 
 {
     if (m_chassis != nullptr)
@@ -41,6 +45,9 @@ void SwerveContainer::ConfigureBindings()
     auto isRobotOriented = controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
     auto isHoldPositionSelected = controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION);
     auto isPolarDriveSelected = controller->GetCommandTrigger(TeleopControlFunctions::POLAR_DRIVE);
+    auto driveToRightReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
+    auto driveToLeftReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT);
+    auto driveToCoralStation = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
 
     m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
 
@@ -59,6 +66,9 @@ void SwerveContainer::ConfigureBindings()
     isRobotOriented.WhileTrue(std::move(m_robotDrive));
 
     isPolarDriveSelected.WhileTrue(std::move(m_polarDrive));
+    driveToCoralStation.WhileTrue(std::move(m_driveToCoralStation));
+    driveToLeftReefBranch.WhileTrue(std::move(m_driveToCoralLeftBranch));
+    driveToRightReefBranch.WhileTrue(std::move(m_driveToCoralRightBranch));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });
