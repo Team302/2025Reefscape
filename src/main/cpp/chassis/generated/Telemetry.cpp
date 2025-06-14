@@ -44,12 +44,6 @@ void Telemetry::Telemeterize(subsystems::CommandSwerveDrivetrain::SwerveDriveSta
     SignalLogger::WriteDoubleArray("DriveState/ModuleTargets", moduleTargetsArray);
     SignalLogger::WriteValue("DriveState/OdometryPeriod", state.OdometryPeriod);
 
-    auto field = DragonField::GetInstance();
-    if (field != nullptr)
-    {
-        field->UpdateRobotPosition(state.Pose);
-    }
-
     /* Telemeterize each module state to a Mechanism2d */
     for (size_t i = 0; i < m_moduleSpeeds.size(); ++i)
     {

@@ -6,13 +6,35 @@
 
 #include <frc2/command/CommandScheduler.h>
 
+// #include "auton/AutonPreviewer.h"
+// #include "auton/CyclePrimitives.h"
+// #include "auton/drivePrimitives/AutonUtils.h"
 #include "chassis/ChassisConfigMgr.h"
-#include "utils/logging/debug/Logger.h"
+#include "chassis/pose/DragonSwervePoseEstimator.h"
+#include "configs/MechanismConfig.h"
+#include "configs/MechanismConfigMgr.h"
+#include "ctre/phoenix6/SignalLogger.hpp"
+#include "feedback/DriverFeedback.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/BargeHelper.h"
+#include "fielddata/ReefHelper.h"
+#include "fielddata/ReefHelper.h"
+#include "frc/RobotController.h"
+#include "frc/Threads.h"
+#include "RobotIdentifier.h"
+#include "state/RobotState.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/DragonField.h"
-#include "frc/DriverStation.h"
+#include "utils/logging/debug/Logger.h"
+#include "utils/logging/signals/DragonDataLoggerMgr.h"
+#include "utils/PeriodicLooper.h"
 #include "utils/RoboRio.h"
-#include "state/RobotState.h"
+#include "utils/sensors/SensorData.h"
+#include "utils/sensors/SensorDataMgr.h"
+#include "vision/definitions/CameraConfig.h"
+#include "vision/definitions/CameraConfigMgr.h"
+#include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
 #include "chassis/SwerveContainer.h"
 
 Robot::Robot()
@@ -24,8 +46,6 @@ Robot::Robot()
 
     InitializeRobot();
     InitializeDriveteamFeedback();
-
-    m_container = std::make_unique<SwerveContainer>();
 }
 
 void Robot::RobotPeriodic()
@@ -37,6 +57,24 @@ void Robot::RobotPeriodic()
     {
         Logger::GetLogger()->PeriodicLog();
     }
+
+    if (m_datalogger != nullptr && !frc::DriverStation::IsDisabled())
+    {
+        m_datalogger->PeriodicDataLog();
+    }
+
+    if (m_robotState != nullptr)
+    {
+        m_robotState->Run();
+    }
+
+    if (m_quest != nullptr)
+    {
+        m_quest->HandleHeartBeat();
+        m_quest->RefreshNT();
+    }
+
+    UpdateDriveTeamFeedback();
 }
 
 void Robot::DisabledInit() {}
@@ -53,9 +91,29 @@ void Robot::AutonomousInit()
     {
         m_autonomousCommand->Schedule();
     }
+    // frc::SetCurrentThreadPriority(true, 15);
+
+    // if (m_cyclePrims != nullptr)
+    // {
+    //     m_cyclePrims->Init();
+    // }
+    // PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic()
+{
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->Update();
+    }
+
+    // if (m_cyclePrims != nullptr)
+    // {
+    //     m_cyclePrims->Run();
+    // }
+    // PeriodicLooper::GetInstance()->AutonRunCurrentState();
+}
 
 void Robot::AutonomousExit() {}
 
@@ -69,9 +127,18 @@ void Robot::TeleopInit()
     {
         m_controller = TeleopControl::GetInstance();
     }
+
+    PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic()
+{
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->Update();
+    }
+}
 
 void Robot::TeleopExit() {}
 
@@ -80,25 +147,50 @@ void Robot::TestInit()
     frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic()
+{
+    SensorDataMgr::GetInstance()->CacheData();
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->Update();
+    }
+
+    PeriodicLooper::GetInstance()->TeleopRunCurrentState();
+}
 
 void Robot::TestExit() {}
 
 void Robot::InitializeRobot()
 {
-    // int32_t teamNumber = frc::RobotController::GetTeamNumber();
-    // FieldConstants::GetInstance();
+    int32_t teamNumber = frc::RobotController::GetTeamNumber();
+    FieldConstants::GetInstance();
     RoboRio::GetInstance();
     auto chassisConfig = ChassisConfigMgr::GetInstance();
     chassisConfig->CreateDrivetrain();
+    m_container = new SwerveContainer();
 
-    // m_dragonswerveposeestimator = nullptr;
+    MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
 
-    // MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
+    CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
 
-    // initialize cameras
-    // CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
-    // auto vision = DragonVision::GetDragonVision();
+    m_dragonswerveposeestimator = new DragonSwervePoseEstimator();
+
+    auto dragonVision = DragonVision::GetDragonVision();
+    if (dragonVision != nullptr)
+    {
+        auto visionPoseEstimators = dragonVision->GetPoseEstimators();
+        for (auto &poseEstimator : visionPoseEstimators)
+        {
+            m_dragonswerveposeestimator->RegisterVisionPoseEstimator(poseEstimator);
+        }
+        if (!visionPoseEstimators.empty())
+        {
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            {
+                m_quest = static_cast<DragonQuest *>(visionPoseEstimators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+            }
+        }
+    }
 
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
@@ -120,15 +212,15 @@ void Robot::UpdateDriveTeamFeedback()
     // {
     //     m_previewer->CheckCurrentAuton();
     // }
-    // if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
-    // {
-    //     m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose()); // ToDo:: Move to DriveTeamFeedback (also don't assume m_field isn't a nullptr)
-    // }
-    // auto feedback = DriverFeedback::GetInstance();
-    // if (feedback != nullptr)
-    // {
-    //     feedback->UpdateFeedback();
-    // }
+    if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
+    {
+        m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose());
+    }
+    auto feedback = DriverFeedback::GetInstance();
+    if (feedback != nullptr)
+    {
+        feedback->UpdateFeedback();
+    }
 }
 
 #ifndef RUNNING_FRC_TESTS

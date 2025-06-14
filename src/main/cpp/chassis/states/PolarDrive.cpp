@@ -15,7 +15,6 @@
 #include "chassis/states/PolarDrive.h"
 #include "frc/geometry/Pose2d.h"
 #include "chassis/ChassisConfigMgr.h"
-
 PolarDrive::PolarDrive(subsystems::CommandSwerveDrivetrain *chassis,
                        TeleopControl *controller,
                        units::velocity::meters_per_second_t maxSpeed) : m_chassis(chassis),
@@ -38,7 +37,7 @@ void PolarDrive::Initialize()
 
 void PolarDrive::Execute()
 {
-    frc::Pose2d currentPose = m_chassis->GetState().Pose;
+    frc::Pose2d currentPose = m_chassis->GetPose();
 
     units::meter_t x_diff = m_reefCenter.X() - currentPose.X();
     units::meter_t y_diff = m_reefCenter.Y() - currentPose.Y();

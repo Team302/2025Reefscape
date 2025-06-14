@@ -13,7 +13,6 @@
 #include "chassis/generated/CommandSwerveDrivetrain.h"
 
 #include "chassis/ChassisConfigMgr.h"
-
 class Telemetry
 {
 private:

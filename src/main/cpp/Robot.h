@@ -64,12 +64,14 @@ private:
     std::optional<frc2::CommandPtr> m_autonomousCommand;
 
     TeleopControl *m_controller;
+    SwerveContainer *m_container;
 
     FMSData *m_fmsData;
     DragonField *m_field;
+    //    AutonPreviewer *m_previewer;
     RobotState *m_robotState;
-
+    DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;
-
-    std::unique_ptr<SwerveContainer> m_container;
+    DragonSwervePoseEstimator *m_dragonswerveposeestimator;
+    DragonQuest *m_quest;
 };

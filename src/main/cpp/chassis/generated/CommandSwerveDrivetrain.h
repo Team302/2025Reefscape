@@ -270,6 +270,8 @@ namespace subsystems
             TunerSwerveDrivetrain::AddVisionMeasurement(std::move(visionRobotPose), utils::FPGAToCurrentTime(timestamp), visionMeasurementStdDevs);
         }
 
+        frc::Pose2d GetPose() { return this->GetState().Pose; };
+
     private:
         void StartSimThread();
     };

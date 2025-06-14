@@ -17,6 +17,7 @@
 
 #include "chassis/generated/TunerConstants302.h"
 #include "chassis/generated/TunerConstants9998.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
 using namespace ctre::phoenix6;
 
@@ -32,9 +33,10 @@ public:
 
     void CreateDrivetrain();
 
-    subsystems::CommandSwerveDrivetrain *GetSwerveChassis() { return m_chassis.get(); }
+    subsystems::CommandSwerveDrivetrain *GetSwerveChassis();
 
     units::meters_per_second_t GetMaxSpeed() { return m_maxSpeed; }
+    double GetRotationRateDegreesPerSecond() const { return m_pigeon != nullptr ? m_pigeon->GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
 
 private:
     ChassisConfigMgr();
@@ -43,4 +45,5 @@ private:
     static ChassisConfigMgr *m_instance;
     units::meters_per_second_t m_maxSpeed;
     std::unique_ptr<subsystems::CommandSwerveDrivetrain> m_chassis;
+    ctre::phoenix6::hardware::Pigeon2 *m_pigeon;
 };
