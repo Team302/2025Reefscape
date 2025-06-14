@@ -24,15 +24,15 @@
 #include "units/velocity.h"
 #include "units/angle.h"
 #include "frc/Timer.h"
+#include <choreo/Choreo.h>
 
 // 302 includes
 #include "chassis/states/TrajectoryDrive.h"
 #include "utils/logging/debug/Logger.h"
 
 TrajectoryDrive::TrajectoryDrive(
-    subsystems::CommandSwerveDrivetrain *chassis,
-    std::optional<choreo::Trajectory<choreo::SwerveSample>> trajectory) : m_chassis(chassis),
-                                                                          m_trajectory(trajectory),
+    subsystems::CommandSwerveDrivetrain *chassis, std::string pathName) : m_chassis(chassis),
+                                                                          m_pathName(pathName),
                                                                           m_trajectoryStates(),
                                                                           m_prevPose(),
                                                                           m_wasMoving(false),
@@ -48,6 +48,9 @@ TrajectoryDrive::TrajectoryDrive(
 
 void TrajectoryDrive::Initialize()
 {
+    m_trajectory = choreo::Choreo::LoadTrajectory<choreo::SwerveSample>(m_pathName);
+    m_trajectoryStates = m_trajectory.value().samples;
+
     // Reset and start the timer when the command begins
     m_timer.get()->Reset();
     m_timer.get()->Start();
@@ -63,7 +66,7 @@ void TrajectoryDrive::Initialize()
 
 void TrajectoryDrive::Execute()
 {
-    if (!m_trajectoryStates.empty() && !IsFinished()) // If we have a path parsed / have states to run
+    if (!m_trajectoryStates.empty()) // If we have a path parsed / have states to run
     {
         auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get()).value();
         if (m_chassis != nullptr)
@@ -76,7 +79,7 @@ void TrajectoryDrive::Execute()
 
             // Generate the next speeds for the robot
             m_chassisSpeeds.vx = desiredState.vx + xFeedback;
-            m_chassisSpeeds.vy = desiredState.vx + yFeedback;
+            m_chassisSpeeds.vy = desiredState.vy + yFeedback;
             m_chassisSpeeds.omega = desiredState.omega + headingFeedback;
         }
     }
@@ -92,7 +95,7 @@ bool TrajectoryDrive::IsFinished()
     bool isDone = false;
 
     auto currentPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
-    if (!m_trajectoryStates.empty()) // If we have states...
+    if (!m_trajectoryStates.empty())
     {
         auto currentTime = m_timer.get()->Get();
 

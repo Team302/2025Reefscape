@@ -35,7 +35,7 @@ public:
      */
     TrajectoryDrive(
         subsystems::CommandSwerveDrivetrain *chassis,
-        std::optional<choreo::Trajectory<choreo::SwerveSample>> m_trajectory);
+        std::string pathName);
     // FRC Command Lifecycle methods
     void
     Initialize() override;
@@ -49,14 +49,9 @@ public:
 
     units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
 
-protected:
-    const units::meters_per_second_t m_maxVel = 1_mps;
-    const units::meters_per_second_squared_t m_maxAccel = 0.5_mps_sq;
-    const units::radians_per_second_t m_maxAngularVel = 540_deg_per_s;
-    const units::radians_per_second_squared_t m_maxAngularAccel = 720_deg_per_s_sq;
-
 private:
     // Pointers and objects needed to run the command
+    std::string m_pathName;
     subsystems::CommandSwerveDrivetrain *m_chassis;
     bool IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
@@ -72,17 +67,11 @@ private:
     std::string m_whyDone;
     units::time::second_t m_totalTrajectoryTime;
 
-    double m_kPCoarse = 5.0;
-    double m_kPFine = 9.0;
-    const double m_percentageCompleteThreshold = 0.90;
-    int m_samePoseCount = 0;
-    const int m_samePoseCountThreshold = 50; // TODO come back and tune this
-
     frc::PIDController m_xController{0.75, 0.0, 0.0};
     frc::PIDController m_yController{0.75, 0.0, 0.0};
     frc::PIDController m_headingController{0.1, 0.0, 0.0};
 
     frc::ChassisSpeeds m_chassisSpeeds;
 
-    swerve::requests::RobotCentric m_driveRequest;
+    swerve::requests::FieldCentric m_driveRequest;
 };
