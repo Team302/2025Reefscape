@@ -110,7 +110,7 @@ void Robot::AutonomousInit()
     // {
     //     m_cyclePrims->Init();
     // }
-    // PeriodicLooper::GetInstance()->AutonRunCurrentState();
+    PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
 void Robot::AutonomousPeriodic()
