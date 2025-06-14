@@ -20,13 +20,12 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include "chassis/generated/CommandSwerveDrivetrain.h"
-
+#include "state/IRobotStateChangeSubscriber.h"
 #include "chassis/generated/Telemetry.h"
-
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
 
-class SwerveContainer
+class SwerveContainer : IRobotStateChangeSubscriber
 {
 public:
     SwerveContainer();
@@ -50,7 +49,13 @@ private:
     frc2::CommandPtr m_driveToCoralLeftBranch;
     frc2::CommandPtr m_driveToCoralRightBranch;
     frc2::CommandPtr m_driveToBarge;
+    frc2::CommandPtr m_driveToLeftCage;
+    frc2::CommandPtr m_driveToRightCage;
+    frc2::CommandPtr m_driveToCenterCage;
+
+    bool m_climbMode = false;
 
     void ConfigureBindings();
     void SetSysIDBinding(TeleopControl *controller);
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 };

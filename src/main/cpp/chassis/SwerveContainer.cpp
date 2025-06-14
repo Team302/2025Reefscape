@@ -20,6 +20,9 @@
 #include "chassis/states/RobotDrive.h"
 #include "chassis/states/PolarDrive.h"
 #include "chassis/states/DriveToTarget.h"
+#include "state/RobotState.h"
+#include "state/IRobotStateChangeSubscriber.h"
+#include "frc2/command/ProxyCommand.h"
 
 SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
@@ -29,9 +32,14 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_driveToCoralStation(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
                                      m_driveToCoralRightBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)),
                                      m_driveToCoralLeftBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)),
-                                     m_driveToBarge(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::BARGE))
+                                     m_driveToBarge(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::BARGE)),
+                                     m_driveToLeftCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::LEFT_CAGE)),
+                                     m_driveToRightCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::RIGHT_CAGE)),
+                                     m_driveToCenterCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CENTER_CAGE))
 
 {
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+
     if (m_chassis != nullptr)
     {
         ConfigureBindings();
@@ -68,10 +76,37 @@ void SwerveContainer::ConfigureBindings()
     isRobotOriented.WhileTrue(std::move(m_robotDrive));
 
     isPolarDriveSelected.WhileTrue(std::move(m_polarDrive));
-    driveToCoralStation.WhileTrue(std::move(m_driveToCoralStation));
-    driveToLeftReefBranch.WhileTrue(std::move(m_driveToCoralLeftBranch));
-    driveToRightReefBranch.WhileTrue(std::move(m_driveToCoralRightBranch));
     driveToBarge.WhileTrue(std::move(m_driveToBarge));
+
+    driveToCoralStation.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
+                                                           {
+    if (m_climbMode) {
+        return frc2::ProxyCommand(m_driveToCenterCage.get()).ToPtr();
+    }
+    else
+    {
+        return frc2::ProxyCommand(m_driveToCoralStation.get()).ToPtr();
+    } }));
+
+    driveToLeftReefBranch.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
+                                                             {
+    if (m_climbMode) {
+        return frc2::ProxyCommand(m_driveToLeftCage.get()).ToPtr();
+    }
+    else
+    {
+        return frc2::ProxyCommand(m_driveToCoralLeftBranch.get()).ToPtr();
+    } }));
+
+    driveToRightReefBranch.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
+                                                              {
+    if (m_climbMode) {
+        return frc2::ProxyCommand(m_driveToRightCage.get()).ToPtr();
+    }
+    else
+    {
+        return frc2::ProxyCommand(m_driveToCoralRightBranch.get()).ToPtr();
+    } }));
 
     m_chassis->RegisterTelemetry([this](auto const &state)
                                  { logger.Telemeterize(state); });
@@ -94,5 +129,12 @@ void SwerveContainer::SetSysIDBinding(TeleopControl *controller)
         (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT)).WhileTrue(m_chassis->SysIdDynamic(frc2::sysid::Direction::kReverse));                 // B
         (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_CLIMB)).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kForward));                  // Y
         (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT)).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));            // X
+    }
+}
+void SwerveContainer::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (change == RobotStateChanges::StateChange::ClimbModeStatus_Int)
+    {
+        m_climbMode = value;
     }
 }
