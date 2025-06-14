@@ -14,6 +14,7 @@ public:
     void Update();
 
     void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
+    void CalculateInitialPose();
 
     void ResetPosition(const frc::Pose2d &pose);
     frc::Pose2d GetPose() const;

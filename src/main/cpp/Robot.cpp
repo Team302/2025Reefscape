@@ -46,6 +46,13 @@ Robot::Robot()
 
     InitializeRobot();
     InitializeDriveteamFeedback();
+
+    BargeHelper::GetInstance();
+    ReefHelper::GetInstance();
+
+    m_datalogger = DragonDataLoggerMgr::GetInstance();
+
+    // auto path = AutonUtils::GetTrajectoryFromPathFile("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
 }
 
 void Robot::RobotPeriodic()
@@ -79,7 +86,13 @@ void Robot::RobotPeriodic()
 
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic()
+{
+    if (m_dragonswerveposeestimator != nullptr)
+    {
+        m_dragonswerveposeestimator->CalculateInitialPose();
+    }
+}
 
 void Robot::DisabledExit() {}
 
