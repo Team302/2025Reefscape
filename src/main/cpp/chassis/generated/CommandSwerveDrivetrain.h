@@ -274,10 +274,16 @@ namespace subsystems
 
         bool IsSamePose();
 
+        void ResetSamePose()
+        {
+            m_samePoseCount = 0;
+            m_prevPose = GetPose();
+        }
+
     private:
         void StartSimThread();
-        int m_samePoseCount;
-        const int m_samePoseCountThreshold = 25;
+        int m_samePoseCount = 0;
+        const int m_samePoseCountThreshold = 35;
         const units::length::inch_t m_distanceThreshold{0.25};
         frc::Pose2d m_prevPose;
     };

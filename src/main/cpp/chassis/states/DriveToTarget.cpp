@@ -17,6 +17,7 @@
 #include "utils/logging/debug/Logger.h"
 #include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Translation2d.h"
+#include "vision/DragonVisionStructLogger.h"s
 
 DriveToTarget::DriveToTarget(
     subsystems::CommandSwerveDrivetrain *chassis,
@@ -24,102 +25,137 @@ DriveToTarget::DriveToTarget(
                                        m_target(target),
                                        m_targetFinder(DragonTargetFinder::GetInstance()),
                                        m_hasTarget(false),
-                                       m_samePoseCount(0),
                                        m_translationPIDX(4.5, 0.0, 0.0, {kMaxVelocity, kMaxAcceleration}),
                                        m_translationPIDY(4.5, 0.0, 0.0, {kMaxVelocity, kMaxAcceleration})
 {
     AddRequirements(m_chassis);
+    m_translationPIDX.SetIZone(0.10);
+    m_translationPIDY.SetIZone(0.10);
+    m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : frc::Pose2d();
+    m_feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
 }
 
 void DriveToTarget::Initialize()
 {
+    m_chassis->ResetSamePose();
+    auto dragonTargetFinderInst = DragonTargetFinder::GetInstance();
+    dragonTargetFinderInst->ResetGoalPose();
+    auto info = dragonTargetFinderInst->GetPose(m_target);
     m_hasTarget = false;
-    m_samePoseCount = 0;
 
-    if (m_targetFinder)
+    if (info.has_value())
     {
-        m_targetFinder->ResetGoalPose();
-        auto info = m_targetFinder->GetPose(m_target);
-        if (info.has_value())
+        m_currentType = get<0>(info.value());
+        m_hasTarget = m_currentType != DragonTargetFinderData::NOT_FOUND;
+        if (m_hasTarget)
         {
-            m_hasTarget = std::get<0>(info.value()) != DragonTargetFinderData::NOT_FOUND;
-            if (m_hasTarget)
-            {
-                m_targetPose = std::get<1>(info.value());
+            m_endPose = get<1>(info.value());
 
-                auto currentPose = m_chassis->GetState().Pose;
-                m_translationPIDX.Reset(currentPose.X());
-                m_translationPIDY.Reset(currentPose.Y());
+            if (m_chassis != nullptr)
+            {
+                m_currentPose = m_chassis->GetPose();
+                m_translationPIDX.SetGoal(m_endPose.X());
+                m_translationPIDY.SetGoal(m_endPose.Y());
+
+                m_translationPIDX.Reset(m_currentPose.X());
+                m_translationPIDY.Reset(m_currentPose.Y());
             }
         }
-    }
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToTarget", "Target X", m_targetPose.X().value());
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToTarget", "Target Y", m_targetPose.Y().value());
-
-    if (!m_hasTarget)
-    {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, "DriveToTarget", "Target not found on init", (int)m_target);
     }
 }
 
 void DriveToTarget::Execute()
 {
+    frc::ChassisSpeeds chassisSpeeds{};
     if (m_chassis != nullptr)
     {
-
-        // Update target pose if vision provides a better estimate
-        auto info = m_targetFinder->GetPose(m_target);
-        if (info.has_value() && std::get<0>(info.value()) != DragonTargetFinderData::NOT_FOUND)
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "target found", m_hasTarget);
+        if (m_hasTarget)
         {
-            m_targetPose = std::get<1>(info.value());
+            m_currentPose = m_chassis->GetPose();
+            CalculateFeedForward(chassisSpeeds);
+
+            auto info = DragonTargetFinder::GetInstance()->GetPose(m_target);
+            if (info.has_value())
+            {
+                frc::Pose2d newEndPose = get<1>(info.value());
+                auto regenerate = false;
+
+                regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) < m_regenerationDistanceThreshold;
+
+                if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
+                {
+                    m_endPose = newEndPose;
+                    m_translationPIDX.SetGoal(m_endPose.X());
+                    m_translationPIDY.SetGoal(m_endPose.Y());
+                }
+                m_currentType = get<0>(info.value());
+            }
+
+            DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
+            DragonVisionStructLogger::logPose2d("target pose", m_endPose);
+
+            if (m_currentType != DragonTargetFinderData::NOT_FOUND)
+            {
+                if (m_distanceError > m_pidResetThreshold)
+                {
+                    m_translationPIDX.Reset(m_currentPose.X(), chassisSpeeds.vx);
+                    m_translationPIDY.Reset(m_currentPose.Y(), chassisSpeeds.vy);
+                }
+                else
+                {
+                    chassisSpeeds.vx += units::velocity::meters_per_second_t(m_translationPIDX.Calculate(m_currentPose.X(), m_endPose.X()));
+                    chassisSpeeds.vy += units::velocity::meters_per_second_t(m_translationPIDY.Calculate(m_currentPose.Y(), m_endPose.Y()));
+                    chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
+                    chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
+                }
+
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
+
+                // if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
+                // {
+                //     chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;
+                // }
+                // else
+                // {
+                //     auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees() : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();
+                //     rotationError = AngleUtils::GetEquivAngle(rotationError);
+                //     chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
+                // }
+            }
         }
-
-        auto currentPose = m_chassis->GetState().Pose;
-
-        // Calculate feed-forward velocity
-        units::meters_per_second_t xSpeed_ff{0.0};
-        units::meters_per_second_t ySpeed_ff{0.0};
-        CalculateFeedForward(xSpeed_ff, ySpeed_ff);
-
-        // Calculate PID feedback velocity
-        units::meters_per_second_t xSpeed_pid{m_translationPIDX.Calculate(currentPose.X(), m_targetPose.X())};
-        units::meters_per_second_t ySpeed_pid{m_translationPIDY.Calculate(currentPose.Y(), m_targetPose.Y())};
-
-        // Combine feed-forward and PID
-        units::meters_per_second_t targetXSpeed = xSpeed_ff + xSpeed_pid;
-        units::meters_per_second_t targetYSpeed = ySpeed_ff + ySpeed_pid;
-
-        // Set the robot's heading to face the target
-
         m_chassis->SetControl(
-            m_driveRequest.WithVelocityX(xSpeed_ff)
-                .WithVelocityY(ySpeed_ff)
-                .WithTargetDirection(m_targetPose.Rotation().Degrees()));
+            m_driveRequest.WithVelocityX(chassisSpeeds.vx)
+                .WithVelocityY(chassisSpeeds.vy)
+                .WithTargetDirection(m_endPose.Rotation().Degrees())
+                .WithHeadingPID(m_rotationKP, m_rotationKI, m_rotationKD)
+                .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
     }
+    // RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsFinished());
 }
 
 bool DriveToTarget::IsFinished()
 {
-    if (!m_hasTarget)
-    {
-        return true; // End immediately if we never had a target
-    }
+    bool isDone = false;
+    bool isSamePose = false;
 
-    auto currentPose = m_chassis->GetState().Pose;
-    auto distance = currentPose.Translation().Distance(m_targetPose.Translation());
-
-    // Check if we are close enough to the target
-    if (distance < m_distanceThreshold)
+    if (m_hasTarget && m_chassis != nullptr)
     {
-        m_samePoseCount++;
+        auto distance = m_currentPose.Translation().Distance(m_endPose.Translation());
+
+        isDone = distance < m_distanceThreshold;
+        isSamePose = m_chassis->IsSamePose();
+        m_prevPose = m_currentPose;
     }
     else
     {
-        m_samePoseCount = 0;
+        isDone = true;
     }
-
-    // End if we have been at the target for a few cycles
-    return m_samePoseCount > 10;
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
+    Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
+    return (isDone || isSamePose);
 }
 
 void DriveToTarget::End(bool interrupted)
@@ -127,24 +163,25 @@ void DriveToTarget::End(bool interrupted)
     m_chassis->SetControl(swerve::requests::SwerveDriveBrake{});
 }
 
-void DriveToTarget::CalculateFeedForward(units::meters_per_second_t &vx, units::meters_per_second_t &vy)
+void DriveToTarget::CalculateFeedForward(frc::ChassisSpeeds &chassisSpeeds)
 {
-    auto currentPose = m_chassis->GetState().Pose;
-    units::meter_t distanceError = currentPose.Translation().Distance(m_targetPose.Translation());
-    units::meter_t feedForwardRange = m_ffMaxRadius - m_ffMinRadius;
-
-    // Calculate feedforward speed based on distance
-    units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
-    if (distanceError > m_ffMinRadius && feedForwardRange.value() > 0)
+    if (m_chassis != nullptr)
     {
-        double feedForwardScale = std::clamp(((distanceError - m_ffMinRadius) / (feedForwardRange)).value(), 0.0, 1.0);
-        feedforwardSpeed = kMaxVelocity * feedForwardScale;
+        m_distanceError = m_currentPose.Translation().Distance(m_endPose.Translation());
+
+        // Calculate feedforward speed based on distance
+        units::velocity::meters_per_second_t feedforwardSpeed = 0.0_mps;
+        if (m_distanceError > m_ffMinRadius)
+        {
+            double feedForwardScale = std::clamp(((m_distanceError - m_ffMinRadius) / (m_feedForwardRange)).value(), 0.0, 1.0);
+            feedforwardSpeed = kMaxVelocity * feedForwardScale;
+        }
+
+        // Apply feedforward to the desired velocity
+        frc::Translation2d translationError = m_endPose.Translation() - m_currentPose.Translation();
+        frc::Rotation2d angleToTarget = translationError.Angle();
+
+        chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
+        chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
     }
-
-    // Apply feedforward to the desired velocity
-    frc::Translation2d translationError = m_targetPose.Translation() - currentPose.Translation();
-    frc::Rotation2d angleToTarget = translationError.Angle();
-
-    vx = feedforwardSpeed * angleToTarget.Cos();
-    vy = feedforwardSpeed * angleToTarget.Sin();
 }
