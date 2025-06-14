@@ -39,3 +39,22 @@ void CommandSwerveDrivetrain::StartSimThread()
         UpdateSimState(deltaTime, frc::RobotController::GetBatteryVoltage()); });
     m_simNotifier->StartPeriodic(kSimLoopPeriod);
 }
+
+bool CommandSwerveDrivetrain::IsSamePose()
+{
+    bool isSamePose = false;
+
+    if (GetPose().Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
+    {
+        m_samePoseCount++;
+        isSamePose = m_samePoseCount > m_samePoseCountThreshold;
+    }
+    else
+    {
+        m_samePoseCount = 0;
+    }
+
+    m_prevPose = GetPose();
+
+    return isSamePose;
+}
