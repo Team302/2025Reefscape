@@ -45,6 +45,7 @@ Robot::Robot()
     isFMSAttached = frc::DriverStation::IsFMSAttached();
 
     InitializeRobot();
+    InitializeAutonOptions();
     InitializeDriveteamFeedback();
 
     BargeHelper::GetInstance();
