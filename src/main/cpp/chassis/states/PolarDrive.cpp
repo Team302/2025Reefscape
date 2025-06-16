@@ -58,7 +58,8 @@ void PolarDrive::Execute()
         m_polarDrive
             .WithVelocityX(radialVelocity)
             .WithVelocityY(angularVelocity)
-            .WithTargetDirection(angleToTarget));
+            .WithTargetDirection(angleToTarget)
+            .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
 }
 
 bool PolarDrive::IsFinished()

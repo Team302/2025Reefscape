@@ -87,8 +87,8 @@ void SwerveContainer::ConfigureBindings()
 
     isRobotOriented.WhileTrue(std::move(m_robotDrive));
 
-    isPolarDriveSelected.WhileTrue(std::move(m_polarDrive));
-    driveToBarge.WhileTrue(std::move(m_driveToBarge));
+    isPolarDriveSelected.WhileTrue(frc2::ProxyCommand(m_polarDrive.get()).ToPtr());
+    driveToBarge.WhileTrue(frc2::ProxyCommand(m_driveToBarge.get()).ToPtr());
 
     driveToCoralStation.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
                                                            {

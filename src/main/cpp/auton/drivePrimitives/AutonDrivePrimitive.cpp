@@ -82,7 +82,6 @@ void AutonDrivePrimitive::Run()
     // Logic to transition from trajectory to vision drive mid-path
     if (!m_visionTransition && m_checkForDriveToUpdate && IsInZone())
     {
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "AutonDrivePrimitive", "Transitioning to Vision Drive", true);
         ChassisOptionEnums::DriveStateType driveToType = m_zone->GetPathUpdateOption();
         m_managedCommand = CreateDriveToTargetCommand(driveToType);
         if (m_managedCommand)

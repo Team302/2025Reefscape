@@ -88,7 +88,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 //     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTargetFinder", "Field Realitve Angle", fieldRelativeAngle.value());
                 //  return make_tuple(DragonTargetFinderData::VISION_BASED, visTagPose.value().ToPose2d());
                 //}
-                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, tagpose);
+                m_goalPose = frc::Pose2d(tagpose.X(), tagpose.Y(), frc::Rotation2d(tagpose.Rotation().Degrees() + 180_deg));
+                return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, m_goalPose.value());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
             {
