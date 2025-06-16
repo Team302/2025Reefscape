@@ -40,8 +40,8 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     map<string, PRIMITIVE_IDENTIFIER> primStringToEnumMap;
     primStringToEnumMap["DO_NOTHING"] = DO_NOTHING;
     primStringToEnumMap["HOLD_POSITION"] = HOLD_POSITION;
-    primStringToEnumMap["DRIVE_PATH_PLANNER"] = DRIVE_PATH_PLANNER;
-    primStringToEnumMap["RESET_POSITION_PATH_PLANNER"] = RESET_POSITION_PATH_PLANNER;
+    primStringToEnumMap["TRAJECTORY_DRIVE"] = TRAJECTORY_DRIVE;
+    primStringToEnumMap["RESET_POSITION"] = RESET_POSITION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
     primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
     primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
@@ -69,12 +69,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                     // {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
                                                                     {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
                                                                     {"NOTHING", ChassisOptionEnums::DriveStateType::STOP_DRIVE}};
-
-    map<string, DriveStopDelay::DelayOption> pathDelayOptionsMap{
-        {"START", DriveStopDelay::DelayOption::START},
-        {"REEF", DriveStopDelay::DelayOption::REEF},
-        {"CORAL_STATION", DriveStopDelay::DelayOption::CORAL_STATION},
-    };
 
     xml_document doc;
     xml_parse_result result = doc.load_file(fulldirfile.c_str());
@@ -144,7 +138,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                     std::string pathName;
                     std::string choreoTrajectoryName;
                     ZoneParamsVector zones;
-                    DriveStopDelay::DelayOption pathDelayOption = DriveStopDelay::DelayOption::START;
 
                     ChassisOptionEnums::DriveStateType pathUpdateOption = ChassisOptionEnums::DriveStateType::STOP_DRIVE;
 
@@ -183,19 +176,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                             else
                             {
                                 Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid heading option"), attr.value());
-                                hasError = true;
-                            }
-                        }
-                        else if (strcmp(attr.name(), "delayOption") == 0)
-                        {
-                            auto delayOptionItr = pathDelayOptionsMap.find(attr.value());
-                            if (delayOptionItr != pathDelayOptionsMap.end())
-                            {
-                                pathDelayOption = delayOptionItr->second;
-                            }
-                            else
-                            {
-                                Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("PrimitiveParser"), string("ParseXML invalid delay option"), attr.value());
                                 hasError = true;
                             }
                         }
@@ -282,8 +262,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
                                                                      visionAlignment,
                                                                      changeTaleState,
                                                                      taleState,
-                                                                     pathUpdateOption,
-                                                                     pathDelayOption));
+                                                                     pathUpdateOption));
                     }
                     else
                     {

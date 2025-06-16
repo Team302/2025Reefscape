@@ -12,41 +12,38 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
+#pragma once
 
-// FRC includes
-#include "units/time.h"
+#include "auton/drivePrimitives/IPrimitive.h"
+#include "frc/Timer.h"
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandScheduler.h>
+#include "auton/ZoneParams.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
-// Team 302 includes
-#include "auton/drivePrimitives/DriveStop.h"
-
-// Third Party Includes
-
-//========================================================================================================
-/// @class  DriveStop
-/// @brief  This is an auton primitive that causes the chassis to not drive
-//========================================================================================================
-
-class DriveStopDelay : public DriveStop
+class AutonDrivePrimitive : public IPrimitive
 {
 public:
-    enum DelayOption
-    {
-        START,
-        REEF,
-        CORAL_STATION,
-        MAX_OPTIONS
-    };
-    /// @brief constructor that creates/initializes the object
-    DriveStopDelay();
+    AutonDrivePrimitive();
+    ~AutonDrivePrimitive() = default;
 
-    /// @brief destructor, clean  up the memory from this object
-    virtual ~DriveStopDelay() = default;
-
-    /// @brief check if the end condition has been met
-    /// @return bool true means the end condition was reached, false means it hasn't
-    bool IsDone() override;
     void Init(PrimitiveParams *params) override;
+    void Run() override;
+    bool IsDone() override;
 
 private:
-    units::time::second_t m_delayTime;
+    frc2::CommandPtr CreateDriveToTargetCommand(ChassisOptionEnums::DriveStateType driveToType);
+
+    subsystems::CommandSwerveDrivetrain *m_chassis;
+    std::unique_ptr<frc::Timer> m_timer;
+    frc2::CommandPtr m_managedCommand;
+
+    // State tracking variables
+    units::time::second_t m_maxTime;
+    bool m_visionTransition;
+    bool m_checkForDriveToUpdate;
+    ZoneParams *m_zone;
+
+    bool IsInZone();
+    int FindDriveToZoneIndex(ZoneParamsVector zones);
 };

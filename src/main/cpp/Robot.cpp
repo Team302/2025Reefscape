@@ -181,7 +181,7 @@ void Robot::InitializeRobot()
     RoboRio::GetInstance();
     auto chassisConfig = ChassisConfigMgr::GetInstance();
     chassisConfig->CreateDrivetrain();
-    m_container = new SwerveContainer();
+    m_container = SwerveContainer::GetInstance();
 
     MechanismConfigMgr::GetInstance()->InitRobot((RobotIdentifier)teamNumber);
 

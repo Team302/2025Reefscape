@@ -2,10 +2,10 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
+<primitive id= "RESET_POSITION"
 choreoname = "BlueLeftOutside_J"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftOutside_J"
 time="2.0">
 <zone filename="RedReefPlacerZones.xml"/>
@@ -15,7 +15,7 @@ time="2.0">
 taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_J2"
 taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "1.5"/>
@@ -24,7 +24,7 @@ time = "1.5"/>
 time="10.0"/>
 
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K1"
 time = "2.0">
 <zone filename="RedReefPlacerZones.xml"/>
@@ -34,7 +34,7 @@ time = "2.0">
 taleOption="STATE_SCORE_CORAL"
 time="5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K2"
 taleOption="STATE_HUMAN_PLAYER_LOAD"
 time = "1.4"/>
@@ -42,7 +42,7 @@ time = "1.4"/>
 <primitive id = "DRIVE_STOP_MECH"
 time="5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_L1"
 filename="RedReefPlacerZones.xml"
 time = "1.3">

@@ -33,26 +33,24 @@ public:
      * @param chassis The swerve drive subsystem
      * @param trajectory The Choreo trajectory to follow
      */
-    TrajectoryDrive(
-        subsystems::CommandSwerveDrivetrain *chassis,
-        std::string pathName);
+    explicit TrajectoryDrive(subsystems::CommandSwerveDrivetrain *chassis);
+
     // FRC Command Lifecycle methods
-    void
-    Initialize() override;
+    void Initialize() override;
     void Execute() override;
     bool IsFinished() override;
     void End(bool interrupted) override;
 
-    std::string GetDriveStateName();
+    void SetPath(const std::string &pathName);
 
     std::string WhyDone() const { return m_whyDone; };
 
     units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
 
 private:
-    // Pointers and objects needed to run the command
-    std::string m_pathName;
     subsystems::CommandSwerveDrivetrain *m_chassis;
+    std::string m_pathName;
+
     bool IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
     std::optional<choreo::Trajectory<choreo::SwerveSample>> m_trajectory;

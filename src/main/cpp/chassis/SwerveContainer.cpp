@@ -24,6 +24,17 @@
 #include "state/IRobotStateChangeSubscriber.h"
 #include "frc2/command/ProxyCommand.h"
 
+SwerveContainer *SwerveContainer::m_instance = nullptr;
+
+SwerveContainer *SwerveContainer::GetInstance()
+{
+    if (SwerveContainer::m_instance == nullptr)
+    {
+        SwerveContainer::m_instance = new SwerveContainer();
+    }
+    return SwerveContainer::m_instance;
+}
+
 SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
                                      m_fieldDrive(std::make_unique<FieldDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
@@ -35,7 +46,8 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_driveToBarge(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::BARGE)),
                                      m_driveToLeftCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::LEFT_CAGE)),
                                      m_driveToRightCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::RIGHT_CAGE)),
-                                     m_driveToCenterCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CENTER_CAGE))
+                                     m_driveToCenterCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CENTER_CAGE)),
+                                     m_trajectoryDrive(std::make_unique<TrajectoryDrive>(m_chassis))
 
 {
     RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);

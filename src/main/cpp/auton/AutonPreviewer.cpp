@@ -100,7 +100,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
         {
             std::vector<Trajectory::State> states;
 
-            if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER)
+            if (param->GetID() == PRIMITIVE_IDENTIFIER::TRAJECTORY_DRIVE)
             {
                 auto pathname = param->GetTrajectoryName();
                 auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);

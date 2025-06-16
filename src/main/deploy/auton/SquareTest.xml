@@ -2,10 +2,10 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
+<primitive id= "RESET_POSITION"
 choreoname = "Square1"/>
 
-<primitive id= "DRIVE_PATH_PLANNER"
+<primitive id= "TRAJECTORY_DRIVE"
 choreoname = "Square1"
 time = "2.0"/>
 
@@ -13,15 +13,15 @@ time = "2.0"/>
 headingOption = "IGNORE"
 time = "10.0"/>
 
-<!-- <primitive id= "DRIVE_PATH_PLANNER"
+<!-- <primitive id= "TRAJECTORY_DRIVE"
 choreoname = "Square2"
 time = "2.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "Square3"
 time = "2.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "Square4"
 time = "2.0"/> -->
 

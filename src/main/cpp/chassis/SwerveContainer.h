@@ -24,15 +24,26 @@
 #include "chassis/generated/Telemetry.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
+#include "chassis/states/TrajectoryDrive.h"
 
 class SwerveContainer : IRobotStateChangeSubscriber
 {
 public:
-    SwerveContainer();
+    static SwerveContainer *GetInstance();
 
     frc2::CommandPtr GetAutonomousCommand();
 
+    frc2::Command *GetDriveToCoralStationCommand() { return m_driveToCoralStation.get(); }
+    frc2::Command *GetDriveToCoralLeftBranchCommand() { return m_driveToCoralLeftBranch.get(); }
+    frc2::Command *GetDriveToCoralRightBranchCommand() { return m_driveToCoralRightBranch.get(); }
+    frc2::Command *GetDriveToBargeCommand() { return m_driveToBarge.get(); }
+    TrajectoryDrive *GetTrajectoryDriveCommand() { return m_trajectoryDrive.get(); }
+
 private:
+    SwerveContainer();
+    virtual ~SwerveContainer() = default;
+    static SwerveContainer *m_instance;
+
     subsystems::CommandSwerveDrivetrain *m_chassis;
 
     units::meters_per_second_t m_maxSpeed;
@@ -46,12 +57,13 @@ private:
     frc2::CommandPtr m_robotDrive;
     frc2::CommandPtr m_polarDrive;
     frc2::CommandPtr m_driveToCoralStation;
-    frc2::CommandPtr m_driveToCoralLeftBranch;
     frc2::CommandPtr m_driveToCoralRightBranch;
+    frc2::CommandPtr m_driveToCoralLeftBranch;
     frc2::CommandPtr m_driveToBarge;
     frc2::CommandPtr m_driveToLeftCage;
     frc2::CommandPtr m_driveToRightCage;
     frc2::CommandPtr m_driveToCenterCage;
+    std::unique_ptr<TrajectoryDrive> m_trajectoryDrive;
 
     bool m_climbMode = false;
 

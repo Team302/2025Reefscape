@@ -2,10 +2,10 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<primitive id= "RESET_POSITION_PATH_PLANNER"
+<primitive id= "RESET_POSITION"
 choreoname = "RedLeftOutside_L"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftOutside_L"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
@@ -14,7 +14,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "4.0">
@@ -23,7 +23,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
@@ -32,7 +32,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "4.0">
@@ -41,7 +41,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_J1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
@@ -50,7 +50,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_J2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "4.0">
@@ -59,7 +59,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_I1"
 taleOption = "STATE_L1SCORING_POSITION"
 time = "4.0">
@@ -68,7 +68,7 @@ time = "4.0">
 
 <primitive id = "DRIVE_STOP_MECH"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_I2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "4.0">

@@ -110,9 +110,6 @@ void DriveToTarget::Execute()
                     chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
                 }
 
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
-                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
-
                 // if (TeleopControl::GetInstance()->IsButtonPressed(TeleopControlFunctions::SWEEP))
                 // {
                 //     chassisMovement.yawAngle = (chassisMovement.driveOption == ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH) ? chassisMovement.yawAngle + m_sweepDelta : chassisMovement.yawAngle - m_sweepDelta;

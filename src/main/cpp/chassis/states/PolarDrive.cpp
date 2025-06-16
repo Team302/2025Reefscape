@@ -42,10 +42,6 @@ void PolarDrive::Initialize()
 
 void PolarDrive::Execute()
 {
-    frc::Pose2d currentPose = m_chassis->GetPose();
-
-    units::meter_t x_diff = m_reefCenter.X() - currentPose.X();
-    units::meter_t y_diff = m_reefCenter.Y() - currentPose.Y();
     frc::Rotation2d angleToTarget = 0_deg;
 
     auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE);

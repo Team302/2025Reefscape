@@ -30,14 +30,14 @@
 #include "auton/drivePrimitives/AutonUtils.h"
 
 TrajectoryDrive::TrajectoryDrive(
-    subsystems::CommandSwerveDrivetrain *chassis, std::string pathName) : m_chassis(chassis),
-                                                                          m_pathName(pathName),
-                                                                          m_trajectoryStates(),
-                                                                          m_prevPose(),
-                                                                          m_wasMoving(false),
-                                                                          m_timer(std::make_unique<frc::Timer>()),
-                                                                          m_whyDone("Trajectory isn't finished/Error"),
-                                                                          m_totalTrajectoryTime(units::time::second_t(0.0))
+    subsystems::CommandSwerveDrivetrain *chassis) : m_chassis(chassis),
+                                                    m_pathName(""),
+                                                    m_trajectoryStates(),
+                                                    m_prevPose(),
+                                                    m_wasMoving(false),
+                                                    m_timer(std::make_unique<frc::Timer>()),
+                                                    m_whyDone("Trajectory isn't finished/Error"),
+                                                    m_totalTrajectoryTime(units::time::second_t(0.0))
 {
     // This command requires the chassis subsystem
     AddRequirements(m_chassis);
@@ -61,6 +61,11 @@ void TrajectoryDrive::Initialize()
     m_chassisSpeeds.vx = 0_mps;
     m_chassisSpeeds.vy = 0_mps;
     m_chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
+}
+
+void TrajectoryDrive::SetPath(const std::string &pathName)
+{
+    m_pathName = pathName;
 }
 
 void TrajectoryDrive::Execute()
