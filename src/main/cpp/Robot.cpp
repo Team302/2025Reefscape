@@ -6,9 +6,9 @@
 
 #include <frc2/command/CommandScheduler.h>
 
-// #include "auton/AutonPreviewer.h"
-// #include "auton/CyclePrimitives.h"
-// #include "auton/drivePrimitives/AutonUtils.h"
+#include "auton/AutonPreviewer.h"
+#include "auton/CyclePrimitives.h"
+#include "auton/drivePrimitives/AutonUtils.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "configs/MechanismConfig.h"
@@ -52,7 +52,7 @@ Robot::Robot()
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
-    // auto path = AutonUtils::GetTrajectoryFromPathFile("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
+    auto path = AutonUtils::GetTrajectoryFromPathFile("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
 }
 
 void Robot::RobotPeriodic()
@@ -104,12 +104,12 @@ void Robot::AutonomousInit()
     {
         m_autonomousCommand->Schedule();
     }
-    // frc::SetCurrentThreadPriority(true, 15);
+    frc::SetCurrentThreadPriority(true, 15);
 
-    // if (m_cyclePrims != nullptr)
-    // {
-    //     m_cyclePrims->Init();
-    // }
+    if (m_cyclePrims != nullptr)
+    {
+        m_cyclePrims->Init();
+    }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
@@ -121,10 +121,10 @@ void Robot::AutonomousPeriodic()
         m_dragonswerveposeestimator->Update();
     }
 
-    // if (m_cyclePrims != nullptr)
-    // {
-    //     m_cyclePrims->Run();
-    // }
+    if (m_cyclePrims != nullptr)
+    {
+        m_cyclePrims->Run();
+    }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
@@ -212,8 +212,8 @@ void Robot::InitializeRobot()
 
 void Robot::InitializeAutonOptions()
 {
-    // m_cyclePrims = new CyclePrimitives(); // intialize auton selections
-    // m_previewer = new AutonPreviewer(m_cyclePrims);
+    m_cyclePrims = new CyclePrimitives(); // intialize auton selections
+    m_previewer = new AutonPreviewer(m_cyclePrims);
 }
 void Robot::InitializeDriveteamFeedback()
 {
@@ -222,10 +222,10 @@ void Robot::InitializeDriveteamFeedback()
 
 void Robot::UpdateDriveTeamFeedback()
 {
-    // if (m_previewer != nullptr)
-    // {
-    //     m_previewer->CheckCurrentAuton();
-    // }
+    if (m_previewer != nullptr)
+    {
+        m_previewer->CheckCurrentAuton();
+    }
     if (m_field != nullptr && m_dragonswerveposeestimator != nullptr)
     {
         m_field->UpdateRobotPosition(m_dragonswerveposeestimator->GetPose());

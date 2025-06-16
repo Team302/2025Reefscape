@@ -65,10 +65,11 @@ private:
 
     TeleopControl *m_controller;
     SwerveContainer *m_container;
+    CyclePrimitives *m_cyclePrims;
 
     FMSData *m_fmsData;
     DragonField *m_field;
-    //    AutonPreviewer *m_previewer;
+    AutonPreviewer *m_previewer;
     RobotState *m_robotState;
     DragonDataLoggerMgr *m_datalogger;
     bool isFMSAttached = false;

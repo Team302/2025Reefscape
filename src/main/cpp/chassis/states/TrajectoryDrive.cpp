@@ -13,8 +13,6 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-
 #include <string>
 
 // FRC Includes
@@ -29,6 +27,7 @@
 // 302 includes
 #include "chassis/states/TrajectoryDrive.h"
 #include "utils/logging/debug/Logger.h"
+#include "auton/drivePrimitives/AutonUtils.h"
 
 TrajectoryDrive::TrajectoryDrive(
     subsystems::CommandSwerveDrivetrain *chassis, std::string pathName) : m_chassis(chassis),
@@ -48,7 +47,7 @@ TrajectoryDrive::TrajectoryDrive(
 
 void TrajectoryDrive::Initialize()
 {
-    m_trajectory = choreo::Choreo::LoadTrajectory<choreo::SwerveSample>(m_pathName);
+    m_trajectory = AutonUtils::GetTrajectoryFromPathFile(m_pathName);
     m_trajectoryStates = m_trajectory.value().samples;
 
     // Reset and start the timer when the command begins
