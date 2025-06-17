@@ -67,7 +67,7 @@ private:
 
     frc::PIDController m_xController{0.75, 0.0, 0.0};
     frc::PIDController m_yController{0.75, 0.0, 0.0};
-    frc::PIDController m_headingController{0.1, 0.0, 0.0};
+    frc::PIDController m_headingController{1.0, 0.0, 0.0};
 
     frc::ChassisSpeeds m_chassisSpeeds;
 

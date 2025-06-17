@@ -1439,7 +1439,6 @@ void DragonTale::LogInformation()
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Dragon Tale Scoring Mode", m_scoringMode);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "State", GetCurrentState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Remedial Action", m_elevatorRemedialAction);
-	// Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Elevator CANRange", GetElevatorCANRangeHeight().value());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "Branch CANRange", GetBranchCANRangeState());
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "DriveToIsDone", m_isDriveToIsDone);
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DragonTale", "At Target", AtTarget());

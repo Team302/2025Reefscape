@@ -1,6 +1,8 @@
 #include "chassis/generated/CommandSwerveDrivetrain.h"
 #include <frc/RobotController.h>
 #include "utils/FMSData.h"
+#include "fielddata/ReefHelper.h"
+#include "fielddata/BargeHelper.h"
 
 using namespace subsystems;
 
@@ -25,6 +27,12 @@ void CommandSwerveDrivetrain::Periodic()
             m_hasAppliedOperatorPerspective = true;
         }
     }
+
+    auto bargeHelper = BargeHelper::GetInstance();
+    auto reefHelper = ReefHelper::GetInstance();
+
+    reefHelper->IsInZone();
+    bargeHelper->IsInZone();
 }
 
 void CommandSwerveDrivetrain::StartSimThread()
