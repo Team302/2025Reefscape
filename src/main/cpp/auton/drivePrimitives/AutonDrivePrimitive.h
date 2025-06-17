@@ -20,6 +20,8 @@
 #include <frc2/command/CommandScheduler.h>
 #include "auton/ZoneParams.h"
 #include "chassis/generated/CommandSwerveDrivetrain.h"
+#include "mechanisms/DragonTale/DragonTale.h"
+#include "auton/PrimitiveEnums.h"
 
 class AutonDrivePrimitive : public IPrimitive
 {
@@ -33,17 +35,17 @@ public:
 
 private:
     frc2::CommandPtr CreateDriveToTargetCommand(ChassisOptionEnums::DriveStateType driveToType);
+    bool IsInZone();
+    int FindDriveToZoneIndex(ZoneParamsVector zones);
 
     subsystems::CommandSwerveDrivetrain *m_chassis;
     std::unique_ptr<frc::Timer> m_timer;
     frc2::CommandPtr m_managedCommand;
 
-    // State tracking variables
+    PRIMITIVE_IDENTIFIER m_activeId;
     units::time::second_t m_maxTime;
     bool m_visionTransition;
     bool m_checkForDriveToUpdate;
     ZoneParams *m_zone;
-
-    bool IsInZone();
-    int FindDriveToZoneIndex(ZoneParamsVector zones);
+    DragonTale *m_dragonTaleMgr;
 };

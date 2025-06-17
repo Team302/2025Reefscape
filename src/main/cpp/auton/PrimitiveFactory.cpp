@@ -49,7 +49,6 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
     switch (primitivePasser->GetID()) // Decides which primitive to get or make
     {
     case DO_NOTHING:
-    case DO_NOTHING_DELAY:
     case DO_NOTHING_MECHANISMS:
     case HOLD_POSITION:
     case TRAJECTORY_DRIVE:

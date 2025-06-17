@@ -43,7 +43,6 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
     primStringToEnumMap["TRAJECTORY_DRIVE"] = TRAJECTORY_DRIVE;
     primStringToEnumMap["RESET_POSITION"] = RESET_POSITION;
     primStringToEnumMap["VISION_ALIGN"] = VISION_ALIGN;
-    primStringToEnumMap["DO_NOTHING_DELAY"] = DO_NOTHING_DELAY;
     primStringToEnumMap["DRIVE_STOP_MECH"] = DO_NOTHING_MECHANISMS;
 
     map<string, ChassisOptionEnums::HeadingOption>
@@ -63,10 +62,7 @@ PrimitiveParamsVector PrimitiveParser::ParseXML(string fulldirfile)
 
     map<string, ChassisOptionEnums::DriveStateType> updateOptionMap{{"RIGHT_REEF_BRANCH", ChassisOptionEnums::DriveStateType::DRIVE_TO_RIGHT_REEF_BRANCH},
                                                                     {"LEFT_REEF_BRANCH", ChassisOptionEnums::DriveStateType::DRIVE_TO_LEFT_REEF_BRANCH},
-                                                                    // {"REEF_ALGAE", PATH_UPDATE_OPTION::REEF_ALGAE}, // need to update when drive option is implemented
-                                                                    // {"FLOOR_ALGAE", PATH_UPDATE_OPTION::FLOOR_ALGAE},
                                                                     {"CORAL_STATION", ChassisOptionEnums::DriveStateType::DRIVE_TO_CORAL_STATION},
-                                                                    // {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
                                                                     {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
                                                                     {"NOTHING", ChassisOptionEnums::DriveStateType::STOP_DRIVE}};
 
@@ -296,8 +292,6 @@ void PrimitiveParser::Print(PrimitiveParamsVector paramVector)
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Choreo Trajectory Name"), param->GetTrajectoryName());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("vision alignment"), param->GetVisionAlignment());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("Dragon Tale State"), param->GetTaleState());
-        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber change"), param->IsClimberStateChanging() ? string("true") : string("false"));
-        // logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("climber state"), param->GetClimberState());
         logger->LogData(LOGGER_LEVEL::PRINT, ntName, string("num zones"), (double)param->GetZones().size());
 
         slot++;

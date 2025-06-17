@@ -17,38 +17,51 @@
 #include "chassis/SwerveContainer.h"
 #include "chassis/states/TrajectoryDrive.h"
 #include "chassis/states/DriveToTarget.h"
+#include "configs/MechanismConfigMgr.h"
 #include "utils/logging/debug/Logger.h"
 #include <frc2/command/Commands.h>
 #include <frc2/command/ProxyCommand.h>
 
 AutonDrivePrimitive::AutonDrivePrimitive() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                              m_timer(std::make_unique<frc::Timer>()),
-                                             m_managedCommand(frc2::cmd::None())
+                                             m_managedCommand(frc2::cmd::None()),
+                                             m_activeId(PRIMITIVE_IDENTIFIER::UNKNOWN_PRIMITIVE),
+                                             m_maxTime(0_s),
+                                             m_visionTransition(false),
+                                             m_checkForDriveToUpdate(false),
+                                             m_zone(nullptr),
+                                             m_dragonTaleMgr(nullptr)
 {
+    // Get mechanism handles once in the constructor
+    auto config = MechanismConfigMgr::GetInstance()->GetCurrentConfig();
+    if (config != nullptr)
+    {
+        auto taleStateMgr = config->GetMechanism(MechanismTypes::MECHANISM_TYPE::DRAGON_TALE);
+        m_dragonTaleMgr = taleStateMgr != nullptr ? dynamic_cast<DragonTale *>(taleStateMgr) : nullptr;
+    }
 }
 
 void AutonDrivePrimitive::Init(PrimitiveParams *params)
 {
-    // Always start with a clean slate
+    m_activeId = params->GetID();
     frc2::CommandScheduler::GetInstance().CancelAll();
     m_visionTransition = false;
     m_maxTime = params->GetTime();
     m_timer->Reset();
     m_timer->Start();
     m_zone = nullptr;
+    m_checkForDriveToUpdate = false;
 
-    switch (params->GetID())
+    switch (m_activeId)
     {
     case PRIMITIVE_IDENTIFIER::TRAJECTORY_DRIVE:
     {
         auto container = SwerveContainer::GetInstance();
         auto trajectoryDriveCmd = container->GetTrajectoryDriveCommand();
-        trajectoryDriveCmd->SetPath(params->GetTrajectoryName()); // Set the path for this run
-
+        trajectoryDriveCmd->SetPath(params->GetTrajectoryName());
         m_managedCommand = frc2::ProxyCommand(trajectoryDriveCmd).ToPtr();
 
-        // Check if this path has a vision update zone
-        int index = FindDriveToZoneIndex(params->GetZones()); // Assume FindDriveToZoneIndex is moved here
+        int index = FindDriveToZoneIndex(params->GetZones());
         if (index != -1)
         {
             m_zone = params->GetZones()[index];
@@ -56,10 +69,10 @@ void AutonDrivePrimitive::Init(PrimitiveParams *params)
         }
         break;
     }
-    case PRIMITIVE_IDENTIFIER::DO_NOTHING:
-    case PRIMITIVE_IDENTIFIER::DO_NOTHING_DELAY:
-    case PRIMITIVE_IDENTIFIER::DO_NOTHING_MECHANISMS:
+
     case PRIMITIVE_IDENTIFIER::HOLD_POSITION:
+    case PRIMITIVE_IDENTIFIER::DO_NOTHING:
+    case PRIMITIVE_IDENTIFIER::DO_NOTHING_MECHANISMS:
     {
         m_managedCommand = frc2::cmd::RunOnce([this]()
                                               { m_chassis->SetControl(swerve::requests::SwerveDriveBrake{}); }, {m_chassis});
@@ -95,9 +108,26 @@ void AutonDrivePrimitive::Run()
 bool AutonDrivePrimitive::IsDone()
 {
     bool timeout = m_timer->HasElapsed(m_maxTime);
-    bool commandFinished = !m_managedCommand.IsScheduled();
 
-    return timeout || commandFinished;
+    switch (m_activeId)
+    {
+    case PRIMITIVE_IDENTIFIER::TRAJECTORY_DRIVE:
+        return timeout || !m_managedCommand.IsScheduled();
+
+    case PRIMITIVE_IDENTIFIER::DO_NOTHING_MECHANISMS:
+        if (m_dragonTaleMgr != nullptr)
+        {
+            bool mechReady = m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_READY ||
+                             m_dragonTaleMgr->GetCurrentState() == DragonTale::STATE_NAMES::STATE_HOLD;
+            return timeout || mechReady;
+        }
+
+    case PRIMITIVE_IDENTIFIER::HOLD_POSITION:
+    case PRIMITIVE_IDENTIFIER::DO_NOTHING:
+    default:
+        break;
+    }
+    return timeout;
 }
 
 int AutonDrivePrimitive::FindDriveToZoneIndex(ZoneParamsVector zones)

@@ -1,5 +1,6 @@
 #include "chassis/generated/CommandSwerveDrivetrain.h"
 #include <frc/RobotController.h>
+#include "utils/FMSData.h"
 
 using namespace subsystems;
 
@@ -14,11 +15,11 @@ void CommandSwerveDrivetrain::Periodic()
      */
     if (!m_hasAppliedOperatorPerspective || frc::DriverStation::IsDisabled())
     {
-        auto const allianceColor = frc::DriverStation::GetAlliance();
+        auto const allianceColor = FMSData::GetInstance()->GetAllianceColor();
         if (allianceColor)
         {
             SetOperatorPerspectiveForward(
-                *allianceColor == frc::DriverStation::Alliance::kRed
+                allianceColor == frc::DriverStation::Alliance::kRed
                     ? kRedAlliancePerspectiveRotation
                     : kBlueAlliancePerspectiveRotation);
             m_hasAppliedOperatorPerspective = true;
