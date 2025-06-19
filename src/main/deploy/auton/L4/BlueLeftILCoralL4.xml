@@ -59,7 +59,9 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "2.5"/>
+time = "2.5">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
