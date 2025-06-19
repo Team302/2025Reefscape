@@ -73,7 +73,7 @@ private:
     int m_samePoseCount = 0;
     const int m_samePoseCountThreshold = 50; // TODO come back and tune this
 
-    frc::PIDController xController{0.75, 0.0, 0.0};
-    frc::PIDController yController{0.75, 0.0, 0.0};
-    frc::PIDController headingController{0.1, 0.0, 0.0};
+    frc::PIDController xController{0.25, 0.0, 0.0};
+    frc::PIDController yController{0.25, 0.0, 0.0};
+    frc::PIDController headingController{1.0, 0.0, 0.0};
 };

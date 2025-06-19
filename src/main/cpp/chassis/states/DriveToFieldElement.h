@@ -73,7 +73,7 @@ private:
     const units::length::inch_t m_distanceThreshold{0.25};
     const units::length::inch_t m_regenerationDistanceThreshold{2.0};
     const units::length::meter_t m_ffMinRadius{0.0};
-    const units::length::meter_t m_ffMaxRadius{1.35};
+    const units::length::meter_t m_ffMaxRadius{1.5};
 
     const units::velocity::meters_per_second_t kMaxVelocity = 4_mps;
     const units::acceleration::meters_per_second_squared_t kMaxAcceleration = 4_mps_sq;
@@ -88,8 +88,8 @@ private:
     double m_translationKP = 4.5;
     double m_translationKI = 0.0;
 #else
-    const double m_translationKP = 3.5;
-    const double m_translationKI = 0.0;
+    const double m_translationKP = 6.0;
+    const double m_translationKI = 2.0;
 #endif
     const double m_translationKD = 0.0;
 
