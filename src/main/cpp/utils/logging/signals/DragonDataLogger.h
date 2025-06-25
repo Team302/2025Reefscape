@@ -42,7 +42,8 @@ public:
     enum BoolSignals
     {
         IS_BROWNOUT,
-        DRIVE_TO_IS_DONE
+        DRIVE_TO_IS_DONE,
+        IS_ALGAE_DETECTED
     };
 
     enum DoubleSignals
@@ -94,7 +95,9 @@ public:
         RIGHT_BACK_SWERVE_DRIVE_TOTALPOWER,
         RIGHT_BACK_SWERVE_DRIVE_WATT_HOURS,
         SWERVE_CHASSIS_TOTAL_CURRENT,
-        SWERVE_CHASSIS_WATT_HOURS
+        SWERVE_CHASSIS_WATT_HOURS,
+        LIMELIGHT1_NUMBER_OF_TAGS,
+        LIMELIGHT1_NUMBER_OF_ALGAE
     };
 
     enum StringSignals
@@ -177,18 +180,18 @@ public:
     string m_cpuTempUnits = "Degrees C";
 
     string m_lfSteerPowerPath = "/Chassis/FrontLeftModule/Steer/Power";
-    string m_lfSteerPowerUnits = "Watts";
+    string m_lfSteerPowerUnits = "";
     string m_lfSteerCurrentPath = "/Chassis/FrontLeftModule/Steer/Current";
-    string m_lfSteerCurrentUnits = "Watts";
+    string m_lfSteerCurrentUnits = "Amps";
     string m_lfSteerTotalPowerPath = "/Chassis/FrontLeftModule/Steer/TotalPower";
     string m_lfSteerTotalPowerUnits = "";
     string m_lfSteerWattHoursPath = "/Chassis/FrontLeftModule/Steer/WattHours";
     string m_lfSteerWattHoursUnits = "WattHours";
 
     string m_lfDrivePowerPath = "/Chassis/FrontLeftModule/Drive/Power";
-    string m_lfDrivePowerUnits = "Watts";
+    string m_lfDrivePowerUnits = "";
     string m_lfDriveCurrentPath = "/Chassis/FrontLeftModule/Drive/Current";
-    string m_lfDriveCurrentUnits = "Watts";
+    string m_lfDriveCurrentUnits = "Amps";
     string m_lfDriveTotalPowerPath = "/Chassis/FrontLeftModule/Drive/TotalPower";
     string m_lfDriveTotalPowerUnits = "";
     string m_lfDriveWattHoursPath = "/Chassis/FrontLeftModule/Drive/WattHours";
@@ -197,7 +200,7 @@ public:
     string m_rfSteerPowerPath = "/Chassis/FrontRightModule/Steer/Power";
     string m_rfSteerPowerUnits = "";
     string m_rfSteerCurrentPath = "/Chassis/FrontRightModule/Steer/Current";
-    string m_rfSteerCurrentUnits = "Watts";
+    string m_rfSteerCurrentUnits = "Amps";
     string m_rfSteerTotalPowerPath = "/Chassis/FrontRightModule/Steer/TotalPower";
     string m_rfSteerTotalPowerUnits = "";
     string m_rfSteerWattHoursPath = "/Chassis/FrontRightModule/Steer/WattHours";
@@ -206,7 +209,7 @@ public:
     string m_rfDrivePowerPath = "/Chassis/FrontRightModule/Drive/Power";
     string m_rfDrivePowerUnits = "";
     string m_rfDriveCurrentPath = "/Chassis/FrontRightModule/Drive/Current";
-    string m_rfDriveCurrentUnits = "Watts";
+    string m_rfDriveCurrentUnits = "Amps";
     string m_rfDriveTotalPowerPath = "/Chassis/FrontRightModule/Drive/TotalPower";
     string m_rfDriveTotalPowerUnits = "";
     string m_rfDriveWattHoursPath = "/Chassis/FrontRightModule/Drive/WattHours";
@@ -215,7 +218,7 @@ public:
     string m_lbSteerPowerPath = "/Chassis/BackLeftModule/Steer/Power";
     string m_lbSteerPowerUnits = "";
     string m_lbSteerCurrentPath = "/Chassis/BackLeftModule/Steer/Current";
-    string m_lbSteerCurrentUnits = "Watts";
+    string m_lbSteerCurrentUnits = "Amps";
     string m_lbSteerTotalPowerPath = "/Chassis/BackLeftModule/Steer/TotalPower";
     string m_lbSteerTotalPowerUnits = "";
     string m_lbSteerWattHoursPath = "/Chassis/BackLeftModule/Steer/WattHours";
@@ -224,7 +227,7 @@ public:
     string m_lbDrivePowerPath = "/Chassis/BackLeftModule/Drive/Power";
     string m_lbDrivePowerUnits = "";
     string m_lbDriveCurrentPath = "/Chassis/BackLeftModule/Drive/Current";
-    string m_lbDriveCurrentUnits = "Watts";
+    string m_lbDriveCurrentUnits = "Amps";
     string m_lbDriveTotalPowerPath = "/Chassis/BackLeftModule/Drive/TotalPower";
     string m_lbDriveTotalPowerUnits = "";
     string m_lbDriveWattHoursPath = "/Chassis/BackLeftModule/Drive/WattHours";
@@ -233,7 +236,7 @@ public:
     string m_rbSteerPowerPath = "/Chassis/BackRightModule/Steer/Power";
     string m_rbSteerPowerUnits = "";
     string m_rbSteerCurrentPath = "/Chassis/BackRightModule/Steer/Current";
-    string m_rbSteerCurrentUnits = "Watts";
+    string m_rbSteerCurrentUnits = "Amps";
     string m_rbSteerTotalPowerPath = "/Chassis/BackRightModule/Steer/TotalPower";
     string m_rbSteerTotalPowerUnits = "";
     string m_rbSteerWattHoursPath = "/Chassis/BackRightModule/Steer/WattHours";
@@ -242,7 +245,7 @@ public:
     string m_rbDrivePowerPath = "/Chassis/BackRightModule/Drive/Power";
     string m_rbDrivePowerUnits = "";
     string m_rbDriveCurrentPath = "/Chassis/BackRightModule/Drive/Current";
-    string m_rbDriveCurrentUnits = "Watts";
+    string m_rbDriveCurrentUnits = "Amps";
     string m_rbDriveTotalPowerPath = "/Chassis/BackRightModule/Drive/TotalPower";
     string m_rbDriveTotalPowerUnits = "";
     string m_rbDriveWattHoursPath = "/Chassis/BackRightModule/Drive/WattHours";
@@ -253,10 +256,15 @@ public:
     string m_swerveChassisWattHoursPath = "/Chassis/WattHours";
     string m_swerveChassisWattHoursUnits = "";
     string m_swerveChassisTotalCurrentPath = "/Chassis/TotalCurrent";
-    string m_swerveChassisTotalCurrentUnits = "Watts";
+    string m_swerveChassisTotalCurrentUnits = "";
+    string m_limelight1NumberOfTagsPath = "LL1/NumberOfTags";
+    string m_limelight1NumberOfTagsUnits = "";
+    string m_limelight1NumberOfAlgaePath = "LL1/NumberOfAlgae";
+    string m_limelight1NumberOfAlgaeUnits = "";
     string m_headingStatePath = "/Chassis/HeadingState";
     string m_driveStatePath = "/Chassis/DriveState";
     string m_IsDonePath = "/Chassis/IsDone";
+    string m_IsAlgaeDetected = "/Chassis/IsAlgaeDetected";
 
     string m_chassisPose2dPath = "/Chassis/Pose2d";
     string m_visionDriveLBranchPose2dPath = "/Vision/DriveToLeftReefBranchPose2d";
@@ -281,9 +289,9 @@ public:
     string m_pose2dUnits = "X, Y, Rotation";
 
     string m_frontLeftTargetSpeedPath = "/Chassis/FrontLeftModule/TargetState/Speed";
-    string m_frontLeftTargetAnglePath;
+    string m_frontLeftTargetAnglePath = "/Chassis/FrontLeftModule/TargetState/Angle";
     string m_frontRightTargetSpeedPath = "/Chassis/FrontRightModule/TargetState/Speed";
-    string m_frontRightTargetAnglePath;
+    string m_frontRightTargetAnglePath = "/Chassis/FrontRightModule/TargetState/Angle";
     string m_backLeftTargetSpeedPath = "/Chassis/BackLeftModule/TargetState/Speed";
     string m_backLeftTargetAnglePath = "/Chassis/BackLeftModule/TargetState/Angle";
     string m_backRightTargetSpeedPath = "/Chassis/BackRightModule/TargetState/Speed";

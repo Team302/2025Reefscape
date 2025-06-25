@@ -226,4 +226,5 @@ protected:
     const double m_pitchRate = 0.0;
     const double m_roll = 0.0;
     const double m_rollRate = 0.0;
+    int m_numberOfTags;
 };
