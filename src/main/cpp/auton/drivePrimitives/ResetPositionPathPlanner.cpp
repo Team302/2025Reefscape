@@ -20,7 +20,7 @@
 // Team 302 includes
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "auton/drivePrimitives/IPrimitive.h"
-#include "auton/drivePrimitives/ResetPositionTrajectory.h"
+#include "auton/drivePrimitives/ResetPositionPathPlanner.h"
 #include "auton/PrimitiveParams.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
@@ -30,15 +30,17 @@
 #include "utils/FMSData.h"
 
 // Third Party Includes
+#include "pathplanner/lib/path/PathPlannerPath.h"
 
 using namespace std;
 using namespace frc;
+using namespace pathplanner;
 
-ResetPositionTrajectory::ResetPositionTrajectory() : IPrimitive()
+ResetPositionPathPlanner::ResetPositionPathPlanner() : IPrimitive()
 {
 }
 
-void ResetPositionTrajectory::Init(PrimitiveParams *param)
+void ResetPositionPathPlanner::Init(PrimitiveParams *param)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
@@ -46,13 +48,18 @@ void ResetPositionTrajectory::Init(PrimitiveParams *param)
     if (chassis != nullptr)
     {
 
-        auto path = AutonUtils::GetTrajectoryFromPathFile(param->GetTrajectoryName());
+        auto path = param->GetTrajectoryName().empty() ? AutonUtils::GetPathFromPathFile(param->GetPathName()) : AutonUtils::GetPathFromTrajectory(param->GetTrajectoryName());
 
-        if (path.has_value())
+        if (AutonUtils::IsValidPath(path))
         {
-            auto initialPose = path.value().GetInitialPose();
+            auto initialPose = path.get()->getStartingHolonomicPose();
             if (initialPose)
             {
+                // debugging
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "X", initialPose.value().X().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Y", initialPose.value().Y().value());
+                Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "Reset Pose", "Theta", initialPose.value().Rotation().Degrees().value());
+
                 // Check to see if current pose is within 2 meters (distanceThreshold) of the centerline (centerline), if it isn't, reset pose with pathplanner/choreo
                 auto actualPose = chassis->GetPose();
                 const units::length::meter_t poseDiff = units::math::abs(actualPose.X() - m_centerline);
@@ -67,7 +74,7 @@ void ResetPositionTrajectory::Init(PrimitiveParams *param)
     }
 }
 
-void ResetPositionTrajectory::ResetPose(Pose2d pose)
+void ResetPositionPathPlanner::ResetPose(Pose2d pose)
 {
     auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
@@ -78,11 +85,11 @@ void ResetPositionTrajectory::ResetPose(Pose2d pose)
     }
 }
 
-void ResetPositionTrajectory::Run()
+void ResetPositionPathPlanner::Run()
 {
 }
 
-bool ResetPositionTrajectory::IsDone()
+bool ResetPositionPathPlanner::IsDone()
 {
     return true;
 }

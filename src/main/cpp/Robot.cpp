@@ -60,7 +60,7 @@ void Robot::RobotInit()
 
     m_datalogger = DragonDataLoggerMgr::GetInstance();
 
-    auto path = AutonUtils::GetTrajectoryFromPathFile("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
+    auto path = AutonUtils::GetPathFromTrajectory("BlueLeftInside_I"); // load choreo library so we don't get loop overruns during autonperiodic
 
     if (m_dragonswerveposeestimator != nullptr)
     {

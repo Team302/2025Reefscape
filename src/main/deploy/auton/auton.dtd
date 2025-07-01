@@ -12,7 +12,9 @@
 		  delayOption		(START | PLACED_CORAL | REEF) "START"
           headingOption     CDATA "IGNORE"
           heading           CDATA "0.0"
+          pathname          CDATA #IMPLIED
 		  choreoname		CDATA #IMPLIED
+		  pathgains			(LongPath | ShortPath) "LongPath"
 		  taleOption		( STATE_READY | STATE_INITIALIZE | 
 		  					STATE_HUMAN_PLAYER_LOAD | STATE_GRAB_ALGAE_REEF | STATE_HOLD |
 							STATE_GRAB_ALGAE_FLOOR | STATE_PROCESS | STATE_NET | STATE_SCORE_ALGAE |

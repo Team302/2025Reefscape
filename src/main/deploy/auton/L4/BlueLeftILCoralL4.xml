@@ -7,7 +7,7 @@ choreoname = "BlueLeftInside_I"/> -->
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftInside_I"
-time = "3.0">
+time = "2.5">
 <zone filename = "BlueReefDriveToRight.xml"/>
 </primitive>
 
@@ -59,9 +59,7 @@ time = "5.0"/>
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "2.5">
-<zone filename = "BlueLeftHumanPlayerStation.xml"/>
-</primitive>
+time = "2.5"/>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>

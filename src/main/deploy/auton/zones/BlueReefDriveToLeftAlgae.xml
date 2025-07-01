@@ -5,7 +5,7 @@
     <zone 
         circlex="4.467"
         circley="4.038"
-        radius="85.0" 
+        radius="75.0" 
         pathUpdateOption="LEFT_REEF_BRANCH"
         taleOption="STATE_GRAB_ALGAE_REEF"/>
         <!-- testing drive to-->

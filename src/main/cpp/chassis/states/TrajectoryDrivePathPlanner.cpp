@@ -23,7 +23,7 @@
 #include "utils/FMSData.h"
 
 // Team302 Includes
-#include "chassis/states/TrajectoryDrive.h"
+#include "chassis/states/TrajectoryDrivePathPlanner.h"
 #include "chassis/ChassisMovement.h"
 #include "utils/logging/debug/Logger.h"
 #include "chassis/states/SpecifiedHeading.h"
@@ -31,80 +31,96 @@
 #include "vision/DragonVisionStructs.h"
 #include "vision/DragonVisionStructLogger.h"
 
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
+
 using frc::Pose2d;
+using pathplanner::PathPlannerTrajectoryState;
 using std::string;
 
-TrajectoryDrive::TrajectoryDrive(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
-                                                           m_trajectory(),
-                                                           m_robotDrive(robotDrive),
-                                                           m_trajectoryStates(),
-                                                           m_prevPose(),
-                                                           m_wasMoving(false),
-                                                           m_timer(std::make_unique<frc::Timer>()),
-                                                           m_whyDone("Trajectory isn't finished/Error"),
-                                                           m_totalTrajectoryTime(units::time::second_t(0.0))
+TrajectoryDrivePathPlanner::TrajectoryDrivePathPlanner(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
+                                                                                 m_trajectory(),
+                                                                                 m_robotDrive(robotDrive),
+                                                                                 // TODO need to tune this also update radius as it is probably wrong
+                                                                                 m_longpathHolonomicController(pathplanner::PIDConstants(2.0, 0.0, 0.0), //(1.95, 0.95, 0.0)
+                                                                                                               pathplanner::PIDConstants(3.0, 0.0, 0.0),
+                                                                                                               // robotDrive->GetChassis()->GetMaxSpeed(),
+                                                                                                               // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
+                                                                                                               units::time::second_t(0.02)),
+                                                                                 m_shortpathHolonomicController(pathplanner::PIDConstants(6.0, 0.0, 0.2), //(6.0, 0.0, 0.0)
+                                                                                                                pathplanner::PIDConstants(3.0, 0.0, 0.0),
+                                                                                                                // robotDrive->GetChassis()->GetMaxSpeed(),
+                                                                                                                // units::length::inch_t(sqrt(((robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) * (robotDrive->GetChassis()->GetWheelBase().to<double>() / 2.0) + (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0) * (robotDrive->GetChassis()->GetTrack().to<double>() / 2.0)))),
+                                                                                                                units::time::second_t(0.02)),
+                                                                                 m_trajectoryStates(),
+                                                                                 m_prevPose(),
+
+                                                                                 m_wasMoving(false),
+                                                                                 m_timer(std::make_unique<frc::Timer>()),
+                                                                                 m_whyDone("Trajectory isn't finished/Error"),
+                                                                                 m_totalTrajectoryTime(units::time::second_t(0.0))
 
 {
     m_prevPose = m_chassis != nullptr ? m_chassis->GetPose() : Pose2d();
 }
 
-std::string TrajectoryDrive::GetDriveStateName() const
+std::string TrajectoryDrivePathPlanner::GetDriveStateName() const
 {
-    return std::string("TrajectoryDrive");
+    return std::string("TrajectoryDrivePathPlanner");
 }
 
-void TrajectoryDrive::Init(ChassisMovement &chassisMovement)
+void TrajectoryDrivePathPlanner::Init(ChassisMovement &chassisMovement)
 {
-    m_trajectory = chassisMovement.trajectory;
-    if (m_trajectory.has_value())
+    m_trajectoryStates.clear();
+    m_trajectory = chassisMovement.pathplannerTrajectory;
+    m_trajectoryStates = m_trajectory.getStates();
+    if (!m_trajectoryStates.empty())
     {
-        m_totalTrajectoryTime = m_trajectory.value().GetTotalTime();
-        m_finalState = m_trajectory.value().GetFinalSample().value();
-        m_trajectoryStates = m_trajectory.value().samples;
+        m_totalTrajectoryTime = m_trajectory.getTotalTime();
+
+        m_finalState = m_trajectoryStates.back();
+
         m_timer.get()->Reset(); // Restarts and starts timer
         m_timer.get()->Start();
     }
 }
 
-std::array<frc::SwerveModuleState, 4> TrajectoryDrive::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
+std::array<frc::SwerveModuleState, 4> TrajectoryDrivePathPlanner::UpdateSwerveModuleStates(ChassisMovement &chassisMovement)
 {
 
-    auto states = chassisMovement.trajectory.value().samples;
+    auto states = chassisMovement.pathplannerTrajectory.getStates();
     if (states.size() != m_trajectoryStates.size())
     {
         Init(chassisMovement);
     }
     if (!m_trajectoryStates.empty() && !states.empty() && !IsDone()) // If we have a path parsed / have states to run
     {
-        if (m_trajectory.value().GetInitialPose() != chassisMovement.trajectory.value().GetInitialPose())
+        if (m_trajectory.getInitialPose() != chassisMovement.pathplannerTrajectory.getInitialPose())
         {
             Init(chassisMovement);
         }
 
-        auto desiredState = m_trajectory.value().SampleAt(m_timer.get()->Get()).value();
-        if (m_chassis != nullptr)
+        auto desiredState = m_trajectory.sample(m_timer.get()->Get() + units::time::second_t(0.02));
+        LogState(desiredState);
+
+        frc::ChassisSpeeds refChassisSpeeds;
+        if (chassisMovement.pathnamegains == ChassisOptionEnums::PathGainsType::LONG)
         {
-            auto currentPose = m_chassis->GetPose();
+            refChassisSpeeds = m_longpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
+        }
+        else
+        {
+            refChassisSpeeds = m_shortpathHolonomicController.calculateRobotRelativeSpeeds(m_chassis->GetPose(), desiredState);
+        }
 
-            units::meters_per_second_t xFeedback{xController.Calculate(currentPose.X().value(), desiredState.x.value())};
-            units::meters_per_second_t yFeedback{yController.Calculate(currentPose.Y().value(), desiredState.y.value())};
-            units::radians_per_second_t headingFeedback{headingController.Calculate(currentPose.Rotation().Radians().value(), desiredState.heading.value())};
-
-            // Generate the next speeds for the robot
-            frc::ChassisSpeeds refChassisSpeeds{
-                desiredState.vx + xFeedback,
-                desiredState.vy + yFeedback,
-                desiredState.omega + headingFeedback};
-
-            if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
-            {
-                chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
-                chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
-            }
-            else
-            {
-                chassisMovement.chassisSpeeds = refChassisSpeeds;
-            }
+        if (chassisMovement.headingOption != ChassisOptionEnums::HeadingOption::IGNORE)
+        {
+            chassisMovement.chassisSpeeds.vx = refChassisSpeeds.vx;
+            chassisMovement.chassisSpeeds.vy = refChassisSpeeds.vy;
+        }
+        else
+        {
+            chassisMovement.chassisSpeeds = refChassisSpeeds;
         }
     }
     else // If we don't have states to run, don't move the robot
@@ -118,17 +134,10 @@ std::array<frc::SwerveModuleState, 4> TrajectoryDrive::UpdateSwerveModuleStates(
     }
     m_chassis->SetStoredHeading(m_chassis->GetPose().Rotation().Degrees());
 
-    auto rot2d = frc::Rotation2d(m_chassis->GetYaw());
-
-    chassisMovement.chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(chassisMovement.chassisSpeeds.vx,
-                                                                                chassisMovement.chassisSpeeds.vy,
-                                                                                chassisMovement.chassisSpeeds.omega,
-                                                                                rot2d);
-
     return m_robotDrive->UpdateSwerveModuleStates(chassisMovement);
 }
 
-void TrajectoryDrive::LogMoveInfo(ChassisMovement &moveInfo)
+void TrajectoryDrivePathPlanner::LogMoveInfo(ChassisMovement &moveInfo)
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "heading option", moveInfo.headingOption);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "drive option", moveInfo.driveOption);
@@ -144,7 +153,7 @@ void TrajectoryDrive::LogMoveInfo(ChassisMovement &moveInfo)
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDriveLog", "no movement option", moveInfo.noMovementOption);
 }
 
-bool TrajectoryDrive::IsDone()
+bool TrajectoryDrivePathPlanner::IsDone()
 {
     bool isDone = false;
 
@@ -163,11 +172,11 @@ bool TrajectoryDrive::IsDone()
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Y", currentPose.Y().value());
             Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "current pose Rotation", currentPose.Rotation().Degrees().value());
 
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose X", m_finalState.GetPose().X().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.GetPose().Y().value());
-            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.GetPose().Rotation().Degrees().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose X", m_finalState.pose.X().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Y", m_finalState.pose.Y().value());
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "TrajectoryDrive", "target pose Rotation", m_finalState.pose.Rotation().Degrees().value());
 
-            isDone = IsSamePose(currentPose, m_finalState.GetPose(), m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
+            isDone = IsSamePose(currentPose, m_finalState.pose, m_chassis->GetChassisSpeeds(), 10.0, 3.0, 1.5); // TO DO verify these values
         }
         else if (m_chassis != nullptr)
         {
@@ -184,7 +193,7 @@ bool TrajectoryDrive::IsDone()
     return isDone;
 }
 
-bool TrajectoryDrive::IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance)
+bool TrajectoryDrivePathPlanner::IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance)
 {
     // Detect if the two poses are the same within a tolerance
     double dCurPosX = currentPose.X().to<double>() * 100; // cm
@@ -212,9 +221,29 @@ bool TrajectoryDrive::IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPo
     return ((dDeltaX <= xyTolerance) && (dDeltaY <= xyTolerance) && (dDeltaRot <= rotTolerance) && (chassisSpeed.to<double>() <= speedTolerance));
 }
 
-void TrajectoryDrive::LogPose(Pose2d pose) const
+units::angular_velocity::degrees_per_second_t TrajectoryDrivePathPlanner::CalcHeadingCorrection(units::angle::degree_t targetAngle, double kPFine, double kPCoarse)
+{
+    units::angle::degree_t currentAngle = m_chassis->GetPose().Rotation().Degrees();
+    units::angular_velocity::degrees_per_second_t correction = units::angular_velocity::degrees_per_second_t(0);
+
+    auto errorAngle = AngleUtils::GetEquivAngle(AngleUtils::GetDeltaAngle(currentAngle, targetAngle));
+
+    if (errorAngle < units::angle::degree_t(5.0))
+        correction = units::angular_velocity::degrees_per_second_t(errorAngle.to<double>() * kPFine);
+    else
+        correction = units::angular_velocity::degrees_per_second_t(errorAngle.to<double>() * kPCoarse);
+
+    return correction;
+}
+
+void TrajectoryDrivePathPlanner::LogPose(Pose2d pose) const
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "Target X", pose.X().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "Target Y", pose.Y().to<double>());
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "trajectory drive", "Target Angle", pose.Rotation().Degrees().to<double>());
 }
+void TrajectoryDrivePathPlanner::LogState(PathPlannerTrajectoryState state) const
+{
+    LogPose(state.pose);
+}
+// overriden in the subclass

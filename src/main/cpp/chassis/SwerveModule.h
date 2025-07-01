@@ -38,6 +38,7 @@
 // Third Party
 #include "ctre/phoenix6/TalonFX.hpp"
 #include "ctre/phoenix6/CANcoder.hpp"
+#include "pathplanner/lib/config/ModuleConfig.h"
 
 class SwerveModule
 {
@@ -110,6 +111,8 @@ public:
     void StopMotors();
     void LogInformation();
 
+    pathplanner::ModuleConfig GetModuleConfig() { return m_moduleConfig; }
+
     std::tuple<double, double> CalcSteerPowerEnergy(units::time::second_t deltaTime);
     std::tuple<double, double> CalcDrivePowerEnergy(units::time::second_t deltaTime);
 
@@ -158,6 +161,7 @@ private:
     bool m_velocityControlled = false;
     bool m_useFOC = false;
     std::string m_networkTableName;
+    pathplanner::ModuleConfig m_moduleConfig;
 
     units::velocity::meters_per_second_t m_simDriveSpeed;
     units::length::meter_t m_simDriveDistance;

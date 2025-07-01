@@ -26,11 +26,15 @@
 #include "fielddata/DragonTargetFinder.h"
 
 // Third party includes
+#include "pathplanner/lib/path/PathPlannerPath.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectory.h"
+#include "pathplanner/lib/trajectory/PathPlannerTrajectoryState.h"
+#include "pathplanner/lib/controllers/PPHolonomicDriveController.h"
 
-class TrajectoryDrive : public RobotDrive
+class TrajectoryDrivePathPlanner : public RobotDrive
 {
 public:
-    TrajectoryDrive(RobotDrive *robotDrive);
+    TrajectoryDrivePathPlanner(RobotDrive *robotDrive);
     std::string GetDriveStateName() const override;
 
     std::array<frc::SwerveModuleState, 4> UpdateSwerveModuleStates(ChassisMovement &chassisMovement) override;
@@ -39,6 +43,10 @@ public:
 
     std::string WhyDone() const { return m_whyDone; };
     virtual bool IsDone();
+    units::angular_velocity::degrees_per_second_t CalcHeadingCorrection(units::angle::degree_t targetAngle, double kPFine, double kPCoarse);
+
+    virtual pathplanner::PathPlannerTrajectory CreateTrajectory(std::optional<std::tuple<DragonTargetFinderData, frc::Pose2d>> info) { return pathplanner::PathPlannerTrajectory(); }
+    virtual void InitFromTrajectory(ChassisMovement &chassisMovement, pathplanner::PathPlannerTrajectory trajectory) {}
 
     units::time::second_t GetTotalTrajectoryTime() const { return m_totalTrajectoryTime; }
 
@@ -53,12 +61,13 @@ private:
     bool IsSamePose(frc::Pose2d currentPose, frc::Pose2d previousPose, frc::ChassisSpeeds velocity, double xyTolerance, double rotTolerance, double speedTolerance);
 
     void LogPose(frc::Pose2d pose) const;
-
-    std::optional<choreo::Trajectory<choreo::SwerveSample>> m_trajectory;
+    void LogState(pathplanner::PathPlannerTrajectoryState state) const;
+    pathplanner::PathPlannerTrajectory m_trajectory;
     RobotDrive *m_robotDrive;
-    choreo::SwerveSample m_finalState;
-    std::vector<choreo::SwerveSample> m_trajectoryStates;
-
+    pathplanner::PPHolonomicDriveController m_longpathHolonomicController;
+    pathplanner::PPHolonomicDriveController m_shortpathHolonomicController;
+    std::vector<pathplanner::PathPlannerTrajectoryState> m_trajectoryStates;
+    pathplanner::PathPlannerTrajectoryState m_finalState = pathplanner::PathPlannerTrajectoryState();
     frc::Pose2d m_prevPose;
     bool m_wasMoving;
     frc::Transform2d m_delta;
@@ -72,8 +81,4 @@ private:
     const double m_percentageCompleteThreshold = 0.90;
     int m_samePoseCount = 0;
     const int m_samePoseCountThreshold = 50; // TODO come back and tune this
-
-    frc::PIDController xController{0.35, 0.0, 0.0};
-    frc::PIDController yController{0.35, 0.0, 0.0};
-    frc::PIDController headingController{1.0, 0.0, 0.0};
 };

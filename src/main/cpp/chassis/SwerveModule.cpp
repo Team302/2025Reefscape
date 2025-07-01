@@ -107,6 +107,12 @@ SwerveModule::SwerveModule(std::string canbusname,
     // ReadConstants(configfilename);
     InitDriveMotor(driveInverted);
     InitSteerMotorEncoder(turnInverted, canCoderInverted, angleOffset, sensorToMechanismRatio, rotorToSensorRatio);
+
+    m_moduleConfig.wheelRadius = GetWheelDiameter() / 2.0;
+    m_moduleConfig.maxDriveVelocityMPS = GetMaxSpeed();
+    m_moduleConfig.driveCurrentLimit = GetDriveCurrentLimit();
+    m_moduleConfig.driveMotor = GetDriveMotorDef();
+    m_moduleConfig.wheelCOF = GetCoefficientOfFriction();
 }
 
 //==================================================================================

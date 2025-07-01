@@ -17,6 +17,8 @@
 
 // FRC Includes
 #include <frc/geometry/Pose2d.h>
+#include <pathplanner/lib/path/PathConstraints.h>
+#include <pathplanner/lib/path/PathPlannerPath.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 // Team302 Includes
@@ -36,6 +38,7 @@
 #include "utils/logging/debug/LoggerEnums.h"
 #include "chassis/LogChassisMovement.h"
 
+using namespace pathplanner;
 using namespace std;
 
 DriveToFieldElement::DriveToFieldElement(RobotDrive *robotDrive) : RobotDrive(robotDrive->GetChassis()),
@@ -138,6 +141,7 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                     chassisSpeeds.vx = std::clamp(chassisSpeeds.vx, -kMaxVelocity, kMaxVelocity);
                     chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
                 }
+
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vx", chassisSpeeds.vx.value());
                 Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DriveToFieldElement"), "Vy", chassisSpeeds.vy.value());
 
@@ -186,9 +190,10 @@ void DriveToFieldElement::InitChassisMovement(ChassisMovement &chassisMovement)
     chassisMovement.driveOption = GetDriveStateType();
     chassisMovement.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     chassisMovement.headingOption = GetHeadingOption();
-    chassisMovement.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
+    chassisMovement.pathplannerTrajectory = pathplanner::PathPlannerTrajectory();
     chassisMovement.centerOfRotationOffset = frc::Translation2d();
     chassisMovement.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
+    chassisMovement.pathnamegains = ChassisOptionEnums::PathGainsType::LONG;
     chassisMovement.chassisSpeeds.omega = units::angular_velocity::radians_per_second_t(0);
     chassisMovement.checkTipping = false;
     chassisMovement.tippingTolerance = units::angle::degree_t(5.0);
