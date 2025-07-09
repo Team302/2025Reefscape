@@ -264,6 +264,35 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
                 return make_tuple(DragonTargetFinderData::VISION_BASED, m_goalPose.value()); // TODO JW come back to this one when we have machine learning
         }
     }
+    else if (item == DragonTargetFinderTarget::ALGAE_ONE)
+    {
+        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        if (allianceColor == frc::DriverStation::Alliance::kBlue)
+        {
+            return make_tuple(DragonTargetFinderData::NOT_FOUND, m_blueAlgaeOnePose);
+        }
+        else
+        {
+            // red pose that James said he would find
+            return make_tuple(DragonTargetFinderData::NOT_FOUND, m_redAlgaeOnePose);
+        }
+    }
+    else if (item == DragonTargetFinderTarget::ALGAE_TWO)
+    {
+        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        if (allianceColor == frc::DriverStation::Alliance::kBlue)
+        {
+            return make_tuple(DragonTargetFinderData::NOT_FOUND, m_blueAlgaeTwoPose);
+        }
+        else
+        {
+            // red pose that James said he would find
+            return make_tuple(DragonTargetFinderData::NOT_FOUND, m_redAlgaeTwoPose);
+        }
+    }
+    else if (item == DragonTargetFinderTarget::ALGAE_TWO)
+    {
+    }
     else if (item == DragonTargetFinderTarget::PROCESSOR)
     {
         frc::Pose2d processorPose = ProcessorHelper::GetInstance()->CalcProcessorPose();

@@ -151,7 +151,13 @@ std::array<frc::SwerveModuleState, 4> DriveToFieldElement::UpdateSwerveModuleSta
                 }
                 else
                 {
-                    auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees() : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();
+                    // just for IRI :thumbs-up
+                    auto rotationError = GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE &&
+                                                 GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE_ONE &&
+                                                 GetDriveStateType() != ChassisOptionEnums::DriveStateType::DRIVE_TO_ALGAE_TWO
+                                             ? chassisMovement.yawAngle - m_currentPose.Rotation().Degrees()
+                                             : m_endPose.Rotation().Degrees() - m_currentPose.Rotation().Degrees();
+
                     rotationError = AngleUtils::GetEquivAngle(rotationError);
                     chassisSpeeds.omega = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotationKP * rotationError.value()), -kMaxAngularVelocity, kMaxAngularVelocity);
                 }

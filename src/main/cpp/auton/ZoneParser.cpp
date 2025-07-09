@@ -54,6 +54,8 @@ ZoneParams *ZoneParser::ParseXML(string fulldirfile)
                                                                                                                 {"CORAL_STATION", ChassisOptionEnums::DRIVE_TO_CORAL_STATION},
                                                                                                                 //    {"PROCESSOR", PATH_UPDATE_OPTION::PROCESSOR},
                                                                                                                 {"BARGE", ChassisOptionEnums::DRIVE_TO_BARGE},
+                                                                                                                {"ALGAE_ONE", ChassisOptionEnums::DRIVE_TO_ALGAE_ONE},
+                                                                                                                {"ALGAE_TWO", ChassisOptionEnums::DRIVE_TO_ALGAE_TWO},
                                                                                                                 {"NOTHING", ChassisOptionEnums::STOP_DRIVE}};
 
     static robin_hood::unordered_map<std::string, ChassisOptionEnums::AutonAvoidOptions> xmlStringToAvoidOptionEnumMap{

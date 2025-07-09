@@ -30,6 +30,8 @@
 enum class DragonTargetFinderTarget
 {
     ALGAE,
+    ALGAE_ONE, // lebron
+    ALGAE_TWO, // mj
     BARGE,
     CLOSEST_LEFT_REEF_BRANCH,
     CLOSEST_RIGHT_REEF_BRANCH,
@@ -91,6 +93,9 @@ private:
             units::length::inch_t(6.5),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
-
+    const frc::Pose2d m_blueAlgaeOnePose = frc::Pose2d(7.2073_m, 7.5_m, 90_deg);
+    const frc::Pose2d m_blueAlgaeTwoPose = frc::Pose2d(6.5_m, 7.5_m, 90_deg);
+    const frc::Pose2d m_redAlgaeOnePose = frc::Pose2d(10.31507_m, 0.645_m, 90_deg);
+    const frc::Pose2d m_redAlgaeTwoPose = frc::Pose2d(11.102373_m, 0.645_m, 90_deg);
     const units::length::inch_t m_armoffset = units::length::inch_t(12);
 };
