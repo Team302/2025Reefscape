@@ -67,7 +67,7 @@ time = "1.5"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueAlgaeOne"
-time = "1.0"
+time = "2.0"
 >
 <zone filename = "BlueAlgaeOne.xml"/>
 </primitive>
@@ -84,7 +84,7 @@ time = "1.5"/>
 
 <primitive id = "DRIVE_PATH_PLANNER"
 choreoname = "BlueAlgaeTwo"
-time = "1.0"
+time = "2.0"
 >
 <zone filename = "BlueAlgaeTwo.xml"/>
 </primitive>

@@ -6,5 +6,6 @@
         circlex="6.5"
         circley="7.5"
         radius="40.0" 
+        pathUpdateOption = "ALGAE_TWO"
 />
 </auton>
