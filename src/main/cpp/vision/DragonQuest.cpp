@@ -19,6 +19,7 @@
 #include "state/RobotStateChanges.h"
 #include "state/RobotState.h"
 #include "state/IRobotStateChangeSubscriber.h"
+#include "utils/logging/debug/Logger.h"
 
 DragonQuest::DragonQuest(
     units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
@@ -55,11 +56,11 @@ DragonQuest::DragonQuest(
 
     m_questMosi.Set(0); // initial idle state
 
-    m_questEnabledChooser.AddOption("ON", "ON");
-    m_questEnabledChooser.AddOption("OFF", "OFF");
+    m_questEnabledChooser.AddOption("ON", true);
+    m_questEnabledChooser.AddOption("OFF", false);
 
-    m_questEndgameEnabledChooser.AddOption("ENDGAME ONLY", "ENDGAME ONLY");
-    m_questEndgameEnabledChooser.AddOption("FULL MATCH", "FULL MATCH");
+    m_questEndgameEnabledChooser.AddOption("ENDGAME ONLY", true);
+    m_questEndgameEnabledChooser.AddOption("FULL MATCH", false);
     frc::SmartDashboard::PutData("Quest ON/OFF", &m_questEnabledChooser);
     frc::SmartDashboard::PutData("Quest Endgame ONLY", &m_questEndgameEnabledChooser);
     RobotState *RobotStates = RobotState::GetInstance();
@@ -160,13 +161,13 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 void DragonQuest::HandleDashboard()
 {
 
-    if (m_questEnabledChooser.GetSelected() == "ON")
+    if (m_questEnabledChooser.GetSelected() == true)
     {
-        if (m_questEndgameEnabledChooser.GetSelected() == "ENDGAME ONLY" && m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
+        if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
         {
             m_isQuestEnabled = true;
         }
-        else if (m_questEndgameEnabledChooser.GetSelected() == "FULL MATCH" && m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn)
+        else if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn)
         {
             m_isQuestEnabled = true;
         }
@@ -193,6 +194,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     if (!m_hasreset || !m_isConnected || !m_isQuestEnabled)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("confidence"), string("NONE"));
     }
     else
     {
@@ -200,6 +202,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
         str.m_visionPose = GetEstimatedPose();
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
         str.m_timeStamp = units::time::second_t(m_timestamp.GetAtomic().serverTime);
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("confidence"), string("HIGH"));
     }
     return str;
 }

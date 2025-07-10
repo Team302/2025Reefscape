@@ -85,8 +85,8 @@ private:
     nt::DoublePublisher m_heartbeatResponsePub;
     nt::DoubleSubscriber m_timestamp;
 
-    frc::SendableChooser<std::string> m_questEnabledChooser;
-    frc::SendableChooser<std::string> m_questEndgameEnabledChooser;
+    frc::SendableChooser<bool> m_questEnabledChooser;
+    frc::SendableChooser<bool> m_questEndgameEnabledChooser;
 
     bool m_hasreset = false;
     bool m_isConnected = false;
