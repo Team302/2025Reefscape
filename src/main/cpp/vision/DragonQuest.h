@@ -21,6 +21,7 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <state/IRobotStateChangeSubscriber.h>
 
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
@@ -34,7 +35,7 @@
 
 using namespace std;
 
-class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
+class DragonQuest : public IRobotStateChangeSubscriber, public DragonDataLogger, public DragonVisionPoseEstimator
 
 {
 public:
@@ -56,6 +57,10 @@ public:
 
     void RefreshNT();
     void HandleHeartBeat();
+
+    void HandleDashboard();
+
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
 private:
     DragonQuest() = delete;
@@ -80,6 +85,9 @@ private:
     nt::DoublePublisher m_heartbeatResponsePub;
     nt::DoubleSubscriber m_timestamp;
 
+    frc::SendableChooser<std::string> m_questEnabledChooser;
+    frc::SendableChooser<std::string> m_questEndgameEnabledChooser;
+
     bool m_hasreset = false;
     bool m_isConnected = false;
 
@@ -94,4 +102,7 @@ private:
     int m_lastProcessedHeartbeatId = 0;
 
     frc::Pose2d m_rawQuestPose;
+
+    bool m_isQuestEnabled = false; // <I> Is the Quest enabled?
+    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 };

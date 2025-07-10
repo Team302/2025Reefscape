@@ -16,6 +16,9 @@
 #include "utils/AngleUtils.h"
 #include "utils/DragonField.h"
 #include "vision/DragonQuest.h"
+#include "state/RobotStateChanges.h"
+#include "state/RobotState.h"
+#include "state/IRobotStateChangeSubscriber.h"
 
 DragonQuest::DragonQuest(
     units::length::inch_t mountingXOffset, /// <I> x offset of Quest from robot center (forward relative to robot)
@@ -24,7 +27,8 @@ DragonQuest::DragonQuest(
     units::angle::degree_t mountingPitch,  /// <I> - Pitch of Quest
     units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
     units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
-    ) : m_mountingXOffset(mountingXOffset),
+    ) : IRobotStateChangeSubscriber(),
+        m_mountingXOffset(mountingXOffset),
         m_mountingYOffset(mountingYOffset),
         m_mountingZOffset(mountingZOffset),
         m_mountingPitch(mountingPitch),
@@ -50,6 +54,16 @@ DragonQuest::DragonQuest(
         frc::Rotation2d(m_mountingYaw)};
 
     m_questMosi.Set(0); // initial idle state
+
+    m_questEnabledChooser.AddOption("ON", "ON");
+    m_questEnabledChooser.AddOption("OFF", "OFF");
+
+    m_questEndgameEnabledChooser.AddOption("ENDGAME ONLY", "ENDGAME ONLY");
+    m_questEndgameEnabledChooser.AddOption("FULL MATCH", "FULL MATCH");
+    frc::SmartDashboard::PutData("Quest ON/OFF", &m_questEnabledChooser);
+    frc::SmartDashboard::PutData("Quest Endgame ONLY", &m_questEndgameEnabledChooser);
+    RobotState *RobotStates = RobotState::GetInstance();
+    RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
 frc::Pose2d DragonQuest::GetEstimatedPose()
@@ -143,10 +157,40 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
     }
 }
 
+void DragonQuest::HandleDashboard()
+{
+
+    if (m_questEnabledChooser.GetSelected() == "ON")
+    {
+        if (m_questEndgameEnabledChooser.GetSelected() == "ENDGAME ONLY" && m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
+        {
+            m_isQuestEnabled = true;
+        }
+        else if (m_questEndgameEnabledChooser.GetSelected() == "FULL MATCH" && m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn)
+        {
+            m_isQuestEnabled = true;
+        }
+        else
+        {
+            m_isQuestEnabled = false;
+        }
+    }
+    else
+    {
+        m_isQuestEnabled = false;
+    }
+}
+
+void DragonQuest::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
+        m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
+}
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
-    if (!m_hasreset || !m_isConnected)
+    HandleDashboard();
+    if (!m_hasreset || !m_isConnected || !m_isQuestEnabled)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
     }
