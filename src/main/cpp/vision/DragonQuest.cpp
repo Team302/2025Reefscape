@@ -56,11 +56,14 @@ DragonQuest::DragonQuest(
 
     m_questMosi.Set(0); // initial idle state
 
-    m_questEnabledChooser.SetDefaultOption("ON", true);
+    m_questEnabledChooser.AddOption("ON", true);
     m_questEnabledChooser.AddOption("OFF", false);
+    m_questEnabledChooser.SetDefaultOption("ON", true);
 
-    m_questEndgameEnabledChooser.SetDefaultOption("ENDGAME ONLY", true);
+    m_questEndgameEnabledChooser.AddOption("ENDGAME ONLY", true);
     m_questEndgameEnabledChooser.AddOption("FULL MATCH", false);
+    m_questEndgameEnabledChooser.SetDefaultOption("ENDGAME ONLY", true);
+
     frc::SmartDashboard::PutData("Quest ON/OFF", &m_questEnabledChooser);
     frc::SmartDashboard::PutData("Quest Endgame ONLY", &m_questEndgameEnabledChooser);
     RobotState *RobotStates = RobotState::GetInstance();
@@ -163,11 +166,8 @@ void DragonQuest::HandleDashboard()
 
     if (m_questEnabledChooser.GetSelected() == true)
     {
-        if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
-        {
-            m_isQuestEnabled = true;
-        }
-        else
+        m_isQuestEnabled = true;
+        if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn)
         {
             m_isQuestEnabled = false;
         }
