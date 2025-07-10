@@ -56,10 +56,10 @@ DragonQuest::DragonQuest(
 
     m_questMosi.Set(0); // initial idle state
 
-    m_questEnabledChooser.AddOption("ON", true);
+    m_questEnabledChooser.SetDefaultOption("ON", true);
     m_questEnabledChooser.AddOption("OFF", false);
 
-    m_questEndgameEnabledChooser.AddOption("ENDGAME ONLY", true);
+    m_questEndgameEnabledChooser.SetDefaultOption("ENDGAME ONLY", true);
     m_questEndgameEnabledChooser.AddOption("FULL MATCH", false);
     frc::SmartDashboard::PutData("Quest ON/OFF", &m_questEnabledChooser);
     frc::SmartDashboard::PutData("Quest Endgame ONLY", &m_questEndgameEnabledChooser);
@@ -142,7 +142,7 @@ void DragonQuest::HandleHeartBeat()
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 {
-    if (!m_hasreset)
+    if (!m_hasReset)
     {
         frc::Pose2d questPose = pose.TransformBy(m_questToRobotTransform);
         m_initialPosePublisher.Set(std::array<double, 3>{questPose.X().value(), questPose.Y().value(), questPose.Rotation().Degrees().value()});
@@ -154,7 +154,7 @@ void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
 #endif
             m_questMosi.Set(2);
         }
-        m_hasreset = true;
+        m_hasReset = true;
     }
 }
 
@@ -164,10 +164,6 @@ void DragonQuest::HandleDashboard()
     if (m_questEnabledChooser.GetSelected() == true)
     {
         if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
-        {
-            m_isQuestEnabled = true;
-        }
-        else if (m_questEndgameEnabledChooser.GetSelected() == true && m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn)
         {
             m_isQuestEnabled = true;
         }
@@ -191,7 +187,7 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {
     DragonVisionPoseEstimatorStruct str;
     HandleDashboard();
-    if (!m_hasreset || !m_isConnected || !m_isQuestEnabled)
+    if (!m_hasReset || !m_isConnected || !m_isQuestEnabled)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("confidence"), string("NONE"));

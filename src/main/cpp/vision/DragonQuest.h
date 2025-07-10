@@ -88,7 +88,7 @@ private:
     frc::SendableChooser<bool> m_questEnabledChooser;
     frc::SendableChooser<bool> m_questEndgameEnabledChooser;
 
-    bool m_hasreset = false;
+    bool m_hasReset = false;
     bool m_isConnected = false;
 
     frc::Transform2d m_questToRobotTransform; // <I> Transform from Quest to robot (used to calculate the robot pose from the quest pose)
