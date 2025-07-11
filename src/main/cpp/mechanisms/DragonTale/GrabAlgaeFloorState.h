@@ -48,8 +48,8 @@ namespace DragonTaleStates
 		const units::angle::degree_t m_ArmTarget = units::angle::degree_t(-25);
 		const units::length::inch_t m_ElevatorLeaderTarget = units::length::inch_t(11);
 
-		const units::angle::degree_t m_ArmTargetLollipop = units::angle::degree_t(-25);
-		const units::length::inch_t m_ElevatorLeaderTargetLollipop = units::length::inch_t(22);
+		const units::angle::degree_t m_ArmTargetLollipop = units::angle::degree_t(30);
+		const units::length::inch_t m_ElevatorLeaderTargetLollipop = units::length::inch_t(0);
 
 		const double m_CoralTarget = double(0);
 		const double m_AlgaeTarget = double(1);
