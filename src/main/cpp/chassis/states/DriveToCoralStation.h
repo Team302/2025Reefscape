@@ -23,18 +23,26 @@
 // Team302 Includes
 #include "chassis/states/DriveToFieldElement.h"
 #include "fielddata/DragonTargetFinder.h"
-
+#include "state/IRobotStateChangeSubscriber.h"
 class RobotDrive;
 
-class DriveToCoralStation : public DriveToFieldElement
+class DriveToCoralStation : public DriveToFieldElement, public IRobotStateChangeSubscriber
 {
 public:
     DriveToCoralStation(RobotDrive *robotDrive);
     std::string GetDriveStateName() const override;
+    void SetTargetAllianceSide() { m_target = DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE; };
 
 protected:
     DragonTargetFinderTarget GetDriveToTarget() const override;
     ChassisOptionEnums::DriveStateType GetDriveStateType() const override;
     ChassisOptionEnums::HeadingOption GetHeadingOption() const override;
     units::angle::degree_t GetModifiedHeadingValue(units::angle::degree_t calculatedHeading) { return calculatedHeading; }
+
+private:
+    mutable DragonTargetFinderTarget m_target = DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE;
+    RobotStateChanges::GamePeriod m_gamePeroid = RobotStateChanges::GamePeriod::Disabled;
+    mutable bool m_runOnceLatch = false;
+    std::string m_magicButtonKey = "Coral Station Alliance Wall";
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value);
 };
