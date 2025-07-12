@@ -231,17 +231,15 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         {
             if (!m_megatag1PosBool)
             {
-                nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-                std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
+                auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
+                m_numberOfTags = poseEstimate.tagCount;
 
                 units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
+                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(poseEstimate.latency / 1000.0);
 
-                frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-                frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
+                frc::Pose3d pose3d = frc::Pose3d{frc::Pose2d((poseEstimate.pose.X()), units::meter_t(poseEstimate.pose.Y()), poseEstimate.pose.Rotation())};
 
-                double numberOfTagsDetected = position[7];
-                double averageTagTargetArea = position[10];
+                double averageTagTargetArea = poseEstimate.avgTagArea;
 
                 // in case of invalid Limelight targets
                 if (pose3d.ToPose2d().X() == units::meter_t(0.0))
@@ -252,11 +250,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 double xyStds;
                 double degStds;
                 // multiple targets detected
-                if (numberOfTagsDetected == 0)
+                if (m_numberOfTags == 0)
                 {
                     return std::nullopt;
                 }
-                else if (numberOfTagsDetected >= 2)
+                else if (m_numberOfTags >= 2)
                 {
                     xyStds = 0.5;
                     degStds = 6;
@@ -299,7 +297,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 // auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
                 LimelightHelpers::SetIMUMode(m_cameraName, mode);
                 auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-
+                m_numberOfTags = poseEstimate.tagCount;
                 // multiple targets detected
                 if (poseEstimate.tagCount == 0)
                 {
@@ -625,6 +623,9 @@ void DragonLimelight::DataLog(uint64_t timestamp)
             Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
         }
     }
+
+    DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LIMELIGHT1_NUMBER_OF_TAGS, m_numberOfTags);
+    DragonDataLogger::LogBoolData(timestamp, DragonDataLogger::BoolSignals::IS_ALGAE_DETECTED, m_tv);
 }
 
 void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
