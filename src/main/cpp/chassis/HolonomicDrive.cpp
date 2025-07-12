@@ -18,29 +18,37 @@
 #include <string>
 
 // FRC includes
-#include "units/velocity.h"
-#include "units/angular_velocity.h"
 #include "frc/kinematics/ChassisSpeeds.h"
+#include "units/angular_velocity.h"
+#include "units/velocity.h"
 
 // Team 302 Includes
 #include "chassis/ChassisMovement.h"
 #include "chassis/ChassisOptionEnums.h"
-#include "chassis/HolonomicDrive.h"
 #include "chassis/definitions/ChassisConfig.h"
 #include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/HolonomicDrive.h"
+#include "fielddata/BargeHelper.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "fielddata/ReefHelper.h"
+#include "state/IRobotStateChangeSubscriber.h"
+#include "state/RobotState.h"
+#include "state/RobotStateChanges.h"
 #include "state/State.h"
+#include "states/FaceNearestReefFace.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "teleopcontrol/TeleopControlFunctions.h"
 #include "utils/FMSData.h"
-#include "vision/DragonVision.h"
 #include "utils/logging/debug/Logger.h"
-#include "states/FaceNearestReefFace.h"
-#include "state/RobotState.h"
-#include "state/IRobotStateChangeSubscriber.h"
+#include "vision/DragonVision.h"
 
+using frc::ChassisSpeeds;
+using frc::DriverStation;
+using std::abs;
+using std::atan2;
+using std::optional;
+using std::pow;
 using std::string;
-using namespace frc;
 
 /// @brief initialize the object and validate the necessary items are not nullptrs
 HolonomicDrive::HolonomicDrive() : State(string("HolonomicDrive"), -1),
@@ -211,8 +219,10 @@ void HolonomicDrive::Run()
                 if (m_robotOrientedDrive)
                 {
                     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::ROBOT_DRIVE;
-                    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+                    if (FMSData::GetAllianceColor() == DriverStation::Alliance::kBlue)
+                    {
                         InitSpeeds(-forward, -strafe, rotate);
+                    }
                 }
                 else
                 {
@@ -268,7 +278,7 @@ void HolonomicDrive::InitChassisMovement()
     m_moveInfo.driveOption = ChassisOptionEnums::DriveStateType::FIELD_DRIVE;
     m_moveInfo.controllerType = ChassisOptionEnums::AutonControllerType::HOLONOMIC;
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::MAINTAIN;
-    m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
+    m_moveInfo.trajectory = optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
     m_moveInfo.centerOfRotationOffset = frc::Translation2d();
     m_moveInfo.noMovementOption = ChassisOptionEnums::NoMovementOption::STOP;
     m_moveInfo.yawAngle = m_swerve->GetYaw();
@@ -313,7 +323,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
 
     auto maxSpeed = m_swerve->GetMaxSpeed();
     auto maxAngSpeed = m_swerve->GetMaxAngularSpeed();
-    auto scale = (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue) ? 1.0 : -1.0;
+    auto scale = (FMSData::GetAllianceColor() == DriverStation::Alliance::kBlue) ? 1.0 : -1.0;
 
     auto forwardSpeed = forwardScale * maxSpeed * scale;
     auto strafeSpeed = strafeScale * maxSpeed * scale;
@@ -321,7 +331,7 @@ void HolonomicDrive::InitSpeeds(double forwardScale,
     m_moveInfo.chassisSpeeds.vx = m_forwardLimiter.Calculate(forwardSpeed);
     m_moveInfo.chassisSpeeds.vy = m_strafeLimiter.Calculate(strafeSpeed);
     m_moveInfo.chassisSpeeds.omega = rotateScale * maxAngSpeed;
-    m_moveInfo.trajectory = std::optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
+    m_moveInfo.trajectory = optional<choreo::Trajectory<choreo::SwerveSample>>(choreo::Trajectory<choreo::SwerveSample>());
 
     m_moveInfo.IsClimbMode = m_climbMode;
     m_moveInfo.previousDriveOption = m_moveInfo.driveOption;
@@ -354,27 +364,12 @@ void HolonomicDrive::DriveToGamePiece(double forward, double strafe, double rot)
 void HolonomicDrive::TurnForward()
 {
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(0.0);
-    }
-    else
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(180.0);
-    }
+    m_moveInfo.yawAngle = (FMSData::GetAllianceColor() == DriverStation::Alliance::kBlue) ? units::angle::degree_t(0.0) : units::angle::degree_t(180.0);
 }
 void HolonomicDrive::TurnBackward()
 {
     m_moveInfo.headingOption = ChassisOptionEnums::HeadingOption::SPECIFIED_ANGLE;
-
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(180.0);
-    }
-    else
-    {
-        m_moveInfo.yawAngle = units::angle::degree_t(0.0);
-    }
+    m_moveInfo.yawAngle = (FMSData::GetAllianceColor() == DriverStation::Alliance::kBlue) ? units::angle::degree_t(180.0) : units::angle::degree_t(0.0);
 }
 
 void HolonomicDrive::SlowMode()

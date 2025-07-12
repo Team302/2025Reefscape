@@ -18,20 +18,27 @@
 #include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/SwerveChassis.h"
+#include "frc/DriverStation.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
 #include "units/time.h"
+#include "utils/FMSData.h"
 #include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
 #include "wpi/array.h"
-#include "utils/FMSData.h"
 
-DragonSwervePoseEstimator::DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
-                                                     const frc::Rotation2d &gyroAngle,
-                                                     const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                                                     const frc::Pose2d &initialPose) : m_frontLeft(nullptr),
+using frc::DriverStation;
+using frc::Pose2d;
+using frc::Rotation2d;
+using frc::SwerveModulePosition;
+using frc::SwerveDriveKinematics;
+
+DragonSwervePoseEstimator::DragonSwervePoseEstimator(SwerveDriveKinematics<4> kinematics,
+                                                     const Rotation2d &gyroAngle,
+                                                     const wpi::array<SwerveModulePosition, 4> &positions,
+                                                     const Pose2d &initialPose) : m_frontLeft(nullptr),
                                                                                        m_frontRight(nullptr),
                                                                                        m_backLeft(nullptr),
                                                                                        m_backRight(nullptr),
@@ -68,9 +75,9 @@ void DragonSwervePoseEstimator::Update()
         {
             SetServeModules(chassis);
         }
-        frc::Rotation2d rot2d{chassis->GetRawYaw()};
+        Rotation2d rot2d{chassis->GetRawYaw()};
 
-        m_poseEstimator.Update(rot2d, wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
+        m_poseEstimator.Update(rot2d, wpi::array<SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
                                                                                m_frontRight->GetPosition(),
                                                                                m_backLeft->GetPosition(),
                                                                                m_backRight->GetPosition()});
@@ -134,7 +141,7 @@ frc::Pose2d DragonSwervePoseEstimator::GetPose() const
 }
 void DragonSwervePoseEstimator::ZeroYaw()
 {
-    if (FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
+    if (FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
     {
         ResetPose(frc::Pose2d(GetPose().X(), GetPose().Y(), frc::Rotation2d(0.0_deg)));
     }
