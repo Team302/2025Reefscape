@@ -30,8 +30,8 @@ ReefHelper *ReefHelper::GetInstance()
     return ReefHelper::m_instance;
 }
 
-ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
-                           m_allianceColor(FMSData::GetInstance()->GetAllianceColor()),
+ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+                           m_allianceColor(FMSData::GetAllianceColor()),
                            m_fieldConstants(FieldConstants::GetInstance())
 {
     m_blueReefCenter = m_fieldConstants->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER);
@@ -41,7 +41,7 @@ ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveC
 
 std::optional<FieldConstants::AprilTagIDs> ReefHelper::GetNearestReefTag()
 {
-    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    m_allianceColor = FMSData::GetAllianceColor();
     if (m_chassis != nullptr)
     {
         auto pose = m_chassis->GetPose();
@@ -257,7 +257,7 @@ void ReefHelper::InitZones()
 
 void ReefHelper::IsInZone()
 {
-    m_allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    m_allianceColor = FMSData::GetAllianceColor();
     auto reefZones = m_allianceColor == frc::DriverStation::Alliance::kRed ? m_reefZonesRed : m_reefZonesBlue;
 
     if (reefZones != nullptr)

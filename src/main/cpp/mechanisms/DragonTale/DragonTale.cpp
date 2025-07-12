@@ -1246,7 +1246,7 @@ void DragonTale::SetSensorFailSafe()
 
 void DragonTale::SetAlgaeReefPosition()
 {
-	bool isBlue = FMSData::GetInstance()->GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
+	bool isBlue = FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue;
 
 	units::length::inch_t algeHeight = isBlue ? m_grabAlgaeLow : m_grabAlgaeHigh;
 	units::angle::degree_t algeAngle = isBlue ? m_grabAlgaeLowAngle : m_grabAlgaeHighAngle;

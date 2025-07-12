@@ -40,7 +40,7 @@ BargeHelper::BargeHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerv
 
 void BargeHelper::CalculateZones()
 {
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto allianceColor = FMSData::GetAllianceColor();
     bool isRed = allianceColor == frc::DriverStation::Alliance::kRed;
     auto sizeOfBarge = 0_m;
 
@@ -88,7 +88,7 @@ void BargeHelper::InitZones()
 }
 std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
 {
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto allianceColor = FMSData::GetAllianceColor();
     auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
     if (bargeZones != nullptr)
     {
@@ -103,7 +103,7 @@ std::optional<units::length::meter_t> BargeHelper::ClampChassisY()
 
 void BargeHelper::IsInZone()
 {
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto allianceColor = FMSData::GetAllianceColor();
     auto bargeZones = allianceColor == frc::DriverStation::Alliance::kRed ? m_bargeZonesRed : m_bargeZonesBlue;
 
     if (bargeZones != nullptr)
@@ -116,7 +116,7 @@ void BargeHelper::IsInZone()
 
 frc::Pose2d BargeHelper::CalcBargePose()
 {
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto allianceColor = FMSData::GetAllianceColor();
     frc::Pose2d pose2d{};
     bool backBarge = m_chassis->GetPose().X() > m_centerLine;
     if (allianceColor == frc::DriverStation::Alliance::kRed)
@@ -140,7 +140,7 @@ frc::Pose2d BargeHelper::CalcBargePose()
 
 frc::Pose2d BargeHelper::GetCagePose(DragonTargetFinderTarget target)
 {
-    auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+    auto allianceColor = FMSData::GetAllianceColor();
     auto fieldElement = allianceColor == frc::DriverStation::kRed ? FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT_CALCULATED : FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT_CALCULATED; // defualt value in front of barge
 
     if (target == DragonTargetFinderTarget::LEFT_CAGE)

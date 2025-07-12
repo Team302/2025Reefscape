@@ -14,7 +14,7 @@
 //====================================================================================================================================================
 #include "chassis/states/PolarDrive.h"
 #include "frc/geometry/Pose2d.h"
-#include "chassis/ChassisConfigMgr.h"
+
 PolarDrive::PolarDrive(subsystems::CommandSwerveDrivetrain *chassis,
                        TeleopControl *controller,
                        units::velocity::meters_per_second_t maxSpeed) : m_chassis(chassis),

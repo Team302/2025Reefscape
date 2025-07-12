@@ -28,9 +28,9 @@
 #include "frc/geometry/Pose3d.h"
 #include "frc/geometry/Rotation3d.h"
 #include "units/angle.h"
+#include "utils/DragonField.h"
 #include "utils/FMSData.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "utils/DragonField.h"
 
 // Debugging
 #include "utils/logging/debug/Logger.h"
@@ -145,7 +145,7 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
 
     else if (item == DragonTargetFinderTarget::REEF_CENTER)
     {
-        auto allianceColor = FMSData::GetInstance()->GetAllianceColor();
+        auto allianceColor = FMSData::GetAllianceColor();
         if (allianceColor == frc::DriverStation::Alliance::kRed)
         {
             return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, fieldconst->GetFieldElementPose2d(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER));
