@@ -21,12 +21,15 @@
 // Team302 Includes
 #include "chassis/states/DriveToCoralStation.h"
 #include "fielddata/DragonTargetFinder.h"
+#include "state/RobotState.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using std::string;
 
-DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive)
-    : DriveToFieldElement(robotDrive)
+DriveToCoralStation::DriveToCoralStation(RobotDrive *robotDrive) : DriveToFieldElement(robotDrive)
 {
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::GameState_Int);
+    frc::SmartDashboard::PutBoolean(m_magicButtonKey, false);
 }
 
 string DriveToCoralStation::GetDriveStateName() const
@@ -36,7 +39,12 @@ string DriveToCoralStation::GetDriveStateName() const
 
 DragonTargetFinderTarget DriveToCoralStation::GetDriveToTarget() const
 {
-    return DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE;
+    if (m_gamePeroid == RobotStateChanges::Teleop && !m_runOnceLatch)
+    {
+        m_target = frc::SmartDashboard::GetBoolean(m_magicButtonKey, false) ? DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE : m_target;
+        m_runOnceLatch = true;
+    }
+    return m_target;
 }
 ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() const
 {
@@ -45,4 +53,11 @@ ChassisOptionEnums::DriveStateType DriveToCoralStation::GetDriveStateType() cons
 ChassisOptionEnums::HeadingOption DriveToCoralStation::GetHeadingOption() const
 {
     return ChassisOptionEnums::HeadingOption::FACE_CORAL_STATION;
+}
+void DriveToCoralStation::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (change == RobotStateChanges::GameState_Int)
+    {
+        m_gamePeroid = static_cast<RobotStateChanges::GamePeriod>(value);
+    }
 }

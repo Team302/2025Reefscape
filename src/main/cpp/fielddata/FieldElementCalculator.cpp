@@ -212,6 +212,7 @@ void FieldElementCalculator::InitializeTransforms()
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT, m_calcCoralRightAlliance);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT_SIDEWALL] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_RIGHT, m_calcCoralRightSidewall);
+
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_LEFT_CAGE] =
         TransformToPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT, m_calcCageLeft);
     m_transformCalculatedMap[FieldConstants::FIELD_ELEMENT::RED_RIGHT_CAGE] =

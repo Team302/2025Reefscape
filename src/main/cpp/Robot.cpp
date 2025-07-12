@@ -129,6 +129,7 @@ void Robot::AutonomousInit()
         m_cyclePrims->Init();
     }
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::GameState_Int, RobotStateChanges::GamePeriod::Auton);
 }
 
 void Robot::AutonomousPeriodic()
@@ -159,6 +160,7 @@ void Robot::TeleopInit()
     }
 
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::GameState_Int, RobotStateChanges::GamePeriod::Teleop);
 }
 
 void Robot::TeleopPeriodic()
@@ -178,6 +180,7 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::GameState_Int, RobotStateChanges::GamePeriod::Disabled);
 }
 
 void Robot::DisabledPeriodic()
