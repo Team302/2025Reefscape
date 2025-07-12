@@ -61,8 +61,6 @@ private:
     void InitializeDriveteamFeedback();
     void UpdateDriveTeamFeedback();
 
-    std::optional<frc2::CommandPtr> m_autonomousCommand;
-
     TeleopControl *m_controller;
     SwerveContainer *m_container;
     CyclePrimitives *m_cyclePrims;

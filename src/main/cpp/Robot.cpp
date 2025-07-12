@@ -42,7 +42,6 @@ Robot::Robot()
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
 
     m_controller = nullptr;
-    isFMSAttached = frc::DriverStation::IsFMSAttached();
 
     InitializeRobot();
     InitializeAutonOptions();
@@ -60,7 +59,7 @@ void Robot::RobotPeriodic()
 {
     frc2::CommandScheduler::GetInstance().Run();
 
-    isFMSAttached = isFMSAttached ? true : frc::DriverStation::IsFMSAttached();
+    isFMSAttached = frc::DriverStation::IsFMSAttached();
     if (!isFMSAttached)
     {
         Logger::GetLogger()->PeriodicLog();
@@ -99,12 +98,6 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit()
 {
-    m_autonomousCommand = m_container->GetAutonomousCommand();
-
-    if (m_autonomousCommand)
-    {
-        m_autonomousCommand->Schedule();
-    }
     frc::SetCurrentThreadPriority(true, 15);
 
     if (m_cyclePrims != nullptr)
@@ -133,15 +126,11 @@ void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit()
 {
-    if (m_autonomousCommand)
-    {
-        m_autonomousCommand->Cancel();
-    }
+
     if (m_controller == nullptr)
     {
         m_controller = TeleopControl::GetInstance();
     }
-
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
