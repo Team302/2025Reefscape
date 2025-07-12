@@ -29,7 +29,7 @@ CoralStationHelper *CoralStationHelper::GetInstance()
     return CoralStationHelper::m_instance;
 }
 
-CoralStationHelper::CoralStationHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+CoralStationHelper::CoralStationHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                            m_allianceColor(FMSData::GetAllianceColor()),
                                            m_fieldConstants(FieldConstants::GetInstance())
 {

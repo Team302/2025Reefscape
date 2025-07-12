@@ -30,7 +30,7 @@ ReefHelper *ReefHelper::GetInstance()
     return ReefHelper::m_instance;
 }
 
-ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                            m_allianceColor(FMSData::GetAllianceColor()),
                            m_fieldConstants(FieldConstants::GetInstance())
 {
