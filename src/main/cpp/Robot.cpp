@@ -41,8 +41,6 @@ Robot::Robot()
 {
     Logger::GetLogger()->PutLoggingSelectionsOnDashboard();
 
-    m_controller = nullptr;
-
     InitializeRobot();
     InitializeAutonOptions();
     InitializeDriveteamFeedback();
@@ -126,11 +124,6 @@ void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit()
 {
-
-    if (m_controller == nullptr)
-    {
-        m_controller = TeleopControl::GetInstance();
-    }
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
@@ -153,13 +146,6 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-    SensorDataMgr::GetInstance()->CacheData();
-    if (m_dragonswerveposeestimator != nullptr)
-    {
-        m_dragonswerveposeestimator->Update();
-    }
-
-    PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
 void Robot::TestExit() {}
