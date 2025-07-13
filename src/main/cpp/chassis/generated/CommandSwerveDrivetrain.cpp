@@ -48,20 +48,22 @@ void CommandSwerveDrivetrain::StartSimThread()
 }
 
 bool CommandSwerveDrivetrain::IsSamePose()
-{
-    bool isSamePose = false;
 
-    if (GetPose().Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold)
+{
+    bool isCurrentlyStopped = GetPose().Translation().Distance(m_prevPose.Translation()) < m_distanceThreshold;
+
+    if (isCurrentlyStopped)
     {
-        m_samePoseCount++;
-        isSamePose = m_samePoseCount > m_samePoseCountThreshold;
+        if (!m_debounceTimer.IsRunning())
+        {
+            m_debounceTimer.Start();
+        }
     }
     else
     {
-        m_samePoseCount = 0;
+        m_debounceTimer.Reset();
     }
-
     m_prevPose = GetPose();
 
-    return isSamePose;
+    return m_debounceTimer.HasElapsed(m_samePoseTime);
 }

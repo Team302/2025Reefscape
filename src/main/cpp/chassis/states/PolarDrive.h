@@ -43,4 +43,8 @@ private:
                                                                  .WithDesaturateWheelSpeeds(true);
     units::velocity::meters_per_second_t m_maxSpeed;
     DragonTargetFinder *m_targetFinder;
+
+    double m_heading_kP = 7.5;
+    double m_heading_kI = 2.0;
+    double m_heading_kD = 0.0;
 };

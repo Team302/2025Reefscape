@@ -25,10 +25,7 @@
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
-#include "utils/logging/debug/Logger.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
-#include "vision/DragonVision.h"
 #include "vision/DragonVisionStructs.h"
 
 using namespace std;

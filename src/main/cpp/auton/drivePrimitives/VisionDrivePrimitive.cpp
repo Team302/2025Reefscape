@@ -20,7 +20,6 @@
 
 // 302 Includes
 #include <auton/drivePrimitives/VisionDrivePrimitive.h>
-#include <chassis/ChassisMovement.h>
 #include <chassis/ChassisOptionEnums.h>
 
 #include "chassis/ChassisConfigMgr.h"
@@ -74,18 +73,6 @@ void VisionDrivePrimitive::Init(PrimitiveParams *params)
 void VisionDrivePrimitive::Run()
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "ArrivedAtRun", true);
-
-    if (m_chassis != nullptr)
-    {
-        ChassisMovement moveInfo;
-
-        moveInfo.headingOption = m_headingOption;
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "driveOption", moveInfo.driveOption);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "headingOption", moveInfo.headingOption);
-
-        // m_chassis->Drive(moveInfo);
-    }
 }
 
 bool VisionDrivePrimitive::IsDone()

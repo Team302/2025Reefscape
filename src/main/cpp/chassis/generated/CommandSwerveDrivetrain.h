@@ -276,14 +276,14 @@ namespace subsystems
 
         void ResetSamePose()
         {
-            m_samePoseCount = 0;
+            m_debounceTimer.Reset();
             m_prevPose = GetPose();
         }
 
     private:
         void StartSimThread();
-        int m_samePoseCount = 0;
-        const int m_samePoseCountThreshold = 35;
+        frc::Timer m_debounceTimer;
+        const units::time::second_t m_samePoseTime = 0.5_s;
         const units::length::inch_t m_distanceThreshold{0.25};
         frc::Pose2d m_prevPose;
     };

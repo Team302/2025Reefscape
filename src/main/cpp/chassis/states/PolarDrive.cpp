@@ -23,6 +23,8 @@ PolarDrive::PolarDrive(subsystems::CommandSwerveDrivetrain *chassis,
 {
     AddRequirements(m_chassis);
     m_targetFinder = DragonTargetFinder::GetInstance();
+
+    m_polarDrive.WithHeadingPID(m_heading_kP, m_heading_kI, m_heading_kD);
 }
 
 void PolarDrive::Initialize()
@@ -32,11 +34,6 @@ void PolarDrive::Initialize()
         auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::REEF_CENTER);
         m_reefCenter = get<1>(info.value());
     }
-
-    double heading_kP = 7.5;
-    double heading_kI = 2.0;
-    double heading_kD = 0.0;
-    m_polarDrive.WithHeadingPID(heading_kP, heading_kI, heading_kD);
 }
 
 void PolarDrive::Execute()

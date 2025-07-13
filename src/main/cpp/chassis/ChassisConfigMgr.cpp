@@ -41,7 +41,7 @@ void ChassisConfigMgr::CreateDrivetrain()
 {
     int32_t teamNumber = frc::RobotController::GetTeamNumber();
 
-    RobotIdentifier id = static_cast<RobotIdentifier>(teamNumber);
+    auto id = static_cast<RobotIdentifier>(teamNumber);
 
     switch (id)
     {
@@ -70,14 +70,9 @@ void ChassisConfigMgr::CreateDrivetrain()
 }
 subsystems::CommandSwerveDrivetrain *ChassisConfigMgr::GetSwerveChassis()
 {
-
-    if (m_chassis.get() != nullptr)
-    {
-        return m_chassis.get();
-    }
-    else
+    if (m_chassis.get() == nullptr)
     {
         CreateDrivetrain();
-        return m_chassis.get();
     }
+    return m_chassis.get();
 }

@@ -97,7 +97,7 @@ void AutonDrivePrimitive::Run()
     {
         ChassisOptionEnums::DriveStateType driveToType = m_zone->GetPathUpdateOption();
         m_managedCommand = CreateDriveToTargetCommand(driveToType);
-        if (m_managedCommand)
+        if (m_managedCommand.get() != nullptr)
         {
             m_managedCommand.Schedule();
             m_visionTransition = true;
