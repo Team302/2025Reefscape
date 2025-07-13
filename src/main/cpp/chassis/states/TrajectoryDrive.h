@@ -65,8 +65,8 @@ private:
     std::string m_whyDone;
     units::time::second_t m_totalTrajectoryTime;
 
-    frc::PIDController m_xController{0.75, 0.0, 0.0};
-    frc::PIDController m_yController{0.75, 0.0, 0.0};
+    frc::PIDController m_xController{0.35, 0.0, 0.0};
+    frc::PIDController m_yController{0.35, 0.0, 0.0};
     frc::PIDController m_headingController{1.0, 0.0, 0.0};
 
     frc::ChassisSpeeds m_chassisSpeeds;

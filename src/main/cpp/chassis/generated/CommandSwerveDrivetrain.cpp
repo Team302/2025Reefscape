@@ -18,14 +18,12 @@ void CommandSwerveDrivetrain::Periodic()
     if (!m_hasAppliedOperatorPerspective || frc::DriverStation::IsDisabled())
     {
         auto const allianceColor = FMSData::GetAllianceColor();
-        if (allianceColor)
-        {
-            SetOperatorPerspectiveForward(
-                allianceColor == frc::DriverStation::Alliance::kRed
-                    ? kRedAlliancePerspectiveRotation
-                    : kBlueAlliancePerspectiveRotation);
-            m_hasAppliedOperatorPerspective = true;
-        }
+
+        SetOperatorPerspectiveForward(
+            allianceColor == frc::DriverStation::Alliance::kRed
+                ? kRedAlliancePerspectiveRotation
+                : kBlueAlliancePerspectiveRotation);
+        m_hasAppliedOperatorPerspective = true;
     }
 
     auto bargeHelper = BargeHelper::GetInstance();
