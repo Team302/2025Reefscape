@@ -47,6 +47,7 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_driveToLeftCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::LEFT_CAGE)),
                                      m_driveToRightCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::RIGHT_CAGE)),
                                      m_driveToCenterCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CENTER_CAGE)),
+                                     m_driveToAlgae(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::ALGAE)),
                                      m_trajectoryDrive(std::make_unique<TrajectoryDrive>(m_chassis))
 
 {
@@ -70,6 +71,7 @@ void SwerveContainer::ConfigureBindings()
     auto driveToLeftReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT);
     auto driveToCoralStation = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
     auto driveToBarge = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_BARGE);
+    auto driveToAglee = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_ALGAE);
 
     m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
 
@@ -89,6 +91,7 @@ void SwerveContainer::ConfigureBindings()
 
     isPolarDriveSelected.WhileTrue(frc2::ProxyCommand(m_polarDrive.get()).ToPtr());
     driveToBarge.WhileTrue(frc2::ProxyCommand(m_driveToBarge.get()).ToPtr());
+    driveToAglee.WhileTrue(frc2::ProxyCommand(m_driveToAlgae.get()).ToPtr());
 
     driveToCoralStation.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
                                                            {
