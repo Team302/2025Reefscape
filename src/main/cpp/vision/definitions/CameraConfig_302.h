@@ -32,4 +32,17 @@ public:
 private:
     std::vector<int> m_limelightIndexs;
     int m_questIndex = -1;
+
+    static constexpr units::length::meter_t m_ll1MountingXOffset = units::length::meter_t(0.24765);  // 9.75 inches
+    static constexpr units::length::meter_t m_ll1MountingYOffset = units::length::meter_t(-0.08255); // -3.25 inches
+    static constexpr units::length::meter_t m_ll1MountingZOffset = units::length::meter_t(0.8223);   // 32.4 inches
+    static constexpr units::angle::degree_t m_ll1Pitch = units::angle::degree_t(-32.0);              // -32 degrees
+    static constexpr units::angle::degree_t m_ll1Yaw = units::angle::degree_t(0);                    // 0 degrees
+    static constexpr units::angle::degree_t m_ll1Roll = units::angle::degree_t(0);                   // 0 degrees
+    static constexpr units::length::inch_t m_questMountingXOffset = units::length::inch_t(-12.3);
+    static constexpr units::length::inch_t m_questMountingYOffset = units::length::inch_t(-2.5);
+    static constexpr units::length::inch_t m_questMountingZOffset = units::length::inch_t(12.574);
+    static constexpr units::angle::degree_t m_questPitch = units::angle::degree_t(0.0);
+    static constexpr units::angle::degree_t m_questYaw = units::angle::degree_t(180.0);
+    static constexpr units::angle::degree_t m_questRoll = units::angle::degree_t(0.0);
 };
