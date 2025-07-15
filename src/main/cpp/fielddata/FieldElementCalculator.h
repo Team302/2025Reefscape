@@ -165,4 +165,8 @@ private:
 
     robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
     robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformTagsMap;
+
+    static constexpr units::length::inch_t m_reefBranchXOffset = units::length::inch_t(0.0);
+    static constexpr units::length::inch_t m_reefBranchYOffset = units::length::inch_t(-6.5);
+    static constexpr units::length::inch_t m_reefBranchZOffset = units::length::inch_t(0.0);
 };

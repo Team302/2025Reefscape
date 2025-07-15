@@ -80,52 +80,52 @@ void FieldElementCalculator::InitializeReefBranchTransformsMap()
     // comp bot
     m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_BLUE] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_BLUE] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::COMP_LEFT_RED] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::COMP_RIGHT_RED] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     // practice bot
     m_reefBranchOffsetMap[OffsetEnums::PRACTICE_LEFT_BLUE] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::PRACTICE_RIGHT_BLUE] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::PRACTICE_LEFT_RED] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
     m_reefBranchOffsetMap[OffsetEnums::PRACTICE_RIGHT_RED] = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(-6.5),
-            units::length::inch_t(0.0)),
+            units::length::inch_t(m_reefBranchXOffset),
+            units::length::inch_t(m_reefBranchYOffset),
+            units::length::inch_t(m_reefBranchZOffset)),
         frc::Rotation3d());
 }
 
