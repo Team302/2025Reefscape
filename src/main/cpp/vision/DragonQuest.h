@@ -22,6 +22,7 @@
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/DoubleTopic.h>
+#include <state/IRobotStateChangeSubscriber.h>
 #include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
@@ -30,7 +31,7 @@
 
 using namespace std;
 
-class DragonQuest : public DragonDataLogger, public DragonVisionPoseEstimator
+class DragonQuest : public IRobotStateChangeSubscriber, public DragonDataLogger, public DragonVisionPoseEstimator
 
 {
 public:
@@ -52,6 +53,10 @@ public:
 
     void RefreshNT();
     void HandleHeartBeat();
+
+    void HandleDashboard();
+
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
 private:
     DragonQuest() = delete;
@@ -76,14 +81,16 @@ private:
     nt::DoublePublisher m_heartbeatResponsePub;
     nt::DoubleSubscriber m_timestamp;
 
-    bool m_hasreset = false;
+    frc::SendableChooser<bool> m_questEnabledChooser;
+    frc::SendableChooser<bool> m_questEndgameEnabledChooser;
+
+    bool m_hasReset = false;
     bool m_isConnected = false;
 
-    frc::Transform2d m_robotToQuestTransform; // <I> Transform from robot center to Quest (used to calculate the quest pose from the robot pose)
-    frc::Transform2d m_questTransform;
+    frc::Transform2d m_questToRobotTransform; // <I> Transform from Quest to robot (used to calculate the robot pose from the quest pose)
 
-    const double m_stdxy = 1.0; // use same values as DragonLimelight when seeing 1 tag close up
-    const double m_stddeg = 12; // use same values as DragonLimelight when seeing 1 tag close up
+    const double m_stdxy = 0.02;
+    const double m_stddeg = 0.035;
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;
@@ -91,4 +98,7 @@ private:
     int m_lastProcessedHeartbeatId = 0;
 
     frc::Pose2d m_rawQuestPose;
+
+    bool m_isQuestEnabled = false; // <I> Is the Quest enabled?
+    RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
 };
