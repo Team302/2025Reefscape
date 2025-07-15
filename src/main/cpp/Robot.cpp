@@ -82,8 +82,6 @@ void Robot::RobotPeriodic()
     UpdateDriveTeamFeedback();
 }
 
-void Robot::DisabledInit() {}
-
 void Robot::DisabledPeriodic()
 {
     if (m_dragonswerveposeestimator != nullptr)
@@ -91,8 +89,6 @@ void Robot::DisabledPeriodic()
         m_dragonswerveposeestimator->CalculateInitialPose();
     }
 }
-
-void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit()
 {
@@ -120,8 +116,6 @@ void Robot::AutonomousPeriodic()
     PeriodicLooper::GetInstance()->AutonRunCurrentState();
 }
 
-void Robot::AutonomousExit() {}
-
 void Robot::TeleopInit()
 {
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
@@ -137,18 +131,10 @@ void Robot::TeleopPeriodic()
     PeriodicLooper::GetInstance()->TeleopRunCurrentState();
 }
 
-void Robot::TeleopExit() {}
-
 void Robot::TestInit()
 {
     frc2::CommandScheduler::GetInstance().CancelAll();
 }
-
-void Robot::TestPeriodic()
-{
-}
-
-void Robot::TestExit() {}
 
 void Robot::InitializeRobot()
 {

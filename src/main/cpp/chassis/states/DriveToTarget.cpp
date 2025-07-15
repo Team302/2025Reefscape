@@ -75,23 +75,6 @@ void DriveToTarget::Execute()
             m_currentPose = m_chassis->GetPose();
             CalculateFeedForward(chassisSpeeds);
 
-            auto info = DragonTargetFinder::GetInstance()->GetPose(m_target);
-            if (info.has_value())
-            {
-                frc::Pose2d newEndPose = get<1>(info.value());
-                auto regenerate = false;
-
-                regenerate = m_endPose.Translation().Distance(newEndPose.Translation()) < m_regenerationDistanceThreshold;
-
-                if ((get<0>(info.value()) == DragonTargetFinderData::VISION_BASED) && regenerate) // If we are in odometry but get vision based pose regenerate
-                {
-                    m_endPose = newEndPose;
-                    m_translationPIDX.SetGoal(m_endPose.X());
-                    m_translationPIDY.SetGoal(m_endPose.Y());
-                }
-                m_currentType = get<0>(info.value());
-            }
-
             DragonVisionStructLogger::logPose2d("current pose", m_currentPose);
             DragonVisionStructLogger::logPose2d("target pose", m_endPose);
 

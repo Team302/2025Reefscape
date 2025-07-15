@@ -72,7 +72,7 @@ private:
     std::optional<FieldConstants::AprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
     frc::Pose3d GetAprilTagPose(DragonVision::VISION_ELEMENT item);
     units::angle::degree_t AdjustRobotRelativeAngleForIntake(units::angle::degree_t angle);
-    std::optional<frc::Pose2d> GetVisonPose(std::optional<VisionData> data);
+    std::optional<frc::Pose2d> GetFieldRelativePose(std::optional<VisionData> data);
     bool SwitchToVision(std::optional<frc::Pose3d> visTagPose);
 
     void SetChassis();
@@ -83,12 +83,7 @@ private:
     bool m_switchToVision = false;
     const units::length::meter_t m_fuseTol{0.25};
     const units::length::meter_t m_switchToVisionThreshold{1.0};
-    const frc::Transform3d m_calcAlgaeOffset = frc::Transform3d(
-        frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(6.5),
-            units::length::inch_t(0.0)),
-        frc::Rotation3d());
-
-    const units::length::inch_t m_armoffset = units::length::inch_t(12);
+    const frc::Transform2d m_intakeOffset = frc::Transform2d{
+        frc::Translation2d(12.0_in, 6.5_in),
+        frc::Rotation2d(0_deg)};
 };

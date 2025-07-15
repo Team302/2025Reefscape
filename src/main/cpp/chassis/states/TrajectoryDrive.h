@@ -65,9 +65,17 @@ private:
     std::string m_whyDone;
     units::time::second_t m_totalTrajectoryTime;
 
-    frc::PIDController m_xController{0.35, 0.0, 0.0};
-    frc::PIDController m_yController{0.35, 0.0, 0.0};
-    frc::PIDController m_headingController{1.0, 0.0, 0.0};
+    const double kPDrive = 0.35;
+    const double kIDrive = 0.0;
+    const double kDDrive = 0.0;
+
+    const double kPHeading = 1.0;
+    const double kIHeading = 0.0;
+    const double kDHeading = 0.0;
+
+    frc::PIDController m_xController{kPDrive, kIDrive, kDDrive};
+    frc::PIDController m_yController{kPDrive, kIDrive, kDDrive};
+    frc::PIDController m_headingController{kPHeading, kIHeading, kDHeading};
 
     frc::ChassisSpeeds m_chassisSpeeds;
 
