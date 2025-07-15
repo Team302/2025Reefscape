@@ -60,8 +60,7 @@ time = "3.0">
 <zone filename = "RedBargeAuto.xml"/>
 </primitive>
 
-<!-- 
-<primitive id = "DRIVE_STOP_MECH"
+<!-- <primitive id = "DRIVE_STOP_MECH"
 taleOption = "STATE_SCORE_ALGAE"
 time = "1.5"/> -->
 
