@@ -37,14 +37,14 @@ private:
 
     frc::Pose2d m_reefCenter;
 
-    swerve::requests::RobotCentricFacingAngle m_polarDrive = swerve::requests::RobotCentricFacingAngle{}
+    swerve::requests::FieldCentricFacingAngle m_polarDrive = swerve::requests::FieldCentricFacingAngle{}
                                                                  .WithDeadband(m_maxSpeed * 0.1)
                                                                  .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
                                                                  .WithDesaturateWheelSpeeds(true);
     units::velocity::meters_per_second_t m_maxSpeed;
     DragonTargetFinder *m_targetFinder;
 
-    double m_heading_kP = 7.5;
-    double m_heading_kI = 2.0;
+    double m_heading_kP = 10.0;
+    double m_heading_kI = 1.0;
     double m_heading_kD = 0.0;
 };

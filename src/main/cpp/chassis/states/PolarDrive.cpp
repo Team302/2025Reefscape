@@ -14,6 +14,7 @@
 //====================================================================================================================================================
 #include "chassis/states/PolarDrive.h"
 #include "frc/geometry/Pose2d.h"
+
 PolarDrive::PolarDrive(subsystems::CommandSwerveDrivetrain *chassis,
                        TeleopControl *controller,
                        units::velocity::meters_per_second_t maxSpeed) : m_chassis(chassis),
@@ -38,7 +39,7 @@ void PolarDrive::Initialize()
 
 void PolarDrive::Execute()
 {
-    frc::Rotation2d angleToTarget = 0_deg;
+    units::angle::degree_t angleToTarget = 0_deg;
 
     auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE);
     if (info.has_value())
@@ -47,15 +48,13 @@ void PolarDrive::Execute()
         angleToTarget = targetpose.Rotation().Degrees();
     }
 
-    auto radialVelocity = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD) * m_maxSpeed;
-    auto angularVelocity = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE) * m_maxSpeed;
-    // 4. Send the control request
+    auto forward = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD) * m_maxSpeed;
+    auto strafe = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE) * m_maxSpeed;
     m_chassis->SetControl(
         m_polarDrive
-            .WithVelocityX(radialVelocity)
-            .WithVelocityY(angularVelocity)
-            .WithTargetDirection(angleToTarget)
-            .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
+            .WithVelocityX(forward)
+            .WithVelocityY(strafe)
+            .WithTargetDirection(angleToTarget));
 }
 
 bool PolarDrive::IsFinished()

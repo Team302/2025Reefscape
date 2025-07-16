@@ -161,7 +161,6 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::SWEEP, driverDPad180},
 
     {TeleopControlFunctions::ROBOT_ORIENTED_DRIVE, driverDPad0},
-    {TeleopControlFunctions::POLAR_DRIVE, driverLBumper},
     {TeleopControlFunctions::AUTO_ALIGN_LEFT, driverXButton},
     {TeleopControlFunctions::AUTO_ALIGN_RIGHT, driverBButton},
     {TeleopControlFunctions::AUTO_CLIMB, driverYButton},
@@ -169,7 +168,7 @@ robin_hood::unordered_map<TeleopControlFunctions::FUNCTION, const TeleopControlB
     {TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION, driverAButton},
     {TeleopControlFunctions::AUTO_ALIGN_ALGAE, driverRTriggerPressed},
     {TeleopControlFunctions::DRIVE_TO_PROCESSOR, driverLTriggerPressed},
-    {TeleopControlFunctions::SLOW_MODE, driverRBumper},
+    {TeleopControlFunctions::POLAR_DRIVE, driverRBumper},
     {TeleopControlFunctions::CLIMB_MODE, driverStartButton},
     {TeleopControlFunctions::SYSID_MODIFER, driverSelectButton},
     {TeleopControlFunctions::HOLD_POSITION, driverDPad270},

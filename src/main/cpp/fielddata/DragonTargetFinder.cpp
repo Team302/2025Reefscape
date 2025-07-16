@@ -76,7 +76,8 @@ optional<tuple<DragonTargetFinderData, Pose2d>> DragonTargetFinder::GetPose(Drag
 
             if (item == DragonTargetFinderTarget::CLOSEST_REEF_ALGAE)
             {
-                m_goalPose = frc::Pose2d(tagpose.X(), tagpose.Y(), frc::Rotation2d(tagpose.Rotation().Degrees() + 180_deg)); // Have to add 180 degrees since the tag is facing the opposite direction of the robot
+                auto targetAngle = FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue ? (tagpose.Rotation().Degrees() + 180_deg) : tagpose.Rotation().Degrees(); // TO DO: Investigate why we need to add 180 degrees for blue alliance (write story)
+                m_goalPose = frc::Pose2d(tagpose.X(), tagpose.Y(), targetAngle);
                 return make_tuple(DragonTargetFinderData::ODOMETRY_BASED, m_goalPose.value());
             }
             else if (item == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)
