@@ -23,7 +23,7 @@
 #include "state/RobotState.h"
 #include "state/IRobotStateChangeSubscriber.h"
 #include "frc2/command/ProxyCommand.h"
-
+#include "utils/logging/debug/Logger.h"
 SwerveContainer *SwerveContainer::m_instance = nullptr;
 
 SwerveContainer *SwerveContainer::GetInstance()
@@ -40,7 +40,8 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_fieldDrive(std::make_unique<FieldDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
                                      m_robotDrive(std::make_unique<RobotDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
                                      m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed)),
-                                     m_driveToCoralStation(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
+                                     m_driveToCoralStationSidewall(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
+                                     m_driveToCoralStationAlliance(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)),
                                      m_driveToCoralRightBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)),
                                      m_driveToCoralLeftBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH)),
                                      m_driveToBarge(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::BARGE)),
@@ -52,6 +53,7 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
 
 {
     RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::DesiredCoralSide_Int);
 
     if (m_chassis != nullptr)
     {
@@ -65,7 +67,6 @@ void SwerveContainer::ConfigureBindings()
 
     auto isResetYawSelected = controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION);
     auto isRobotOriented = controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
-    auto isHoldPositionSelected = controller->GetCommandTrigger(TeleopControlFunctions::HOLD_POSITION);
     auto isPolarDriveSelected = controller->GetCommandTrigger(TeleopControlFunctions::POLAR_DRIVE);
     auto driveToRightReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
     auto driveToLeftReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT);
@@ -80,9 +81,6 @@ void SwerveContainer::ConfigureBindings()
     frc2::RobotModeTriggers::Disabled().WhileTrue(m_chassis->ApplyRequest([]
                                                                           { return swerve::requests::Idle{}; })
                                                       .IgnoringDisable(true));
-
-    isHoldPositionSelected.WhileTrue(m_chassis->ApplyRequest([this]() -> auto &&
-                                                             { return m_brakeRequest; }));
 
     isResetYawSelected.OnTrue(m_chassis->RunOnce([this, controller]
                                                  { m_chassis->SeedFieldCentric(); }));
@@ -100,8 +98,14 @@ void SwerveContainer::ConfigureBindings()
     }
     else
     {
-        return frc2::ProxyCommand(m_driveToCoralStation.get()).ToPtr();
-    } }));
+        if (m_desiredCoralSide == RobotStateChanges::DesiredCoralSide::AllianceWall)
+        {
+            return frc2::ProxyCommand(m_driveToCoralStationAlliance.get()).ToPtr();
+        }   
+        else
+        {
+            return frc2::ProxyCommand(m_driveToCoralStationSidewall.get()).ToPtr();
+        } } }));
 
     driveToLeftReefBranch.WhileTrue(frc2::cmd::DeferredProxy([this]() -> frc2::CommandPtr
                                                              {
@@ -129,11 +133,6 @@ void SwerveContainer::ConfigureBindings()
     SetSysIDBinding(controller);
 }
 
-frc2::CommandPtr SwerveContainer::GetAutonomousCommand()
-{
-    return frc2::cmd::Print("No autonomous command configured");
-}
-
 void SwerveContainer::SetSysIDBinding(TeleopControl *controller)
 {
     if (controller != nullptr)
@@ -151,5 +150,10 @@ void SwerveContainer::NotifyStateUpdate(RobotStateChanges::StateChange change, i
     if (change == RobotStateChanges::StateChange::ClimbModeStatus_Int)
     {
         m_climbMode = value;
+    }
+    else if (change == RobotStateChanges::StateChange::DesiredCoralSide_Int)
+    {
+        m_desiredCoralSide = RobotStateChanges::DesiredCoralSide(value); // cast to enum
+        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "SwerveContainer", "Desired Coral Side:", std::to_string(static_cast<int>(m_desiredCoralSide)));
     }
 }

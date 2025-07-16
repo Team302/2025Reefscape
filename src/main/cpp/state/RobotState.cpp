@@ -76,6 +76,7 @@ void RobotState::Run()
         {
             PublishScoringMode(controller);
             PublishClimbMode(controller);
+            PublishDesiredCoralSide(controller);
         }
     }
 }
@@ -217,4 +218,18 @@ void RobotState::PublishClimbMode(TeleopControl *controller)
     }
 
     m_climbModeButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::CLIMB_MODE);
+}
+
+void RobotState::PublishDesiredCoralSide(TeleopControl *controller)
+{
+    if (controller->IsButtonPressed(TeleopControlFunctions::SWITCH_DESIRED_CORAL_SIDE))
+    {
+        if (m_desiredCoralSideButtonReleased)
+        {
+            m_desiredCoralSide = (m_desiredCoralSide == RobotStateChanges::DesiredCoralSide::AllianceWall) ? RobotStateChanges::DesiredCoralSide::Sidewall : RobotStateChanges::DesiredCoralSide::AllianceWall;
+            PublishStateChange(RobotStateChanges::DesiredCoralSide_Int, m_desiredCoralSide);
+        }
+    }
+
+    m_desiredCoralSideButtonReleased = !controller->IsButtonPressed(TeleopControlFunctions::SWITCH_DESIRED_CORAL_SIDE);
 }

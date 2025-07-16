@@ -50,6 +50,7 @@ private:
     void PublishGameStateChanges();
     void PublishScoringMode(TeleopControl *controller);
     void PublishClimbMode(TeleopControl *controller);
+    void PublishDesiredCoralSide(TeleopControl *controller);
 
     RobotState();
     ~RobotState();
@@ -58,8 +59,10 @@ private:
     RobotStateChanges::ScoringMode m_scoringMode;
     RobotStateChanges::GamePeriod m_gamePhase;
     RobotStateChanges::ClimbMode m_climbMode;
+    RobotStateChanges::DesiredCoralSide m_desiredCoralSide = RobotStateChanges::DesiredCoralSide::Sidewall;
 
     bool m_scoringModeButtonReleased;
     bool m_climbModeButtonReleased;
+    bool m_desiredCoralSideButtonReleased;
     static RobotState *m_instance;
 };
