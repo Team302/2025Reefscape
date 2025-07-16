@@ -76,7 +76,7 @@ private:
     frc::Transform3d m_calcCoralLeftAlliance = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(-25.0),
+            units::length::inch_t(-22.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
@@ -90,7 +90,7 @@ private:
     frc::Transform3d m_calcCoralRightAlliance = frc::Transform3d(
         frc::Translation3d(
             units::length::inch_t(0.0),
-            units::length::inch_t(30.0),
+            units::length::inch_t(22.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());
 
