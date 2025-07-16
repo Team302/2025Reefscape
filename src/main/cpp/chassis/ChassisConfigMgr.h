@@ -36,7 +36,7 @@ public:
     subsystems::CommandSwerveDrivetrain *GetSwerveChassis();
 
     units::meters_per_second_t GetMaxSpeed() { return m_maxSpeed; }
-    double GetRotationRateDegreesPerSecond() const { m_chassis != nullptr ? m_chassis.get()->GetPigeon2().GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
+    double GetRotationRateDegreesPerSecond() const { return m_chassis != nullptr ? m_chassis.get()->GetPigeon2().GetAngularVelocityZWorld(true).GetValueAsDouble() : 0.0; }
 
 private:
     ChassisConfigMgr();
