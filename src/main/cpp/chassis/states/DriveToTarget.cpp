@@ -19,6 +19,8 @@
 #include "frc/geometry/Translation2d.h"
 #include "vision/DragonVisionStructLogger.h"
 #include "state/RobotState.h"
+#include "fielddata/ReefHelper.h"
+#include "fielddata/BargeHelper.h"
 
 DriveToTarget::DriveToTarget(
     subsystems::CommandSwerveDrivetrain *chassis,
@@ -102,6 +104,18 @@ void DriveToTarget::Execute()
                 .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
     }
+
+    if (m_target == DragonTargetFinderTarget::BARGE) // TO DO: Come back and see if there is a better way to implement this inluding the publishing in End() method
+    {
+        auto bargeHelper = BargeHelper::GetInstance();
+        bargeHelper->IsInZone();
+    }
+    else if (m_target == DragonTargetFinderTarget::CLOSEST_LEFT_REEF_BRANCH || m_target == DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)
+    {
+        auto reefHelper = ReefHelper::GetInstance();
+        reefHelper->IsInZone();
+    }
+
     RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, IsFinished());
 }
 
@@ -129,6 +143,15 @@ bool DriveToTarget::IsFinished()
 
 void DriveToTarget::End(bool interrupted)
 {
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+    if (m_target == DragonTargetFinderTarget::BARGE)
+    {
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, false);
+    }
+    else
+    {
+        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
+    }
     m_chassis->SetControl(swerve::requests::SwerveDriveBrake{});
 }
 
