@@ -66,7 +66,6 @@ void ChassisConfigMgr::CreateDrivetrain()
         m_chassis = nullptr;
         break;
     }
-    m_pigeon = &(m_chassis.get()->GetPigeon2());
 }
 subsystems::CommandSwerveDrivetrain *ChassisConfigMgr::GetSwerveChassis()
 {
