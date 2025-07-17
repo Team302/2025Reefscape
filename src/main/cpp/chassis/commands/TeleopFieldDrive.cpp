@@ -14,6 +14,7 @@
 //====================================================================================================================================================
 
 #include "chassis/commands/TeleopFieldDrive.h"
+#include "state/RobotState.h"
 
 // Note the simplified constructor and AddRequirements call
 TeleopFieldDrive::TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
@@ -25,17 +26,40 @@ TeleopFieldDrive::TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
                                                                                                    m_maxAngularRate(maxAngularRate)
 {
     AddRequirements(m_chassis);
+    m_targetFinder = DragonTargetFinder::GetInstance();
+    m_fieldHeadingDriveRequest.WithHeadingPID(m_heading_kP, m_heading_kI, m_heading_kD);
 }
+
+void TeleopFieldDrive::Initialize()
+{
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, false);
+    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
+}
+
 void TeleopFieldDrive::Execute()
 {
     double forward = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);
     double strafe = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
     double rotate = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE);
 
-    m_chassis->SetControl(
-        m_fieldDriveRequest.WithVelocityX(forward * m_maxSpeed)
-            .WithVelocityY(strafe * m_maxSpeed)
-            .WithRotationalRate(rotate * m_maxAngularRate));
+    auto isFaceReefSelected = m_controller->IsButtonPressed(TeleopControlFunctions::FACE_REEF);
+
+    // Heading Control
+    if (isFaceReefSelected)
+    {
+        FaceReef();
+        m_chassis->SetControl(m_fieldHeadingDriveRequest.WithVelocityX(forward * m_maxSpeed)
+                                  .WithVelocityY(strafe * m_maxSpeed)
+                                  .WithTargetDirection(m_targetHeading));
+    }
+    else // if nothing is selected then just drive with the current heading
+    {
+        m_chassis->SetControl(
+            m_fieldDriveRequest.WithVelocityX(forward * m_maxSpeed)
+                .WithVelocityY(strafe * m_maxSpeed)
+                .WithRotationalRate(rotate * m_maxAngularRate));
+    }
 }
 
 bool TeleopFieldDrive::IsFinished()
@@ -49,4 +73,14 @@ void TeleopFieldDrive::End(bool interrupted)
 {
     m_chassis->ApplyRequest([]() -> auto
                             { return swerve::requests::SwerveDriveBrake{}; });
+}
+
+void TeleopFieldDrive::FaceReef()
+{
+    auto info = m_targetFinder->GetPose(DragonTargetFinderTarget::CLOSEST_REEF_ALGAE);
+    if (info.has_value())
+    {
+        auto targetpose = get<1>(info.value());
+        m_targetHeading = targetpose.Rotation().Degrees();
+    }
 }

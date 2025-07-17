@@ -81,9 +81,9 @@ private:
     std::optional<frc::Pose2d> m_algaePose;
 
     bool m_switchToVision = false;
-    const units::length::meter_t m_fuseTol{0.25};
-    const units::length::meter_t m_switchToVisionThreshold{1.0};
-    const frc::Transform2d m_intakeOffset = frc::Transform2d{
+    static constexpr units::length::meter_t m_fuseTol{0.25};
+    static constexpr units::length::meter_t m_switchToVisionThreshold{1.0};
+    static constexpr frc::Transform2d m_intakeOffset = frc::Transform2d{
         frc::Translation2d(12.0_in, 6.5_in),
         frc::Rotation2d(0_deg)};
 };

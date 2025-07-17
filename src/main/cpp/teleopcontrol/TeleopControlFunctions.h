@@ -41,7 +41,7 @@ public:
         AUTO_ALIGN_PROCESSOR,
         AUTO_ALIGN_ALGAE,
         RESET_POSITION,
-        POLAR_DRIVE,
+        FACE_REEF,
         SLOW_MODE,
         MANUAL_CLIMB_UP,
         MANUAL_CLIMB_DOWN,

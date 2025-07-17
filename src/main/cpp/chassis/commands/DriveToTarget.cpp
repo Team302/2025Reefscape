@@ -18,7 +18,6 @@
 #include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Translation2d.h"
 #include "vision/DragonVisionStructLogger.h"
-#include "state/RobotState.h"
 #include "fielddata/ReefHelper.h"
 #include "fielddata/BargeHelper.h"
 
@@ -105,7 +104,7 @@ void DriveToTarget::Execute()
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
     }
 
-    if (m_target == DragonTargetFinderTarget::BARGE) // TODO: Come back and see if there is a better way to implement this inluding the publishing in End() method
+    if (m_target == DragonTargetFinderTarget::BARGE) // TODO: Come back and see if there is a better way to implement this including the publishing in End() method
     {
         auto bargeHelper = BargeHelper::GetInstance();
         bargeHelper->IsInZone();
@@ -143,15 +142,6 @@ bool DriveToTarget::IsFinished()
 
 void DriveToTarget::End(bool interrupted)
 {
-    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
-    if (m_target == DragonTargetFinderTarget::BARGE)
-    {
-        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, false);
-    }
-    else
-    {
-        RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
-    }
     m_chassis->SetControl(swerve::requests::SwerveDriveBrake{});
 }
 

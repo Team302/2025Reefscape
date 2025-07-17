@@ -18,8 +18,8 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/Command.h>
 #include "chassis/generated/CommandSwerveDrivetrain.h"
-
 #include "teleopcontrol/TeleopControl.h"
+#include "fielddata/DragonTargetFinder.h"
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
 
@@ -31,6 +31,7 @@ public:
                      units::velocity::meters_per_second_t maxSpeed,
                      units::angular_velocity::degrees_per_second_t maxAngularRate);
 
+    void Initialize() override;
     void Execute() override;
     bool IsFinished() override;
     void End(bool interrupted) override;
@@ -40,10 +41,22 @@ private:
     TeleopControl *m_controller;
     units::velocity::meters_per_second_t m_maxSpeed;
     units::angular_velocity::degrees_per_second_t m_maxAngularRate;
+    DragonTargetFinder *m_targetFinder;
+    units::angle::degree_t m_targetHeading{0_deg};
+    static constexpr double m_heading_kP{10.0};
+    static constexpr double m_heading_kI{1.0};
+    static constexpr double m_heading_kD{0.0};
 
     swerve::requests::FieldCentric m_fieldDriveRequest = swerve::requests::FieldCentric{}
                                                              .WithDeadband(m_maxSpeed * 0.1)                                  // TODO: Investigate this deadband vs controller deadband
                                                              .WithRotationalDeadband(m_maxAngularRate * 0.1)                  // TODO: Investigate this deadband vs controller deadband
                                                              .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
                                                              .WithDesaturateWheelSpeeds(true);
+
+    swerve::requests::FieldCentricFacingAngle m_fieldHeadingDriveRequest = swerve::requests::FieldCentricFacingAngle{}
+                                                                               .WithDeadband(m_maxSpeed * 0.1)                                  // TODO: Investigate this deadband vs controller deadband
+                                                                               .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
+                                                                               .WithDesaturateWheelSpeeds(true);
+
+    void FaceReef();
 };

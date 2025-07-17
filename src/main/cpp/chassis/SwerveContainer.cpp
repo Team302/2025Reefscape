@@ -18,7 +18,6 @@
 #include <frc2/command/button/RobotModeTriggers.h>
 #include "chassis/commands/TeleopFieldDrive.h"
 #include "chassis/commands/TeleopRobotDrive.h"
-#include "chassis/commands/PolarDrive.h"
 #include "chassis/commands/DriveToTarget.h"
 #include "state/RobotState.h"
 #include "state/IRobotStateChangeSubscriber.h"
@@ -39,7 +38,6 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_maxSpeed(ChassisConfigMgr::GetInstance()->GetMaxSpeed()),
                                      m_fieldDrive(std::make_unique<TeleopFieldDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
                                      m_robotDrive(std::make_unique<TeleopRobotDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
-                                     m_polarDrive(std::make_unique<PolarDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed)),
                                      m_driveToCoralStationSidewall(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_SIDWALL_SIDE)),
                                      m_driveToCoralStationAlliance(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_CORAL_STATION_ALLIANCE_SIDE)),
                                      m_driveToCoralRightBranch(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CLOSEST_RIGHT_REEF_BRANCH)),
@@ -65,29 +63,43 @@ void SwerveContainer::ConfigureBindings()
 {
     auto controller = TeleopControl::GetInstance();
 
+    CreateStandardDriveCommands(controller);
+    CreateReefscapeDriveToCommands(controller);
+
+    m_chassis->RegisterTelemetry([this](auto const &state)
+                                 { logger.Telemeterize(state); });
+
+    SetSysIDBinding(controller);
+}
+
+void SwerveContainer::CreateStandardDriveCommands(TeleopControl *controller)
+{
     auto isResetYawSelected = controller->GetCommandTrigger(TeleopControlFunctions::RESET_POSITION);
     auto isRobotOriented = controller->GetCommandTrigger(TeleopControlFunctions::ROBOT_ORIENTED_DRIVE);
-    auto isPolarDriveSelected = controller->GetCommandTrigger(TeleopControlFunctions::POLAR_DRIVE);
+
+    if (m_chassis != nullptr)
+    {
+        m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
+
+        frc2::RobotModeTriggers::Disabled().WhileTrue(m_chassis->ApplyRequest([]
+                                                                              { return swerve::requests::Idle{}; })
+                                                          .IgnoringDisable(true));
+
+        isResetYawSelected.OnTrue(m_chassis->RunOnce([this, controller]
+                                                     { m_chassis->SeedFieldCentric(); }));
+    }
+
+    isRobotOriented.WhileTrue(std::move(m_robotDrive));
+}
+
+void SwerveContainer::CreateReefscapeDriveToCommands(TeleopControl *controller)
+{
     auto driveToRightReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT);
     auto driveToLeftReefBranch = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_LEFT);
     auto driveToCoralStation = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_HUMAN_PLAYER_STATION);
     auto driveToBarge = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_BARGE);
     auto driveToAglee = controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_ALGAE);
 
-    m_chassis->SetDefaultCommand(std::move(m_fieldDrive));
-
-    // Idle while the robot is disabled. This ensures the configured
-    // neutral mode is applied to the drive motors while disabled.
-    frc2::RobotModeTriggers::Disabled().WhileTrue(m_chassis->ApplyRequest([]
-                                                                          { return swerve::requests::Idle{}; })
-                                                      .IgnoringDisable(true));
-
-    isResetYawSelected.OnTrue(m_chassis->RunOnce([this, controller]
-                                                 { m_chassis->SeedFieldCentric(); }));
-
-    isRobotOriented.WhileTrue(std::move(m_robotDrive));
-
-    isPolarDriveSelected.WhileTrue(frc2::ProxyCommand(m_polarDrive.get()).ToPtr());
     driveToBarge.WhileTrue(frc2::ProxyCommand(m_driveToBarge.get()).ToPtr());
     driveToAglee.WhileTrue(frc2::ProxyCommand(m_driveToAlgae.get()).ToPtr());
 
@@ -126,11 +138,6 @@ void SwerveContainer::ConfigureBindings()
     {
         return frc2::ProxyCommand(m_driveToCoralRightBranch.get()).ToPtr();
     } }));
-
-    m_chassis->RegisterTelemetry([this](auto const &state)
-                                 { logger.Telemeterize(state); });
-
-    SetSysIDBinding(controller);
 }
 
 void SwerveContainer::SetSysIDBinding(TeleopControl *controller)
@@ -145,6 +152,7 @@ void SwerveContainer::SetSysIDBinding(TeleopControl *controller)
         (controller->GetCommandTrigger(TeleopControlFunctions::SYSID_MODIFER) && controller->GetCommandTrigger(TeleopControlFunctions::AUTO_ALIGN_RIGHT)).WhileTrue(m_chassis->SysIdQuasistatic(frc2::sysid::Direction::kReverse));            // X
     }
 }
+
 void SwerveContainer::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
 {
     if (change == RobotStateChanges::StateChange::ClimbModeStatus_Int)

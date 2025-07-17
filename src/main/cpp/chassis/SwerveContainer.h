@@ -45,15 +45,12 @@ private:
     subsystems::CommandSwerveDrivetrain *m_chassis;
 
     units::meters_per_second_t m_maxSpeed;
-    units::radians_per_second_t m_maxAngularRate = 1_tps;
-
-    swerve::requests::SwerveDriveBrake m_brakeRequest{};
+    static constexpr units::radians_per_second_t m_maxAngularRate{1.5_tps};
 
     Telemetry logger;
 
     frc2::CommandPtr m_fieldDrive;
     frc2::CommandPtr m_robotDrive;
-    frc2::CommandPtr m_polarDrive;
     frc2::CommandPtr m_driveToCoralStationSidewall;
     frc2::CommandPtr m_driveToCoralStationAlliance;
     frc2::CommandPtr m_driveToCoralRightBranch;
@@ -70,5 +67,8 @@ private:
 
     void ConfigureBindings();
     void SetSysIDBinding(TeleopControl *controller);
+    void CreateStandardDriveCommands(TeleopControl *controller);
+    void CreateReefscapeDriveToCommands(TeleopControl *controller);
+
     void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 };
