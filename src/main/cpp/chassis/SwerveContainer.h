@@ -24,7 +24,7 @@
 #include "chassis/generated/Telemetry.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "teleopcontrol/TeleopControl.h"
-#include "chassis/states/TrajectoryDrive.h"
+#include "chassis/commands/TrajectoryDrive.h"
 
 class SwerveContainer : IRobotStateChangeSubscriber
 {

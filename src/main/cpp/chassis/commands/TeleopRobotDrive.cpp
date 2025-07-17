@@ -13,7 +13,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "chassis/states/TeleopRobotDrive.h"
+#include "chassis/commands/TeleopRobotDrive.h"
 #include "utils/logging/debug/Logger.h"
 
 // Note the simplified constructor and AddRequirements call

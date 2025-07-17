@@ -15,8 +15,8 @@
 #include "auton/drivePrimitives/AutonDrivePrimitive.h"
 #include "auton/PrimitiveParams.h"
 #include "chassis/SwerveContainer.h"
-#include "chassis/states/TrajectoryDrive.h"
-#include "chassis/states/DriveToTarget.h"
+#include "chassis/commands/TrajectoryDrive.h"
+#include "chassis/commands/DriveToTarget.h"
 #include "configs/MechanismConfigMgr.h"
 #include "utils/logging/debug/Logger.h"
 #include <frc2/command/Commands.h>

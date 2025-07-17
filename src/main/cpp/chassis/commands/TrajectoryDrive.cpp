@@ -25,7 +25,7 @@
 #include <choreo/Choreo.h>
 
 // 302 includes
-#include "chassis/states/TrajectoryDrive.h"
+#include "chassis/commands/TrajectoryDrive.h"
 #include "utils/logging/debug/Logger.h"
 #include "auton/drivePrimitives/AutonUtils.h"
 
