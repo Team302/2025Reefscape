@@ -93,8 +93,8 @@ private:
 
     frc::Transform2d m_questToRobotTransform; // <I> Transform from Quest to robot (used to calculate the robot pose from the quest pose)
 
-    const double m_stdxy = 0.02;
-    const double m_stddeg = 0.035;
+    static constexpr double m_stdxy{0.02};
+    static constexpr double m_stddeg{.035};
 
     double m_prevFrameCount = 0;
     int m_loopCounter = 0;
