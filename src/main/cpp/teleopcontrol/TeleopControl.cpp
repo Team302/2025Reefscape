@@ -437,7 +437,7 @@ frc2::Trigger TeleopControl::GetCommandTrigger(TeleopControlFunctions::FUNCTION 
 			// NOTE: CommandXboxController does not have direct support for diagonal POV directions.
 			// You would need to use `controller->GetPOV()` and a lambda for those, e.g.:
 			// return frc2::Trigger([controller] { return controller->GetPOV() == 45; });
-			// For simplicity, this implementation only includes cardinal directions. TO DO: implement the comment above
+			// For simplicity, this implementation only includes cardinal directions. TODO: implement the comment above
 
 		default:
 			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("TeleopControl-Command"), std::to_string(function), "Couldn't map the TeleopControlMapEnum");

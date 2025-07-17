@@ -66,7 +66,6 @@ void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 {
     if (m_chassis != nullptr)
     {
-        m_chassis->GetPigeon2().SetYaw(pose.Rotation().Degrees());
         m_chassis->ResetPose(pose);
     }
 }

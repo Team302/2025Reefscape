@@ -23,13 +23,13 @@
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
 
-class RobotDrive : public frc2::CommandHelper<frc2::Command, RobotDrive>
+class TeleopRobotDrive : public frc2::CommandHelper<frc2::Command, TeleopRobotDrive>
 {
 public:
-    RobotDrive(subsystems::CommandSwerveDrivetrain *chassis,
-               TeleopControl *controller,
-               units::velocity::meters_per_second_t maxSpeed,
-               units::angular_velocity::degrees_per_second_t maxAngularRate);
+    TeleopRobotDrive(subsystems::CommandSwerveDrivetrain *chassis,
+                     TeleopControl *controller,
+                     units::velocity::meters_per_second_t maxSpeed,
+                     units::angular_velocity::degrees_per_second_t maxAngularRate);
 
     void Execute() override;
     bool IsFinished() override;

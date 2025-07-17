@@ -65,13 +65,13 @@ private:
     std::string m_whyDone;
     units::time::second_t m_totalTrajectoryTime;
 
-    const double kPDrive = 0.35;
-    const double kIDrive = 0.0;
-    const double kDDrive = 0.0;
+    static constexpr double kPDrive{0.35};
+    static constexpr double kIDrive{0.0};
+    static constexpr double kDDrive{0.0};
 
-    const double kPHeading = 1.0;
-    const double kIHeading = 0.0;
-    const double kDHeading = 0.0;
+    static constexpr double kPHeading{1.0};
+    static constexpr double kIHeading{0.0};
+    static constexpr double kDHeading{0.0};
 
     frc::PIDController m_xController{kPDrive, kIDrive, kDDrive};
     frc::PIDController m_yController{kPDrive, kIDrive, kDDrive};

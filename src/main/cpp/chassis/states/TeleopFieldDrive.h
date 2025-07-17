@@ -23,13 +23,13 @@
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
 
-class FieldDrive : public frc2::CommandHelper<frc2::Command, FieldDrive>
+class TeleopFieldDrive : public frc2::CommandHelper<frc2::Command, TeleopFieldDrive>
 {
 public:
-    FieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
-               TeleopControl *controller,
-               units::velocity::meters_per_second_t maxSpeed,
-               units::angular_velocity::degrees_per_second_t maxAngularRate);
+    TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
+                     TeleopControl *controller,
+                     units::velocity::meters_per_second_t maxSpeed,
+                     units::angular_velocity::degrees_per_second_t maxAngularRate);
 
     void Execute() override;
     bool IsFinished() override;
@@ -42,8 +42,8 @@ private:
     units::angular_velocity::degrees_per_second_t m_maxAngularRate;
 
     swerve::requests::FieldCentric m_fieldDriveRequest = swerve::requests::FieldCentric{}
-                                                             .WithDeadband(m_maxSpeed * 0.1)
-                                                             .WithRotationalDeadband(m_maxAngularRate * 0.1)                  // Add a 10% deadband
+                                                             .WithDeadband(m_maxSpeed * 0.1)                                  // TODO: Investigate this deadband vs controller deadband
+                                                             .WithRotationalDeadband(m_maxAngularRate * 0.1)                  // TODO: Investigate this deadband vs controller deadband
                                                              .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
                                                              .WithDesaturateWheelSpeeds(true);
 };

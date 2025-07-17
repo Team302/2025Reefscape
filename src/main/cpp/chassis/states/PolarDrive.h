@@ -38,13 +38,13 @@ private:
     frc::Pose2d m_reefCenter;
 
     swerve::requests::FieldCentricFacingAngle m_polarDrive = swerve::requests::FieldCentricFacingAngle{}
-                                                                 .WithDeadband(m_maxSpeed * 0.1)
+                                                                 .WithDeadband(m_maxSpeed * 0.1)                                  // TODO: Investigate this deadband vs controller deadband
                                                                  .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
                                                                  .WithDesaturateWheelSpeeds(true);
     units::velocity::meters_per_second_t m_maxSpeed;
     DragonTargetFinder *m_targetFinder;
 
-    double m_heading_kP = 10.0;
-    double m_heading_kI = 1.0;
-    double m_heading_kD = 0.0;
+    static constexpr double m_heading_kP{10.0};
+    static constexpr double m_heading_kI{1.0};
+    static constexpr double m_heading_kD{0.0};
 };

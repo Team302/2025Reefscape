@@ -13,20 +13,20 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "chassis/states/FieldDrive.h"
+#include "chassis/states/TeleopFieldDrive.h"
 
 // Note the simplified constructor and AddRequirements call
-FieldDrive::FieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
-                       TeleopControl *controller,
-                       units::velocity::meters_per_second_t maxSpeed,
-                       units::angular_velocity::degrees_per_second_t maxAngularRate) : m_chassis(chassis),
-                                                                                       m_controller(controller),
-                                                                                       m_maxSpeed(maxSpeed),
-                                                                                       m_maxAngularRate(maxAngularRate)
+TeleopFieldDrive::TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
+                                   TeleopControl *controller,
+                                   units::velocity::meters_per_second_t maxSpeed,
+                                   units::angular_velocity::degrees_per_second_t maxAngularRate) : m_chassis(chassis),
+                                                                                                   m_controller(controller),
+                                                                                                   m_maxSpeed(maxSpeed),
+                                                                                                   m_maxAngularRate(maxAngularRate)
 {
     AddRequirements(m_chassis);
 }
-void FieldDrive::Execute()
+void TeleopFieldDrive::Execute()
 {
     double forward = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);
     double strafe = m_controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
@@ -38,14 +38,14 @@ void FieldDrive::Execute()
             .WithRotationalRate(rotate * m_maxAngularRate));
 }
 
-bool FieldDrive::IsFinished()
+bool TeleopFieldDrive::IsFinished()
 {
     // A default drive command should never finish on its own.
     // It runs until it is interrupted by another command.
     return false;
 }
 
-void FieldDrive::End(bool interrupted)
+void TeleopFieldDrive::End(bool interrupted)
 {
     m_chassis->ApplyRequest([]() -> auto
                             { return swerve::requests::SwerveDriveBrake{}; });
