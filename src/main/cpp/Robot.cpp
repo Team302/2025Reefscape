@@ -149,7 +149,7 @@ void Robot::InitializeRobot()
 
     CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
 
-    m_dragonswerveposeestimator = new DragonSwervePoseEstimator();
+    m_dragonswerveposeestimator = DragonSwervePoseEstimator::GetInstance();
 
     auto dragonVision = DragonVision::GetDragonVision();
     if (dragonVision != nullptr)
