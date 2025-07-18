@@ -18,9 +18,21 @@
 #include "state/RobotStateChanges.h"
 #include "vision/DragonVision.h"
 
-DragonSwervePoseEstimator::DragonSwervePoseEstimator() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()), // Get the pointer once
-                                                         m_visionPoseEstimators()
+DragonSwervePoseEstimator *DragonSwervePoseEstimator::m_instance = nullptr;
+
+DragonSwervePoseEstimator::DragonSwervePoseEstimator()
 {
+    m_chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
+    m_visionPoseEstimators.clear();
+}
+
+DragonSwervePoseEstimator *DragonSwervePoseEstimator::GetInstance()
+{
+    if (DragonSwervePoseEstimator::m_instance == nullptr)
+    {
+        DragonSwervePoseEstimator::m_instance = new DragonSwervePoseEstimator();
+    }
+    return DragonSwervePoseEstimator::m_instance;
 }
 
 void DragonSwervePoseEstimator::RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator)

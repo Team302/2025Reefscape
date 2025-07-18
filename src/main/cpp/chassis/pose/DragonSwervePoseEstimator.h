@@ -22,6 +22,7 @@
 class DragonSwervePoseEstimator
 {
 public:
+    static DragonSwervePoseEstimator *GetInstance();
     DragonSwervePoseEstimator();
     ~DragonSwervePoseEstimator() = default;
 
@@ -34,9 +35,11 @@ public:
     frc::Pose2d GetPose() const;
 
 private:
-    void AddVisionMeasurements();
+    static DragonSwervePoseEstimator *m_instance;
 
     subsystems::CommandSwerveDrivetrain *m_chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
 
     std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
+
+    void AddVisionMeasurements();
 };

@@ -14,4 +14,9 @@
 //====================================================================================================================================================
 
 #include "chassis/pose/DragonVisionPoseEstimator.h"
-DragonVisionPoseEstimator::DragonVisionPoseEstimator() = default;
+#include "chassis/pose/DragonSwervePoseEstimator.h"
+
+DragonVisionPoseEstimator::DragonVisionPoseEstimator()
+{
+    DragonSwervePoseEstimator::GetInstance()->RegisterVisionPoseEstimator(this);
+}
