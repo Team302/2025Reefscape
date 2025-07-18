@@ -55,18 +55,21 @@ private:
     void CalculateCenters(robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, frc::Pose3d> &fieldConstantsPoseMap);
     frc::Pose3d AverageHexagonPose(frc::Pose3d &pose1, frc::Pose3d &pose2, frc::Pose3d &pose3, frc::Pose3d &pose4, frc::Pose3d &pose5, frc::Pose3d &pose6);
 
-    static constexpr units::length::inch_t m_XdistanceProcessors{16.0};
-    static constexpr units::length::inch_t m_YdistanceProcessors{-9.0};
+    static constexpr units::length::inch_t m_xDistanceProcessors{16.0};
+    static constexpr units::length::inch_t m_yDistanceProcessors{-9.0};
     static constexpr units::length::inch_t m_distanceBetweenSticks{6.5};
-    static constexpr units::length::inch_t m_XdistanceCage{-18.0};
-    static constexpr units::length::inch_t m_YdistanceCageRight{41.0};
-    static constexpr units::length::inch_t m_YdistanceCageLeft{-43.0};
+    static constexpr units::length::inch_t m_xDistanceCage{-18.0};
+    static constexpr units::length::inch_t m_yDistanceCageRight{41.0};
+    static constexpr units::length::inch_t m_yDistanceCageLeft{-43.0};
     static constexpr units::length::inch_t m_centerOffsetFromTag{-1.0};
-    static constexpr units::length::inch_t m_XdistanceBarge{20.0};
-    static constexpr units::length::inch_t m_YcoralRightAlliance{30.0};
-    static constexpr units::length::inch_t m_YcoralLeftAlliance{-25.0};
-    static constexpr units::length::inch_t m_YcoralLeftSidewall{30.0};
-    static constexpr units::length::inch_t m_YcoralRightSidewall{-22.0};
+    static constexpr units::length::inch_t m_xDistanceBarge{20.0};
+    static constexpr units::length::inch_t m_yCoralRightAlliance{30.0};
+    static constexpr units::length::inch_t m_yCoralLeftAlliance{-25.0};
+    static constexpr units::length::inch_t m_yCoralLeftSidewall{30.0};
+    static constexpr units::length::inch_t m_yCoralRightSidewall{-22.0};
+    static constexpr units::length::inch_t m_xNoOffset{0.0};
+    static constexpr units::length::inch_t m_yNoOffset{0.0};
+    static constexpr units::length::inch_t m_zNoOffset{0.0};
 
     // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
@@ -81,99 +84,99 @@ private:
     // other transforms
     frc::Transform3d m_noTransform = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            units::length::inch_t(0.0),
-            units::length::inch_t(0.0)),
+            m_xNoOffset,
+            m_yNoOffset,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftAlliance = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            m_YcoralLeftAlliance,
-            units::length::inch_t(0.0)),
+            m_xNoOffset,
+            m_yCoralLeftAlliance,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCoralLeftSidewall = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            m_YcoralLeftSidewall,
-            units::length::inch_t(0.0)),
+            m_xNoOffset,
+            m_yCoralLeftSidewall,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightAlliance = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
-            m_YcoralRightAlliance,
-            units::length::inch_t(0.0)),
+            m_xNoOffset,
+            m_yCoralRightAlliance,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCoralRightSidewall = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0),
-            m_YcoralRightSidewall,
-            units::length::inch_t(0.0)),
+            m_xNoOffset,
+            m_yCoralRightSidewall,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCageLeft = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceCage,
-            m_YdistanceCageLeft,
-            units::length::inch_t(0.0)),
+            m_xDistanceCage,
+            m_yDistanceCageLeft,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCageRight = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceCage,
-            m_YdistanceCageRight,
-            units::length::inch_t(0.0)),
+            m_xDistanceCage,
+            m_yDistanceCageRight,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcCageCenter = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceCage,
+            m_xDistanceCage,
             m_centerOffsetFromTag,
-            units::length::inch_t(0.0)),
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcLeftStick = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
+            m_xNoOffset,
             -m_distanceBetweenSticks,
-            units::length::inch_t(0.0)),
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcRightStick = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(0.0),
+            m_xNoOffset,
             m_distanceBetweenSticks,
-            units::length::inch_t(0.0)),
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcBargeFront = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceBarge, // 16.0
-            units::length::inch_t(0.0),
-            units::length::inch_t(0.0)),
+            m_xDistanceBarge, // 16.0
+            m_yNoOffset,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcBargeBack = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceBarge, // 16.0
-            units::length::inch_t(0.0),
-            units::length::inch_t(0.0)),
+            m_xDistanceBarge, // 16.0
+            m_yNoOffset,
+            m_zNoOffset),
         frc::Rotation3d());
 
     frc::Transform3d m_calcProcessorRed = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceProcessors,
-            m_YdistanceProcessors,
-            units::length::inch_t(0.0)),
+            m_xDistanceProcessors,
+            m_yDistanceProcessors,
+            m_zNoOffset),
         frc::Rotation3d());
     frc::Transform3d m_calcProcessorBlue = frc::Transform3d(
         frc::Translation3d(
-            m_XdistanceProcessors,
-            m_YdistanceProcessors,
-            units::length::inch_t(0.0)),
+            m_xDistanceProcessors,
+            m_yDistanceProcessors,
+            m_zNoOffset),
         frc::Rotation3d());
 
     robin_hood::unordered_map<FieldConstants::FIELD_ELEMENT, TransformToPose> m_transformCalculatedMap;
