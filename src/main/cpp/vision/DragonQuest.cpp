@@ -168,7 +168,7 @@ void DragonQuest::HandleDashboard()
     if (m_questEnabledChooser.GetSelected() == true)
     {
         m_isQuestEnabled = true;
-        if (m_questEndgameEnabledChooser.GetSelected() == true && (m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn || m_isDriveToBarge != RobotStateChanges::IsDriveToBarge_Bool))
+        if (m_questEndgameEnabledChooser.GetSelected() == true && (m_climbMode != RobotStateChanges::ClimbMode::ClimbModeOn && !m_isDriveToBarge))
         {
             m_isQuestEnabled = false;
         }
