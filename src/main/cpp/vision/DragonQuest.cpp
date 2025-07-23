@@ -188,7 +188,7 @@ void DragonQuest::NotifyStateUpdate(RobotStateChanges::StateChange change, int v
 void DragonQuest::NotifyStateUpdate(RobotStateChanges::StateChange change, bool value)
 {
     if (RobotStateChanges::StateChange::IsDriveToBarge_Bool == change)
-        m_isDriveToBarge = static_cast<RobotStateChanges::StateChange>(value);
+        m_isDriveToBarge = value;
 }
 DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
 {

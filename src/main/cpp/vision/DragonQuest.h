@@ -107,5 +107,5 @@ private:
 
     bool m_isQuestEnabled = false; // <I> Is the Quest enabled?
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
-    RobotStateChanges::StateChange m_isDriveToBarge = RobotStateChanges::StateChange::IsDriveToBarge_Bool;
+    bool m_isDriveToBarge = false;
 };
