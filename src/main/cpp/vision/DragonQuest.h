@@ -62,6 +62,8 @@ public:
 
     void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, bool value) override;
+
 private:
     DragonQuest() = delete;
     void ZeroPosition();
@@ -105,4 +107,5 @@ private:
 
     bool m_isQuestEnabled = false; // <I> Is the Quest enabled?
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;
+    bool m_isDriveToBarge = false;
 };

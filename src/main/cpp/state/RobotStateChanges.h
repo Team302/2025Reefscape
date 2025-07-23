@@ -34,6 +34,7 @@ public:
         ElevatorHeight_Inch,
         IsInBargeZone_Bool,
         IsInReefZone_Bool,
+        IsDriveToBarge_Bool,
         LoopCounterEnd // Must be last Enum for the loop counter
     };
 

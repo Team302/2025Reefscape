@@ -169,6 +169,7 @@ void HolonomicDrive::Run()
         else if (driveToBarge && !m_climbMode)
         {
             DriveToFieldElement(forward, strafe, rotate, ChassisOptionEnums::DriveStateType::DRIVE_TO_BARGE);
+            RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsDriveToBarge_Bool, true);
             m_bargeHelper->IsInZone();
         }
         else if (driveToAlgae && !m_climbMode)
@@ -233,6 +234,7 @@ void HolonomicDrive::Run()
                 RobotState::GetInstance()->PublishStateChange(RobotStateChanges::DriveToFieldElementIsDone_Bool, false);
                 RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInBargeZone_Bool, false);
                 RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsInReefZone_Bool, false);
+                RobotState::GetInstance()->PublishStateChange(RobotStateChanges::StateChange::IsDriveToBarge_Bool, false);
             }
         }
         if (isSlowMode)
