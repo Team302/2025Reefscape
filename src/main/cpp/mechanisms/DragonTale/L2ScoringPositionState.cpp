@@ -50,7 +50,6 @@ void L2ScoringPositionState::Init()
 		InitCOMP_BOT302();
 
 	m_mechanism->UpdateTargetCoralPercentOutput(m_CoralTarget);
-	m_mechanism->UpdateTargetAlgaeTalonFXSPercentOutput(m_AlgaeTarget);
 	m_mechanism->SetArmTarget(m_ArmTarget);
 	m_mechanism->SetElevatorTarget(m_ElevatorLeaderTarget);
 }

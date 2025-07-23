@@ -11,6 +11,9 @@ time = "2.5">
 <zone filename = "BlueReefDriveToRight.xml"/>
 </primitive>
 
+<primitive id = "DO_NOTHING"
+time = "0.25"/>
+
 <primitive id = "DRIVE_STOP_MECH"
 taleOption="STATE_SCORE_CORAL"
 time = "5.0"/> 
@@ -30,6 +33,9 @@ choreoname = "BlueLeftCSA_K1"
 time = "5.0">
 <zone filename = "BlueReefDriveToLeft.xml"/>
 </primitive>
+
+<primitive id = "DO_NOTHING"
+time = "0.25"/>
 
 <primitive id = "DRIVE_STOP_MECH"
 taleOption="STATE_SCORE_CORAL"
@@ -52,6 +58,9 @@ time = "3.0">
 <zone filename = "BlueReefDriveToRight.xml"/>
 </primitive>
 
+<primitive id = "DO_NOTHING"
+time = "0.25"/>
+
 <primitive id = "DRIVE_STOP_MECH"
 taleOption="STATE_SCORE_CORAL"
 time = "5.0"/>
@@ -69,6 +78,9 @@ choreoname = "BlueLeftCSA_A1"
 time = "3.0">
 <zone filename = "BlueReefDriveToLeft.xml"/>
 </primitive>
+
+<primitive id = "DO_NOTHING"
+time = "0.25"/>
 
 <primitive id = "DRIVE_STOP_MECH"
 taleOption="STATE_SCORE_CORAL"
