@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <frc/RobotController.h>
 #include "fielddata/DragonTargetFinder.h"
 #include "chassis/ChassisConfigMgr.h"
 #include "vision/DragonVision.h"
@@ -12,9 +11,6 @@ class DragonTargetFinderTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        // Initialize necessary components
-        int32_t teamNumber = frc::RobotController::GetTeamNumber();
-        ChassisConfigMgr::GetInstance()->InitChassis(static_cast<RobotIdentifier>(teamNumber));
         auto chassisConfig = ChassisConfigMgr::GetInstance();
         auto chassis = chassisConfig->GetSwerveChassis();
     }
