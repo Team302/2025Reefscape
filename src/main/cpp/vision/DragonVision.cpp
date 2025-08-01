@@ -20,8 +20,7 @@
 #include "frc/Timer.h"
 
 // Team 302 includes
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/definitions/ChassisConfig.h"
+#include "chassis/ChassisConfigMgr.h"
 #include "vision/DragonVision.h"
 #include "vision/DragonLimelight.h"
 #include "utils/FMSData.h"
@@ -105,14 +104,13 @@ DragonVision::DragonVision()
 void DragonVision::AddLimelight(DragonLimelight *camera, DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	m_dragonLimelightMap.insert(std::pair<DRAGON_LIMELIGHT_CAMERA_USAGE, DragonLimelight *>(usage, camera));
+	m_poseEstimators.push_back(camera);
 }
 
 std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
 {
 	if (element == VISION_ELEMENT::ALGAE)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("GetVisionData"), std::string("reached"));
-
 		return GetVisionDataFromAlgae(element);
 	}
 	else if (element == VISION_ELEMENT::NEAREST_APRILTAG) // nearest april tag
@@ -275,17 +273,12 @@ std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
 
 std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
 {
-	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("getVisionDataFrom Algae"), std::string("Machine Learning"));
-
 	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 
 	for (auto cam : cameras)
 	{
 		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
 		{
-			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("pipeline"), std::string("Machine learning"));
-			Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("Has Target"), cam->HasTarget());
-
 			if (cam->HasTarget())
 			{
 				// create translation using 3 estimated distances
@@ -298,7 +291,6 @@ std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT el
 																			   cam->EstimateTargetYDistance_RelToRobotCoords().value(),
 																			   cam->EstimateTargetZDistance_RelToRobotCoords().value());
 					frc::Rotation3d rotationToAlgae = frc::Rotation3d();
-					Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("algae"), std::string("rotation"), cam->GetTargetYawRobotFrame().value().to<double>());
 
 					// create rotation3d with pitch and yaw (don't have access to roll)
 					rotationToAlgae = frc::Rotation3d(units::angle::degree_t(0.0),
@@ -650,7 +642,7 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 
 		if (visdata.has_value())
 		{
-			auto currentPose{frc::Pose3d(ChassisConfigMgr::GetInstance()->GetCurrentChassis()->GetPose())};
+			auto currentPose{frc::Pose3d(ChassisConfigMgr::GetInstance()->GetSwerveChassis()->GetPose())};
 
 			auto trans3d = visdata.value().transformToTarget;
 			auto targetPose = currentPose + trans3d;

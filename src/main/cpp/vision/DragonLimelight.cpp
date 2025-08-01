@@ -33,8 +33,7 @@
 #include "units/time.h"
 
 // Team 302 includes
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/ChassisConfigMgr.h"
 #include "chassis/pose/DragonSwervePoseEstimator.h"
 #include "vision/DragonLimelight.h"
 #include "utils/logging/debug/Logger.h"
@@ -71,7 +70,7 @@ DragonLimelight::DragonLimelight(
                                          DragonDataLogger(),
                                          m_identifier(identifier),
                                          m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
-                                         m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+                                         m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                          m_cameraPose(frc::Pose3d(mountingXOffset, mountingYOffset, mountingZOffset, frc::Rotation3d(roll, pitch, yaw)))
 {
     SetLEDMode(ledMode);
@@ -232,15 +231,17 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
         {
             if (!m_megatag1PosBool)
             {
-                auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-                m_numberOfTags = poseEstimate.tagCount;
+                nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
+                std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
 
                 units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(poseEstimate.latency / 1000.0);
+                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
 
-                frc::Pose3d pose3d = frc::Pose3d{frc::Pose2d((poseEstimate.pose.X()), units::meter_t(poseEstimate.pose.Y()), poseEstimate.pose.Rotation())};
+                frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
+                frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
 
-                double averageTagTargetArea = poseEstimate.avgTagArea;
+                double numberOfTagsDetected = position[7];
+                double averageTagTargetArea = position[10];
 
                 // in case of invalid Limelight targets
                 if (pose3d.ToPose2d().X() == units::meter_t(0.0))
@@ -251,11 +252,11 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 double xyStds;
                 double degStds;
                 // multiple targets detected
-                if (m_numberOfTags == 0)
+                if (numberOfTagsDetected == 0)
                 {
                     return std::nullopt;
                 }
-                else if (m_numberOfTags >= 2)
+                else if (numberOfTagsDetected >= 2)
                 {
                     xyStds = 0.5;
                     degStds = 6;
@@ -298,7 +299,7 @@ std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool me
                 // auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
                 LimelightHelpers::SetIMUMode(m_cameraName, mode);
                 auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-                m_numberOfTags = poseEstimate.tagCount;
+
                 // multiple targets detected
                 if (poseEstimate.tagCount == 0)
                 {
@@ -574,39 +575,36 @@ std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
 
 DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
 {
-    if (m_chassis != nullptr && m_chassis->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
+    if (m_chassis != nullptr && ChassisConfigMgr::GetInstance()->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
     {
-        auto poseest = m_chassis->GetSwervePoseEstimator();
-        if (poseest != nullptr)
+
+        LimelightHelpers::SetRobotOrientation(GetCameraName(),
+                                              m_chassis->GetPose().Rotation().Degrees().value(),
+                                              m_yawRate,
+                                              m_pitch,
+                                              m_pitchRate,
+                                              m_roll,
+                                              m_rollRate);
+
+        std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
+
+        if (megaTag2Pose.has_value())
         {
-            LimelightHelpers::SetRobotOrientation(GetCameraName(),
-                                                  poseest->GetPose().Rotation().Degrees().value(),
-                                                  m_yawRate,
-                                                  m_pitch,
-                                                  m_pitchRate,
-                                                  m_roll,
-                                                  m_rollRate);
-
-            std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
-
-            if (megaTag2Pose.has_value())
+            if (EstimateTargetXDistance())
             {
-                if (EstimateTargetXDistance())
+                DragonVisionPoseEstimatorStruct str;
+                if (EstimateTargetXDistance().value().to<double>() < 36)
                 {
-                    DragonVisionPoseEstimatorStruct str;
-                    if (EstimateTargetXDistance().value().to<double>() < 36)
-                    {
-                        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
-                    }
-                    else
-                    {
-                        str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::MEDIUM;
-                    }
-                    str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
-                    str.m_timeStamp = megaTag2Pose.value().timeStamp;
-                    str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
-                    return str;
+                    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
                 }
+                else
+                {
+                    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::MEDIUM;
+                }
+                str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
+                str.m_timeStamp = megaTag2Pose.value().timeStamp;
+                str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
+                return str;
             }
         }
     }
@@ -642,7 +640,7 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
     auto rollrate = 0.0;
     if (m_chassis != nullptr)
     {
-        yawrate = m_chassis->GetRotationRateDegreesPerSecond();
+        yawrate = ChassisConfigMgr::GetInstance()->GetRotationRateDegreesPerSecond();
         pitch = GetCameraPitch().value();
         roll = GetCameraRoll().value();
     }

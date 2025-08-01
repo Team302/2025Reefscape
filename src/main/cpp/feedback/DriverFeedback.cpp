@@ -13,26 +13,25 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include <frc/DriverStation.h>
-#include <networktables/NetworkTable.h>
-#include <networktables/NetworkTableEntry.h>
-#include <networktables/NetworkTableInstance.h>
-
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveChassis.h"
-#include "configs/MechanismConfigMgr.h"
-#include "feedback/DriverFeedback.h"
 #include "frc/DriverStation.h"
-#include "mechanisms/DragonTale/DragonTale.h"
-#include "state/IRobotStateChangeSubscriber.h"
+#include "feedback/DriverFeedback.h"
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
+#include "state/IRobotStateChangeSubscriber.h"
+#include <networktables/NetworkTableInstance.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
+#include <frc/DriverStation.h>
+
 #include "teleopcontrol/TeleopControl.h"
+#include "configs/MechanismConfigMgr.h"
+#include "mechanisms/DragonTale/DragonTale.h"
 #include "utils/logging/debug/Logger.h"
-#include "vision/definitions/CameraConfigMgr.h"
-#include "vision/DragonQuest.h"
 #include "vision/DragonVision.h"
+#include "vision/DragonQuest.h"
+#include "chassis/pose/DragonVisionPoseEstimator.h"
+#include "chassis/ChassisConfigMgr.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 using frc::DriverStation;
 
@@ -174,10 +173,10 @@ void DriverFeedback::UpdateDiagnosticLEDs()
             algaeSensor = taleMgr->GetAlgaeSensorState();
         }
     }
-    auto chassisConfig = ChassisConfigMgr::GetInstance()->GetCurrentConfig()->GetSwerveChassis();
-    if (chassisConfig != nullptr)
+    auto dragonVision = DragonVision::GetDragonVision();
+    if (dragonVision != nullptr)
     {
-        auto visionPoseEstitmators = chassisConfig->GetSwervePoseEstimator()->GetVisionPoseEstimators();
+        auto visionPoseEstitmators = dragonVision->GetPoseEstimators();
         if (!visionPoseEstitmators.empty())
         {
             if (!CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetLimelightIndexs().empty())

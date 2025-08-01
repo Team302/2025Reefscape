@@ -115,7 +115,9 @@
     "xlocmon": "cpp",
     "xlocnum": "cpp",
     "xloctime": "cpp",
-    "xhash": "cpp"
+    "xhash": "cpp",
+    "queue": "cpp",
+    "stack": "cpp"
   },
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,

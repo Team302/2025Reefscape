@@ -20,10 +20,9 @@
 
 // 302 Includes
 #include <auton/drivePrimitives/VisionDrivePrimitive.h>
-#include <chassis/ChassisMovement.h>
 #include <chassis/ChassisOptionEnums.h>
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+
+#include "chassis/ChassisConfigMgr.h"
 
 /// DEBUGGING
 #include "utils/logging/debug/Logger.h"
@@ -36,7 +35,7 @@ VisionDrivePrimitive::VisionDrivePrimitive() : IPrimitive(),
                                                m_timer(new frc::Timer()),
                                                m_timeout(0.0)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = ChassisConfigMgr::GetInstance();
     m_chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 }
 
@@ -74,18 +73,6 @@ void VisionDrivePrimitive::Init(PrimitiveParams *params)
 void VisionDrivePrimitive::Run()
 {
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "ArrivedAtRun", true);
-
-    if (m_chassis != nullptr)
-    {
-        ChassisMovement moveInfo;
-
-        moveInfo.headingOption = m_headingOption;
-
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "driveOption", moveInfo.driveOption);
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, m_ntName, "headingOption", moveInfo.headingOption);
-
-        m_chassis->Drive(moveInfo);
-    }
 }
 
 bool VisionDrivePrimitive::IsDone()

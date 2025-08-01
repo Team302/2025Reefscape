@@ -28,7 +28,7 @@
 #include "chassis/ChassisOptionEnums.h"
 #include "vision/DragonVision.h"
 #include "auton/ZoneParams.h"
-#include "auton/drivePrimitives/DriveStopDelay.h"
+
 #include "mechanisms/DragonTale/DragonTale.h"
 
 // Third Party Includes
@@ -54,8 +54,7 @@ public:
                     VISION_ALIGNMENT visionAlignment,
                     bool changeTaleState,
                     DragonTale::STATE_NAMES taleState,
-                    ChassisOptionEnums::DriveStateType pathUpdateOption,
-                    DriveStopDelay::DelayOption delayOption); // create zones parameter of type ZonesParamsVector
+                    ChassisOptionEnums::DriveStateType pathUpdateOption); // create zones parameter of type ZonesParamsVector
 
     PrimitiveParams() = delete;
     virtual ~PrimitiveParams() = default; // Destructor
@@ -71,15 +70,6 @@ public:
     ZoneParamsVector GetZones() const { return m_zones; }; // create a GetZones() method to return the instance of zones m_zones
     VISION_ALIGNMENT GetVisionAlignment() const { return m_visionAlignment; }
 
-    DriveStopDelay::DelayOption GetDelayOption() const { return m_delayOption; }
-
-    void SetStartDelay(units::time::second_t startDelay) { m_startDelay = startDelay; }
-    void SetReefDelay(units::time::second_t reefDelay) { m_reefDelay = reefDelay; }
-    void SetCoralStationDelay(units::time::second_t coralStationDelay) { m_coralStationDelay = coralStationDelay; }
-    units::time::second_t GetStartDelay() const { return m_startDelay; }
-    units::time::second_t GetReefDelay() const { return m_reefDelay; }
-    units::time::second_t GetCoralStationDelay() const { return m_coralStationDelay; }
-
     bool IsTaleStateChanging() const { return m_changeTaleState; }
     DragonTale::STATE_NAMES GetTaleState() const { return m_taleState; }
 
@@ -91,12 +81,6 @@ private:
     units::time::second_t m_time;
     ChassisOptionEnums::HeadingOption m_headingOption = ChassisOptionEnums::HeadingOption::IGNORE;
     float m_heading;
-
-    DriveStopDelay::DelayOption m_delayOption;
-
-    units::time::second_t m_startDelay;
-    units::time::second_t m_reefDelay;
-    units::time::second_t m_coralStationDelay;
 
     std::string m_choreoTrajectoryName;
     VISION_ALIGNMENT m_visionAlignment;

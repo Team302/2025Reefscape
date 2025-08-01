@@ -34,6 +34,7 @@ public:
         ElevatorHeight_Inch,
         IsInBargeZone_Bool,
         IsInReefZone_Bool,
+        DesiredCoralSide_Int,
         LoopCounterEnd // Must be last Enum for the loop counter
     };
 
@@ -66,5 +67,10 @@ public:
         Auton,
         Teleop,
         Disabled
+    };
+    enum DesiredCoralSide
+    {
+        Sidewall,
+        AllianceWall
     };
 };

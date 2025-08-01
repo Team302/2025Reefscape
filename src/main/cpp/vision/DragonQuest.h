@@ -21,16 +21,12 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <networktables/DoubleTopic.h>
 #include <state/IRobotStateChangeSubscriber.h>
-
 #include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveChassis.h"
 #include "networktables/DoubleArrayTopic.h"
 #include "networktables/IntegerTopic.h"
-#include "utils/logging/debug/Logger.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/logging/signals/DragonDataLogger.h"
-#include "vision/DragonVision.h"
 #include "vision/DragonVisionStructs.h"
 
 using namespace std;

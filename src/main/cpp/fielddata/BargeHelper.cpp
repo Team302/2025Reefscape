@@ -14,8 +14,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/ChassisConfigMgr.h"
 #include "fielddata/BargeHelper.h"
 #include "frc/DriverStation.h"
 #include "frc/Filesystem.h"
@@ -32,7 +31,7 @@ BargeHelper *BargeHelper::GetInstance()
     return BargeHelper::m_instance;
 }
 
-BargeHelper::BargeHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+BargeHelper::BargeHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                              m_fieldConstants(FieldConstants::GetInstance())
 {
     CalculateZones();

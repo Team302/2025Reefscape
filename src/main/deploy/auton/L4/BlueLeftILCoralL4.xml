@@ -2,10 +2,10 @@
 <!DOCTYPE auton SYSTEM "auton.dtd">
 <auton>
 
-<!-- <primitive id= "RESET_POSITION_PATH_PLANNER"
+<!-- <primitive id= "RESET_POSITION"
 choreoname = "BlueLeftInside_I"/> -->
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftInside_I"
 time = "3.0">
 <zone filename = "BlueReefDriveToRight.xml"/>
@@ -15,7 +15,7 @@ time = "3.0">
 taleOption="STATE_SCORE_CORAL"
 time = "5.0"/> 
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_I2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "2.5">
@@ -25,7 +25,7 @@ time = "2.5">
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K1"
 time = "5.0">
 <zone filename = "BlueReefDriveToLeft.xml"/>
@@ -35,7 +35,7 @@ time = "5.0">
 taleOption="STATE_SCORE_CORAL"
 time = "5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_K2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
 time = "2.5">
@@ -46,7 +46,7 @@ time = "2.5">
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_L1"
 time = "3.0">
 <zone filename = "BlueReefDriveToRight.xml"/>
@@ -56,15 +56,17 @@ time = "3.0">
 taleOption="STATE_SCORE_CORAL"
 time = "5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_L2"
 taleOption = "STATE_HUMAN_PLAYER_LOAD"
-time = "2.5"/>
+time = "2.5">
+<zone filename = "BlueLeftHumanPlayerStation.xml"/>
+</primitive>
 
 <primitive id = "DRIVE_STOP_MECH"
 time = "5.0"/>
 
-<primitive id = "DRIVE_PATH_PLANNER"
+<primitive id = "TRAJECTORY_DRIVE"
 choreoname = "BlueLeftCSA_A1" 
 time = "3.0">
 <zone filename = "BlueReefDriveToLeft.xml"/>

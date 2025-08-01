@@ -12,111 +12,76 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
 #include "chassis/pose/DragonSwervePoseEstimator.h"
-#include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveChassis.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/geometry/Rotation2d.h"
+#include "chassis/ChassisConfigMgr.h"
 #include "state/RobotState.h"
 #include "state/RobotStateChanges.h"
-#include "units/time.h"
-#include "utils/FMSData.h"
-#include "utils/logging/debug/Logger.h"
 #include "vision/DragonVision.h"
-#include "wpi/array.h"
 
-using frc::DriverStation;
-using frc::Pose2d;
-using frc::Rotation2d;
-using frc::SwerveModulePosition;
-using frc::SwerveDriveKinematics;
+DragonSwervePoseEstimator *DragonSwervePoseEstimator::m_instance = nullptr;
 
-DragonSwervePoseEstimator::DragonSwervePoseEstimator(SwerveDriveKinematics<4> kinematics,
-                                                     const Rotation2d &gyroAngle,
-                                                     const wpi::array<SwerveModulePosition, 4> &positions,
-                                                     const Pose2d &initialPose) : m_frontLeft(nullptr),
-                                                                                       m_frontRight(nullptr),
-                                                                                       m_backLeft(nullptr),
-                                                                                       m_backRight(nullptr),
-                                                                                       m_kinematics(kinematics),
-                                                                                       m_poseEstimator(kinematics, gyroAngle, positions, initialPose),
-                                                                                       m_visionPoseEstimators()
+DragonSwervePoseEstimator::DragonSwervePoseEstimator()
 {
-    SetServeModules(ChassisConfigMgr::GetInstance()->GetCurrentChassis());
+    m_chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
+    m_visionPoseEstimators.clear();
 }
 
-void DragonSwervePoseEstimator::SetServeModules(SwerveChassis *chassis)
+DragonSwervePoseEstimator *DragonSwervePoseEstimator::GetInstance()
 {
-    if (chassis != nullptr)
+    if (DragonSwervePoseEstimator::m_instance == nullptr)
     {
-        m_frontLeft = chassis->GetFrontLeft();
-        m_frontRight = chassis->GetFrontRight();
-        m_backLeft = chassis->GetBackLeft();
-        m_backRight = chassis->GetBackRight();
+        DragonSwervePoseEstimator::m_instance = new DragonSwervePoseEstimator();
     }
+    return DragonSwervePoseEstimator::m_instance;
 }
 
 void DragonSwervePoseEstimator::RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator)
 {
-    m_visionPoseEstimators.push_back(poseEstimator);
+    if (poseEstimator != nullptr)
+    {
+        m_visionPoseEstimators.push_back(poseEstimator);
+    }
 }
 
+// This is the new main loop method
 void DragonSwervePoseEstimator::Update()
 {
-
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
-    if (chassis != nullptr)
+    if (m_chassis != nullptr)
     {
-        if (m_frontLeft == nullptr) // Ensure there isn't a timing issue
-        {
-            SetServeModules(chassis);
-        }
-        Rotation2d rot2d{chassis->GetRawYaw()};
-
-        m_poseEstimator.Update(rot2d, wpi::array<SwerveModulePosition, 4>{m_frontLeft->GetPosition(),
-                                                                               m_frontRight->GetPosition(),
-                                                                               m_backLeft->GetPosition(),
-                                                                               m_backRight->GetPosition()});
+        AddVisionMeasurements();
     }
-    AddVisionMeasurements();
-
-    RobotState::GetInstance()->PublishStateChange(RobotStateChanges::ChassisPose_Pose2D, GetPose());
 }
 
 void DragonSwervePoseEstimator::AddVisionMeasurements()
 {
+    // This logic is mostly the same, but it calls the chassis method.
     for (auto estimator : m_visionPoseEstimators)
     {
+        // "Pull" the data from the vision system
         auto poseInfo = estimator->GetPoseEstimate();
-        if (poseInfo.m_confidenceLevel == DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE)
+        if (poseInfo.m_confidenceLevel != DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE)
         {
-            continue;
+            // "Push" the data to the chassis's internal estimator
+            m_chassis->AddVisionMeasurement(poseInfo.m_visionPose,
+                                            poseInfo.m_timeStamp,
+                                            poseInfo.m_stds);
         }
-
-        // currently just using std deviation for vision measurements passed in;
-        // may need to revisit if the different systems provide different std deviation values
-        // for similar data confidence
-        m_poseEstimator.AddVisionMeasurement(poseInfo.m_visionPose,
-                                             poseInfo.m_timeStamp,
-                                             poseInfo.m_stds);
     }
+}
+
+frc::Pose2d DragonSwervePoseEstimator::GetPose() const
+{
+    return (m_chassis != nullptr) ? m_chassis->GetPose() : frc::Pose2d{};
 }
 
 void DragonSwervePoseEstimator::ResetPosition(const frc::Pose2d &pose)
 {
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
-    if (chassis != nullptr && m_frontLeft != nullptr && m_frontRight != nullptr && m_backLeft != nullptr && m_backRight != nullptr)
+    if (m_chassis != nullptr)
     {
-        auto yaw = GetPose().Rotation().Degrees();
-        m_poseEstimator.ResetPosition(yaw,
-                                      wpi::array<frc::SwerveModulePosition, 4>{m_frontLeft->GetPosition(), m_frontRight->GetPosition(), m_backLeft->GetPosition(), m_backRight->GetPosition()},
-                                      pose);
+        m_chassis->ResetPose(pose);
     }
 }
+
 void DragonSwervePoseEstimator::CalculateInitialPose()
 {
     auto vision = DragonVision::GetDragonVision();
@@ -129,42 +94,8 @@ void DragonSwervePoseEstimator::CalculateInitialPose()
             auto visionpose = vision->CalcVisionPose();
             if (visionpose != std::nullopt) // may want to use reset Position instead of reset pose here?
             {
-                ResetPose(visionpose.value());
-                // ResetPosition(visionpose.value());
+                ResetPosition(visionpose.value());
             }
         }
-    }
-}
-frc::Pose2d DragonSwervePoseEstimator::GetPose() const
-{
-    return m_poseEstimator.GetEstimatedPosition();
-}
-void DragonSwervePoseEstimator::ZeroYaw()
-{
-    if (FMSData::GetAllianceColor() == frc::DriverStation::Alliance::kBlue)
-    {
-        ResetPose(frc::Pose2d(GetPose().X(), GetPose().Y(), frc::Rotation2d(0.0_deg)));
-    }
-    else
-    {
-        ResetPose(frc::Pose2d(GetPose().X(), GetPose().Y(), frc::Rotation2d(180.0_deg)));
-    }
-}
-
-void DragonSwervePoseEstimator::ResetPose(const frc::Pose2d &pose)
-{
-    m_poseEstimator.ResetPose(pose);
-
-    // Added the following block to match what was done in 2024
-    auto chassis = ChassisConfigMgr::GetInstance()->GetCurrentChassis();
-    if (chassis != nullptr)
-    {
-        // chassis->SetYaw(pose.Rotation().Degrees());
-        chassis->SetStoredHeading(pose.Rotation().Degrees());
-    }
-
-    for (auto estimator : m_visionPoseEstimators)
-    {
-        estimator->SetRobotPose(pose);
     }
 }

@@ -63,10 +63,10 @@ private:
     static constexpr units::length::inch_t m_yDistanceCageLeft{-43.0};
     static constexpr units::length::inch_t m_centerOffsetFromTag{-1.0};
     static constexpr units::length::inch_t m_xDistanceBarge{20.0};
-    static constexpr units::length::inch_t m_yCoralRightAlliance{30.0};
+    static constexpr units::length::inch_t m_yCoralRightAlliance{25.0};
     static constexpr units::length::inch_t m_yCoralLeftAlliance{-25.0};
-    static constexpr units::length::inch_t m_yCoralLeftSidewall{30.0};
-    static constexpr units::length::inch_t m_yCoralRightSidewall{-22.0};
+    static constexpr units::length::inch_t m_yCoralLeftSidewall{25.0};
+    static constexpr units::length::inch_t m_yCoralRightSidewall{-25.0};
     static constexpr units::length::inch_t m_xNoOffset{0.0};
     static constexpr units::length::inch_t m_yNoOffset{0.0};
     static constexpr units::length::inch_t m_zNoOffset{0.0};
@@ -74,7 +74,7 @@ private:
     // Robot is 34" from front to back
     frc::Transform3d m_halfRobotTransform = frc::Transform3d(
         frc::Translation3d(
-            units::length::inch_t(16), // 16
+            units::length::inch_t(17), // 16
             units::length::inch_t(0.0),
             units::length::inch_t(0.0)),
         frc::Rotation3d());

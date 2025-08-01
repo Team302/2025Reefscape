@@ -15,16 +15,12 @@
 //====================================================================================================================================================
 
 // Team 302 includes
-#include "auton/drivePrimitives/DriveHoldPosition.h"
-#include "auton/drivePrimitives/DriveAutonTrajectory.h"
-#include "auton/drivePrimitives/DriveStop.h"
-#include "auton/drivePrimitives/DriveStopDelay.h"
-#include "auton/drivePrimitives/DriveStopMech.h"
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionTrajectory.h"
 #include "auton/drivePrimitives/VisionDrivePrimitive.h"
 #include "auton/PrimitiveEnums.h"
 #include "auton/PrimitiveFactory.h"
+#include "auton/drivePrimitives/AutonDrivePrimitive.h"
 
 PrimitiveFactory *PrimitiveFactory::m_instance = nullptr;
 
@@ -37,12 +33,8 @@ PrimitiveFactory *PrimitiveFactory::GetInstance()
     return PrimitiveFactory::m_instance; // Return said instance
 }
 
-PrimitiveFactory::PrimitiveFactory() : m_DriveStop(nullptr),
-                                       m_DriveStopDelay(nullptr),
-                                       m_driveStopMech(nullptr),
-                                       m_DriveHoldPosition(nullptr),
-                                       m_resetPositionTrajectory(nullptr),
-                                       m_driveAutonTrajectory(nullptr)
+PrimitiveFactory::PrimitiveFactory() : m_resetPositionTrajectory(nullptr),
+                                       m_autonDrivePrimitive(nullptr)
 {
 }
 
@@ -57,36 +49,18 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
     switch (primitivePasser->GetID()) // Decides which primitive to get or make
     {
     case DO_NOTHING:
-        if (m_DriveStop == nullptr)
-        {
-            m_DriveStop = new DriveStop();
-        }
-        primitive = m_DriveStop;
-        break;
-    case DO_NOTHING_DELAY:
-        if (m_DriveStopDelay == nullptr)
-        {
-            m_DriveStopDelay = new DriveStopDelay();
-        }
-        primitive = m_DriveStopDelay;
-        break;
     case DO_NOTHING_MECHANISMS:
-        if (m_driveStopMech == nullptr)
-        {
-            m_driveStopMech = new DriveStopMech();
-        }
-        primitive = m_driveStopMech;
-        break;
-
     case HOLD_POSITION:
-        if (m_DriveHoldPosition == nullptr)
+    case TRAJECTORY_DRIVE:
+    case VISION_ALIGN:
+        if (m_autonDrivePrimitive == nullptr)
         {
-            m_DriveHoldPosition = new DriveHoldPosition();
+            m_autonDrivePrimitive = new AutonDrivePrimitive();
         }
-        primitive = m_DriveHoldPosition;
+        primitive = m_autonDrivePrimitive;
         break;
 
-    case RESET_POSITION_PATH_PLANNER:
+    case RESET_POSITION:
         if (m_resetPositionTrajectory == nullptr)
         {
             m_resetPositionTrajectory = new ResetPositionTrajectory();
@@ -94,24 +68,9 @@ IPrimitive *PrimitiveFactory::GetIPrimitive(PrimitiveParams *primitivePasser)
         primitive = m_resetPositionTrajectory;
         break;
 
-    case DRIVE_PATH_PLANNER:
-        if (m_driveAutonTrajectory == nullptr)
-        {
-            m_driveAutonTrajectory = new DriveAutonTrajectory();
-        }
-        primitive = m_driveAutonTrajectory;
-        break;
-
-    case VISION_ALIGN:
-        if (m_visionAlign == nullptr)
-        {
-            m_visionAlign = new VisionDrivePrimitive();
-        }
-        primitive = m_visionAlign;
-        break;
-
     default:
         break;
     }
+
     return primitive;
 }

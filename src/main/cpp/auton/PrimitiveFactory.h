@@ -40,11 +40,7 @@ private:
     virtual ~PrimitiveFactory();
 
     static PrimitiveFactory *m_instance;
-    IPrimitive *m_DriveStop;
-    IPrimitive *m_DriveStopDelay;
-    IPrimitive *m_driveStopMech;
-    IPrimitive *m_DriveHoldPosition;
     IPrimitive *m_resetPositionTrajectory;
     IPrimitive *m_visionAlign;
-    IPrimitive *m_driveAutonTrajectory;
+    IPrimitive *m_autonDrivePrimitive;
 };

@@ -14,8 +14,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
+#include "chassis/ChassisConfigMgr.h"
 #include "fielddata/ReefHelper.h"
 #include "frc/DriverStation.h"
 #include "utils/FMSData.h"
@@ -31,7 +30,7 @@ ReefHelper *ReefHelper::GetInstance()
     return ReefHelper::m_instance;
 }
 
-ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetCurrentChassis()),
+ReefHelper::ReefHelper() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                            m_allianceColor(FMSData::GetAllianceColor()),
                            m_fieldConstants(FieldConstants::GetInstance())
 {

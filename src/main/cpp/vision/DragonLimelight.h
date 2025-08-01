@@ -35,7 +35,7 @@
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/ChassisConfigMgr.h"
 
 // Third Party Includes
 
@@ -218,7 +218,7 @@ protected:
 
     // from old dragon camera
     std::string m_cameraName;
-    SwerveChassis *m_chassis;
+    subsystems::CommandSwerveDrivetrain *m_chassis;
     frc::Pose3d m_cameraPose;
     const double m_maxRotationRateDegreesPerSec = 720.0;
     const double m_yawRate = 0.0;

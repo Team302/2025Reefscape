@@ -33,8 +33,8 @@
 #include "auton/PrimitiveParser.h"
 #include "auton/drivePrimitives/AutonUtils.h"
 #include "utils/logging/debug/Logger.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+#include "chassis/ChassisConfigMgr.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
 // Thirdparty includes
 using frc::ChassisSpeeds;
@@ -90,8 +90,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
 
     Rotation2d heading(units::angle::degree_t(0.0));
 
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
-    auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
+    auto chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
 
     if (chassis != nullptr)
     {
@@ -101,7 +100,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
         {
             std::vector<Trajectory::State> states;
 
-            if (param->GetID() == PRIMITIVE_IDENTIFIER::DRIVE_PATH_PLANNER)
+            if (param->GetID() == PRIMITIVE_IDENTIFIER::TRAJECTORY_DRIVE)
             {
                 auto pathname = param->GetTrajectoryName();
                 auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);

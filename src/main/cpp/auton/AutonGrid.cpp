@@ -20,7 +20,6 @@
 
 // Team302 Includes
 #include "auton/AutonGrid.h"
-#include "utils/logging/debug/Logger.h"
 
 // Thirdparty includes
 

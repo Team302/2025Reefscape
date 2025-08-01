@@ -65,5 +65,4 @@ void CameraConfig_302::BuildCameraConfig()
                     units::angle::degree_t(m_questYaw),            // <I> - Yaw of Quest
                     units::angle::degree_t(m_questRoll)            // <I> - Roll of Quest
     );
-    m_questIndex = 1;
 }

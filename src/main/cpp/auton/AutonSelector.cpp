@@ -133,19 +133,6 @@ string AutonSelector::GetTargetFace()
 	return m_targetFace.GetSelected();
 }
 
-units::time::second_t AutonSelector::GetStartDelay()
-{
-	return units::time::second_t(frc::SmartDashboard::GetNumber(m_startDelay, 0));
-}
-units::time::second_t AutonSelector::GetReefDelay()
-{
-	return units::time::second_t(frc::SmartDashboard::GetNumber(m_reefDelay, 0));
-}
-units::time::second_t AutonSelector::GetCoralStationDelay()
-{
-	return units::time::second_t(frc::SmartDashboard::GetNumber(m_coralStationDelay, 0));
-}
-
 //---------------------------------------------------------------------
 // Method: 		PutChoicesOnDashboard
 // Description: This puts the list of files in the m_csvFiles attribute
@@ -184,10 +171,4 @@ void AutonSelector::PutChoicesOnDashboard()
 	m_desiredScoringLevel.AddOption("L4", "L4");
 	m_desiredScoringLevel.SetDefaultOption("L4", "L4");
 	frc::SmartDashboard::PutData("Desired Level", &m_desiredScoringLevel);
-
-	// delay options within our paths
-
-	frc::SmartDashboard::PutNumber(m_startDelay, 0);
-	frc::SmartDashboard::PutNumber(m_reefDelay, 0);
-	frc::SmartDashboard::PutNumber(m_coralStationDelay, 0);
 }

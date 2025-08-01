@@ -329,8 +329,6 @@ private:
 	double m_elevatorGearRatio;
 	double m_elevatorDiameterInch;
 
-	void InitializeLogging();
-
 	frc::Timer m_powerTimer;
 	double m_power = 0.0;
 	double m_energy = 0.0;

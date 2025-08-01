@@ -12,53 +12,34 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
-
 #include <vector>
-
+#include "chassis/ChassisConfigMgr.h"
 #include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/SwerveModule.h"
-#include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Pose2d.h"
-#include "frc/kinematics/SwerveDriveKinematics.h"
-
-class SwerveChassis;
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
 class DragonSwervePoseEstimator
 {
 public:
-    DragonSwervePoseEstimator(frc::SwerveDriveKinematics<4> kinematics,
-                              const frc::Rotation2d &gyroAngle,
-                              const wpi::array<frc::SwerveModulePosition, 4> &positions,
-                              const frc::Pose2d &initialPose);
-
-    void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
-
-    void Update();
-    frc::Pose2d GetPose() const;
-    void ResetPosition(const frc::Pose2d &pose);
-    void ResetPose(const frc::Pose2d &pose);
-    void ZeroYaw();
-    void CalculateInitialPose();
-    std::vector<DragonVisionPoseEstimator *> GetVisionPoseEstimators() { return m_visionPoseEstimators; };
-
-private:
-    void AddVisionMeasurements();
-    DragonSwervePoseEstimator() = delete;
+    static DragonSwervePoseEstimator *GetInstance();
+    DragonSwervePoseEstimator();
     ~DragonSwervePoseEstimator() = default;
 
-    DragonSwervePoseEstimator(const DragonSwervePoseEstimator &) = delete;
-    DragonSwervePoseEstimator &operator=(const DragonSwervePoseEstimator &) = delete;
+    void Update();
 
-    void SetServeModules(SwerveChassis *chassis);
+    void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
+    void CalculateInitialPose();
 
-    SwerveModule *m_frontLeft;
-    SwerveModule *m_frontRight;
-    SwerveModule *m_backLeft;
-    SwerveModule *m_backRight;
-    frc::SwerveDriveKinematics<4> m_kinematics;
-    frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
+    void ResetPosition(const frc::Pose2d &pose);
+    frc::Pose2d GetPose() const;
+
+private:
+    static DragonSwervePoseEstimator *m_instance;
+
+    subsystems::CommandSwerveDrivetrain *m_chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
 
     std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
+
+    void AddVisionMeasurements();
 };

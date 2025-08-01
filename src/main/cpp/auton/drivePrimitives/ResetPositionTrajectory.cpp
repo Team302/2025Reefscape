@@ -22,9 +22,9 @@
 #include "auton/drivePrimitives/IPrimitive.h"
 #include "auton/drivePrimitives/ResetPositionTrajectory.h"
 #include "auton/PrimitiveParams.h"
-#include "chassis/definitions/ChassisConfig.h"
-#include "chassis/definitions/ChassisConfigMgr.h"
-#include "chassis/SwerveChassis.h"
+
+#include "chassis/ChassisConfigMgr.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 #include "vision/DragonVision.h"
 #include "utils/logging/debug/Logger.h"
 #include "utils/FMSData.h"
@@ -40,7 +40,7 @@ ResetPositionTrajectory::ResetPositionTrajectory() : IPrimitive()
 
 void ResetPositionTrajectory::Init(PrimitiveParams *param)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = ChassisConfigMgr::GetInstance();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
     if (chassis != nullptr)
@@ -69,7 +69,7 @@ void ResetPositionTrajectory::Init(PrimitiveParams *param)
 
 void ResetPositionTrajectory::ResetPose(Pose2d pose)
 {
-    auto config = ChassisConfigMgr::GetInstance()->GetCurrentConfig();
+    auto config = ChassisConfigMgr::GetInstance();
     auto chassis = config != nullptr ? config->GetSwerveChassis() : nullptr;
 
     if (chassis != nullptr)
