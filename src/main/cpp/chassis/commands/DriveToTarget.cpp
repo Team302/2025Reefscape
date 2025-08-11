@@ -149,14 +149,6 @@ bool DriveToTarget::IsFinished()
 
 void DriveToTarget::End(bool interrupted)
 {
-    if (m_target == DragonTargetFinderTarget::ALGAE)
-    {
-        auto vision = DragonVision::GetDragonVision();
-        if (vision != nullptr)
-        {
-            vision->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
-        }
-    }
     m_chassis->SetControl(swerve::requests::SwerveDriveBrake{});
 }
 
