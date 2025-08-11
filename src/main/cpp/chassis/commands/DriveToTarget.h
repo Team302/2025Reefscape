@@ -30,7 +30,8 @@ public:
      * @param chassis A pointer to the swerve drive subsystem.
      * @param target The specific field element to target.
      */
-    DriveToTarget(subsystems::CommandSwerveDrivetrain *chassis, DragonTargetFinderTarget target);
+    DriveToTarget(subsystems::CommandSwerveDrivetrain *chassis, DragonTargetFinderTarget target, units::velocity::meters_per_second_t maxSpeed,
+                  units::angular_velocity::degrees_per_second_t maxAngularRate);
 
     // FRC Command Lifecycle methods
     void Initialize() override;
@@ -40,6 +41,9 @@ public:
 
 private:
     void CalculateFeedForward(frc::ChassisSpeeds &chassisSpeeds);
+
+    units::velocity::meters_per_second_t m_maxSpeed;
+    units::angular_velocity::degrees_per_second_t m_maxAngularRate;
 
     subsystems::CommandSwerveDrivetrain *m_chassis;
     DragonTargetFinderTarget m_target;
@@ -85,4 +89,12 @@ private:
 
     frc::ProfiledPIDController<units::length::meters> m_translationPIDX{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
     frc::ProfiledPIDController<units::length::meters> m_translationPIDY{m_translationKP, m_translationKI, m_translationKD, m_translationConstraints, 20_ms};
+
+    swerve::requests::FieldCentric m_fieldDriveRequest = swerve::requests::FieldCentric{}
+                                                             .WithDeadband(m_maxSpeed * 0.1)                                  // TODO: Investigate this deadband vs controller deadband
+                                                             .WithRotationalDeadband(m_maxAngularRate * 0.1)                  // TODO: Investigate this deadband vs controller deadband
+                                                             .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage) // Use open-loop voltage for drive
+                                                             .WithDesaturateWheelSpeeds(true);
+
+    void FindTarget();
 };

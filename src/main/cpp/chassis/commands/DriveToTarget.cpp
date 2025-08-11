@@ -20,13 +20,18 @@
 #include "vision/DragonVisionStructLogger.h"
 #include "fielddata/ReefHelper.h"
 #include "fielddata/BargeHelper.h"
+#include "teleopcontrol/TeleopControl.h"
 
 DriveToTarget::DriveToTarget(
     subsystems::CommandSwerveDrivetrain *chassis,
-    DragonTargetFinderTarget target) : m_chassis(chassis),
-                                       m_target(target),
-                                       m_targetFinder(DragonTargetFinder::GetInstance()),
-                                       m_hasTarget(false)
+    DragonTargetFinderTarget target,
+    units::velocity::meters_per_second_t maxSpeed,
+    units::angular_velocity::degrees_per_second_t maxAngularRate) : m_chassis(chassis),
+                                                                    m_target(target),
+                                                                    m_targetFinder(DragonTargetFinder::GetInstance()),
+                                                                    m_maxSpeed(maxSpeed),
+                                                                    m_maxAngularRate(maxAngularRate),
+                                                                    m_hasTarget(false)
 
 {
     AddRequirements(m_chassis);
@@ -41,30 +46,17 @@ void DriveToTarget::Initialize()
     m_chassis->ResetSamePose();
     auto dragonTargetFinderInst = DragonTargetFinder::GetInstance();
     dragonTargetFinderInst->ResetGoalPose();
-    auto info = dragonTargetFinderInst->GetPose(m_target);
-    m_hasTarget = false;
+    m_endPose = m_chassis->GetPose();
 
-    if (info.has_value())
+    if (m_target == DragonTargetFinderTarget::ALGAE)
     {
-        m_currentType = get<0>(info.value());
-        m_hasTarget = m_currentType != DragonTargetFinderData::NOT_FOUND;
-        if (m_hasTarget)
+        auto vision = DragonVision::GetDragonVision();
+        if (vision != nullptr)
         {
-            m_endPose = get<1>(info.value());
-
-            if (m_chassis != nullptr)
-            {
-                m_currentPose = m_chassis->GetPose();
-                m_translationPIDX.SetGoal(m_endPose.X());
-                m_translationPIDY.SetGoal(m_endPose.Y());
-
-                auto speeds = m_chassis->GetState().Speeds;
-
-                m_translationPIDX.Reset(m_currentPose.X(), speeds.vx);
-                m_translationPIDY.Reset(m_currentPose.Y(), speeds.vy);
-            }
+            vision->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
         }
     }
+    FindTarget();
 }
 
 void DriveToTarget::Execute()
@@ -96,14 +88,26 @@ void DriveToTarget::Execute()
                     chassisSpeeds.vy = std::clamp(chassisSpeeds.vy, -kMaxVelocity, kMaxVelocity);
                 }
             }
+            m_chassis->SetControl(
+                m_driveRequest.WithVelocityX(chassisSpeeds.vx)
+                    .WithVelocityY(chassisSpeeds.vy)
+                    .WithTargetDirection(m_endPose.Rotation().Degrees())
+                    .WithHeadingPID(m_rotationKP, m_rotationKI, m_rotationKD)
+                    .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
+            Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
         }
-        m_chassis->SetControl(
-            m_driveRequest.WithVelocityX(chassisSpeeds.vx)
-                .WithVelocityY(chassisSpeeds.vy)
-                .WithTargetDirection(m_endPose.Rotation().Degrees())
-                .WithHeadingPID(m_rotationKP, m_rotationKI, m_rotationKD)
-                .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance));
-        Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Error", m_endPose.Translation().Distance(m_currentPose.Translation()).value());
+        else // If no target found allow user to drive(TODO: Need to figure out a better way to handle this)
+        {
+            auto controller = TeleopControl::GetInstance();
+            double forward = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_FORWARD);
+            double strafe = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_STRAFE);
+            double rotate = controller->GetAxisValue(TeleopControlFunctions::HOLONOMIC_DRIVE_ROTATE);
+
+            m_chassis->SetControl(
+                m_fieldDriveRequest.WithVelocityX(forward * m_maxSpeed)
+                    .WithVelocityY(strafe * m_maxSpeed)
+                    .WithRotationalRate(rotate * m_maxAngularRate));
+        }
     }
 
     if (m_target == DragonTargetFinderTarget::BARGE) // TODO: Come back and see if there is a better way to implement this including the publishing in End() method
@@ -135,15 +139,24 @@ bool DriveToTarget::IsFinished()
     }
     else
     {
-        isDone = true;
+        FindTarget(); // If no target found (used for vision targets), try to find it again
     }
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is Done", isDone);
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, "DriveToFieldElement", "Is SamePose", isSamePose);
+
     return (isDone || isSamePose);
 }
 
 void DriveToTarget::End(bool interrupted)
 {
+    if (m_target == DragonTargetFinderTarget::ALGAE)
+    {
+        auto vision = DragonVision::GetDragonVision();
+        if (vision != nullptr)
+        {
+            vision->SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH, DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG);
+        }
+    }
     m_chassis->SetControl(swerve::requests::SwerveDriveBrake{});
 }
 
@@ -165,5 +178,35 @@ void DriveToTarget::CalculateFeedForward(frc::ChassisSpeeds &chassisSpeeds)
 
         chassisSpeeds.vx = feedforwardSpeed * angleToTarget.Cos();
         chassisSpeeds.vy = feedforwardSpeed * angleToTarget.Sin();
+    }
+}
+
+void DriveToTarget::FindTarget()
+{
+    auto dragonTargetFinderInst = DragonTargetFinder::GetInstance();
+
+    auto info = dragonTargetFinderInst->GetPose(m_target);
+    m_hasTarget = false;
+
+    if (info.has_value())
+    {
+        m_currentType = get<0>(info.value());
+        m_hasTarget = m_currentType != DragonTargetFinderData::NOT_FOUND;
+        if (m_hasTarget)
+        {
+            m_endPose = get<1>(info.value());
+
+            if (m_chassis != nullptr)
+            {
+                m_currentPose = m_chassis->GetPose();
+                m_translationPIDX.SetGoal(m_endPose.X());
+                m_translationPIDY.SetGoal(m_endPose.Y());
+
+                auto speeds = m_chassis->GetState().Speeds;
+
+                m_translationPIDX.Reset(m_currentPose.X(), speeds.vx);
+                m_translationPIDY.Reset(m_currentPose.Y(), speeds.vy);
+            }
+        }
     }
 }

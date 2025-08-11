@@ -657,7 +657,7 @@ std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTa
 	return std::nullopt;
 }
 
-void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline)
+void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline) // TODO: When we rework vision, we should make this funciton a result of Camera names not usage, this way we can specify the camera we want. Not all cameras of a certian change to the same pipeline
 {
 	auto cameras = GetCameras(position);
 	for (auto cam : cameras)
@@ -665,7 +665,6 @@ void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LI
 		if (cam->GetPipeline() != pipeline)
 		{
 			cam->SetPipeline(pipeline);
-			// hopefully will update the target
 			cam->PeriodicCacheData();
 		}
 	}
