@@ -19,6 +19,7 @@
 #include "chassis/commands/TeleopFieldDrive.h"
 #include "chassis/commands/TeleopRobotDrive.h"
 #include "chassis/commands/DriveToTarget.h"
+#include "chassis/commands/VisionDrive.h"
 #include "state/RobotState.h"
 #include "state/IRobotStateChangeSubscriber.h"
 #include "frc2/command/ProxyCommand.h"
@@ -46,7 +47,7 @@ SwerveContainer::SwerveContainer() : m_chassis(ChassisConfigMgr::GetInstance()->
                                      m_driveToLeftCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::LEFT_CAGE)),
                                      m_driveToRightCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::RIGHT_CAGE)),
                                      m_driveToCenterCage(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::CENTER_CAGE)),
-                                     m_driveToAlgae(std::make_unique<DriveToTarget>(m_chassis, DragonTargetFinderTarget::ALGAE)),
+                                     m_driveToAlgae(std::make_unique<VisionDrive>(m_chassis, TeleopControl::GetInstance(), m_maxSpeed, m_maxAngularRate)),
                                      m_trajectoryDrive(std::make_unique<TrajectoryDrive>(m_chassis))
 
 {
