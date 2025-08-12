@@ -40,7 +40,7 @@ private:
     subsystems::CommandSwerveDrivetrain *m_chassis;
     TeleopControl *m_controller;
     units::velocity::meters_per_second_t m_maxSpeed;
-    units::velocity::meters_per_second_t m_maxVisionSpeed = 1_mps;
+    units::velocity::meters_per_second_t m_maxVisionSpeed = 1.5_mps;
     units::angular_velocity::degrees_per_second_t m_maxAngularRate;
 
     DragonVision *m_vision = DragonVision::GetDragonVision();

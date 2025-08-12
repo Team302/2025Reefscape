@@ -47,7 +47,7 @@ void VisionDrive::Execute()
         auto ty = -m_vision->GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 
         auto rotate = tx.value() * m_rotationkP * m_maxAngularRate;
-        auto forward = ty.value() * m_forwardkP * m_maxSpeed;
+        auto forward = ty.value() * m_forwardkP * m_maxVisionSpeed;
 
         m_chassis->SetControl(
             m_RobotDriveRequest.WithVelocityX(forward)
