@@ -45,6 +45,5 @@ private:
                                                              .WithDeadband(m_maxSpeed * 0.1)
                                                              .WithRotationalDeadband(m_maxAngularRate * 0.1) // Add a 10% deadband
                                                              .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage)
-                                                             .WithDesaturateWheelSpeeds(true); // Use open-loop control for drive motors
-    // Use open-loop control for drive motors
+                                                             .WithDesaturateWheelSpeeds(true);
 };
