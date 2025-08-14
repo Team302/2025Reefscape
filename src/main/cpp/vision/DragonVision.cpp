@@ -453,31 +453,21 @@ std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE 
 units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCameras(usage);
-	units::angle::degree_t minTx = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
-		auto thisTx = cam->GetTx();
-		if (thisTx < minTx)
-		{
-			minTx = thisTx;
-		}
+		return cam->GetTy();
 	}
-	return minTx;
+	return 0_deg;
 }
 
 units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	auto cameras = GetCameras(usage);
-	units::angle::degree_t minTy = units::angle::degree_t(720); // arbitrary large value
 	for (auto cam : cameras)
 	{
-		auto thisTy = cam->GetTy();
-		if (thisTy < minTy)
-		{
-			minTy = thisTy;
-		}
+		return cam->GetTx();
 	}
-	return minTy;
+	return 0_deg;
 }
 
 std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DRAGON_LIMELIGHT_CAMERA_USAGE usage)

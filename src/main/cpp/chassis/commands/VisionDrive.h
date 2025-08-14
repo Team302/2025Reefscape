@@ -22,6 +22,7 @@
 #include "teleopcontrol/TeleopControl.h"
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
+#include <frc/controller/PIDController.h>
 
 class VisionDrive : public frc2::CommandHelper<frc2::Command, VisionDrive>
 {
@@ -40,13 +41,21 @@ private:
     subsystems::CommandSwerveDrivetrain *m_chassis;
     TeleopControl *m_controller;
     units::velocity::meters_per_second_t m_maxSpeed;
-    units::velocity::meters_per_second_t m_maxVisionSpeed = 1.5_mps;
+    units::velocity::meters_per_second_t m_maxVisionSpeed = 1.25_mps;
+    units::angular_velocity::degrees_per_second_t m_visionAngularRate = 360_deg_per_s;
     units::angular_velocity::degrees_per_second_t m_maxAngularRate;
 
     DragonVision *m_vision = DragonVision::GetDragonVision();
 
-    double m_forwardkP = 0.1;
-    double m_rotationkP = 0.005;
+    double m_forwardkP = 0.12;
+    double m_forwadkI = 0.1;
+    double m_forwardkD = 0.0;
+    double m_rotationkP = 0.15;
+    double m_rotationkI = 0.1;
+    double m_rotationkD = 0.0;
+
+    frc::PIDController m_drivePID{m_forwardkP, m_forwadkI, m_forwardkD};
+    frc::PIDController m_rotatePID{m_forwardkP, m_forwadkI, m_forwardkD};
 
     swerve::requests::RobotCentric m_RobotDriveRequest = swerve::requests::RobotCentric{}
                                                              .WithDeadband(m_maxSpeed * 0.1)

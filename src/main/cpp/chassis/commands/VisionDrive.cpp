@@ -27,6 +27,8 @@ VisionDrive::VisionDrive(subsystems::CommandSwerveDrivetrain *chassis,
                                                                                          m_maxAngularRate(maxAngularRate)
 {
     AddRequirements(m_chassis);
+    m_drivePID.SetIZone(5.0);
+    m_rotatePID.SetIZone(5.0);
 }
 
 void VisionDrive::Initialize()
@@ -43,11 +45,11 @@ void VisionDrive::Execute()
     bool hasTarget = m_vision->HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
     if (hasTarget)
     {
-        auto tx = -m_vision->GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
+        auto tx = m_vision->GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
         auto ty = -m_vision->GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 
-        auto rotate = tx.value() * m_rotationkP * m_maxAngularRate;
-        auto forward = ty.value() * m_forwardkP * m_maxVisionSpeed;
+        auto rotate = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotatePID.Calculate(tx.value())), -m_visionAngularRate, m_visionAngularRate);
+        auto forward = std::clamp(units::velocity::meters_per_second_t(m_drivePID.Calculate(ty.value())), -m_maxVisionSpeed, m_maxVisionSpeed);
 
         m_chassis->SetControl(
             m_RobotDriveRequest.WithVelocityX(forward)
