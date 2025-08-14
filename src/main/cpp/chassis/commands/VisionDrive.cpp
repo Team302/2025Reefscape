@@ -14,8 +14,6 @@
 //====================================================================================================================================================
 
 #include "chassis/commands/VisionDrive.h"
-#include "utils/logging/debug/Logger.h"
-#include <frc/RobotBase.h>
 
 // Note the simplified constructor and AddRequirements call
 VisionDrive::VisionDrive(subsystems::CommandSwerveDrivetrain *chassis,
@@ -45,7 +43,7 @@ void VisionDrive::Execute()
     bool hasTarget = m_vision->HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
     if (hasTarget)
     {
-        auto tx = m_vision->GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
+        auto tx = -m_vision->GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
         auto ty = -m_vision->GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE::BOTH);
 
         auto rotate = std::clamp(units::angular_velocity::degrees_per_second_t(m_rotatePID.Calculate(tx.value())), -m_visionAngularRate, m_visionAngularRate);
