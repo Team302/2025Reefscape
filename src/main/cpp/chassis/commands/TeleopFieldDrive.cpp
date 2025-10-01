@@ -15,6 +15,7 @@
 
 #include "chassis/commands/TeleopFieldDrive.h"
 #include "state/RobotState.h"
+#include "utils/FMSData.h"
 
 // Note the simplified constructor and AddRequirements call
 TeleopFieldDrive::TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
@@ -28,6 +29,7 @@ TeleopFieldDrive::TeleopFieldDrive(subsystems::CommandSwerveDrivetrain *chassis,
     AddRequirements(m_chassis);
     m_targetFinder = DragonTargetFinder::GetInstance();
     m_fieldHeadingDriveRequest.WithHeadingPID(m_heading_kP, m_heading_kI, m_heading_kD);
+    RobotState::GetInstance()->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
 void TeleopFieldDrive::Initialize()
@@ -54,9 +56,15 @@ void TeleopFieldDrive::Execute()
     // Heading Control
     if (isFaceReefSelected)
     {
-        FaceReef();
+        if (m_climbMode == RobotStateChanges::ClimbMode::ClimbModeOn)
+        {
+            m_targetHeading = units::angle::degree_t(-90);
+        }
+        else
+        {
+            FaceReef();
+        }
         m_chassis->SetControl(m_fieldHeadingDriveRequest.WithVelocityX(forward * m_maxSpeed)
-                                  .WithForwardPerspective(ctre::phoenix6::swerve::requests::ForwardPerspectiveValue::BlueAlliance)
                                   .WithVelocityY(strafe * m_maxSpeed)
                                   .WithTargetDirection(m_targetHeading));
     }
@@ -87,6 +95,12 @@ void TeleopFieldDrive::FaceReef()
     if (info.has_value())
     {
         auto targetpose = get<1>(info.value());
-        m_targetHeading = targetpose.Rotation().Degrees() - 180_deg;
+        m_targetHeading = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? targetpose.Rotation().Degrees() - 180_deg : targetpose.Rotation().Degrees();
     }
+}
+
+void TeleopFieldDrive::NotifyStateUpdate(RobotStateChanges::StateChange change, int value)
+{
+    if (RobotStateChanges::StateChange::ClimbModeStatus_Int == change)
+        m_climbMode = static_cast<RobotStateChanges::ClimbMode>(value);
 }
