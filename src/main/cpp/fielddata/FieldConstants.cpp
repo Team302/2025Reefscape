@@ -163,7 +163,7 @@ void FieldConstants::ReadFieldCalibrationData()
     }
 }
 
-frc::Pose3d FieldConstants::GetAprilTagPoseFromLayout(int tagID){
+frc::Pose3d FieldConstants::GetAprilTagPoseFromLayout(int tagID) {
     if (!m_fieldLayout.GetTagPose(tagID).has_value())
     {
         return frc::Pose3d();
