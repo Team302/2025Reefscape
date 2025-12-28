@@ -163,6 +163,7 @@ void Robot::InitializeRobot()
         {
             if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest() != nullptr)
             {
+                m_quest = CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest();
                 m_dragonswerveposeestimator->RegisterVisionPoseEstimator(CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest());
             }
         }
