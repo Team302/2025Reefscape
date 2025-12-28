@@ -161,9 +161,9 @@ void Robot::InitializeRobot()
         }
         if (!visionPoseEstimators.empty())
         {
-            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest() != nullptr)
             {
-                m_quest = static_cast<DragonQuest *>(visionPoseEstimators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+                m_dragonswerveposeestimator->RegisterVisionPoseEstimator(CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest());
             }
         }
     }

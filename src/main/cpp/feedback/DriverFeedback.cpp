@@ -187,13 +187,9 @@ void DriverFeedback::UpdateDiagnosticLEDs()
                     ll1Status = limeLight->HealthCheck();
                 }
             }
-            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest() != nullptr)
             {
-                auto quest = dynamic_cast<DragonQuest *>(visionPoseEstitmators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
-                if (quest != nullptr)
-                {
-                    questStatus = quest->HealthCheck();
-                }
+                CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest()->HealthCheck();
             }
         }
     }
