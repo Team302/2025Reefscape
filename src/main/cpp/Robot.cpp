@@ -76,7 +76,7 @@ void Robot::RobotPeriodic()
     if (m_quest != nullptr)
     {
         m_quest->HandleHeartBeat();
-        m_quest->RefreshNT();
+        m_quest->GetPoseEstimate();
     }
 
     UpdateDriveTeamFeedback();
@@ -169,7 +169,10 @@ void Robot::InitializeRobot()
             }
         }
     }
-
+    if (m_quest != nullptr)
+    {
+        m_quest->SetRobotPose(frc::Pose2d());
+    }
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
 }

@@ -28,6 +28,9 @@
 #include "networktables/IntegerTopic.h"
 #include "utils/logging/signals/DragonDataLogger.h"
 #include "vision/DragonVisionStructs.h"
+#include "vision/Questnavlib/commands.pb.h"
+#include "vision/Questnavlib/data.pb.h"
+#include <networktables/RawTopic.h>
 
 using namespace std;
 
@@ -60,7 +63,6 @@ public:
 
 private:
     DragonQuest() = delete;
-    void ZeroPosition();
 
     units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
     units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
@@ -70,16 +72,17 @@ private:
     units::angle::degree_t m_mountingRoll;   /// <I> - Roll of Quest
 
     std::shared_ptr<nt::NetworkTable> m_networktable;
-    static DragonQuest *m_dragonquest;
-    nt::IntegerSubscriber m_questMiso;
-    nt::IntegerPublisher m_questMosi;
-    nt::DoubleArrayTopic m_posTopic;
-    nt::DoubleArrayTopic m_rotationTopic;
-    nt::IntegerTopic m_frameCountTopic;
-    nt::DoubleArrayPublisher m_initialPosePublisher;
-    nt::DoubleSubscriber m_heartbeatRequestSub;
-    nt::DoublePublisher m_heartbeatResponsePub;
-    nt::DoubleSubscriber m_timestamp;
+
+    // Replace array topics with raw topics for protobuf
+    nt::RawPublisher m_frameDataPublisher;
+    nt::RawSubscriber m_frameDataSubscriber;
+    nt::RawPublisher m_commandPublisher;
+    nt::RawSubscriber m_commandResponseSubscriber;
+    nt::RawPublisher m_deviceDataPublisher;
+    nt::RawSubscriber m_deviceDataSubscriber;
+
+    // Add command ID tracking
+    uint32_t m_nextCommandId = 1;
 
     frc::SendableChooser<bool> m_questEnabledChooser;
     frc::SendableChooser<bool> m_questEndgameEnabledChooser;
