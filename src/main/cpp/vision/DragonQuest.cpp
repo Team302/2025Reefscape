@@ -62,24 +62,31 @@ DragonQuest::DragonQuest(
     RobotStates->RegisterForStateChanges(this, RobotStateChanges::StateChange::ClimbModeStatus_Int);
 }
 
-frc::Pose2d DragonQuest::GetEstimatedPose()
+void DragonQuest::Periodic()
+{
+    SetIsConnected();
+    HandleDashboard();
+    GetEstimatedPose();
+}
+
+void DragonQuest::GetEstimatedPose()
 {
     auto rawData = m_frameDataSubscriber.Get();
     if (rawData.empty())
     {
-        return frc::Pose2d{}; // Return default pose if no data
+        m_lastCalculatedPose = frc::Pose2d{}; // Return default pose if no data
     }
 
     questnav::protos::data::ProtobufQuestNavFrameData frameData;
     if (!frameData.ParseFromArray(rawData.data(), rawData.size()))
     {
         Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR_ONCE, string("DragonQuest"), string("GetEstimatedPose"), string("Failed to parse frame data"));
-        return frc::Pose2d{};
+        m_lastCalculatedPose = frc::Pose2d{};
     }
 
     if (!frameData.has_pose3d())
     {
-        return frc::Pose2d{};
+        m_lastCalculatedPose = frc::Pose2d{};
     }
 
     const auto &pose3d = frameData.pose3d();
@@ -97,13 +104,13 @@ frc::Pose2d DragonQuest::GetEstimatedPose()
 
     // Convert from Quest coordinates to robot coordinates
     units::length::meter_t x{translation.x()};
-    units::length::meter_t y{-translation.y()};
-    units::angle::radian_t yaw{-yawRadians};
+    units::length::meter_t y{translation.y()};
+    units::angle::radian_t yaw{yawRadians};
 
     frc::Pose2d questPose{x, y, yaw};
     frc::Pose2d robotPose = questPose.TransformBy(m_questToRobotTransform.Inverse());
 
-    return robotPose;
+    m_lastCalculatedPose = robotPose;
 }
 
 void DragonQuest::SetIsConnected()
@@ -143,23 +150,7 @@ void DragonQuest::SetIsConnected()
 
 void DragonQuest::DataLog(uint64_t timestamp)
 {
-    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, GetEstimatedPose());
-}
-
-void DragonQuest::HandleHeartBeat()
-{
-    // if (m_questMiso.Get() == 98)
-    // {
-    //     m_questMosi.Set(0);
-    // }
-    // double requestId = m_heartbeatRequestSub.Get();
-    // // Only respond to new requests to avoid flooding
-    // if (requestId > 0 && requestId != m_lastProcessedHeartbeatId)
-    // {
-    //     m_heartbeatResponsePub.Set(requestId);
-    //     m_lastProcessedHeartbeatId = requestId;
-    // }
-    SetIsConnected();
+    Log2DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_QUEST_POSE2D, m_lastCalculatedPose);
 }
 
 void DragonQuest::SetRobotPose(const frc::Pose2d &pose)
@@ -235,7 +226,6 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("m_isQuestEnabled"), m_isQuestEnabled);
 
     DragonVisionPoseEstimatorStruct str;
-    HandleDashboard();
     if (!m_hasReset || !m_isConnected || !m_isQuestEnabled)
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::NONE;
@@ -244,12 +234,12 @@ DragonVisionPoseEstimatorStruct DragonQuest::GetPoseEstimate()
     else
     {
         str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
-        str.m_visionPose = GetEstimatedPose();
+        str.m_visionPose = m_lastCalculatedPose;
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("x"), str.m_visionPose.X().value());
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("y"), str.m_visionPose.Y().value());
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("rot"), str.m_visionPose.Rotation().Degrees().value());
         str.m_stds = wpi::array{m_stdxy, m_stdxy, m_stddeg};
-        // str.m_timeStamp = units::time::second_t(m_timestamp.GetAtomic().serverTime);
+        str.m_timeStamp = units::time::second_t(m_frameDataSubscriber.GetAtomic().serverTime);
         Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("questnav"), string("confidence"), string("HIGH"));
     }
     return str;

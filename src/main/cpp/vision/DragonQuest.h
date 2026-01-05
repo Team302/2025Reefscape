@@ -46,23 +46,26 @@ public:
         units::angle::degree_t mountingYaw,    /// <I> - Yaw of Quest
         units::angle::degree_t mountingRoll    /// <I> - Roll of Quest
     );
-    frc::Pose2d GetEstimatedPose();
     void DataLog(uint64_t timestamp) override;
+
     bool HealthCheck() override { return m_isConnected; };
-    void SetIsConnected();
 
     DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
+
     void SetRobotPose(const frc::Pose2d &pose) override;
 
-    void RefreshNT();
-    void HandleHeartBeat();
-
-    void HandleDashboard();
+    void Periodic();
 
     void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
 private:
     DragonQuest() = delete;
+
+    void GetEstimatedPose();
+
+    void SetIsConnected();
+
+    void HandleDashboard();
 
     units::length::inch_t m_mountingXOffset; /// <I> x offset of Quest from robot center (forward relative to robot)
     units::length::inch_t m_mountingYOffset; /// <I> y offset of Quest from robot center (left relative to robot)
@@ -100,7 +103,7 @@ private:
 
     int m_lastProcessedHeartbeatId = 0;
 
-    frc::Pose2d m_rawQuestPose;
+    frc::Pose2d m_lastCalculatedPose;
 
     bool m_isQuestEnabled = false; // <I> Is the Quest enabled?
     RobotStateChanges::ClimbMode m_climbMode = RobotStateChanges::ClimbMode::ClimbModeOff;

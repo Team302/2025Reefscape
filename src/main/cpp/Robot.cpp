@@ -75,7 +75,7 @@ void Robot::RobotPeriodic()
 
     if (m_quest != nullptr)
     {
-        m_quest->HandleHeartBeat();
+        m_quest->Periodic();
         m_quest->GetPoseEstimate();
     }
 
