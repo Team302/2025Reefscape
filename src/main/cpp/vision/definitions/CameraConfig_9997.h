@@ -27,9 +27,9 @@ public:
     void BuildCameraConfig() override;
 
     std::vector<int> GetLimelightIndexs() override { return m_limelightIndexs; }
-    int GetQuestIndex() override { return m_questIndex; }
+    DragonQuest *GetQuest() { return m_quest; }
 
 private:
     std::vector<int> m_limelightIndexs;
-    int m_questIndex = -1;
+    DragonQuest *m_quest = nullptr;
 };

@@ -75,8 +75,8 @@ void Robot::RobotPeriodic()
 
     if (m_quest != nullptr)
     {
-        m_quest->HandleHeartBeat();
-        m_quest->RefreshNT();
+        m_quest->Periodic();
+        m_quest->GetPoseEstimate();
     }
 
     UpdateDriveTeamFeedback();
@@ -162,13 +162,17 @@ void Robot::InitializeRobot()
         }
         if (!visionPoseEstimators.empty())
         {
-            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex() != -1)
+            if (CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest() != nullptr)
             {
-                m_quest = static_cast<DragonQuest *>(visionPoseEstimators[CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuestIndex()]);
+                m_quest = CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest();
+                m_dragonswerveposeestimator->RegisterVisionPoseEstimator(CameraConfigMgr::GetInstance()->GetCurrentConfig()->GetQuest());
             }
         }
     }
-
+    if (m_quest != nullptr)
+    {
+        m_quest->SetRobotPose(frc::Pose2d());
+    }
     m_robotState = RobotState::GetInstance();
     m_robotState->Init();
 }

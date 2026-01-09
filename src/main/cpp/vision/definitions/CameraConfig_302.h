@@ -27,11 +27,11 @@ public:
     void BuildCameraConfig() override;
 
     std::vector<int> GetLimelightIndexs() override { return m_limelightIndexs; }
-    int GetQuestIndex() override { return m_questIndex; }
+    DragonQuest *GetQuest() override { return m_quest; }
 
 private:
     std::vector<int> m_limelightIndexs;
-    int m_questIndex = -1;
+    DragonQuest *m_quest = nullptr;
 
     static constexpr units::length::meter_t m_ll1MountingXOffset{0.24765};  // 9.75 inches
     static constexpr units::length::meter_t m_ll1MountingYOffset{-0.08255}; // -3.25 inches

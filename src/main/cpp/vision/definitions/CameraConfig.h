@@ -26,5 +26,5 @@ public:
 
     virtual void BuildCameraConfig();
     virtual std::vector<int> GetLimelightIndexs() = 0;
-    virtual int GetQuestIndex() = 0;
+    virtual DragonQuest *GetQuest() = 0;
 };
