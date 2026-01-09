@@ -14,31 +14,24 @@
 //====================================================================================================================================================
 
 #pragma once
-#include <vector>
 
-#include "frc/geometry/Pose2d.h"
-#include "units/time.h"
-#include "wpi/array.h"
+#include "vision/DragonVision.h"
+#include <frc2/command/CommandPtr.h>
 
-// struct DragonVisionPoseEstimatorStruct
-// {
-// public:
-//     DragonVisionPoseEstimatorStruct() : m_confidenceLevel(ConfidenceLevel::NONE),
-//                                         m_visionPose(frc::Pose2d{}),
-//                                         m_timeStamp(units::time::second_t(0.0)),
-//                                         m_stds(wpi::array(0.9, 0.9, 0.9)) {};
-//     ~DragonVisionPoseEstimatorStruct() = default;
+/**
+ * This class is where the bulk of the robot should be declared.  Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls).  Instead, the structure of the robot (including subsystems,
+ * commands, and trigger mappings) should be declared here.
+ */
+class DragonVisionPoseEstimatorContainer
+{
+public:
+    DragonVisionPoseEstimatorContainer();
 
-//     enum ConfidenceLevel
-//     {
-//         NONE,
-//         LOW,
-//         MEDIUM,
-//         HIGH
-//     };
-
-//     ConfidenceLevel m_confidenceLevel;
-//     frc::Pose2d m_visionPose;
-//     units::time::second_t m_timeStamp;
-//     wpi::array<double, 3> m_stds;
-// };
+private:
+    // The robot's subsystems and commands are defined here...
+    DragonVision *m_vision = DragonVision::GetDragonVision();
+    frc2::CommandPtr m_updateVisionPoseEstimatorCommand;
+};

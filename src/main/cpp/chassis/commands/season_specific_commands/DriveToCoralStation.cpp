@@ -13,8 +13,8 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #include "chassis/commands/season_specific_commands/DriveToCoralStation.h"
-#include "fielddata/CoralStationHelper.h"
 #include "fielddata/FieldConstants.h"
+#include "fielddata/CoralStationHelper.h"
 #include "state/RobotState.h"
 
 DriveToCoralStation::DriveToCoralStation(subsystems::CommandSwerveDrivetrain *chassis)
