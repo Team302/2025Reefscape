@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -16,12 +15,16 @@
 
 #pragma once
 
-///  @brief	    Interface for loggable items that can be mixed in with other interfaces
-class SensorData
+class SwerveContainer;
+class DragonVisionPoseEstimatorContainer;
+
+class RobotContainer
 {
 public:
-	SensorData();
-	virtual ~SensorData() = default;
+    RobotContainer();
+    ~RobotContainer() = default;
 
-	virtual void PeriodicCacheData() = 0;
+private:
+    SwerveContainer *m_swervecontainer;
+    DragonVisionPoseEstimatorContainer *m_visionPoseEstimatorContainer;
 };

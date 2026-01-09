@@ -13,6 +13,11 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
+#include "feedback/DriverFeedback.h"
+#include "frc/DriverStation.h"
+#include "state/IRobotStateChangeSubscriber.h"
+#include "state/RobotState.h"
+#include "state/RobotStateChanges.h"
 #include <frc/DriverStation.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
@@ -20,17 +25,12 @@
 
 #include "chassis/ChassisConfigMgr.h"
 #include "configs/MechanismConfigMgr.h"
-#include "feedback/DriverFeedback.h"
-#include "frc/DriverStation.h"
 #include "mechanisms/DragonTale/DragonTale.h"
-#include "state/IRobotStateChangeSubscriber.h"
-#include "state/RobotState.h"
-#include "state/RobotStateChanges.h"
 #include "teleopcontrol/TeleopControl.h"
 #include "utils/logging/debug/Logger.h"
-#include "vision/definitions/CameraConfigMgr.h"
 #include "vision/DragonQuest.h"
 #include "vision/DragonVision.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 using frc::DriverStation;
 
