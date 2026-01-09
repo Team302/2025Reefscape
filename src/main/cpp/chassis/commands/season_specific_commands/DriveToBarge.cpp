@@ -12,11 +12,29 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
+#include "chassis/commands/season_specific_commands/DriveToBarge.h"
+#include "fielddata/BargeHelper.h"
 
-#include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "chassis/pose/DragonSwervePoseEstimator.h"
-
-DragonVisionPoseEstimator::DragonVisionPoseEstimator()
+DriveToBarge::DriveToBarge(subsystems::CommandSwerveDrivetrain *chassis)
+    : DriveToPose(chassis)
 {
-    DragonSwervePoseEstimator::GetInstance()->RegisterVisionPoseEstimator(this);
+}
+
+frc::Pose2d DriveToBarge::GetEndPose()
+{
+    frc::Pose2d endPose;
+    auto bargeHelper = BargeHelper::GetInstance();
+    if (bargeHelper != nullptr)
+    {
+        endPose = bargeHelper->CalcBargePose();
+    }
+    return endPose;
+}
+
+void DriveToBarge::Execute()
+{
+    DriveToPose::Execute();
+
+    auto bargeHelper = BargeHelper::GetInstance();
+    bargeHelper->IsInZone();
 }

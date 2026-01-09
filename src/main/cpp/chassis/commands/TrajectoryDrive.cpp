@@ -32,7 +32,7 @@
 TrajectoryDrive::TrajectoryDrive(
     subsystems::CommandSwerveDrivetrain *chassis) : m_chassis(chassis),
                                                     m_pathName(""),
-                                                    m_trajectoryStates(),
+                                                    // m_trajectoryStates(),
                                                     m_prevPose(),
                                                     m_wasMoving(false),
                                                     m_timer(std::make_unique<frc::Timer>()),

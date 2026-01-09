@@ -116,6 +116,8 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "xhash": "cpp",
+    "coroutine": "cpp",
+    "resumable": "cpp",
     "queue": "cpp",
     "stack": "cpp"
   },

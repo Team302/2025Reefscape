@@ -42,6 +42,11 @@ InitState::InitState(std::string stateName,
 
 void InitState::Init()
 {
+	if (m_mechanism == nullptr)
+	{
+		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, string("ClimberManager"), string("InitState"), string("Mechanism is null"));
+		return;
+	}
 	Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("ArrivedAt"), string("InitState"), string("Init"));
 	m_mechanism->GetClimber()->SetPosition(units::angle::turn_t(0.0));
 	m_mechanism->UpdateTargetClimberPercentOut(m_ClimberTarget);

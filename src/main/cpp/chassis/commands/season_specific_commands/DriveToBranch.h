@@ -12,27 +12,31 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
 
-// C++ Includes
-#include <string>
-#include <vector>
+#include "chassis/commands/DriveToPose.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
+#include "chassis/SwerveContainer.h"
+#include "fielddata/FieldConstants.h"
 
-// FRC includes
-#include "frc/Timer.h"
-#include "networktables/NetworkTable.h"
-#include "units/angle.h"
-#include "units/length.h"
-#include "units/time.h"
-#include "frc/geometry/Pose2d.h"
-
-// Team 302 includes
-#include "vision/DragonLimelight.h"
-
-class DragonLimelight90 : public DragonLimelight
+class DriveToBranch : public DriveToPose
 {
 public:
-    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTy(); }
-    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return GetTx(); }
+    /**
+     * @brief Creates a command to drive to the Barge AprilTag.
+     *
+     * @param chassis A pointer to the swerve drive subsystem.
+     */
+    DriveToBranch(subsystems::CommandSwerveDrivetrain *chassis, FieldConstants::FIELD_ELEMENT_OFFSETS location);
+
+    /**
+     * @brief Default destructor.
+     */
+    ~DriveToBranch() = default;
+
+    frc::Pose2d GetEndPose() override;
+    void Execute() override;
+
+private:
+    FieldConstants::FIELD_ELEMENT_OFFSETS m_location;
 };

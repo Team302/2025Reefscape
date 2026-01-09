@@ -11,35 +11,27 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================#pragma once
+//====================================================================================================================================================
 #pragma once
 
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Translation3d.h"
-#include "wpi/array.h"
-#include "units/time.h"
+#include "chassis/commands/DriveToPose.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
-enum PoseEstimationStrategy
+class DriveToBarge : public DriveToPose
 {
-    MULTI_TAG,
-    SINGLE_TAG,
-    MEGA_TAG,
-    MEGA_TAG_2,
-    NONE
-};
+public:
+    /**
+     * @brief Creates a command to drive to the Barge AprilTag.
+     *
+     * @param chassis A pointer to the swerve drive subsystem.
+     */
+    DriveToBarge(subsystems::CommandSwerveDrivetrain *chassis);
 
-struct VisionPose
-{
-    frc::Pose3d estimatedPose = frc::Pose3d{};                                     // empty pose3d if we don't give one out
-    units::time::millisecond_t timeStamp = units::time::millisecond_t(-1.0);       // negative timestamp for no timestamp
-    wpi::array<double, 3> visionMeasurementStdDevs = {0.1, 0.1, 0.1};              // default std devs from WPI docs
-    PoseEstimationStrategy estimationStrategy = PoseEstimationStrategy::MULTI_TAG; // default estimation strategy, what should be used
-};
+    /**
+     * @brief Default destructor.
+     */
+    ~DriveToBarge() = default;
 
-struct VisionData
-{
-    frc::Transform3d transformToTarget = frc::Transform3d{}; // from robot center
-    frc::Translation3d translationToTarget = frc::Translation3d{};
-    frc::Rotation3d rotationToTarget = frc::Rotation3d{};
-    int tagId = -1; // if we don't have april tag data, use null id
+    frc::Pose2d GetEndPose() override;
+    void Execute() override;
 };

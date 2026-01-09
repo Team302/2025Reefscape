@@ -15,23 +15,27 @@
 
 #pragma once
 
-// C++ Includes
-#include <string>
-#include <vector>
+#include <memory>
+#include <utility>
+#include <cmath>
 
-// FRC includes
-#include "frc/Timer.h"
-#include "networktables/NetworkTable.h"
-#include "units/angle.h"
 #include "units/length.h"
-#include "units/time.h"
-#include "frc/geometry/Pose2d.h"
+#include "units/angle.h"
+#include "vision/DragonVisionStruct.h"
 
-// Team 302 includes
-#include "vision/DragonLimelight.h"
-class DragonLimelight180 : public DragonLimelight
+class PoseOffsetUtils
 {
 public:
-    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTx(); }
-    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTy(); }
+    PoseOffsetUtils() = delete;
+    ~PoseOffsetUtils() = delete;
+
+    /// @brief Calculates the X and Y distance from the center of the robot to the detected object.
+    /// @param target The vision target data (ObjectDetection).
+    /// @return std::pair<units::length::meter_t, units::length::meter_t> where first is X (Forward), second is Y (Left).
+    static std::pair<units::length::meter_t, units::length::meter_t> CalculateXYDistanceFromObject(const DragonVisionStruct &target, units::length::inch_t objectHeight);
+
+    /// @brief Calculates the straight-line ground distance (hypotenuse) from the center of the robot to the object.
+    /// @param target The vision target data (ObjectDetection).
+    /// @return units::length::meter_t The total ground distance.
+    static units::length::meter_t CalculateDistanceFromObject(const DragonVisionStruct &target, units::length::inch_t objectHeight);
 };

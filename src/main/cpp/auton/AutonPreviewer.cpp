@@ -16,7 +16,7 @@
 #include <string>
 
 // FRC Includes
-#include "frc/trajectory/TrajectoryUtil.h"
+//#include "frc/trajectory/TrajectoryUtil.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
@@ -103,6 +103,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
             if (param->GetID() == PRIMITIVE_IDENTIFIER::TRAJECTORY_DRIVE)
             {
                 auto pathname = param->GetTrajectoryName();
+                /**
                 auto path = AutonUtils::GetTrajectoryFromPathFile(pathname);
                 if (path.has_value())
                 {
@@ -126,6 +127,7 @@ std::vector<frc::Trajectory> AutonPreviewer::GetTrajectories()
                     }
                     trajectories.emplace_back(states);
                 }
+                **/
             }
         }
     }
