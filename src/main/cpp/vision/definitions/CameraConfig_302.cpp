@@ -18,11 +18,16 @@
 #include "utils/logging/debug/Logger.h"
 #include "vision/definitions/CameraConfig_302.h"
 #include "vision/DragonLimelight.h"
-#include "vision/DragonVision.h"
 #include "vision/DragonQuest.h"
+#include "vision/DragonVision.h"
 
 void CameraConfig_302::BuildCameraConfig()
 {
+    auto vision = DragonVision::GetDragonVision();
+    if (vision == nullptr)
+    {
+        return;
+    }
     DragonLimelight *front = new DragonLimelight(std::string("limelight-front"), // networkTableName
                                                  DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
                                                  DRAGON_LIMELIGHT_CAMERA_TYPE::LIMELIGHT4,            // PIPELINE initialPipeline,
@@ -38,8 +43,7 @@ void CameraConfig_302::BuildCameraConfig()
                                                  DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION                // CAM_MODE camMode,
 
     ); // additional parameter
-    DragonVision::GetDragonVision()->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
-    m_limelightIndexs.push_back(0);
+    vision->AddLimelight(front, DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
 
     DragonLimelight *back = new DragonLimelight(std::string("limelight-algae"), // networkTableName
                                                 DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::BACK_CAMERA,
@@ -56,13 +60,14 @@ void CameraConfig_302::BuildCameraConfig()
                                                 DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION         // CAM_MODE camMode,
 
     ); // additional parameter
-    DragonVision::GetDragonVision()->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+    vision->AddLimelight(back, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 
-    new DragonQuest(units::length::inch_t(m_questMountingXOffset), // <I> x offset of Quest from robot center (forward relative to robot)
-                    units::length::inch_t(m_questMountingYOffset), // <I> y offset of Quest from robot center (left relative to robot)
-                    units::length::inch_t(m_questMountingZOffset), // <I> z offset of Quest from robot center (up relative to robot)
-                    units::angle::degree_t(m_questPitch),          // <I> - Pitch of Quest
-                    units::angle::degree_t(m_questYaw),            // <I> - Yaw of Quest
-                    units::angle::degree_t(m_questRoll)            // <I> - Roll of Quest
+    auto quest = new DragonQuest(units::length::inch_t(m_questMountingXOffset), // <I> x offset of Quest from robot center (forward relative to robot)
+                                 units::length::inch_t(m_questMountingYOffset), // <I> y offset of Quest from robot center (left relative to robot)
+                                 units::length::inch_t(m_questMountingZOffset), // <I> z offset of Quest from robot center (up relative to robot)
+                                 units::angle::degree_t(m_questPitch),          // <I> - Pitch of Quest
+                                 units::angle::degree_t(m_questYaw),            // <I> - Yaw of Quest
+                                 units::angle::degree_t(m_questRoll)            // <I> - Roll of Quest
     );
+    vision->AddQuest(quest);
 }
