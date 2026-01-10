@@ -80,6 +80,7 @@ DragonVision *DragonVision::GetDragonVision()
 	if (DragonVision::m_dragonVision == nullptr)
 	{
 		DragonVision::m_dragonVision = new DragonVision();
+		DragonVision::m_dragonVision->InitializeCameras();
 	}
 	return DragonVision::m_dragonVision;
 }
@@ -117,6 +118,42 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier)
 	return false;
 }
 
+std::vector<bool> DragonVision::HealthCheckAllLimelights()
+{
+	std::vector<bool> healthStatuses;
+	for (const auto &pair : m_dragonLimelightMap)
+	{
+		DragonLimelight *limelight = pair.second;
+		if (limelight != nullptr)
+		{
+			healthStatuses.push_back(limelight->IsLimelightRunning());
+		}
+		else
+		{
+			healthStatuses.push_back(false);
+		}
+	}
+	return healthStatuses;
+}
+
+/**
+ * @brief Performs a health check on the associated DragonQuest object.
+ *
+ * This method checks if the DragonQuest object (m_dragonQuest) is not null
+ * and calls its HealthCheck() method to determine its health status.
+ *
+ * @return true if the DragonQuest object exists and its health check passes;
+ *         false otherwise.
+ */
+bool DragonVision::HealthCheckQuest()
+{
+	if (m_dragonQuest != nullptr)
+	{
+		return m_dragonQuest->HealthCheck();
+	}
+	return false;
+}
+
 frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
 
 /// @brief Returns a cached AprilTag field layout, loading the 2025 field on first access.
@@ -131,15 +168,22 @@ frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 	return DragonVision::m_aprilTagLayout;
 }
 
-/// @brief Constructor. Initializes camera configuration using the robot's team number.
-/// @note Lightweight; may perform camera config initialization that should be called early
-///       in robot startup.
-DragonVision::DragonVision()
+/**
+ * @brief Initializes the cameras for the robot vision system.
+ *
+ * This method retrieves the team number from the robot controller and uses it
+ * to initialize the cameras via the CameraConfigMgr singleton. The team number
+ * is cast to a RobotIdentifier to ensure proper configuration based on the
+ * robot's identity.
+ *
+ * @note This method should be called during the robot initialization phase to
+ * ensure that all cameras are properly configured before use.
+ */
+void DragonVision::InitializeCameras()
 {
 	int32_t teamNumber = frc::RobotController::GetTeamNumber();
 	CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
 }
-
 /// @brief Add a Limelight instance to the manager.
 /// @param camera Pointer to the DragonLimelight to add.
 /// @param usage The camera usage category for this camera.

@@ -71,6 +71,30 @@
 class DragonQuest;
 
 class DragonVision : public frc2::SubsystemBase
+/**
+ * @class DragonVision
+ * @brief Manages vision-related functionality, including camera initialization,
+ *        AprilTag detection, object detection, and robot pose estimation.
+ *
+ * This class provides a singleton interface for managing vision systems,
+ * including Limelight cameras and the DragonQuest subsystem. It supports
+ * registering cameras, aggregating detection results, performing health checks,
+ * and estimating robot poses based on vision data.
+ *
+ * Key Features:
+ * - Singleton pattern for centralized vision management.
+ * - Support for AprilTag and object detection.
+ * - Health checks for cameras and vision subsystems.
+ * - Robot pose estimation using multiple detection methods.
+ *
+ * Usage Notes:
+ * - The singleton instance is not thread-safe during initialization; ensure
+ *   proper synchronization if accessed concurrently during startup.
+ * - Camera and subsystem lifetimes must be managed externally; raw pointers
+ *   are stored internally without ownership transfer.
+ * - The class is designed for use throughout the program's lifetime, with
+ *   intentional memory leaks for the singleton instance.
+ */
 {
 public:
     /// @brief Get the singleton instance of DragonVision.
@@ -83,6 +107,11 @@ public:
     /// @brief Get the AprilTag field layout used by vision code.
     /// @return Cached frc::AprilTagFieldLayout for the configured field (loads on first use).
     static frc::AprilTagFieldLayout GetAprilTagLayout();
+
+    /// @brief Initialize all cameras registered with the vision system.
+    /// @note This function sets up the cameras for operation, ensuring they are ready for use.
+    ///       It should be called during the system initialization phase.
+    void InitializeCameras();
 
     enum VISION_ELEMENT
     {
@@ -133,6 +162,20 @@ public:
     /// @return true if the camera exists and reports running; false otherwise.
     bool HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier);
 
+    /**
+     * Performs a health check on all connected Limelight cameras.
+     *
+     * This function checks the status of each Limelight camera in the system
+     * and returns a vector of boolean values indicating the health of each camera.
+     * A value of `true` means the corresponding Limelight is functioning correctly,
+     * while `false` indicates an issue with that Limelight.
+     *
+     * @return A vector of boolean values representing the health status of each Limelight.
+     */
+    std::vector<bool> HealthCheckAllLimelights();
+
+    bool HealthCheckQuest();
+
     /// @brief Set the processing pipeline for matching cameras.
     /// @param position Usage/category for cameras to update.
     /// @param pipeline Pipeline enum value to set.
@@ -153,8 +196,8 @@ public:
 
 private:
     /// @brief Constructor (private for singleton).
-    DragonVision();
-    ~DragonVision() = default;
+    DragonVision() = default;
+    ~DragonVision() override = default;
 
     /// @brief Distribute a Pose2d to vision subsystems that accept external robot pose.
     /// @param pose The pose to set (frc::Pose2d).

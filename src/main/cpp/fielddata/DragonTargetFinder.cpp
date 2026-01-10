@@ -52,7 +52,7 @@ DragonTargetFinder *DragonTargetFinder::GetInstance()
     return DragonTargetFinder::m_instance;
 }
 
-DragonTargetFinder::DragonTargetFinder() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()), m_vision(DragonVision::GetDragonVision())
+DragonTargetFinder::DragonTargetFinder() : m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis())
 {
 }
 

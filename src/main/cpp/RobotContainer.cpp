@@ -22,5 +22,5 @@ RobotContainer::RobotContainer()
 {
     // Initialize all of your commands and subsystems here
     m_swervecontainer = SwerveContainer::GetInstance();
-    // m_visionPoseEstimatorContainer = new DragonVisionPoseEstimatorContainer();
+    m_visionPoseEstimatorContainer = new DragonVisionPoseEstimatorContainer();
 }

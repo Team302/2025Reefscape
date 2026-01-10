@@ -13,12 +13,15 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#include "vision/DragonVisionPoseEstimatorContainer.h"
 #include "vision/DragonVisionPoseEstimator.h"
+#include "vision/DragonVisionPoseEstimatorContainer.h"
 
 DragonVisionPoseEstimatorContainer::DragonVisionPoseEstimatorContainer() : m_updateVisionPoseEstimatorCommand(std::make_unique<DragonVisionPoseEstimator>())
 
 {
     // Initialize all of your commands and subsystems here
-    m_vision->SetDefaultCommand(std::move(m_updateVisionPoseEstimatorCommand));
+    if (m_vision != nullptr)
+    {
+        // m_vision->SetDefaultCommand(std::move(m_updateVisionPoseEstimatorCommand));
+    }
 }

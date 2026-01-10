@@ -67,7 +67,6 @@ private:
     static DragonTargetFinder *m_instance;
 
     subsystems::CommandSwerveDrivetrain *m_chassis;
-    DragonVision *m_vision;
     DragonTargetFinderTarget m_targetVisionTarget;
 
     std::optional<FieldAprilTagIDs> GetAprilTag(DragonVision::VISION_ELEMENT item);
