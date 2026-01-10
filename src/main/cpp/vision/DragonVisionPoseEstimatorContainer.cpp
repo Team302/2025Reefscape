@@ -22,6 +22,7 @@ DragonVisionPoseEstimatorContainer::DragonVisionPoseEstimatorContainer() : m_upd
     // Initialize all of your commands and subsystems here
     if (m_vision != nullptr)
     {
+        // TODO: come back to this; currently it is crashing here
         // m_vision->SetDefaultCommand(std::move(m_updateVisionPoseEstimatorCommand));
     }
 }
