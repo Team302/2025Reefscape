@@ -14,9 +14,8 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "vision/definitions/CameraConfig.h"
-
 #include "units/length.h"
+#include "vision/definitions/CameraConfig.h"
 
 class CameraConfig_302 : public CameraConfig
 {
@@ -26,13 +25,7 @@ public:
 
     void BuildCameraConfig() override;
 
-    std::vector<int> GetLimelightIndexs() override { return m_limelightIndexs; }
-    int GetQuestIndex() override { return m_questIndex; }
-
 private:
-    std::vector<int> m_limelightIndexs;
-    int m_questIndex = -1;
-
     static constexpr units::length::meter_t m_ll1MountingXOffset{0.24765};  // 9.75 inches
     static constexpr units::length::meter_t m_ll1MountingYOffset{-0.08255}; // -3.25 inches
     static constexpr units::length::meter_t m_ll1MountingZOffset{0.8223};   // 32.4 inches

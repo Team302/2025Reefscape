@@ -13,33 +13,30 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 #pragma once
-#include <vector>
-#include "chassis/ChassisConfigMgr.h"
-#include "chassis/pose/DragonVisionPoseEstimator.h"
-#include "frc/geometry/Pose2d.h"
-#include "chassis/generated/CommandSwerveDrivetrain.h"
 
-class DragonSwervePoseEstimator
+#include "chassis/generated/CommandSwerveDrivetrain.h"
+#include "chassis/commands/DriveToPose.h"
+#include "state/IRobotStateChangeSubscriber.h"
+
+class DriveToCoralStation : public DriveToPose, IRobotStateChangeSubscriber
 {
 public:
-    static DragonSwervePoseEstimator *GetInstance();
-    DragonSwervePoseEstimator();
-    ~DragonSwervePoseEstimator() = default;
+    /**
+     * @brief Creates a command to drive to the Barge AprilTag.
+     *
+     * @param chassis A pointer to the swerve drive subsystem.
+     */
+    DriveToCoralStation(subsystems::CommandSwerveDrivetrain *chassis);
 
-    void Update();
+    /**
+     * @brief Default destructor.
+     */
+    ~DriveToCoralStation() = default;
 
-    void RegisterVisionPoseEstimator(DragonVisionPoseEstimator *poseEstimator);
-    void CalculateInitialPose();
-
-    void ResetPosition(const frc::Pose2d &pose);
-    frc::Pose2d GetPose() const;
+    frc::Pose2d GetEndPose() override;
 
 private:
-    static DragonSwervePoseEstimator *m_instance;
+    void NotifyStateUpdate(RobotStateChanges::StateChange change, int value) override;
 
-    subsystems::CommandSwerveDrivetrain *m_chassis = ChassisConfigMgr::GetInstance()->GetSwerveChassis();
-
-    std::vector<DragonVisionPoseEstimator *> m_visionPoseEstimators;
-
-    void AddVisionMeasurements();
+    RobotStateChanges::DesiredCoralSide m_desiredCoralSide = RobotStateChanges::DesiredCoralSide::Sidewall;
 };

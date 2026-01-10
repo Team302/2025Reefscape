@@ -15,24 +15,23 @@
 
 #pragma once
 
-// C++ Includes
-#include <string>
-#include <vector>
+#include "vision/DragonVision.h"
+#include <frc2/command/CommandPtr.h>
 
-// FRC includes
-#include "frc/Timer.h"
-#include "networktables/NetworkTable.h"
-#include "units/angle.h"
-#include "units/length.h"
-#include "units/time.h"
-#include "frc/geometry/Pose2d.h"
-
-// Team 302 includes
-#include "vision/DragonLimelight.h"
-
-class DragonLimelight270 : public DragonLimelight
+/**
+ * This class is where the bulk of the robot should be declared.  Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls).  Instead, the structure of the robot (including subsystems,
+ * commands, and trigger mappings) should be declared here.
+ */
+class DragonVisionPoseEstimatorContainer
 {
 public:
-    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return -1.0 * GetTy(); }
-    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return -1.0 * GetTx(); }
+    DragonVisionPoseEstimatorContainer();
+
+private:
+    // The robot's subsystems and commands are defined here...
+    DragonVision *m_vision = DragonVision::GetDragonVision();
+    frc2::CommandPtr m_updateVisionPoseEstimatorCommand;
 };

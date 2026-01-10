@@ -14,9 +14,8 @@
 //====================================================================================================================================================
 
 #pragma once
-#include "vision/definitions/CameraConfig.h"
-
 #include "units/length.h"
+#include "vision/definitions/CameraConfig.h"
 
 class CameraConfig_9997 : public CameraConfig
 {
@@ -25,11 +24,4 @@ public:
     ~CameraConfig_9997() = default;
 
     void BuildCameraConfig() override;
-
-    std::vector<int> GetLimelightIndexs() override { return m_limelightIndexs; }
-    int GetQuestIndex() override { return m_questIndex; }
-
-private:
-    std::vector<int> m_limelightIndexs;
-    int m_questIndex = -1;
 };

@@ -14,32 +14,30 @@
 //====================================================================================================================================================#pragma once
 #pragma once
 
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Translation3d.h"
-#include "wpi/array.h"
-#include "units/time.h"
-
-enum PoseEstimationStrategy
+enum class FieldAprilTagIDs
 {
-    MULTI_TAG,
-    SINGLE_TAG,
-    MEGA_TAG,
-    MEGA_TAG_2,
-    NONE
-};
-
-struct VisionPose
-{
-    frc::Pose3d estimatedPose = frc::Pose3d{};                                     // empty pose3d if we don't give one out
-    units::time::millisecond_t timeStamp = units::time::millisecond_t(-1.0);       // negative timestamp for no timestamp
-    wpi::array<double, 3> visionMeasurementStdDevs = {0.1, 0.1, 0.1};              // default std devs from WPI docs
-    PoseEstimationStrategy estimationStrategy = PoseEstimationStrategy::MULTI_TAG; // default estimation strategy, what should be used
-};
-
-struct VisionData
-{
-    frc::Transform3d transformToTarget = frc::Transform3d{}; // from robot center
-    frc::Translation3d translationToTarget = frc::Translation3d{};
-    frc::Rotation3d rotationToTarget = frc::Rotation3d{};
-    int tagId = -1; // if we don't have april tag data, use null id
+    // Blue
+    BLUE_CORAL_STATION_LEFT_TAG = 13,
+    BLUE_CORAL_STATION_RIGHT_TAG = 12,
+    BLUE_PROCESSOR_TAG = 16,
+    BLUE_BARGE_FRONT_TAG = 14,
+    BLUE_BARGE_BACK_TAG = 4,
+    BLUE_REEF_AB_TAG = 18,
+    BLUE_REEF_CD_TAG = 17,
+    BLUE_REEF_EF_TAG = 22,
+    BLUE_REEF_GH_TAG = 21,
+    BLUE_REEF_IJ_TAG = 20,
+    BLUE_REEF_KL_TAG = 19,
+    // Red
+    RED_CORAL_STATION_LEFT_TAG = 1,
+    RED_CORAL_STATION_RIGHT_TAG = 2,
+    RED_PROCESSOR_TAG = 3,
+    RED_BARGE_FRONT_TAG = 5,
+    RED_BARGE_BACK_TAG = 15,
+    RED_REEF_AB_TAG = 7,
+    RED_REEF_CD_TAG = 8,
+    RED_REEF_EF_TAG = 9,
+    RED_REEF_GH_TAG = 10,
+    RED_REEF_IJ_TAG = 11,
+    RED_REEF_KL_TAG = 6
 };

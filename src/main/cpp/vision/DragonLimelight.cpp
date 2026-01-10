@@ -18,41 +18,56 @@
 #include <vector>
 
 // FRC includes
-#include "networktables/NetworkTableInstance.h"
+#include "frc/DriverStation.h"
+#include "frc/RobotBase.h"
+#include "frc/Timer.h"
+#include "frc/geometry/Pose3d.h"
+#include "frc/geometry/Rotation3d.h"
+#include "networktables/DoubleArrayTopic.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
 #include "units/angle.h"
 #include "units/length.h"
 #include "units/time.h"
-#include "networktables/DoubleArrayTopic.h"
-#include "frc/DriverStation.h"
-#include "frc/geometry/Pose3d.h"
-#include "frc/geometry/Rotation3d.h"
-#include "frc/Timer.h"
-#include "units/length.h"
-#include "units/time.h"
-#include "frc/RobotBase.h"
 
 // Team 302 includes
 #include "chassis/ChassisConfigMgr.h"
-#include "chassis/pose/DragonSwervePoseEstimator.h"
-#include "vision/DragonLimelight.h"
 #include "utils/logging/debug/Logger.h"
+#include "vision/DragonLimelight.h"
 #include "vision/DragonVision.h"
-#include "vision/DragonVisionStructLogger.h"
 
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
 
-/// TODO
-/// Need to support DragonLimelight becoming a child of DragonCamera
-/// Need to remove everything involving target height, should use apriltag field positions
-/// Need to support new OriginFieldPosition function, look at limelight docs NetworkTables API
+namespace
+{
+    bool IsValidAprilTag(const std::vector<FieldAprilTagIDs> &validTags, int tagID);
+    bool IsValidObjectClass(const std::vector<int> &validClasses, int classID);
+    std::optional<std::pair<double, double>> GetStandardDeviationsForMetaTag1PoseEstimation(int ntags, double targetAreaPercent);
+}
 
 ///-----------------------------------------------------------------------------------
 /// Method:         DragonLimelight (constructor)
 /// Description:    Create the object
 ///-----------------------------------------------------------------------------------
+/// ----------------------------------------------------------------------------------
+/// @brief Construct a DragonLimelight object.
+/// @details Initializes network table handle, camera pose, chassis pointer, sets LED/camera/pipeline modes,
+///          starts a health timer and port forwarding for Limelight access.
+/// @param networkTableName NetworkTable name for the Limelight instance (sanitized internally)
+/// @param identifier enum identifying which physical limelight this represents
+/// @param cameraType limelight camera type (unused in current implementation)
+/// @param cameraUsage whether this camera is used for odometry, vision, etc. (unused here)
+/// @param mountingXOffset forward offset in inches from robot center
+/// @param mountingYOffset left offset in inches from robot center
+/// @param mountingZOffset up offset in inches from robot center
+/// @param pitch camera pitch in degrees
+/// @param yaw camera yaw in degrees
+/// @param roll camera roll in degrees
+/// @param initialPipeline starting pipeline to select on the Limelight
+/// @param ledMode initial LED mode to set
+/// @param camMode initial camera mode to set
 DragonLimelight::DragonLimelight(
     std::string networkTableName, /// <I> networkTableName
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier,
@@ -66,11 +81,8 @@ DragonLimelight::DragonLimelight(
     units::angle::degree_t roll,               /// <I> - Roll of camera
     DRAGON_LIMELIGHT_PIPELINE initialPipeline, /// <I> enum for pipeline
     DRAGON_LIMELIGHT_LED_MODE ledMode,
-    DRAGON_LIMELIGHT_CAM_MODE camMode) : DragonVisionPoseEstimator(),
-                                         SensorData(),
-                                         DragonDataLogger(),
-                                         m_identifier(identifier),
-                                         m_networktable(nt::NetworkTableInstance::GetDefault().GetTable(std::string(networkTableName))),
+    DRAGON_LIMELIGHT_CAM_MODE camMode) : m_identifier(identifier),
+                                         m_limelightNT(nt::NetworkTableInstance::GetDefault().GetTable(LimelightHelpers::sanitizeName(std::string(networkTableName)))),
                                          m_chassis(ChassisConfigMgr::GetInstance()->GetSwerveChassis()),
                                          m_cameraPose(frc::Pose3d(mountingXOffset, mountingYOffset, mountingZOffset, frc::Rotation3d(roll, pitch, yaw)))
 {
@@ -78,7 +90,7 @@ DragonLimelight::DragonLimelight(
     SetCamMode(camMode);
     SetPipeline(initialPipeline);
     SetCameraPose_RobotSpace(mountingXOffset.to<double>(), mountingYOffset.to<double>(), mountingZOffset.to<double>(), roll.to<double>(), pitch.to<double>(), yaw.to<double>());
-    m_cameraName = networkTableName;
+    m_cameraName = LimelightHelpers::sanitizeName(std::string(networkTableName));
     m_healthTimer = new frc::Timer();
     for (int port = 5800; port <= 5809; port++)
     {
@@ -86,30 +98,24 @@ DragonLimelight::DragonLimelight(
     }
 }
 
-void DragonLimelight::PeriodicCacheData()
-{
-    m_megatag1PosBool = false;
-    m_megatag2PosBool = false;
-
-    m_tv = LimelightHelpers::getTV(m_cameraName);
-    m_tx = units::angle::degree_t(LimelightHelpers::getTX(m_cameraName));
-    m_ty = units::angle::degree_t(LimelightHelpers::getTY(m_cameraName));
-    m_tagid = LimelightHelpers::getFiducialID(m_cameraName);
-    m_pipeline = static_cast<DRAGON_LIMELIGHT_PIPELINE>(LimelightHelpers::getCurrentPipelineIndex(m_cameraName));
-}
-
-bool DragonLimelight::HealthCheck()
+/// ----------------------------------------------------------------------------------
+/// @brief Check whether the Limelight is running/responding.
+/// @details Uses heartbeat value exposed by Limelight network table and a short local timer.
+///          In simulation always returns true.
+/// @return true if Limelight is considered healthy and updating; false otherwise.
+/// ----------------------------------------------------------------------------------
+bool DragonLimelight::IsLimelightRunning()
 {
     if (frc::RobotBase::IsSimulation())
     {
         return true; // In simulation, we don't have a limelight, so just return true
     }
 
-    auto nt = m_networktable.get();
+    auto nt = m_limelightNT.get();
     if (nt != nullptr)
     {
-
         double currentHb = nt->GetNumber("hb", START_HB);
+
         // check if heartbeat has ever been set and network table is not default
         if (currentHb == START_HB)
         {
@@ -130,219 +136,202 @@ bool DragonLimelight::HealthCheck()
     return false;
 }
 
-/// @brief Assume that the current pipeline is AprilTag and that a target is detected
-/// @return -1 if the network table cannot be found
-std::optional<int> DragonLimelight::GetAprilTagID()
+/// ----------------------------------------------------------------------------------
+/// @brief Retrieve detected AprilTag targets from Limelight.
+/// @param validAprilTagIDs Optional list of field april tag IDs to filter results. If empty, all tags returned.
+/// @return vector of DragonVisionStruct unique_ptr for each valid AprilTag detection. Empty if NT not available.
+/// @notes Each DragonVisionStruct contains offsets, area, latency and distances computed by Limelight helpers.
+/// ----------------------------------------------------------------------------------
+std::vector<std::unique_ptr<DragonVisionStruct>> DragonLimelight::GetAprilTagVisionTargetInfo(const std::vector<FieldAprilTagIDs> &validAprilTagIDs) const
 {
-    return m_tagid;
-}
-
-bool DragonLimelight::HasTarget()
-{
-    return m_tv;
-}
-
-units::angle::degree_t DragonLimelight::GetTx() const
-{
-    return m_tx;
-}
-
-units::angle::degree_t DragonLimelight::GetTy() const
-{
-    return m_ty;
-}
-
-std::optional<units::angle::degree_t> DragonLimelight::GetTargetYaw()
-{
-    return -1.0 * GetTx();
-}
-
-std::optional<units::angle::degree_t> DragonLimelight::GetTargetYawRobotFrame()
-{
-    std::optional<units::length::inch_t> targetXdistance = EstimateTargetXDistance_RelToRobotCoords();
-    std::optional<units::length::inch_t> targetYdistance = EstimateTargetYDistance_RelToRobotCoords();
-
-    if (targetXdistance.has_value() && targetYdistance.has_value())
-    {
-        if (std::abs(targetXdistance.value().to<double>()) > 0)
-        {
-            return units::math::atan2(targetYdistance.value(), targetXdistance.value());
-        }
-        else
-        {
-            return units::angle::degree_t(0.0);
-        }
-    }
-
-    return std::nullopt;
-}
-
-std::optional<units::angle::degree_t> DragonLimelight::GetTargetPitch()
-{
-    Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("DragonLimelight"), std::string("GetTargetVerticalOffset"), std::string("Invalid limelight rotation"));
-    return GetTy();
-}
-
-std::optional<units::angle::degree_t> DragonLimelight::GetTargetPitchRobotFrame()
-{
-    std::optional<units::length::inch_t> targetXDistance = std::optional<units::length::inch_t>(EstimateTargetXDistance_RelToRobotCoords());
-    std::optional<units::length::inch_t> targetZDistance = EstimateTargetZDistance_RelToRobotCoords();
-
-    if (targetXDistance && targetZDistance)
-    {
-        units::angle::degree_t targetPitchToRobot = units::angle::degree_t(atan2(targetZDistance.value().to<double>(), targetXDistance.value().to<double>()));
-        return targetPitchToRobot;
-    }
-
-    return std::nullopt;
-}
-
-std::optional<double> DragonLimelight::GetTargetArea()
-{
-    auto nt = m_networktable.get();
+    std::vector<std::unique_ptr<DragonVisionStruct>> targets;
+    auto nt = m_limelightNT.get();
     if (nt != nullptr)
     {
-        return nt->GetNumber("ta", 0.0);
+        auto aprilTags = LimelightHelpers::getRawFiducials(m_limelightNT);
+
+        for (auto aprilTag : aprilTags)
+        {
+            auto isValid = IsValidAprilTag(validAprilTagIDs, aprilTag.id);
+
+            if (!isValid)
+            {
+                continue; // skip this tag
+            }
+
+            auto aprilTagValue = std::make_unique<DragonVisionStruct>();
+            aprilTagValue.get()->aprilTagData.tagID = static_cast<FieldAprilTagIDs>(aprilTag.id);
+            aprilTagValue.get()->targetType = DragonTargetType::APRIL_TAG;
+            aprilTagValue.get()->horizontalOffset = units::angle::degree_t(aprilTag.txnc);
+            aprilTagValue.get()->verticalOffset = units::angle::degree_t(aprilTag.tync);
+            aprilTagValue.get()->targetAreaPercent = aprilTag.ta;
+            aprilTagValue.get()->pipelineLatency = units::millisecond_t(LimelightHelpers::getLatency_Pipeline(m_limelightNT) + LimelightHelpers::getLatency_Capture(m_limelightNT));
+            aprilTagValue.get()->aprilTagData.distToCamera = units::length::meter_t(aprilTag.distToCamera);
+            aprilTagValue.get()->aprilTagData.distToRobot = units::length::meter_t(aprilTag.distToRobot);
+            aprilTagValue.get()->aprilTagData.ambiguity = aprilTag.ambiguity;
+
+            targets.emplace_back(std::move(aprilTagValue));
+        }
     }
 
-    return std::nullopt;
+    return targets;
 }
 
-std::optional<units::angle::degree_t> DragonLimelight::GetTargetSkew()
+/// ----------------------------------------------------------------------------------
+/// @brief Retrieve object detection results from Limelight (e.g., neural detector).
+/// @param validClasses Optional filter of class ids to keep; if empty, all detections returned.
+/// @return vector of DragonVisionStruct unique_ptr for each valid object detection. Empty if NT not available.
+/// @notes Corners and class id are populated in the returned structs.
+/// ----------------------------------------------------------------------------------
+std::vector<std::unique_ptr<DragonVisionStruct>> DragonLimelight::GetObjectDetectionTargetInfo(const std::vector<int> &validClasses) const
 {
-    if (m_networktable != nullptr)
+    std::vector<std::unique_ptr<DragonVisionStruct>> targets;
+    auto nt = m_limelightNT.get();
+    if (nt != nullptr)
     {
-        return units::angle::degree_t(m_networktable->GetNumber("ts", 0.0));
+        auto objects = LimelightHelpers::getRawDetections(m_limelightNT);
+
+        for (auto object : objects)
+        {
+            auto isValid = IsValidObjectClass(validClasses, object.classId);
+
+            if (!isValid)
+            {
+                continue; // skip this tag
+            }
+
+            auto objectValue = std::make_unique<DragonVisionStruct>();
+            objectValue.get()->objectDetectionData.classID = object.classId;
+            objectValue.get()->targetType = DragonTargetType::OBJECT_DETECTION;
+            objectValue.get()->horizontalOffset = units::angle::degree_t(object.txnc);
+            objectValue.get()->verticalOffset = units::angle::degree_t(object.tync);
+            objectValue.get()->targetAreaPercent = object.ta;
+            objectValue.get()->pipelineLatency = units::millisecond_t(LimelightHelpers::getLatency_Pipeline(m_limelightNT) + LimelightHelpers::getLatency_Capture(m_limelightNT));
+            objectValue.get()->objectDetectionData.corner0X = object.corner0_X;
+            objectValue.get()->objectDetectionData.corner0Y = object.corner0_Y;
+            objectValue.get()->objectDetectionData.corner1X = object.corner1_X;
+            objectValue.get()->objectDetectionData.corner1Y = object.corner1_Y;
+            objectValue.get()->objectDetectionData.corner2X = object.corner2_X;
+            objectValue.get()->objectDetectionData.corner2Y = object.corner2_Y;
+            objectValue.get()->objectDetectionData.corner3X = object.corner3_X;
+            objectValue.get()->objectDetectionData.corner3Y = object.corner3_Y;
+            objectValue.get()->objectDetectionData.mountingXOffset = m_cameraPose.X();
+            objectValue.get()->objectDetectionData.mountingYOffset = m_cameraPose.Y();
+            objectValue.get()->objectDetectionData.mountingZOffset = m_cameraPose.Z();
+            objectValue.get()->objectDetectionData.camPitch = m_cameraPose.Rotation().Y();
+            objectValue.get()->objectDetectionData.camYaw = m_cameraPose.Rotation().Z();
+            objectValue.get()->objectDetectionData.camRoll = m_cameraPose.Rotation().X();
+
+            targets.emplace_back(std::move(objectValue));
+        }
     }
 
-    return std::nullopt;
+    return targets;
 }
 
 /**
  * @brief Get the Pose object for the current location of the robot
  * https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization
  */
-std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool megatag2)
+/// ----------------------------------------------------------------------------------
+/// @brief High-level entry to request a pose estimate from Limelight for odometry.
+/// @param useMegatag2 if true, request MegaTag2 pose estimation path; otherwise use MegaTag1 path.
+/// @return optional VisionPose when Limelight has a valid pose estimate; std::nullopt otherwise.
+/// @notes Adjusts Limelight IMU mode for best results depending on which MegaTag method is used.
+/// ----------------------------------------------------------------------------------
+std::optional<VisionPose> DragonLimelight::EstimatePoseOdometryLimelight(bool useMegatag2)
 {
     if (frc::RobotBase::IsSimulation())
     {
         return std::nullopt;
     }
-    // use megatag1
-    // megatag2 = false;  TODO: Try Again without this
+
     auto mode = static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_ONLY); // Chief Delphi answer says perfect portrait pose doesn't work with internal IMU
+    LimelightHelpers::SetIMUMode(m_cameraName, mode);
 
-    // Megatag 1
-    if (m_networktable.get() != nullptr)
+    if (useMegatag2)
     {
-        LimelightHelpers::SetIMUMode(m_cameraName, mode);
-        // Megatag 1
-        if (!megatag2)
-        {
-            if (!m_megatag1PosBool)
-            {
-                nt::DoubleArrayTopic topic = m_networktable.get()->GetDoubleArrayTopic("botpose_wpiblue");
-                std::vector<double> position = topic.GetEntry(std::array<double, 7>{}).Get(); // default value is empty array
-
-                units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-                units::time::millisecond_t timestamp = currentTime - units::millisecond_t(position[6] / 1000.0);
-
-                frc::Rotation3d rotation = frc::Rotation3d{units::angle::degree_t(position[3]), units::angle::degree_t(position[4]), units::angle::degree_t(position[5])};
-                frc::Pose3d pose3d = frc::Pose3d{units::meter_t(position[0]), units::meter_t(position[1]), units::meter_t(position[2]), rotation};
-
-                double numberOfTagsDetected = position[7];
-                double averageTagTargetArea = position[10];
-
-                // in case of invalid Limelight targets
-                if (pose3d.ToPose2d().X() == units::meter_t(0.0))
-                {
-                    return std::nullopt;
-                }
-
-                double xyStds;
-                double degStds;
-                // multiple targets detected
-                if (numberOfTagsDetected == 0)
-                {
-                    return std::nullopt;
-                }
-                else if (numberOfTagsDetected >= 2)
-                {
-                    xyStds = 0.5;
-                    degStds = 6;
-                }
-                // 1 target with large area (close to camera))
-                else if (averageTagTargetArea > 0.8)
-                {
-                    xyStds = 1.0;
-                    degStds = 12;
-                }
-                // TODO: tune this!
-                // 1 target with medium area (somewhat close to camera))
-                // else if (averageTagTargetArea > 0.45)
-                // {
-                //     xyStds = 1.5;
-                //     degStds = 21;
-                // }
-                // 1 target small area (farther away from camera)
-                else if (averageTagTargetArea > 0.1)
-                {
-                    xyStds = 2.0;
-                    degStds = 30;
-                }
-                // conditions don't match to add a vision measurement
-                else
-                {
-                    return std::nullopt;
-                }
-                m_megatag1PosBool = true;
-                m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
-            }
-            return m_megatag1Pos;
-        }
-
-        // Megatag 2
-        else
-        {
-            if (!m_megatag2PosBool)
-            {
-                // auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
-                LimelightHelpers::SetIMUMode(m_cameraName, mode);
-                auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
-
-                // multiple targets detected
-                if (poseEstimate.tagCount == 0)
-                {
-                    return std::nullopt;
-                }
-                // conditions don't match to add a vision measurement
-                else
-                {
-                    double xyStds = .7;
-                    double degStds = 9999999;
-                    m_megatag2PosBool = true;
-                    m_megatag2Pos = {frc::Pose3d{poseEstimate.pose}, poseEstimate.timestampSeconds, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG_2};
-                    // auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
-                    LimelightHelpers::SetIMUMode(m_cameraName, mode);
-                }
-            }
-            return m_megatag2Pos;
-        }
+        return GetMegaTag2Pose();
+    }
+    else
+    {
+        return GetMegaTag1Pose();
     }
     return std::nullopt;
 }
 
-std::optional<units::time::millisecond_t> DragonLimelight::GetPipelineLatency()
+/// ----------------------------------------------------------------------------------
+/// @brief Get pose estimate using the MegaTag1/standard Limelight pose estimate API.
+/// @return optional VisionPose populated from Limelight pose if tagCount > 0 and valid deviations are computable.
+/// @sideeffects If robot pose has not been set, SetRobotPose will be invoked using the estimate's 2D pose.
+/// ----------------------------------------------------------------------------------
+std::optional<VisionPose> DragonLimelight::GetMegaTag1Pose()
 {
-    auto nt = m_networktable.get();
-    if (nt != nullptr)
+    auto limelightMeasurement = LimelightHelpers::getBotPoseEstimate_wpiBlue(m_cameraName);
+
+    if (limelightMeasurement.tagCount == 0)
     {
-        return units::time::second_t(LimelightHelpers::getLatency_Pipeline(m_cameraName));
+        return std::nullopt;
+    }
+    auto deviations = GetStandardDeviationsForMetaTag1PoseEstimation(limelightMeasurement.tagCount, limelightMeasurement.avgTagArea);
+    if (!deviations.has_value())
+    {
+        return std::nullopt;
     }
 
-    return std::nullopt;
+    auto pose3d = frc::Pose3d{limelightMeasurement.pose};
+
+    units::time::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
+    units::time::millisecond_t timestamp = currentTime - units::millisecond_t(limelightMeasurement.timestampSeconds / 1000.0);
+
+    double xyStds = deviations.value().first;
+    double degStds = deviations.value().second;
+
+    m_megatag1PosBool = true;
+    m_megatag1Pos = {pose3d, timestamp, {xyStds, xyStds, degStds}, PoseEstimationStrategy::MEGA_TAG};
+    if (!m_robotPoseSet)
+    {
+        SetRobotPose(pose3d.ToPose2d());
+    }
+    return m_megatag1Pos;
 }
 
+/// ----------------------------------------------------------------------------------
+/// @brief Get pose estimate using the MegaTag2 specialized API.
+/// @details Requires an initial robot pose to be set (will attempt to get MegaTag1 pose first if needed).
+/// @return optional VisionPose populated from MegaTag2 pose estimate API; std::nullopt on failure.
+/// ----------------------------------------------------------------------------------
+std::optional<VisionPose> DragonLimelight::GetMegaTag2Pose()
+{
+    if (!m_robotPoseSet)
+    {
+        auto megatag1pose = GetMegaTag1Pose();
+        if (!megatag1pose.has_value())
+        {
+            return std::nullopt;
+        }
+    }
+    // Get the pose estimate
+    auto mode = frc::DriverStation::IsDisabled() ? static_cast<int>(LIMELIGHT_IMU_MODE::USE_EXTERNAL_IMU_AND_FUSE_WITH_INTERNAL_IMU) : static_cast<int>(LIMELIGHT_IMU_MODE::USE_INTERNAL_IMU);
+    LimelightHelpers::SetIMUMode(m_cameraName, mode);
+    auto poseEstimate = LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(m_cameraName);
+
+    double xyStds = .7;
+    double degStds = 9999999;
+    m_megatag2PosBool = true;
+    m_megatag2Pos = {frc::Pose3d{poseEstimate.pose},
+                     poseEstimate.timestampSeconds,
+                     {xyStds, xyStds, degStds},
+                     PoseEstimationStrategy::MEGA_TAG_2};
+
+    return m_megatag2Pos;
+}
+
+/// ----------------------------------------------------------------------------------
+/// @brief Set Limelight LED mode.
+/// @param mode enumeration controlling LED behavior (pipeline, blink, on, off)
+/// @notes Uses LimelightHelpers wrappers to send commands to the camera.
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetLEDMode(DRAGON_LIMELIGHT_LED_MODE mode)
 {
     switch (mode)
@@ -363,9 +352,13 @@ void DragonLimelight::SetLEDMode(DRAGON_LIMELIGHT_LED_MODE mode)
     }
 }
 
+/// ----------------------------------------------------------------------------------
+/// @brief Set Limelight camera mode (e.g., vision vs driver camera).
+/// @param mode enum value to put into the camera's camMode NT entry.
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetCamMode(DRAGON_LIMELIGHT_CAM_MODE mode)
 {
-    auto nt = m_networktable.get();
+    auto nt = m_limelightNT.get();
     if (nt != nullptr)
     {
         nt->PutNumber("camMode", static_cast<int>(mode));
@@ -375,274 +368,129 @@ void DragonLimelight::SetCamMode(DRAGON_LIMELIGHT_CAM_MODE mode)
 /**
  * @brief Update the pipeline index, this assumes that all of your limelights have the same pipeline at each index
  */
+/// ----------------------------------------------------------------------------------
+/// @brief Set the Limelight pipeline index.
+/// @param pipeline enum index for the selected pipeline
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetPipeline(DRAGON_LIMELIGHT_PIPELINE pipeline)
 {
     m_pipeline = pipeline;
     LimelightHelpers::setPipelineIndex(m_cameraName, static_cast<int>(pipeline));
 }
 
+/// ----------------------------------------------------------------------------------
+/// @brief Set the Limelight priority tag id used for pose selection (Limelight helper wrapper).
+/// @param id Field AprilTag id to give priority to.
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetPriorityTagID(int id)
 {
     LimelightHelpers::setPriorityTagID(m_cameraName, id);
 }
 
+/// ----------------------------------------------------------------------------------
+/// @brief Publish the camera transform relative to the robot to the Limelight.
+/// @param forward forward offset (inches)
+/// @param left left offset (inches)
+/// @param up up offset (inches)
+/// @param roll roll (degrees)
+/// @param pitch pitch (degrees)
+/// @param yaw yaw (degrees)
+/// @notes Calls LimelightHelpers::setCameraPose_RobotSpace.
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw)
 {
     LimelightHelpers::setCameraPose_RobotSpace(m_cameraName, forward, left, up, roll, pitch, yaw);
 }
 
-void DragonLimelight::PrintValues()
-{ /*
-    Should do something similar but in DragonCamera instead of DragonLimelight
-
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues HasTarget"), to_string(HasTarget()));
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues XOffset"), to_string(GetTargetHorizontalOffset().to<double>()));
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues YOffset"), to_string(GetTargetVerticalOffset().to<double>()));
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues Area"), to_string(GetTargetArea()));
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues Skew"), to_string(GetTargetSkew().to<double>()));
-     Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, string("DragonLimelight"), string("PrintValues Latency"), to_string(GetPipelineLatency().to<double>()));
- */
-}
-
-units::length::inch_t DragonLimelight::CalcXTargetToRobot(units::angle::degree_t camPitch, units::length::inch_t mountHeight, units::length::inch_t camXOffset, units::angle::degree_t tY)
+namespace
 {
-    units::length::inch_t XDistance = units::length::inch_t((units::math::tan(units::angle::degree_t(90) + camPitch + tY) * mountHeight) + units::math::abs(camXOffset));
-
-    if (GetCameraYaw() > units::degree_t(std::abs(90.0)))
+    /// ----------------------------------------------------------------------------------
+    /// @brief Determine if an AprilTag id is in the allowed list.
+    /// @param validTags allowed FieldAprilTagIDs list; empty means accept all.
+    /// @param tagID numeric id to test
+    /// @return true if tagID is accepted, false otherwise.
+    /// ----------------------------------------------------------------------------------
+    bool IsValidAprilTag(const std::vector<FieldAprilTagIDs> &validTags, int tagID)
     {
-        return -1.0 * (XDistance + m_driveThroughOffset);
-    }
-    return XDistance + m_driveThroughOffset;
-}
-
-units::length::inch_t DragonLimelight::CalcYTargetToRobot(units::angle::degree_t camYaw, units::length::inch_t xTargetDistance, units::length::inch_t camYOffset, units::length::inch_t camXOffset, units::angle::degree_t tX)
-{
-    units::length::inch_t yDistance = units::length::inch_t(0.0);
-    if (GetCameraYaw() > units::degree_t(std::abs(90.0)))
-        yDistance = units::length::inch_t((units::math::tan(tX + camYaw) * (xTargetDistance - camXOffset)) + camYOffset);
-    else
-        yDistance = units::length::inch_t((units::math::tan(tX + camYaw) * (xTargetDistance - camXOffset)) - camYOffset);
-
-    return yDistance;
-}
-
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetXDistance()
-{
-    units::length::meter_t mountingHeight = m_cameraPose.Z();
-
-    units::angle::degree_t mountingAngle = m_cameraPose.Rotation().Y() * -1;
-    std::optional<units::angle::degree_t> targetPitch = GetTargetPitch();
-    std::optional<int> aprilTagID = GetAprilTagID();
-    if (!aprilTagID)
-    {
-        if (targetPitch)
+        if (validTags.empty())
         {
-            double tangent = units::math::tan(mountingAngle + targetPitch.value());
-            if (tangent == 0)
+            return true;
+        }
+
+        auto it = std::find_if(validTags.begin(), validTags.end(),
+                               [&tagID](const FieldAprilTagIDs &validTags)
+                               { return static_cast<int>(validTags) == tagID; });
+
+        return it != validTags.end();
+    }
+
+    /// ----------------------------------------------------------------------------------
+    /// @brief Determine if an object detection class id is in the allowed list.
+    /// @param validClasses allowed class ids; empty means accept all.
+    /// @param classID numeric class id to test
+    /// @return true if classID is accepted, false otherwise.
+    /// ----------------------------------------------------------------------------------
+    bool IsValidObjectClass(const std::vector<int> &validClasses, int classID)
+    {
+        if (validClasses.empty())
+        {
+            return true;
+        }
+
+        auto it = std::find_if(validClasses.begin(), validClasses.end(),
+                               [&classID](const int &validClass)
+                               { return validClass == classID; });
+
+        return it != validClasses.end();
+    }
+
+    /// ----------------------------------------------------------------------------------
+    /// @brief Compute conservative standard deviations for pose (x/y in meters, yaw in degrees)
+    ///        based on number of tags seen and their average area reported by Limelight.
+    /// @param ntags number of tags used in the pose estimate
+    /// @param targetAreaPercent average tag area (normalized float from Limelight)
+    /// @return pair(xyStdMeters, yawStdDegrees) if computable, std::nullopt if pose not reliable.
+    /// ----------------------------------------------------------------------------------
+    std::optional<std::pair<double, double>> GetStandardDeviationsForMetaTag1PoseEstimation(int ntags, double targetAreaPercent)
+    {
+
+        if (ntags == 0)
+        {
+            return std::nullopt;
+        }
+
+        double xyStds = 0.5; // assume we see 2 or more tags
+        double degStds = 6;  // assume we see 2 or more tags
+        LimelightHelpers::PoseEstimate limelightMeasurement = LimelightHelpers::getBotPoseEstimate_wpiBlue("");
+
+        if (limelightMeasurement.tagCount == 1)
+        {
+            if (limelightMeasurement.avgTagArea > 0.8)
             {
-                return std::nullopt;
+                xyStds = 1.0;
+                degStds = 12;
+            }
+            else if (limelightMeasurement.avgTagArea > 0.1)
+            {
+                xyStds = 2.0;
+                degStds = 30;
             }
             else
             {
-                // TODO come back to this with different math
-                // units::length::inch_t estimatedTargetDistance = (m_noteVerticalOffset - mountingHeight) / tangent;
-                units::length::inch_t estimatedTargetDistance = (mountingHeight) / tangent;
-
-                return estimatedTargetDistance;
+                return std::nullopt;
             }
         }
+        return std::make_pair(xyStds, degStds);
     }
-    else
-    {
-        auto botpose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
-        std::vector<double> xdistance = botpose.GetEntry(std::array<double, 6>{}).Get(); // default value is empty array
-
-        return units::length::inch_t(xdistance[0]);
-    }
-
-    return std::nullopt;
 }
 
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetYDistance()
-{
-    std::optional<int> aprilTagID = GetAprilTagID();
-    std::optional<units::angle::degree_t> targetYaw = GetTargetYaw();
-    std::optional<units::length::inch_t> targetXdistance = EstimateTargetXDistance();
-    if (!aprilTagID && targetYaw && targetXdistance)
-    {
-        units::length::inch_t estimatedTargetDistance = targetXdistance.value() * units::math::tan(m_cameraPose.Rotation().Z() + targetYaw.value());
-        return estimatedTargetDistance;
-    }
-    else if (aprilTagID)
-    {
-        auto botpose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
-        std::vector<double> xdistance = botpose.GetEntry(std::array<double, 6>{}).Get(); // default value is empty array
-
-        return units::length::inch_t(xdistance[1]);
-    }
-
-    return std::nullopt;
-}
-
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetZDistance()
-{
-
-    if (!GetAprilTagID())
-    {
-        // TODO COME BACK TO THIS ONE
-        // units::length::inch_t estimatedTargetZDistance = m_cameraPose.Z() - m_noteVerticalOffset;
-        units::length::inch_t estimatedTargetZDistance = m_cameraPose.Z();
-        return estimatedTargetZDistance;
-    }
-
-    else
-    {
-        auto botpose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
-        std::vector<double> xdistance = botpose.GetEntry(std::array<double, 6>{}).Get(); // default value is empty array
-
-        return units::length::inch_t(xdistance[2]);
-    }
-
-    return std::nullopt;
-}
-
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetXDistance_RelToRobotCoords()
-{
-    units::angle::degree_t camPitch = GetCameraPitch();
-    units::length::inch_t mountHeight = GetMountingZOffset();
-    units::length::inch_t camXOffset = GetMountingXOffset();
-    units::angle::degree_t Ty = GetTargetPitch().value();
-    return CalcXTargetToRobot(camPitch, mountHeight, camXOffset, Ty);
-}
-
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetYDistance_RelToRobotCoords()
-{
-
-    units::angle::degree_t camYaw = GetCameraYaw();
-    units::length::inch_t camYOffset = GetMountingYOffset();
-    units::length::inch_t camXOffset = GetMountingXOffset();
-    units::angle::degree_t Tx = GetTargetYaw().value();
-    units::length::inch_t xTargetDistance = CalcXTargetToRobot(GetCameraPitch(), GetMountingZOffset(), GetMountingXOffset(), GetTargetPitch().value());
-
-    return CalcYTargetToRobot(camYaw, xTargetDistance, camYOffset, camXOffset, Tx);
-}
-
-std::optional<units::length::inch_t> DragonLimelight::EstimateTargetZDistance_RelToRobotCoords()
-{
-    std::optional<units::length::inch_t> zDistance = EstimateTargetZDistance();
-    if (zDistance)
-    {
-        units::length::inch_t targetZoffset_RF_inch = zDistance.value() + GetMountingZOffset(); ///< the offset is positive if the limelight is above the center of the robot
-
-        return targetZoffset_RF_inch;
-    }
-
-    return std::nullopt;
-}
-
-std::optional<VisionData> DragonLimelight::GetDataToNearestAprilTag()
-{
-    std::optional<int> tagId = GetAprilTagID();
-    if (tagId)
-    {
-        auto targetPose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
-
-        std::vector<double> vector = targetPose.GetEntry(std::array<double, 6>{}).Get();
-
-        frc::Rotation3d rotation = frc::Rotation3d(units::angle::degree_t(vector[5]), units::angle::degree_t(vector[3]), units::angle::degree_t(vector[4]));
-        auto transform = frc::Transform3d(units::length::meter_t(vector[0]), units::length::meter_t(vector[1]), units::length::meter_t(vector[2]), rotation);
-
-        return VisionData{
-            transform, transform.Translation(), rotation, tagId.value()};
-    }
-
-    return std::nullopt;
-}
-
-std::optional<VisionData> DragonLimelight::GetDataToSpecifiedTag(int id)
-{
-    std::optional<int> detectedTag = GetAprilTagID();
-    if (detectedTag.has_value())
-    {
-        if (detectedTag.value() == id)
-        {
-            auto targetPose = m_networktable.get()->GetDoubleArrayTopic("targetpose_robotspace");
-
-            std::vector<double> vector = targetPose.GetEntry(std::array<double, 6>{}).Get();
-
-            // targetpose_robotspace: 3D transform of the primary in-view AprilTag in the coordinate system of the Robot (array (6)) [tx, ty, tz, pitch, yaw, roll] (meters, degrees)
-            frc::Rotation3d rotationTransform = frc::Rotation3d(units::angle::degree_t(vector[5]), units::angle::degree_t(vector[3]), -units::angle::degree_t(vector[4]));
-            auto transform = frc::Transform3d(units::length::meter_t(vector[0]), units::length::meter_t(vector[1]), units::length::meter_t(vector[2]), rotationTransform);
-
-            frc::Rotation3d rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0), units::angle::degree_t(0.0), units::math::atan2(transform.X(), transform.Z())); // roll pitch yaw
-
-            return VisionData{transform, transform.Translation(), rotationToTarget, detectedTag.value()};
-        }
-    }
-
-    return std::nullopt;
-}
-
-DragonVisionPoseEstimatorStruct DragonLimelight::GetPoseEstimate()
-{
-    if (m_chassis != nullptr && ChassisConfigMgr::GetInstance()->GetRotationRateDegreesPerSecond() < m_maxRotationRateDegreesPerSec)
-    {
-
-        LimelightHelpers::SetRobotOrientation(GetCameraName(),
-                                              m_chassis->GetPose().Rotation().Degrees().value(),
-                                              m_yawRate,
-                                              m_pitch,
-                                              m_pitchRate,
-                                              m_roll,
-                                              m_rollRate);
-
-        std::optional<VisionPose> megaTag2Pose = EstimatePoseOdometryLimelight(true);
-
-        if (megaTag2Pose.has_value())
-        {
-            if (EstimateTargetXDistance())
-            {
-                DragonVisionPoseEstimatorStruct str;
-                if (EstimateTargetXDistance().value().to<double>() < 36)
-                {
-                    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::HIGH;
-                }
-                else
-                {
-                    str.m_confidenceLevel = DragonVisionPoseEstimatorStruct::ConfidenceLevel::MEDIUM;
-                }
-                str.m_stds = megaTag2Pose.value().visionMeasurementStdDevs;
-                str.m_timeStamp = megaTag2Pose.value().timeStamp;
-                str.m_visionPose = megaTag2Pose.value().estimatedPose.ToPose2d();
-                return str;
-            }
-        }
-    }
-    return DragonVisionPoseEstimatorStruct();
-}
-
-void DragonLimelight::DataLog(uint64_t timestamp)
-{
-    auto vispose = EstimatePoseOdometryLimelight(true);
-    if (vispose.has_value())
-    {
-        if (m_identifier == DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA)
-        {
-            Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT_POSE3D, vispose.value().estimatedPose);
-        }
-        else
-        {
-            Log3DPoseData(timestamp, DragonDataLogger::PoseSingals::CURRENT_CHASSIS_LIMELIGHT2_POSE3D, vispose.value().estimatedPose);
-        }
-    }
-
-    DragonDataLogger::LogDoubleData(timestamp, DragonDataLogger::DoubleSignals::LIMELIGHT1_NUMBER_OF_TAGS, m_numberOfTags);
-    DragonDataLogger::LogBoolData(timestamp, DragonDataLogger::BoolSignals::IS_ALGAE_DETECTED, m_tv);
-}
-
+/// ----------------------------------------------------------------------------------
+/// @brief Configure the robot orientation that the Limelight should use for pose fusion.
+/// @details Sends yaw, yaw rate and camera pitch/roll to the Limelight so it can fuse orientation.
+/// @param pose 2D robot pose used to set initial yaw/orientation for the Limelight.
+/// ----------------------------------------------------------------------------------
 void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
 {
-    return;
     auto yawrate = 0.0;
     auto pitch = 0.0;
     auto pitchrate = 0.0;
@@ -651,8 +499,8 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
     if (m_chassis != nullptr)
     {
         yawrate = ChassisConfigMgr::GetInstance()->GetRotationRateDegreesPerSecond();
-        pitch = GetCameraPitch().value();
-        roll = GetCameraRoll().value();
+        pitch = m_cameraPose.Rotation().Y().value();
+        roll = m_cameraPose.Rotation().X().value();
     }
 
     LimelightHelpers::SetRobotOrientation(m_cameraName,
@@ -662,4 +510,5 @@ void DragonLimelight::SetRobotPose(const frc::Pose2d &pose)
                                           pitchrate,
                                           roll,
                                           rollrate);
+    m_robotPoseSet = true;
 }

@@ -12,25 +12,15 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-#pragma once
 
-#include <string>
-#include "vision/DragonVisionStructs.h"
-#include "vision/DragonLimelight.h"
-#include "frc/geometry/Translation3d.h"
-#include "frc/geometry/Transform3d.h"
-#include "Limelight/LimelightHelpers.h"
+#include "RobotContainer.h"
 
-class DragonVisionStructLogger
+#include "chassis/SwerveContainer.h"
+#include "vision/DragonVisionPoseEstimatorContainer.h"
+
+RobotContainer::RobotContainer()
 {
-public:
-    static void logVisionData(const std::string& loggerName, const std::optional<VisionData> optVisionData);
-    static void logTransform3d(const std::string &loggerName, const frc::Transform3d transform3d);
-    static void logTranslation3d(const std::string &loggerName, const frc::Translation3d translation3d);
-    static void logRotation3d(const std::string &loggerName, const frc::Rotation3d rotation3d);
-    static void logDragonCamera(const std::string &loggerName, const DragonLimelight& camera);
-    static void logPose3d(const std::string &loggerName, const frc::Pose3d pose3d);
-    static void logVisionPose(const std::string &loggerName, const std::optional<VisionPose> optVisionPose);
-    static void logPose2d(const std::string &loggerName, const frc::Pose2d pose2d);
-    static void logLLPoseEstimation(const std::string &loggerName, const LimelightHelpers::PoseEstimate llPoseEstimate);
-};
+    // Initialize all of your commands and subsystems here
+    m_swervecontainer = SwerveContainer::GetInstance();
+    m_visionPoseEstimatorContainer = new DragonVisionPoseEstimatorContainer();
+}

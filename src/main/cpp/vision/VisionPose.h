@@ -1,3 +1,4 @@
+
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -11,28 +12,18 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//====================================================================================================================================================
-
+//====================================================================================================================================================#pragma once
 #pragma once
 
-// C++ Includes
-#include <string>
-#include <vector>
-
-// FRC includes
-#include "frc/Timer.h"
-#include "networktables/NetworkTable.h"
-#include "units/angle.h"
-#include "units/length.h"
+#include "frc/geometry/Pose3d.h"
 #include "units/time.h"
-#include "frc/geometry/Pose2d.h"
+#include "vision/DragonVisionEnums.h"
+#include "wpi/array.h"
 
-// Team 302 includes
-#include "vision/DragonLimelight.h"
-
-class DragonLimelight90 : public DragonLimelight
+struct VisionPose
 {
-public:
-    inline std::optional<units::angle::degree_t> GetTargetYaw() override { return GetTy(); }
-    inline std::optional<units::angle::degree_t> GetTargetPitch() override { return GetTx(); }
+    frc::Pose3d estimatedPose = frc::Pose3d{};                                     // empty pose3d if we don't give one out
+    units::time::millisecond_t timeStamp = units::time::millisecond_t(-1.0);       // negative timestamp for no timestamp
+    wpi::array<double, 3> visionMeasurementStdDevs = {0.1, 0.1, 0.1};              // default std devs from WPI docs
+    PoseEstimationStrategy estimationStrategy = PoseEstimationStrategy::MULTI_TAG; // default estimation strategy, what should be used
 };

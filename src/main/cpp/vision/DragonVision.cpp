@@ -13,41 +13,90 @@
 /// OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-// C++ Includes
-#include <string>
+// Developer documentation:
+// Brief: High-level manager for vision subsystems (Limelight + QUEST).
+// Responsibilities:
+//  - Singleton access via DragonVision::GetDragonVision()
+//  - Manage multiple DragonLimelight instances and a DragonQuest instance
+//  - Query and aggregate AprilTag and object-detection targets across cameras
+//  - Select targets according to VisionTargetOption and return selected target data
+//  - Provide robot pose estimates fused/selected from camera poses
+//  - Configure per-camera pipelines and set robot pose for vision subsystems
+//
+// Notes:
+//  - Not thread-safe; callers must synchronize if used from multiple threads concurrently.
+//  - ProcessOutputOption returns indices into a vector that may be moved-from by callers;
+//    callers must be aware of ownership transfer when moving unique_ptrs.
+//  - HealthCheck relies on DragonLimelight::IsLimelightRunning() for camera health.
+//
+// TODO:
+//  - Implement fusion logic for fused target/pose selection (FUSED_TARGET_INFO).
+//  - Consider adding internal synchronization or atomics if concurrent access is required.
+//  - Improve selection heuristics and add unit tests for ProcessOutputOption and GetBestPose.
 
-// FRC Includes
+// C++ Includes
+#include <algorithm> // <<-- added for std::max_element / std::distance
+#include <iterator>	 // added for std::make_move_iterator
+#include <memory>
+#include <string>
+#include <vector>
+
+// FRC
+#include "frc/RobotController.h"
 #include "frc/Timer.h"
+#include "frc/geometry/Pose2d.h"
 
 // Team 302 includes
 #include "chassis/ChassisConfigMgr.h"
-#include "vision/DragonVision.h"
-#include "vision/DragonLimelight.h"
-#include "utils/FMSData.h"
-#include "vision/DragonVisionStructLogger.h"
-#include "utils/logging/debug/Logger.h"
 #include "utils/DragonField.h"
+#include "utils/FMSData.h"
+#include "utils/logging/debug/Logger.h"
+#include "vision/DragonLimelight.h"
+#include "vision/DragonQuest.h"
+#include "vision/DragonVision.h"
+#include "vision/DragonVisionPoseEstimatorStruct.h"
+#include "vision/VisionPose.h"
+#include "vision/definitions/CameraConfigMgr.h"
 
 // Third Party Includes
 #include "Limelight/LimelightHelpers.h"
 
+namespace
+{
+	std::vector<int> ProcessOutputOption(VisionTargetOption option, std::vector<std::unique_ptr<DragonVisionStruct>> &targets);
+
+	std::optional<VisionPose> GetBestPose(const std::vector<VisionPose> &poses);
+} // namespace
+
 DragonVision *DragonVision::m_dragonVision = nullptr;
+
+/// @brief Get the singleton instance of DragonVision.
+/// @note Not thread-safe. Callers must synchronize if called from multiple threads
+///       during initialization. The returned pointer has program lifetime; no deletion
+///       is performed by the class.
+/// @return Pointer to the DragonVision singleton instance.
 DragonVision *DragonVision::GetDragonVision()
 {
 	if (DragonVision::m_dragonVision == nullptr)
 	{
 		DragonVision::m_dragonVision = new DragonVision();
+		DragonVision::m_dragonVision->InitializeCameras();
 	}
 	return DragonVision::m_dragonVision;
 }
 
+/// @brief Check health for all limelights that match a usage.
+/// @param usage The camera usage category to check (e.g., APRIL_TAGS).
+/// @return true if all matching cameras that are considered return running; false otherwise.
+/// @note If no cameras match the usage, the function will return false.
+/// @thread-safety Not synchronized; callers should ensure safe concurrent access.
 bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	bool isHealthy = false;
-	auto cameras = GetCameras(usage);
-	for (auto cam : cameras)
+	auto limelights = GetLimelights(usage);
+	for (auto limelight : limelights)
 	{
-		isHealthy = cam->HealthCheck();
+		isHealthy = limelight->IsLimelightRunning();
 		if (!isHealthy)
 		{
 			return isHealthy;
@@ -56,38 +105,60 @@ bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 	return isHealthy;
 }
 
+/// @brief Check health for a single limelight identified by identifier.
+/// @param identifier The camera identifier to check.
+/// @return true if the camera exists and reports as running; false otherwise.
 bool DragonVision::HealthCheck(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier)
 {
-	auto camera = GetCameras(identifier);
+	auto camera = GetLimelightFromIdentifier(identifier);
 	if (camera != nullptr)
 	{
-		return camera->HealthCheck();
+		return camera->IsLimelightRunning();
 	}
 	return false;
 }
 
-std::optional<frc::Pose2d> DragonVision::CalcVisionPose()
+std::vector<bool> DragonVision::HealthCheckAllLimelights()
 {
-	std::optional<VisionPose> megaTag1Position = GetRobotPosition(); // Megatag1
-	if (megaTag1Position.has_value())
+	std::vector<bool> healthStatuses;
+	for (const auto &pair : m_dragonLimelightMap)
 	{
-		auto megaTag2Position = GetRobotPositionMegaTag2(megaTag1Position.value().estimatedPose.ToPose2d().Rotation().Degrees(),
-														 units::angular_velocity::degrees_per_second_t(0.0),
-														 units::angle::degree_t(0.0),
-														 units::angular_velocity::degrees_per_second_t(0.0),
-														 units::angle::degree_t(0.0),
-														 units::angular_velocity::degrees_per_second_t(0.0));
-		if (megaTag2Position.has_value())
+		DragonLimelight *limelight = pair.second;
+		if (limelight != nullptr)
 		{
-
-			return megaTag2Position.value().estimatedPose.ToPose2d();
+			healthStatuses.push_back(limelight->IsLimelightRunning());
 		}
-		return megaTag1Position.value().estimatedPose.ToPose2d();
+		else
+		{
+			healthStatuses.push_back(false);
+		}
 	}
-
-	return std::nullopt;
+	return healthStatuses;
 }
+
+/**
+ * @brief Performs a health check on the associated DragonQuest object.
+ *
+ * This method checks if the DragonQuest object (m_dragonQuest) is not null
+ * and calls its HealthCheck() method to determine its health status.
+ *
+ * @return true if the DragonQuest object exists and its health check passes;
+ *         false otherwise.
+ */
+bool DragonVision::HealthCheckQuest()
+{
+	if (m_dragonQuest != nullptr)
+	{
+		return m_dragonQuest->HealthCheck();
+	}
+	return false;
+}
+
 frc::AprilTagFieldLayout DragonVision::m_aprilTagLayout = frc::AprilTagFieldLayout();
+
+/// @brief Returns a cached AprilTag field layout, loading the 2025 field on first access.
+/// @return An instance of frc::AprilTagFieldLayout describing the field tag positions.
+/// @note Calling repeatedly returns the cached layout; expensive load is only done once.
 frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 {
 	if (DragonVision::m_aprilTagLayout != frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::k2025ReefscapeWelded))
@@ -97,492 +168,187 @@ frc::AprilTagFieldLayout DragonVision::GetAprilTagLayout()
 	return DragonVision::m_aprilTagLayout;
 }
 
-DragonVision::DragonVision()
+/**
+ * @brief Initializes the cameras for the robot vision system.
+ *
+ * This method retrieves the team number from the robot controller and uses it
+ * to initialize the cameras via the CameraConfigMgr singleton. The team number
+ * is cast to a RobotIdentifier to ensure proper configuration based on the
+ * robot's identity.
+ *
+ * @note This method should be called during the robot initialization phase to
+ * ensure that all cameras are properly configured before use.
+ */
+void DragonVision::InitializeCameras()
 {
+	int32_t teamNumber = frc::RobotController::GetTeamNumber();
+	CameraConfigMgr::GetInstance()->InitCameras(static_cast<RobotIdentifier>(teamNumber));
 }
-
+/// @brief Add a Limelight instance to the manager.
+/// @param camera Pointer to the DragonLimelight to add.
+/// @param usage The camera usage category for this camera.
+/// @note Ownership is not transferred here; this class stores the raw pointer.
 void DragonVision::AddLimelight(DragonLimelight *camera, DRAGON_LIMELIGHT_CAMERA_USAGE usage)
 {
 	m_dragonLimelightMap.insert(std::pair<DRAGON_LIMELIGHT_CAMERA_USAGE, DragonLimelight *>(usage, camera));
-	m_poseEstimators.push_back(camera);
 }
 
-std::optional<VisionData> DragonVision::GetVisionData(VISION_ELEMENT element)
+/// @brief Register the DragonQuest instance with the manager.
+/// @param quest Pointer to the DragonQuest instance.
+/// @note Ownership not transferred; this class keeps the raw pointer.
+void DragonVision::AddQuest(DragonQuest *quest)
 {
-	if (element == VISION_ELEMENT::ALGAE)
-	{
-		return GetVisionDataFromAlgae(element);
-	}
-	else if (element == VISION_ELEMENT::NEAREST_APRILTAG) // nearest april tag
-	{
-		return GetVisionDataToNearestTag();
-	}
-	else if (element == VISION_ELEMENT::REEF)
-	{
-		return GetVisionDataToNearestFieldElementAprilTag(element);
-	}
-	else if (element == VISION_ELEMENT::BARGE)
-	{
-		return GetVisionDataToNearestFieldElementAprilTag(element);
-	}
-	else
-	{
-		return GetVisionDataFromElement(element);
-	}
-	// if we don't see any vision targets, return null optional
-	return std::nullopt;
+	m_dragonQuest = quest;
 }
 
-std::optional<VisionData> DragonVision::GetVisionDataToNearestFieldElementAprilTag(VISION_ELEMENT element)
+/// @brief Aggregate AprilTag targets from all relevant limelights and select according to option.
+/// @param option Selection option (e.g., closest valid target).
+/// @param validAprilTagIDs List of AprilTag IDs considered valid for selection/filtering.
+/// @return Vector of unique_ptr<DragonVisionStruct> for the selected targets. Ownership of
+///         returned pointers is transferred to the caller.
+/// @note Internally moves target objects from per-camera containers into the returned vector.
+std::vector<std::unique_ptr<DragonVisionStruct>> DragonVision::GetAprilTagVisionTargetInfo(VisionTargetOption option,
+																						   const std::vector<FieldAprilTagIDs> &validAprilTagIDs) const
+
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
+
+	std::vector<std::unique_ptr<DragonVisionStruct>> alltargets;
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	for (auto limelight : limelights)
 	{
-		std::optional<VisionData> limelightData = cam->GetDataToNearestAprilTag();
-		if (limelightData.has_value())
+		auto camTargets = limelight->GetAprilTagVisionTargetInfo(validAprilTagIDs);
+		// move entries from camTargets into targets
+		alltargets.insert(
+			alltargets.end(),
+			std::make_move_iterator(camTargets.begin()),
+			std::make_move_iterator(camTargets.end()));
+	}
+
+	int slot = 0;
+	auto indecies = ProcessOutputOption(option, alltargets);
+	std::vector<std::unique_ptr<DragonVisionStruct>> targets;
+	for (auto &index : indecies)
+	{
+		targets.emplace_back(std::move(alltargets[index]));
+		slot++;
+	}
+	return targets;
+}
+
+/// @brief Aggregate object-detection targets from all relevant limelights and select according to option.
+/// @param option Selection option (e.g., closest valid target).
+/// @param validClasses List of detection class IDs considered valid for selection/filtering.
+/// @return Vector of unique_ptr<DragonVisionStruct> for the selected targets. Ownership of
+///         returned pointers is transferred to the caller.
+/// @note Internally moves target objects from per-camera containers into the returned vector.
+std::vector<std::unique_ptr<DragonVisionStruct>> DragonVision::GetObjectDetectionTargetInfo(VisionTargetOption option,
+																							const std::vector<int> &validClasses) const
+{
+	std::vector<std::unique_ptr<DragonVisionStruct>> alltargets;
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::OBJECT_DETECTION_ALGAE);
+	for (auto limelight : limelights)
+	{
+		auto camTargets = limelight->GetObjectDetectionTargetInfo(validClasses);
+		// move entries from camTargets into targets
+		alltargets.insert(
+			alltargets.end(),
+			std::make_move_iterator(camTargets.begin()),
+			std::make_move_iterator(camTargets.end()));
+	}
+
+	int slot = 0;
+	auto indecies = ProcessOutputOption(option, alltargets);
+	std::vector<std::unique_ptr<DragonVisionStruct>> targets;
+	for (auto &index : indecies)
+	{
+		targets.emplace_back(std::move(alltargets[index]));
+		slot++;
+	}
+	return targets;
+}
+
+/// @brief Query all registered limelights for MegaTag1-based robot poses and choose the best.
+/// @return Optional VisionPose; std::nullopt if no valid poses were returned by cameras.
+/// @note Uses GetBestPose to pick the most reliable pose among candidates.
+std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag1()
+{
+	std::vector<VisionPose> poses;
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	for (auto limelight : limelights)
+	{
+		auto pose = limelight->GetMegaTag1Pose();
+		if (pose.has_value())
 		{
-			// get alliance color from FMSData
-			frc::DriverStation::Alliance allianceColor = FMSData::GetAllianceColor();
-
-			// initialize tags to check to null pointer
-			std::vector<int> tagIdsToCheck = {};
-			switch (element)
-			{
-			case VISION_ELEMENT::REEF:
-				tagIdsToCheck = GetReefTags(allianceColor);
-				break;
-
-			case VISION_ELEMENT::PROCESSOR:
-				tagIdsToCheck = GetProcessorTags(allianceColor);
-				break;
-
-			case VISION_ELEMENT::CORAL_STATION:
-				tagIdsToCheck = GetCoralStationsTags(allianceColor);
-				break;
-
-			case VISION_ELEMENT::BARGE:
-				tagIdsToCheck = GetBargeTags(allianceColor);
-				break;
-
-			default:
-				return std::nullopt;
-				break;
-			}
-
-			if (std::find(tagIdsToCheck.begin(), tagIdsToCheck.end(), limelightData.value().tagId) != tagIdsToCheck.end())
-			{
-				return limelightData;
-			}
+			poses.emplace_back(pose.value());
 		}
 	}
-
-	// tag doesnt matter or no tag
-	return std::nullopt;
+	return GetBestPose(poses);
 }
 
-std::vector<int> DragonVision::GetReefTags(frc::DriverStation::Alliance allianceColor) const
+/// @brief Query all registered limelights for MegaTag2-based robot poses and choose the best.
+/// @return Optional VisionPose; std::nullopt if no valid poses were returned by cameras.
+/// @note Uses GetBestPose to pick the most reliable pose among candidates.
+std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2()
 {
-	std::vector<int> tagIdsToCheck = {};
-	if (allianceColor == frc::DriverStation::Alliance::kBlue)
+	std::vector<VisionPose> poses;
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
+	for (auto limelight : limelights)
 	{
-		tagIdsToCheck.emplace_back(17);
-		tagIdsToCheck.emplace_back(18);
-		tagIdsToCheck.emplace_back(19);
-		tagIdsToCheck.emplace_back(20);
-		tagIdsToCheck.emplace_back(21);
-		tagIdsToCheck.emplace_back(22);
-	}
-	else
-	{
-		tagIdsToCheck.emplace_back(6);
-		tagIdsToCheck.emplace_back(7);
-		tagIdsToCheck.emplace_back(8);
-		tagIdsToCheck.emplace_back(9);
-		tagIdsToCheck.emplace_back(10);
-		tagIdsToCheck.emplace_back(11);
-	}
-	return tagIdsToCheck;
-}
-std::vector<int> DragonVision::GetCoralStationsTags(frc::DriverStation::Alliance allianceColor) const
-{
-	std::vector<int> tagIdsToCheck = {};
-	if (allianceColor == frc::DriverStation::Alliance::kBlue)
-	{
-		tagIdsToCheck.emplace_back(12);
-		tagIdsToCheck.emplace_back(13);
-	}
-	else
-	{
-		tagIdsToCheck.emplace_back(1);
-		tagIdsToCheck.emplace_back(2);
-	}
-	return tagIdsToCheck;
-}
-std::vector<int> DragonVision::GetProcessorTags(frc::DriverStation::Alliance allianceColor) const
-{
-	std::vector<int> tagIdsToCheck = {};
-	if (allianceColor == frc::DriverStation::Alliance::kBlue)
-	{
-		tagIdsToCheck.emplace_back(16);
-	}
-	else
-	{
-		tagIdsToCheck.emplace_back(3);
-	}
-	return tagIdsToCheck;
-}
-std::vector<int> DragonVision::GetBargeTags(frc::DriverStation::Alliance allianceColor) const
-{
-	std::vector<int> tagIdsToCheck = {};
-	if (allianceColor == frc::DriverStation::Alliance::kBlue)
-	{
-		tagIdsToCheck.emplace_back(4);
-		tagIdsToCheck.emplace_back(14);
-	}
-	else
-	{
-		tagIdsToCheck.emplace_back(5);
-		tagIdsToCheck.emplace_back(15);
-	}
-	return tagIdsToCheck;
-}
-
-std::optional<VisionData> DragonVision::GetVisionDataToNearestTag()
-{
-	std::optional<VisionData> limelightData = std::nullopt;
-
-	units::length::inch_t closest = units::length::inch_t(-1.0);
-	std::vector<VisionData> visData;
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
-	{
-		auto data = cam->GetDataToNearestAprilTag();
-		if (data.has_value())
+		auto pose = limelight->GetMegaTag2Pose();
+		if (pose.has_value())
 		{
-			units::length::inch_t dist = data.value().translationToTarget.X();
-			if (closest.value() < 0.0 || closest.value() > dist.value())
-			{
-				closest = dist;
-				limelightData = data;
-			}
+			poses.emplace_back(pose.value());
 		}
 	}
-
-	return limelightData;
+	return GetBestPose(poses);
 }
 
-std::optional<VisionData> DragonVision::GetVisionDataFromAlgae(VISION_ELEMENT element)
+/// @brief Get robot pose estimate derived from Quest detections.
+/// @return DragonVisionPoseEstimatorStruct - confidence level indicates the usefulness of the pose.
+DragonVisionPoseEstimatorStruct DragonVision::GetRobotPositionQuest()
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
-	return GetRawVisionDataFromObject(cameras, DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL);
+	auto quest = DragonVision::GetDragonVision()->GetQuest();
+	if (quest != nullptr && quest->HealthCheck())
+	{
+		return quest->GetPoseEstimate();
+	}
+	return {};
 }
 
-std::optional<VisionData> DragonVision::GetRawVisionDataFromObject(std::vector<DragonLimelight *> cameras, DRAGON_LIMELIGHT_PIPELINE pipeline)
+/// @brief Set a robot pose for all vision subsystems that consume robot pose information.
+/// @param pose The new robot pose (frc::Pose2d) to distribute.
+/// @note Updates all running limelights and the DragonQuest instance (if present).
+void DragonVision::SetRobotPose(const frc::Pose2d &pose)
 {
-	for (auto cam : cameras)
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
+	for (auto limelight : limelights)
 	{
-		if (cam->GetPipeline() == DRAGON_LIMELIGHT_PIPELINE::MACHINE_LEARNING_PL)
-		{
-			if (cam->HasTarget())
-			{
-				// create translation using 3 estimated distances
-				if (cam->EstimateTargetXDistance_RelToRobotCoords().has_value() ||
-					cam->EstimateTargetZDistance_RelToRobotCoords().has_value() ||
-					cam->EstimateTargetYDistance_RelToRobotCoords().has_value())
-				{
-					frc::Translation3d translationToTarget = frc::Translation3d(cam->EstimateTargetXDistance_RelToRobotCoords().value(),
-																				cam->EstimateTargetYDistance_RelToRobotCoords().value(),
-																				cam->EstimateTargetZDistance_RelToRobotCoords().value());
-					frc::Rotation3d rotationToTarget = frc::Rotation3d();
-
-					// create rotation3d with pitch and yaw (don't have access to roll)
-					rotationToTarget = frc::Rotation3d(units::angle::degree_t(0.0),
-													   cam->GetTargetPitchRobotFrame().value(),
-													   cam->GetTargetYawRobotFrame().value());
-
-					// return VisionData with new translation and rotation
-					return VisionData{frc::Transform3d(translationToTarget, rotationToTarget), translationToTarget, rotationToTarget, -1};
-				}
-			}
-		}
-	}
-	// if we don't have a selected cam
-	return std::nullopt;
-}
-
-std::optional<VisionData> DragonVision::GetVisionDataFromElement(VISION_ELEMENT element)
-{
-	frc::DriverStation::Alliance allianceColor = FMSData::GetAllianceColor();
-
-	// initialize selected field element to empty Pose3d
-	frc::Pose3d fieldElementPose = frc::Pose3d{};
-	int idToSearch = -1;
-	switch (element)
-	{
-		// TODO: JW need to handle multiple tags
-	case VISION_ELEMENT::REEF:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_REEF_CENTER)} /*load red reef*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_REEF_CENTER)}; /*load blue reef*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 4 : 7;																																																													   // should be red 6-11, blue 17-22
-		break;
-	case VISION_ELEMENT::PROCESSOR:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_PROCESSOR)} /*load red processor*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_PROCESSOR)}; /*load blue processor*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;
-		break;
-	case VISION_ELEMENT::CORAL_STATION:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_CORAL_STATION_LEFT_SIDEWALL)} /*load red coral station*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_CORAL_STATION_LEFT_SIDEWALL)}; /*load blue coral station*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																																								// should be red 1 or 2, blue 12 or 13
-		break;
-	case VISION_ELEMENT::BARGE:
-		fieldElementPose = allianceColor == frc::DriverStation::Alliance::kRed ? frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::RED_BARGE_FRONT)} /*load red barge*/ : frc::Pose3d{FieldConstants::GetInstance()->GetFieldElementPose(FieldConstants::FIELD_ELEMENT::BLUE_BARGE_FRONT)}; /*load blue barge*/
-		idToSearch = allianceColor == frc::DriverStation::Alliance::kRed ? 5 : 6;																																																														// should be red 5 or 15, blue 4 or 14
-		break;
-	default:
-		return std::nullopt;
-		break;
+		limelight->SetRobotPose(pose);
 	}
 
-	std::optional<VisionData> singleTagEstimate = SingleTagToElement(fieldElementPose, idToSearch);
-	if (singleTagEstimate)
+	auto quest = GetQuest();
+	if (quest != nullptr)
 	{
-		return singleTagEstimate;
-	}
-
-	return std::nullopt;
-}
-
-std::optional<VisionData> DragonVision::SingleTagToElement(frc::Pose3d elementPose, int idToSearch)
-{
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
-	{
-		// get the optional of the translation and rotation to the apriltag
-		auto aprilTagData = cam->GetDataToSpecifiedTag(idToSearch);
-		if (aprilTagData.has_value())
-		{
-			return aprilTagData;
-		}
-	}
-
-	return std::nullopt;
-}
-
-std::optional<VisionPose> DragonVision::GetRobotPosition()
-{
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
-	{
-		auto pose = cam->EstimatePoseOdometryLimelight(false); // false megatag1
-		if (pose.has_value())								   // if we have a valid pose, return it
-		{
-			return pose;
-		}
-	}
-
-	// if we aren't able to calculate our pose from vision, return a null optional
-	return std::nullopt;
-}
-
-std::optional<VisionPose> DragonVision::GetRobotPositionMegaTag2(units::angle::degree_t yaw,
-																 units::angular_velocity::degrees_per_second_t yawRate,
-																 units::angle::degree_t pitch,
-																 units::angular_velocity::degrees_per_second_t pitchRate,
-																 units::angle::degree_t roll,
-																 units::angular_velocity::degrees_per_second_t rollRate)
-{
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
-	{
-		LimelightHelpers::SetRobotOrientation(cam->GetCameraName(),
-											  yaw.value(),
-											  yawRate.value(),
-											  pitch.value(),
-											  pitchRate.value(),
-											  roll.value(),
-											  rollRate.value());
-		auto estPose = cam->EstimatePoseOdometryLimelight(true); // true since megatag2
-		if (estPose.has_value())
-		{
-			return estPose;
-		}
-	}
-
-	return std::nullopt;
-}
-
-/*****************
- * testAndLogVisionData:  Test and log the vision data
- * add this line to teleopPeriodic to test and log vision data
- *
- *     DragonVision::GetDragonVision()->testAndLogVisionData();
- */
-void DragonVision::testAndLogVisionData()
-{
-	try
-	{
-		std::optional<VisionPose> visionPose = GetRobotPosition();
-
-		DragonField::GetInstance()->UpdateObjectVisionPose("VisionPose", visionPose);
-	}
-	catch (std::bad_optional_access &boa)
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("testAndLogVisionData"), std::string("bad_optional_access"), boa.what());
-	}
-	catch (std::exception &e)
-	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::ERROR, std::string("testAndLogVisionData"), std::string("exception"), e.what());
+		quest->SetRobotPose(pose);
 	}
 }
 
-// Limelight raw data functions
-
-// TODO:  these need to be smarter to deal with multiple cameras with the same usage
-std::optional<double> DragonVision::GetTargetArea(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
+/// @brief Return limelights that match the provided usage/category and are running.
+/// @param usage The usage/category to filter by (ALGAE_AND_APRIL_TAGS, APRIL_TAGS, etc.).
+/// @return Vector of pointers to running DragonLimelight instances that match the criteria.
+/// @note Only returns cameras that report IsLimelightRunning() == true.
+std::vector<DragonLimelight *> DragonVision::GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const
 {
-	auto cameras = GetCameras(usage);
-	std::optional<double> maxArea = std::nullopt;
-	for (auto cam : cameras)
-	{
-		auto thisArea = cam->GetTargetArea();
-		if (thisArea.has_value())
-		{
-			if (!maxArea.has_value() || thisArea.value() > maxArea.value())
-			{
-				maxArea = thisArea;
-			}
-		}
-	}
-	return maxArea;
-}
-units::angle::degree_t DragonVision::GetTy(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	units::angle::degree_t minTy = units::angle::degree_t(720); // arbitrary large value
-	for (auto cam : cameras)
-	{
-		auto thisTy = cam->GetTy();
-		if (thisTy < minTy)
-		{
-			minTy = thisTy;
-		}
-	}
-	return minTy;
-}
-
-units::angle::degree_t DragonVision::GetTx(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	units::angle::degree_t minTx = units::angle::degree_t(720); // arbitrary large value
-	for (auto cam : cameras)
-	{
-		auto thisTx = cam->GetTx();
-		if (thisTx < minTx)
-		{
-			minTx = thisTx;
-		}
-	}
-	return minTx;
-}
-std::optional<units::angle::degree_t> DragonVision::GetTargetYaw(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	std::optional<units::angle::degree_t> minYaw = std::nullopt;
-	for (auto cam : cameras)
-	{
-		auto thisYaw = cam->GetTargetYaw();
-		if (thisYaw.has_value())
-		{
-			if (!minYaw.has_value() || thisYaw.value() < minYaw.value())
-			{
-				minYaw = thisYaw;
-			}
-		}
-	}
-	return minYaw;
-}
-
-std::optional<units::angle::degree_t> DragonVision::GetTargetSkew(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	std::optional<units::angle::degree_t> minSkew = std::nullopt;
-	for (auto cam : cameras)
-	{
-		auto thisSkew = cam->GetTargetSkew();
-		if (thisSkew.has_value())
-		{
-			if (!minSkew.has_value() || thisSkew.value() < minSkew.value())
-			{
-				minSkew = thisSkew;
-			}
-		}
-	}
-	return minSkew;
-}
-
-std::optional<units::angle::degree_t> DragonVision::GetTargetPitch(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	std::optional<units::angle::degree_t> minPitch = std::nullopt;
-	for (auto cam : cameras)
-	{
-		auto thisPitch = cam->GetTargetPitch();
-		if (thisPitch.has_value())
-		{
-			if (!minPitch.has_value() || thisPitch.value() < minPitch.value())
-			{
-				minPitch = thisPitch;
-			}
-		}
-	}
-	return minPitch;
-}
-
-std::optional<int> DragonVision::GetAprilTagID(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	std::optional<int> targetAprilTag = std::nullopt;
-	std::optional<double> minArea = std::nullopt;
-	for (auto cam : cameras)
-	{
-		auto thisTag = cam->GetAprilTagID();
-		if (thisTag.has_value())
-		{
-			auto thisArea = cam->GetTargetArea();
-			if (!minArea.has_value() || thisArea.value() < minArea.value())
-			{
-				minArea = thisArea;
-				targetAprilTag = thisTag;
-			}
-		}
-	}
-	return targetAprilTag;
-}
-
-bool DragonVision::HasTarget(DRAGON_LIMELIGHT_CAMERA_USAGE usage)
-{
-	auto cameras = GetCameras(usage);
-	for (auto cam : cameras)
-	{
-		auto hasTarget = cam->HasTarget();
-		if (hasTarget)
-		{
-			return hasTarget;
-		}
-	}
-	return false;
-}
-
-std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE usage) const
-{
-	std::vector<DragonLimelight *> validCameras;
+	std::vector<DragonLimelight *> validLimelights;
 	for (auto it = m_dragonLimelightMap.begin(); it != m_dragonLimelightMap.end(); ++it)
 	{
 		bool addCam = false;
-		auto cam = (*it).second;
+		auto limelight = (*it).second;
 		if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS)
 		{
-			if (cam->HealthCheck())
+			if (limelight->IsLimelightRunning())
 			{
-				validCameras.emplace_back(cam);
+				validLimelights.emplace_back(limelight);
 			}
 		}
 		else
@@ -593,7 +359,7 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 			{
 				if ((*it).first == DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS)
 				{
-					auto pipe = cam->GetPipeline();
+					auto pipe = DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG;
 					if (usage == DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS)
 					{
 						addCam = pipe == DRAGON_LIMELIGHT_PIPELINE::APRIL_TAG;
@@ -608,66 +374,120 @@ std::vector<DragonLimelight *> DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_
 
 		if (addCam)
 		{
-			if (cam->HealthCheck())
+			if (limelight->IsLimelightRunning())
 			{
-				validCameras.emplace_back(cam);
+				validLimelights.emplace_back(limelight);
 			}
 		}
 	}
-	return validCameras;
+	return validLimelights;
 }
 
-DragonLimelight *DragonVision::GetCameras(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier) const
+/// @brief Lookup a limelight instance by its camera identifier.
+/// @param identifier The identifier to search for.
+/// @return Pointer to the DragonLimelight if found and running; nullptr otherwise.
+DragonLimelight *DragonVision::GetLimelightFromIdentifier(DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier) const
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
-	for (auto cam : cameras)
+	auto limelights = GetLimelights(DRAGON_LIMELIGHT_CAMERA_USAGE::ALGAE_AND_APRIL_TAGS);
+	for (auto limelight : limelights)
 	{
-		if (cam->GetCameraIdentifier() == identifier)
+		if (limelight->GetCameraIdentifier() == identifier)
 		{
-			return cam;
+			return limelight;
 		}
 		return nullptr;
 	}
 	return nullptr;
 }
 
-std::optional<frc::Pose3d> DragonVision::GetAprilTagPose(FieldConstants::AprilTagIDs tagId) const
+/// @brief Set the active pipeline for all limelights that match the usage.
+/// @param usage The camera usage/category whose cameras should be switched.
+/// @param pipeline The pipeline enum value to set on matching cameras.
+/// @note Only running cameras will be updated.
+void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE usage, DRAGON_LIMELIGHT_PIPELINE pipeline)
 {
-	auto cameras = GetCameras(DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-	for (auto cam : cameras)
+	auto limelights = GetLimelights(usage);
+	for (auto limelight : limelights)
 	{
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - cam"), cam->GetCameraName());
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - tagID"), static_cast<int>(tagId));
-
-		auto visdata = cam->GetDataToSpecifiedTag(static_cast<int>(tagId));
-		Logger::GetLogger()->LogData(LOGGER_LEVEL::PRINT, std::string("DragonTargetFinder"), std::string("DragonVision - visData.has_value()"), visdata.has_value() ? "true" : "false");
-
-		if (visdata.has_value())
-		{
-			auto currentPose{frc::Pose3d(ChassisConfigMgr::GetInstance()->GetSwerveChassis()->GetPose())};
-
-			auto trans3d = visdata.value().transformToTarget;
-			auto targetPose = currentPose + trans3d;
-			units::angle::degree_t robotRelativeAngle = visdata.value().rotationToTarget.Z(); // value is robot to target
-
-			units::angle::degree_t fieldRelativeAngle = currentPose.Rotation().Angle() + robotRelativeAngle;
-			auto pose = frc::Pose2d(targetPose.X(), targetPose.Y(), fieldRelativeAngle);
-			return frc::Pose3d(pose);
-		}
+		limelight->SetPipeline(pipeline);
 	}
-
-	return std::nullopt;
 }
 
-void DragonVision::SetPipeline(DRAGON_LIMELIGHT_CAMERA_USAGE position, DRAGON_LIMELIGHT_PIPELINE pipeline)
+namespace
 {
-	auto cameras = GetCameras(position);
-	for (auto cam : cameras)
+	/// @brief Choose indices from a list of targets according to a selection option.
+	/// @param option Selection option (e.g., CLOSEST_VALID_TARGET).
+	/// @param targets Vector of unique_ptr<DragonVisionStruct> from which to select.
+	/// @return Vector of indices into the provided targets vector that were selected.
+	/// @note The function does not modify the target contents; callers may move entries
+	///       after receiving indices. Currently only CLOSEST_VALID_TARGET is implemented.
+	std::vector<int> ProcessOutputOption(VisionTargetOption option, std::vector<std::unique_ptr<DragonVisionStruct>> &targets)
 	{
-		if (cam->GetPipeline() != pipeline)
+		std::vector<int> selectedIndices;
+		if (targets.empty())
 		{
-			cam->SetPipeline(pipeline);
-			cam->PeriodicCacheData();
+			return selectedIndices;
 		}
+
+		switch (option)
+		{
+		case VisionTargetOption::CLOSEST_VALID_TARGET:
+		{
+			// find index of target with largest targetAreaPercent (closest)
+			auto it = std::max_element(
+				targets.begin(),
+				targets.end(),
+				[](const std::unique_ptr<DragonVisionStruct> &a, const std::unique_ptr<DragonVisionStruct> &b)
+				{
+					return a->targetAreaPercent < b->targetAreaPercent;
+				});
+			int index = static_cast<int>(std::distance(targets.begin(), it));
+			selectedIndices.emplace_back(index);
+			break;
+		}
+		// TODO: add fused option here
+		default:
+			break;
+		}
+		return selectedIndices;
+	}
+
+	/// @brief From a list of candidate VisionPose objects, return the one with the best (lowest) stddevs.
+	/// @param poses The candidate poses to evaluate.
+	/// @return Optional VisionPose chosen as best; std::nullopt if empty input.
+	/// @note Compares visionMeasurementStdDevs [x, y, rot] and returns the pose with smallest combined deviations.
+	std::optional<VisionPose> GetBestPose(const std::vector<VisionPose> &poses)
+	{
+		if (poses.empty())
+		{
+			return std::nullopt;
+		}
+
+		if (poses.size() == 1)
+		{
+			return poses[0];
+		}
+
+		auto bestfit = 0;
+		auto stddevX = poses[0].visionMeasurementStdDevs[0];
+		auto stddevY = poses[0].visionMeasurementStdDevs[1];
+		auto stddevRot = poses[0].visionMeasurementStdDevs[2];
+
+		auto slot = 0;
+		for (auto thispose : poses)
+		{
+			auto thisStddevX = thispose.visionMeasurementStdDevs[0];
+			auto thisStddevY = thispose.visionMeasurementStdDevs[1];
+			auto thisStddevRot = thispose.visionMeasurementStdDevs[2];
+			if (thisStddevX < stddevX && thisStddevY < stddevY && thisStddevRot < stddevRot)
+			{
+				bestfit = slot;
+				stddevX = thisStddevX;
+				stddevY = thisStddevY;
+				stddevRot = thisStddevRot;
+			}
+			slot++;
+		}
+		return poses[bestfit];
 	}
 }

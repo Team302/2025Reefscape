@@ -22,6 +22,11 @@
 
 void CameraConfig_9997::BuildCameraConfig()
 {
+    auto vision = DragonVision::GetDragonVision();
+    if (vision == nullptr)
+    {
+        return;
+    }
 
     DragonLimelight *placer = new DragonLimelight(std::string("limelight-front"), // networkTableName
                                                   DRAGON_LIMELIGHT_CAMERA_IDENTIFIER::FRONT_CAMERA,
@@ -38,6 +43,5 @@ void CameraConfig_9997::BuildCameraConfig()
                                                   DRAGON_LIMELIGHT_CAM_MODE::CAM_VISION      // CAM_MODE camMode,
 
     ); // additional parameter
-    DragonVision::GetDragonVision()->AddLimelight(placer, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
-    m_limelightIndexs.push_back(0);
+    vision->AddLimelight(placer, DRAGON_LIMELIGHT_CAMERA_USAGE::APRIL_TAGS);
 }

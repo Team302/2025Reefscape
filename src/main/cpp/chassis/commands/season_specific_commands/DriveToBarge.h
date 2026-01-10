@@ -12,33 +12,26 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
-#include <vector>
 
-#include "frc/geometry/Pose2d.h"
-#include "units/time.h"
-#include "wpi/array.h"
+#include "chassis/commands/DriveToPose.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
 
-struct DragonVisionPoseEstimatorStruct
+class DriveToBarge : public DriveToPose
 {
 public:
-    DragonVisionPoseEstimatorStruct() : m_confidenceLevel(ConfidenceLevel::NONE),
-                                        m_visionPose(frc::Pose2d{}),
-                                        m_timeStamp(units::time::second_t(0.0)),
-                                        m_stds(wpi::array(0.9, 0.9, 0.9)) {};
-    ~DragonVisionPoseEstimatorStruct() = default;
+    /**
+     * @brief Creates a command to drive to the Barge AprilTag.
+     *
+     * @param chassis A pointer to the swerve drive subsystem.
+     */
+    DriveToBarge(subsystems::CommandSwerveDrivetrain *chassis);
 
-    enum ConfidenceLevel
-    {
-        NONE,
-        LOW,
-        MEDIUM,
-        HIGH
-    };
+    /**
+     * @brief Default destructor.
+     */
+    ~DriveToBarge() = default;
 
-    ConfidenceLevel m_confidenceLevel;
-    frc::Pose2d m_visionPose;
-    units::time::second_t m_timeStamp;
-    wpi::array<double, 3> m_stds;
+    frc::Pose2d GetEndPose() override;
+    void Execute() override;
 };

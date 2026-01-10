@@ -13,21 +13,16 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
 
-#pragma once
-#include "chassis/pose/DragonVisionPoseEstimatorStruct.h"
-#include "frc/geometry/Pose2d.h"
+#include "vision/DragonVisionPoseEstimator.h"
+#include "vision/DragonVisionPoseEstimatorContainer.h"
 
-class DragonVisionPoseEstimator
+DragonVisionPoseEstimatorContainer::DragonVisionPoseEstimatorContainer() : m_updateVisionPoseEstimatorCommand(std::make_unique<DragonVisionPoseEstimator>())
+
 {
-public:
-    DragonVisionPoseEstimator();
-    ~DragonVisionPoseEstimator() = default;
-
-    virtual DragonVisionPoseEstimatorStruct GetPoseEstimate() { return DragonVisionPoseEstimatorStruct(); };
-    virtual void SetRobotPose(const frc::Pose2d &pose) {};
-    virtual bool HealthCheck() = 0;
-
-private:
-    DragonVisionPoseEstimator(const DragonVisionPoseEstimator &) = delete;
-    DragonVisionPoseEstimator &operator=(const DragonVisionPoseEstimator &) = delete;
-};
+    // Initialize all of your commands and subsystems here
+    if (m_vision != nullptr)
+    {
+        // TODO: come back to this; currently it is crashing here
+        // m_vision->SetDefaultCommand(std::move(m_updateVisionPoseEstimatorCommand));
+    }
+}

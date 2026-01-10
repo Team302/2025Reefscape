@@ -1,4 +1,3 @@
-
 //====================================================================================================================================================
 // Copyright 2025 Lake Orion Robotics FIRST Team 302
 //
@@ -13,24 +12,31 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //====================================================================================================================================================
-
 #pragma once
-#include <vector>
-#include "utils/sensors/SensorData.h"
 
-class SensorDataMgr
+#include "chassis/commands/DriveToPose.h"
+#include "chassis/generated/CommandSwerveDrivetrain.h"
+#include "chassis/SwerveContainer.h"
+#include "fielddata/FieldConstants.h"
+
+class DriveToBranch : public DriveToPose
 {
 public:
-    static SensorDataMgr *GetInstance();
+    /**
+     * @brief Creates a command to drive to the Barge AprilTag.
+     *
+     * @param chassis A pointer to the swerve drive subsystem.
+     */
+    DriveToBranch(subsystems::CommandSwerveDrivetrain *chassis, FieldConstants::FIELD_ELEMENT_OFFSETS location);
 
-    // register methods
-    void RegisterSensorData(SensorData *sd);
-    void CacheData() const;
+    /**
+     * @brief Default destructor.
+     */
+    ~DriveToBranch() = default;
+
+    frc::Pose2d GetEndPose() override;
+    void Execute() override;
 
 private:
-    SensorDataMgr();
-    ~SensorDataMgr();
-
-    std::vector<SensorData *> m_SensorData;
-    static SensorDataMgr *m_instance;
+    FieldConstants::FIELD_ELEMENT_OFFSETS m_location;
 };

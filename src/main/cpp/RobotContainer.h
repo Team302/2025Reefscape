@@ -11,38 +11,20 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-//======================================================\==============================================================================================
+//====================================================================================================================================================
 
-#include "utils/sensors/SensorDataMgr.h"
-#include "utils/sensors/SensorData.h"
+#pragma once
 
-#include <vector>
+class SwerveContainer;
+class DragonVisionPoseEstimatorContainer;
 
-using std::vector;
-
-SensorDataMgr *SensorDataMgr::m_instance = nullptr;
-SensorDataMgr *SensorDataMgr::GetInstance()
+class RobotContainer
 {
-    if (SensorDataMgr::m_instance == nullptr)
-    {
-        SensorDataMgr::m_instance = new SensorDataMgr();
-    }
-    return SensorDataMgr::m_instance;
-}
+public:
+    RobotContainer();
+    ~RobotContainer() = default;
 
-SensorDataMgr::SensorDataMgr() : m_SensorData()
-{
-}
-void SensorDataMgr::RegisterSensorData(
-    SensorData *sd)
-{
-    m_SensorData.emplace_back(sd);
-}
-
-void SensorDataMgr::CacheData() const
-{
-    for (SensorData *sensor : m_SensorData)
-    {
-        sensor->PeriodicCacheData();
-    }
-}
+private:
+    SwerveContainer *m_swervecontainer;
+    DragonVisionPoseEstimatorContainer *m_visionPoseEstimatorContainer;
+};

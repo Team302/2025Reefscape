@@ -16,99 +16,58 @@
 #pragma once
 
 // C++ Includes
+#include <memory>
 #include <string>
 #include <vector>
 
 // FRC includes
-
+#include "fielddata/FieldConstants.h"
+#include "frc/DriverStation.h"
 #include "frc/Timer.h"
+#include "frc/geometry/Pose2d.h"
+#include "frc/geometry/Pose3d.h"
 #include "networktables/NetworkTable.h"
 #include "units/angle.h"
 #include "units/length.h"
 #include "units/time.h"
-#include "frc/geometry/Pose2d.h"
-#include "frc/geometry/Pose3d.h"
-#include "frc/DriverStation.h"
 
 // Team 302 includes
-#include "utils/sensors/SensorData.h"
-#include "utils/logging/signals/DragonDataLogger.h"
-#include "vision/DragonVisionStructs.h"
-#include "chassis/pose/DragonVisionPoseEstimator.h"
 #include "chassis/ChassisConfigMgr.h"
+#include "fielddata/FieldAprilTagIDs.h"
+#include "vision/DragonVisionEnums.h"
+#include "vision/DragonVisionStruct.h"
+#include "vision/VisionPose.h"
 
 // Third Party Includes
 
-enum class DRAGON_LIMELIGHT_CAMERA_TYPE
-{
-    LIMELIGHT4,
-    LIMELIGHT4_W_HAILO8,
-    LIMELIGHT3G,
-    LIMELIGHT3,
-    LIMELIGHT3_W_CORAL
-};
-
-enum class DRAGON_LIMELIGHT_CAMERA_IDENTIFIER
-{
-    BACK_CAMERA,
-    FRONT_CAMERA
-};
-
-enum class DRAGON_LIMELIGHT_CAMERA_USAGE
-{
-    APRIL_TAGS,
-    OBJECT_DETECTION_ALGAE,
-    ALGAE_AND_APRIL_TAGS
-};
-
-enum class DRAGON_LIMELIGHT_LED_MODE
-{
-    LED_UNKNOWN = -1,
-    LED_PIPELINE_CONTROL,
-    LED_OFF,
-    LED_BLINK,
-    LED_ON
-};
-
-enum class DRAGON_LIMELIGHT_CAM_MODE
-{
-    CAM_UNKNOWN = -1,
-    CAM_VISION,
-    CAM_DRIVER
-};
-
-enum class DRAGON_LIMELIGHT_STREAM_MODE
-{
-    STREAM_UNKNOWN = -1,
-    STREAM_STANDARD,     // side by side if two cams
-    STREAM_PIP_MAIN,     // Second Cam bottom right of Main Cam
-    STREAM_PIP_SECONDARY // Main Cam bottom right of Second Cam
-};
-
-enum class DRAGON_LIMELIGHT_SNAPSHOT_MODE
-{
-    SNAPSHOT_MODE_UNKNOWN = -1,
-    SNAP_OFF,
-    SNAP_ON
-};
-
-enum class DRAGON_LIMELIGHT_PIPELINE
-{
-    UNKNOWN = -1,
-    APRIL_TAG = 0,
-    MACHINE_LEARNING_PL = 1,
-    COLOR_THRESHOLD
-};
-
 // DragonLimelight needs to be a child of DragonCamera
-class DragonLimelight : public DragonVisionPoseEstimator, public SensorData, public DragonDataLogger
+class DragonLimelight
 {
 public:
     ///-----------------------------------------------------------------------------------
-    /// Method:         DragonLimelight (constructor)
-    /// Description:    Create the object
+    /// @brief Deleted default constructor. Must provide configuration values.
     ///-----------------------------------------------------------------------------------
     DragonLimelight() = delete;
+
+    ///-----------------------------------------------------------------------------------
+    /// @brief Construct a DragonLimelight object.
+    /// @details Initializes network table reference, camera pose offsets, pipeline/LED/cam modes,
+    ///          and prepares port forwarding for the Limelight. Throws/assumes external code
+    ///          provides valid enums and mounting offsets.
+    /// @param name NetworkTable name for the Limelight (sanitized internally).
+    /// @param identifier Identifier enum for multiple limelights on the robot.
+    /// @param cameraType Type hint for camera hardware/configuration.
+    /// @param cameraUsage How the camera will be used (odometry, driver camera, etc.).
+    /// @param mountingXOffset Forward offset (inches) from robot center.
+    /// @param mountingYOffset Left offset (inches) from robot center.
+    /// @param mountingZOffset Up offset (inches) from robot center.
+    /// @param pitch Camera pitch in degrees.
+    /// @param yaw Camera yaw in degrees.
+    /// @param roll Camera roll in degrees.
+    /// @param initialPipeline Pipeline enum to select on initialization.
+    /// @param ledMode Initial LED mode to set.
+    /// @param camMode Initial camera mode to set.
+    ///-----------------------------------------------------------------------------------
     DragonLimelight(
         std::string name, /// <I> - network table name
         DRAGON_LIMELIGHT_CAMERA_IDENTIFIER identifier,
@@ -125,68 +84,102 @@ public:
         DRAGON_LIMELIGHT_CAM_MODE camMode);
 
     ///-----------------------------------------------------------------------------------
-    /// Method:         ~DragonLimelight (destructor)
-    /// Description:    Delete the object
+    /// @brief Default destructor.
+    /// @details Does minimal cleanup (no ownership of heavy resources here). Timer ownership
+    ///          is handled in implementation.
     ///-----------------------------------------------------------------------------------
     ~DragonLimelight() = default;
 
-    bool HealthCheck() override;
-    bool HasTarget();
+    ///-----------------------------------------------------------------------------------
+    /// @brief Get a list of AprilTag detections filtered by validTag (if provided).
+    /// @param validTag Optional list of FieldAprilTagIDs; if empty all tags returned.
+    /// @return Vector of unique_ptr to DragonVisionStruct, one per valid detection.
+    /// @notes Non-blocking; returns empty vector when network table is not available.
+    ///-----------------------------------------------------------------------------------
+    std::vector<std::unique_ptr<DragonVisionStruct>> GetAprilTagVisionTargetInfo(const std::vector<FieldAprilTagIDs> &validTag = {}) const;
 
-    virtual std::optional<units::angle::degree_t> GetTargetYaw();
-    std::optional<units::angle::degree_t> GetTargetYawRobotFrame();
-    virtual std::optional<units::angle::degree_t> GetTargetPitch();
-    std::optional<units::angle::degree_t> GetTargetPitchRobotFrame();
-    std::optional<double> GetTargetArea();
-    std::optional<units::angle::degree_t> GetTargetSkew();
-    std::optional<units::time::millisecond_t> GetPipelineLatency();
-    std::optional<int> GetAprilTagID();
+    ///-----------------------------------------------------------------------------------
+    /// @brief Get a list of object-detection results filtered by class IDs.
+    /// @param validClasses Optional class ID filter; if empty all detections returned.
+    /// @return Vector of unique_ptr to DragonVisionStruct containing detection details.
+    ///-----------------------------------------------------------------------------------
+    std::vector<std::unique_ptr<DragonVisionStruct>> GetObjectDetectionTargetInfo(const std::vector<int> &validClasses = {}) const;
 
-    std::optional<VisionPose> EstimatePoseOdometryLimelight(bool megatag2);
+    ///-----------------------------------------------------------------------------------
+    /// @brief Check whether the Limelight appears to be running/responding.
+    /// @return true if the heartbeat and timer indicate the Limelight is healthy.
+    ///-----------------------------------------------------------------------------------
+    bool IsLimelightRunning();
 
-    std::optional<VisionData> GetDataToNearestAprilTag();
-    std::optional<VisionData> GetDataToSpecifiedTag(int id);
-
-    std::optional<units::length::inch_t> EstimateTargetXDistance();
-    std::optional<units::length::inch_t> EstimateTargetYDistance();
-    std::optional<units::length::inch_t> EstimateTargetZDistance();
-
-    std::optional<units::length::inch_t> EstimateTargetXDistance_RelToRobotCoords();
-    std::optional<units::length::inch_t> EstimateTargetYDistance_RelToRobotCoords();
-    std::optional<units::length::inch_t> EstimateTargetZDistance_RelToRobotCoords();
-
-    units::length::inch_t CalcXTargetToRobot(units::angle::degree_t camPitch, units::length::inch_t mountHeight, units::length::inch_t camXOffset, units::angle::degree_t tY);
-    units::length::inch_t CalcYTargetToRobot(units::angle::degree_t camYaw, units::length::inch_t xTargetDistance, units::length::inch_t camYOffset, units::length::inch_t camXOffset, units::angle::degree_t tX);
-
-    // limelight specific helper functions
+    ///-----------------------------------------------------------------------------------
+    /// @brief Set the Limelight LED behavior.
+    /// @param mode LED mode enum controlling on/off/blink/pipeline control.
+    ///-----------------------------------------------------------------------------------
     void SetLEDMode(DRAGON_LIMELIGHT_LED_MODE mode);
-    void SetCamMode(DRAGON_LIMELIGHT_CAM_MODE mode);
-    void SetPipeline(DRAGON_LIMELIGHT_PIPELINE pipeline);
-    void SetPriorityTagID(int id);
-    void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
 
-    DRAGON_LIMELIGHT_PIPELINE GetPipeline() const { return m_pipeline; }
-    units::angle::degree_t GetCameraPitch() const { return m_cameraPose.Rotation().Y(); }
-    units::angle::degree_t GetCameraYaw() const { return m_cameraPose.Rotation().Z(); }
-    units::angle::degree_t GetCameraRoll() const { return m_cameraPose.Rotation().X(); } // rotates around x-axis
-    units::length::inch_t GetMountingXOffset() const { return m_cameraPose.X(); }
-    units::length::inch_t GetMountingYOffset() const { return m_cameraPose.Y(); }
-    units::length::inch_t GetMountingZOffset() const { return m_cameraPose.Z(); }
-    std::string GetCameraName() const { return m_cameraName; }
+    ///-----------------------------------------------------------------------------------
+    /// @brief Set the camera mode (vision vs driver camera).
+    /// @param mode Camera mode enum to write to the Limelight NT entry.
+    ///-----------------------------------------------------------------------------------
+    void SetCamMode(DRAGON_LIMELIGHT_CAM_MODE mode);
+
+    ///-----------------------------------------------------------------------------------
+    /// @brief Select the active Limelight pipeline index.
+    /// @param pipeline Pipeline enum index to set on the Limelight.
+    ///-----------------------------------------------------------------------------------
+    void SetPipeline(DRAGON_LIMELIGHT_PIPELINE pipeline);
+
+    ///-----------------------------------------------------------------------------------
+    /// @brief Get the identifier enum for this camera instance.
+    ///-----------------------------------------------------------------------------------
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER GetCameraIdentifier() { return m_identifier; }
 
-    void PeriodicCacheData() override;
+    ///-----------------------------------------------------------------------------------
+    /// @brief Request a pose estimate from the Limelight for odometry fusion.
+    /// @param useMegatag2 If true use MegaTag2 based estimate, otherwise use MegaTag1.
+    /// @return optional VisionPose when valid; std::nullopt when unavailable.
+    ///-----------------------------------------------------------------------------------
+    std::optional<VisionPose> EstimatePoseOdometryLimelight(bool useMegatag2);
 
-    units::angle::degree_t GetTx() const;
-    units::angle::degree_t GetTy() const;
+    ///-----------------------------------------------------------------------------------
+    /// @brief Retrieve MegaTag1 (standard) pose estimate.
+    /// @return optional VisionPose when tags are sufficient and sigma can be computed.
+    ///-----------------------------------------------------------------------------------
+    std::optional<VisionPose> GetMegaTag1Pose();
 
-    void PrintValues(); // Prints out all values to ensure everything is working and connected
+    ///-----------------------------------------------------------------------------------
+    /// @brief Retrieve MegaTag2 pose estimate (specialized).
+    /// @return optional VisionPose when MegaTag2 API provides a valid estimate.
+    ///-----------------------------------------------------------------------------------
+    std::optional<VisionPose> GetMegaTag2Pose();
 
-    DragonVisionPoseEstimatorStruct GetPoseEstimate() override;
-    void DataLog(uint64_t timestamp) override;
-    void SetRobotPose(const frc::Pose2d &pose) override;
+    ///-----------------------------------------------------------------------------------
+    /// @brief Send a 2D robot pose to the Limelight as an initial orientation hint.
+    /// @param pose Pose2d used for initial yaw/orientation in the Limelight fusion.
+    ///-----------------------------------------------------------------------------------
+    void SetRobotPose(const frc::Pose2d &pose);
 
-protected:
+    ///-----------------------------------------------------------------------------------
+    /// @brief Get sanitized camera name used for network table operations.
+    ///-----------------------------------------------------------------------------------
+    std::string GetCameraName() const { return m_cameraName; }
+
+private:
+    ///-----------------------------------------------------------------------------------
+    /// @brief Set the priority AprilTag ID used by Limelight pose selection logic.
+    /// @param id Tag id to prioritize.
+    ///-----------------------------------------------------------------------------------
+    void SetPriorityTagID(int id);
+
+    ///-----------------------------------------------------------------------------------
+    /// @brief Publish camera transform relative to robot to the Limelight.
+    /// @param forward left/right/up/roll/pitch/yaw in robot-space units (double).
+    ///-----------------------------------------------------------------------------------
+    void SetCameraPose_RobotSpace(double forward, double left, double up, double roll, double pitch, double yaw);
+
+    ///-----------------------------------------------------------------------------------
+    /// @brief IMU mode enum used to configure Limelight's IMU usage.
+    ///-----------------------------------------------------------------------------------
     enum class LIMELIGHT_IMU_MODE
     {
         USE_EXTERNAL_IMU_ONLY = 0,
@@ -195,36 +188,37 @@ protected:
         USE_INTERNAL_WITH_MT1_ASSISTED_CONVERGENCE,
         USE_INTERNAL_IMU_WITH_EXTERNAL_IMU_ASSISTED_CONVERGENCE
     };
-    units::length::inch_t m_driveThroughOffset = units::length::inch_t(0.0);
 
+    ///-----------------------------------------------------------------------------------
+    /// @name Member variables
+    /// @brief Important internal state used by Limelight wrapper.
+    ///-----------------------------------------------------------------------------------
     DRAGON_LIMELIGHT_CAMERA_IDENTIFIER m_identifier;
-    std::shared_ptr<nt::NetworkTable> m_networktable;
+    std::shared_ptr<nt::NetworkTable> m_limelightNT;
 
-    // cached elements
-    bool m_tv;
-    units::angle::degree_t m_tx;
-    units::angle::degree_t m_ty;
-    int m_tagid;
-    bool m_megatag2PosBool = false;
-    bool m_megatag1PosBool = false;
-    VisionPose m_megatag2Pos;
-    VisionPose m_megatag1Pos;
+    const double START_HB = -9999;     ///< initial heartbeat sentinel
+    const double MAX_HB = 2000000000;  ///< safety max heartbeat (unused currently)
+    double m_lastHeartbeat = START_HB; ///< last seen heartbeat value
+    frc::Timer *m_healthTimer;         ///< local timer used for heartbeat health checks
 
-    const double START_HB = -9999;
-    const double MAX_HB = 2000000000;
-    double m_lastHeartbeat = START_HB;
-    frc::Timer *m_healthTimer;
-    DRAGON_LIMELIGHT_PIPELINE m_pipeline;
+    DRAGON_LIMELIGHT_PIPELINE m_pipeline; ///< currently selected pipeline
 
     // from old dragon camera
-    std::string m_cameraName;
-    subsystems::CommandSwerveDrivetrain *m_chassis;
-    frc::Pose3d m_cameraPose;
-    const double m_maxRotationRateDegreesPerSec = 720.0;
+    std::string m_cameraName;                            ///< sanitized camera name used with helpers
+    subsystems::CommandSwerveDrivetrain *m_chassis;      ///< pointer to chassis for orientation/limits
+    frc::Pose3d m_cameraPose;                            ///< camera transform relative to robot
+    const double m_maxRotationRateDegreesPerSec = 720.0; ///< fallback limit if chassis not available
+    // Small orientation/yaw/pitch members used when setting robot orientation in Limelight
     const double m_yawRate = 0.0;
     const double m_pitch = 0.0;
     const double m_pitchRate = 0.0;
     const double m_roll = 0.0;
     const double m_rollRate = 0.0;
-    int m_numberOfTags;
+
+    int m_numberOfTags;             ///< last count of tags reported
+    bool m_megatag1PosBool = false; ///< flag: have MegaTag1 estimate
+    VisionPose m_megatag1Pos;       ///< last MegaTag1 pose
+    bool m_megatag2PosBool = false; ///< flag: have MegaTag2 estimate
+    VisionPose m_megatag2Pos;       ///< last MegaTag2 pose
+    bool m_robotPoseSet = false;    ///< true after SetRobotPose has been called
 };
